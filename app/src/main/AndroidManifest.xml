@@ -14,10 +14,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true"/>
+        <meta-data
+            android:name="xposeddescription"
+            android:value="QTool
+QQ功能增强优化 免费开源软件 请勿倒卖或用于违法违禁行为" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="83" />
     </application>
 
 </manifest>
