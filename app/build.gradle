@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "com.hicore.qtool"
         minSdk 24
-        targetSdk 31
+        targetSdk 26
         versionCode 1
         versionName "1.0"
 
