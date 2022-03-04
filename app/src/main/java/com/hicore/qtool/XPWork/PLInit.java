@@ -1,4 +1,4 @@
-package com.hicore.qtool.XPHook;
+package com.hicore.qtool.XPWork;
 
 public interface PLInit {
     boolean StartInit();

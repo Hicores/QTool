@@ -3,13 +3,11 @@ package com.hicore.qtool.XposedInit;
 import android.util.Log;
 
 import com.hicore.qtool.LogUtils.LogUtils;
-import com.hicore.qtool.XPHook.BaseHookItem;
-import com.hicore.qtool.XPHook.PLInit;
+import com.hicore.qtool.XPWork.BaseHookItem;
+import com.hicore.qtool.XPWork.PLInit;
 
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import dalvik.system.DexFile;
 

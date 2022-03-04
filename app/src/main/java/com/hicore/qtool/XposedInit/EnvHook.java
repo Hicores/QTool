@@ -2,6 +2,8 @@ package com.hicore.qtool.XposedInit;
 
 import android.content.Context;
 
+import com.hicore.ReflectUtils.InjectRes;
+
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 
@@ -15,6 +17,9 @@ public class EnvHook {
                 HookEnv.AppContext = (Context) param.args[0];
                 //优先初始化Path
                 ExtraPathInit.InitPath();
+                //然后注入资源
+                InjectRes.StartInject(HookEnv.ToolApkPath);
+                //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelayDialog();
                 if (HookEnv.ExtraDataPath != null){
                     //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
