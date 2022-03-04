@@ -3,7 +3,7 @@ package com.hicore.ReflectUtils;
 import android.content.res.Resources;
 import android.util.Log;
 
-import com.hicore.qtool.LogUtils.LogUtils;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.qtool.XposedInit.HookEnv;
 
 import java.lang.reflect.Method;

@@ -2,7 +2,7 @@ package com.hicore.qtool.XposedInit;
 
 import android.util.Log;
 
-import com.hicore.qtool.LogUtils.LogUtils;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.qtool.XPWork.BaseHookItem;
 import com.hicore.qtool.XPWork.PLInit;
 

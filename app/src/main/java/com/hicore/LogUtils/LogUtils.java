@@ -1,4 +1,4 @@
-package com.hicore.qtool.LogUtils;
+package com.hicore.LogUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
