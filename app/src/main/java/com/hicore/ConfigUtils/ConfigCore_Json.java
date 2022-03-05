@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ConfigCore_Json <V> implements ConfigCore{
+public class ConfigCore_Json implements ConfigCore{
     /*
     采用JSON的方式来储存信息,由于是多读少写的情况,应该不会有多大的性能损失
      */

@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project/QTool/app/src/main/res/drawable/btnclick.xml" value="0.1215" />
+        <entry key="..\:/Project/QTool/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1215" />
+        <entry key="..\:/Project/QTool/app/src/main/res/drawable/itemback.xml" value="0.1215" />
         <entry key="..\:/Project/QTool/app/src/main/res/layout/activity_main.xml" value="0.18931159420289856" />
       </map>
     </option>
