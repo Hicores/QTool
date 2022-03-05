@@ -12,4 +12,21 @@ public class DataUtils {
         while ((read = inp.read(buffer))!=-1)out.write(buffer,0,read);
         return out.toByteArray();
     }
+    public static byte[] HexToByteArray(String hex){
+        if(hex.length()%2!=0){
+            hex="0"+hex;
+        }
+        byte[] result=new byte[hex.length()/2];
+        for(int i=0;i<hex.length();i+=2){
+            result[i/2]=(byte)Integer.parseInt(hex.substring(i,i+2),16);
+        }
+        return result;
+    }
+    public static String ByteArrayToHex(byte[] bytes){
+        String result="";
+        for(byte b:bytes){
+            result=result+Integer.toHexString(b&0xff);
+        }
+        return result;
+    }
 }

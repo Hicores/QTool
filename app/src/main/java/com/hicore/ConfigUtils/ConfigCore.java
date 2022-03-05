@@ -15,9 +15,11 @@ public interface ConfigCore {
     long getLong(String PathName,String Key,long Def);
     void setLong(String PathName,String Key,long Value);
 
-    List getList(String PathName,String Key);
+    List getList(String PathName,String Key,boolean isCreate);
     void setList(String PathName,String Key,List Value);
 
     byte[] getBytes(String PathName,String Key);
     void setBytes(String PathName,String Key,byte[] Value);
+
+    String[] getKeys(String PathName);
 }
