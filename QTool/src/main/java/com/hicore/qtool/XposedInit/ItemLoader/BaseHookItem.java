@@ -1,4 +1,4 @@
-package com.hicore.qtool.XPWork;
+package com.hicore.qtool.XposedInit.ItemLoader;
 
 public abstract class BaseHookItem {
     public String getTag(){

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
-import com.hicore.qtool.XPWork.BaseHookItem;
 import com.hicore.qtool.XposedInit.HookEnv;
 
 import java.util.ArrayList;
