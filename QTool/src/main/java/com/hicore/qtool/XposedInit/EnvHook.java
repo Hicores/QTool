@@ -3,6 +3,7 @@ package com.hicore.qtool.XposedInit;
 import android.content.Context;
 
 import com.hicore.ReflectUtils.InjectRes;
+import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
