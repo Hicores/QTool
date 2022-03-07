@@ -7,7 +7,7 @@ public abstract class BaseHookItem {
     public boolean startHook(){
         return false;
     }
-    public boolean startDelayHook(){ return false;}
+    public boolean isEnable(){return false;}
     public String getErrorInfo(){
         return getTag()+"未继承getErrorInfo";
     }

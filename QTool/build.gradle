@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.hicore.qtool"
-        minSdk 24
+        minSdk 26
         targetSdk 26
         versionCode 1
         versionName "1.0"
@@ -50,5 +50,6 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82:sources'
 
     annotationProcessor project(':ItemProcesser')
+    implementation project(":ItemProcesser")
 
 }

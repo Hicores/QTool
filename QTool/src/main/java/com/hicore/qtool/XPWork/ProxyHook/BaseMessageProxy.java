@@ -1,9 +1,8 @@
-package com.hicore.qtool.XPWork;
-
+package com.hicore.qtool.XPWork.ProxyHook;
 
 import com.hicore.HookItem;
 
 @HookItem(isRunInAllProc = false,isDelayInit = false)
-public class TestAnno {
+public class BaseMessageProxy {
 
 }

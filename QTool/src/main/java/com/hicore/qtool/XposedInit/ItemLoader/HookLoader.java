@@ -3,59 +3,92 @@ package com.hicore.qtool.XposedInit.ItemLoader;
 import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
+import com.hicore.ReflectUtils.MField;
 import com.hicore.qtool.XPWork.BaseHookItem;
-import com.hicore.qtool.XPWork.PLInit;
 import com.hicore.qtool.XposedInit.HookEnv;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import dalvik.system.DexFile;
 
 public class HookLoader {
     private static final String TAG = "HookLoader";
     private static LinkedHashMap<String,BaseHookItem> loadHookInstances;
-    private static LinkedHashMap<String,PLInit> PLInitInstances;
+
+    private static ArrayList<String> BasicInit;
+    private static ArrayList<String> DelayInit;
+    private static ArrayList<String> runOnAllProc;
+    private static ArrayList<String> runOnMainProc;
+
+    private static HashMap<String,BaseHookItem> cacheHookInst = new HashMap<>();
+
     public static void SearchAndLoadAllHook(){
-        try {//从模块的Dex文件中搜索到所有Hook实例类并进行加载
-            DexFile dexFile = new DexFile(HookEnv.ToolApkPath);
-            ClassLoader mLoader = BaseHookItem.class.getClassLoader();
-            Enumeration classNames = dexFile.entries();
-            while (classNames.hasMoreElements()){
-                try{
-                    String clzName = (String) classNames.nextElement();
-                    if (clzName.startsWith(BaseHookItem.class.getPackage().getName())){
-                        Class clz = mLoader.loadClass(clzName);
-                        if (BaseHookItem.class.isAssignableFrom(clz)){
-                            LogUtils.debug(TAG,"Found hook instance class "+clzName+",try load it.");
-                            try{
-                                BaseHookItem item = (BaseHookItem) clz.newInstance();
-                                item.startHook();
-                                loadHookInstances.put(clzName,item);
-                                LogUtils.debug(TAG,"Load hook instance "+clzName+" success.");
-                            }catch (Throwable e){
-                                LogUtils.error(TAG,"Load hook instance "+clzName+" failed.");
-                            }
-                        }if (PLInit.class.isAssignableFrom(clz)){
-                            LogUtils.debug(TAG,"Found ConfInit instance class "+clzName+",try load it.");
-                            try{
-                                PLInit instance;
-                                if (loadHookInstances.containsValue(clzName)){
-                                    instance = (PLInit) loadHookInstances.get(clzName);
-                                }else {
-                                    instance = (PLInit) clz.newInstance();
-                                }
-                                instance.StartInit();
-                                LogUtils.debug(TAG,"Load ConfInit instance "+clzName+" success.");
-                            }catch (Throwable e){
-                                LogUtils.error(TAG,"Load ConfInit instance "+clzName+" failed.");
-                            }
-
-                        }
-
+        try {
+            ClassLoader mLoader = HookLoader.class.getClassLoader();
+            Class findClz = mLoader.loadClass("com.hicore.qtool.XposedInit.ItemLoader.MItemInfo");
+            BasicInit = MField.GetField(null,findClz,"BasicInit",ArrayList.class);
+            DelayInit = MField.GetField(null,findClz,"DelayInit",ArrayList.class);
+            runOnAllProc = MField.GetField(null,findClz,"runOnAllProc",ArrayList.class);
+            runOnMainProc = MField.GetField(null,findClz,"runOnMainProc",ArrayList.class);
+            for (String clzName : BasicInit){
+                if (!cacheHookInst.containsKey(clzName)){
+                    Class clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)){
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        cacheHookInst.put(clzName,mItem);
                     }
-                }catch (Exception e){ }
+                }
+            }
+            for (String clzName : DelayInit){
+                if (!cacheHookInst.containsKey(clzName)){
+                    Class clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)){
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        cacheHookInst.put(clzName,mItem);
+                    }
+                }
+            }
+            for (String clzName : runOnAllProc){
+                if (!cacheHookInst.containsKey(clzName)){
+                    Class clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)){
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        cacheHookInst.put(clzName,mItem);
+                    }
+                }
+            }
+            for (String clzName : runOnMainProc){
+                if (!cacheHookInst.containsKey(clzName)){
+                    Class clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)){
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        cacheHookInst.put(clzName,mItem);
+                    }
+                }
+            }
 
+            if (HookEnv.IsMainProcess){
+                for (String clzName : runOnMainProc){
+                    BaseHookItem item = cacheHookInst.get(clzName);
+                    if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                        item.startHook();
+                    }
+                }
+
+                for (String clzName : runOnAllProc){
+                    BaseHookItem item = cacheHookInst.get(clzName);
+                    if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                        item.startHook();
+                    }
+                }
+            }
+            else {
+                for (String clzName : runOnAllProc){
+                    BaseHookItem item = cacheHookInst.get(clzName);
+                    if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                        item.startHook();
+                    }
+                }
             }
 
         } catch (Throwable e) {
@@ -63,19 +96,27 @@ public class HookLoader {
         }
     }
     public static void CallAllDelayHook(){
-        for (BaseHookItem item : loadHookInstances.values()){
-            try{
-                item.startDelayHook();
-            }catch (Throwable th){
-                LogUtils.error(TAG,"Can't load DelayHook for clz:" + item.getClass().getName());
+        if (HookEnv.IsMainProcess){
+            for (String clzName : runOnMainProc){
+                BaseHookItem item = cacheHookInst.get(clzName);
+                if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                    item.startHook();
+                }
+            }
+
+            for (String clzName : runOnAllProc){
+                BaseHookItem item = cacheHookInst.get(clzName);
+                if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                    item.startHook();
+                }
             }
         }
-
-        for (PLInit item : PLInitInstances.values()){
-            try{
-                item.StartDelayInit();
-            }catch (Throwable th){
-                LogUtils.error(TAG,"Can't invoke PLInit for clz:" + item.getClass().getName());
+        else {
+            for (String clzName : runOnAllProc){
+                BaseHookItem item = cacheHookInst.get(clzName);
+                if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+                    item.startHook();
+                }
             }
         }
     }

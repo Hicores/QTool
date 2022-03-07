@@ -20,7 +20,7 @@
         <module name="QTool.ItemProcesser" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.7">
+    <bytecodeTargetLevel target="1.8">
       <module name="QTool.QTool" target="11" />
     </bytecodeTargetLevel>
   </component>
