@@ -5,10 +5,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class LogUtils {
-    private static boolean DebugMode = true;
     static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.CHINA);
     public static void debug(String Tag,String text){
-        if (!DebugMode)return;
         LogOutputFile.Print(LogOutputFile.LEVEL_DEBUG,"["+format.format(new Date())+"]"+Tag+":"+text);
     }
 

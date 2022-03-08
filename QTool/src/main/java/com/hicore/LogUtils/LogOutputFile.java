@@ -18,6 +18,8 @@ public class LogOutputFile {
     public static final int LEVEL_WARNING = 1 << 2;
     public static final int LEVEL_ERROR = 1 << 3;
     public static final int LEVEL_FETAL_ERROR = 1 << 4;
+
+    public static int Current_LEVEL = LEVEL_DEBUG;
     private BufferedWriter writer;
     private String LogPath;
     private AtomicInteger ErrCount = new AtomicInteger(-1);
@@ -44,12 +46,14 @@ public class LogOutputFile {
         if (CheckIsAvailable()){
             try {
                 writer.write(Text);
+                writer.flush();
             } catch (IOException e) {
                 XposedBridge.log(e);
             }
         }
     }
     public static void Print(int Level,String Text){
+        if (Level < Current_LEVEL)return;
         if (!instance.containsKey(Level))return;
         LogOutputFile out = instance.get(Level);
         out.print(Text);

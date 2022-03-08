@@ -3,6 +3,7 @@ package com.hicore.qtool.XposedInit;
 import android.content.Context;
 
 import com.hicore.HookUtils.XPBridge;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.InjectRes;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
@@ -12,6 +13,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 
 public class EnvHook {
+    private static final String TAG = "EnvHook";
     public static void HookForContext(){
         //由于很多环境的初始化都需要Context来进行,所有这里选择直接Hook获取Context再进行初始化
         XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
@@ -22,6 +24,7 @@ public class EnvHook {
                 //优先初始化Path
                 ExtraPathInit.InitPath();
                 //然后注入资源
+                LogUtils.debug(TAG,"Path Init Success");
                 InjectRes.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelayDialog();

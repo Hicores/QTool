@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.translation.UiTranslationStateCallback;
 
 import com.hicore.HookItem;
 import com.hicore.HookUtils.XPBridge;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.InjectRes;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
@@ -20,6 +22,7 @@ import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 public class DebugSetHook extends BaseHookItem {
+    private static final String TAG = "DEBUG_SET_INJECT_HOOK";
     @Override
     public String getTag() {
         return super.getTag();
@@ -32,11 +35,13 @@ public class DebugSetHook extends BaseHookItem {
             ViewGroup group = (ViewGroup) param.args[1];
             Context context = group.getContext();
             InjectRes.StartInject(context);
-            Utils.ShowToast(group.getContext().getString(R.string.TestResInject));
+
+            LogUtils.debug(TAG,String.valueOf(group));
+
+
         });
         return true;
     }
-
     @Override
     public boolean isEnable() {
         return true;
