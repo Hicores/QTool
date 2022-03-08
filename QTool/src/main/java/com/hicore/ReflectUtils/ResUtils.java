@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XposedBridge;
 
-public class InjectRes {
+public class ResUtils {
     public static void StartInject(Context ctx){
         try{
             try{
@@ -28,5 +28,13 @@ public class InjectRes {
             LogUtils.fetal_error("Inject_Res", Log.getStackTraceString(e));
         }
     }
+    public static boolean CheckResInject(Context context){
+        try{
+            return context.getResources().getString(R.string.TestResInject).contains("Success");
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 
 }

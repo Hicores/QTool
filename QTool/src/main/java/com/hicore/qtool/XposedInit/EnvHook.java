@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
-import com.hicore.ReflectUtils.InjectRes;
+import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
-import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -25,7 +24,7 @@ public class EnvHook {
                 ExtraPathInit.InitPath();
                 //然后注入资源
                 LogUtils.debug(TAG,"Path Init Success");
-                InjectRes.StartInject(HookEnv.AppContext);
+                ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelayDialog();
                 if (HookEnv.ExtraDataPath != null){

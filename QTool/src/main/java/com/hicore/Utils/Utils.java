@@ -5,11 +5,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.hicore.ReflectUtils.InjectRes;
+import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.qtool.XposedInit.HookEnv;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 public class Utils {
@@ -29,7 +28,7 @@ public class Utils {
                 boolean isPause = MField.GetField(activityRecord,"paused",boolean.class);
                 if (!isPause){
                     Activity act = MField.GetField(activityRecord,"activity");
-                    InjectRes.StartInject(act);
+                    ResUtils.StartInject(act);
                     return act;
                 }
             }

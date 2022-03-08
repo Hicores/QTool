@@ -14,7 +14,6 @@ import de.robv.android.xposed.XposedBridge;
 
 public class HookLoader {
     private static final String TAG = "HookLoader";
-    private static LinkedHashMap<String,BaseHookItem> loadHookInstances;
 
     private static ArrayList<String> BasicInit;
     private static ArrayList<String> DelayInit;
@@ -153,15 +152,20 @@ public class HookLoader {
     }
     public static ArrayList<CheckResult> CheckForItemsStatus(){
         ArrayList<CheckResult> result = new ArrayList<>();
-        for (String clzName : loadHookInstances.keySet()){
+        for (String clzName : cacheHookInst.keySet()){
             CheckResult subResult = new CheckResult();
             subResult.ClassName = clzName;
-            BaseHookItem item = loadHookInstances.get(clzName);
+            BaseHookItem item = cacheHookInst.get(clzName);
             if (item != null){
                 subResult.Name = item.getTag();
-                subResult.IsAvailable = item.check();
-                subResult.IsEnable = item.isEnable();
-                subResult.ErrorInfo = item.getErrorInfo();
+                try{
+                    subResult.IsAvailable = item.check();
+                    subResult.IsEnable = item.isEnable();
+                    subResult.ErrorInfo = item.getErrorInfo();
+                }catch (Throwable th){
+                    subResult.IsAvailable = false;
+                    subResult.ErrorInfo = th.toString();
+                }
                 result.add(subResult);
             }
         }

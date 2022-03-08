@@ -48,9 +48,9 @@ public class XPBridge {
         }));
     }
     public interface BeforeHook{
-        void onBefore(XC_MethodHook.MethodHookParam param);
+        void onBefore(XC_MethodHook.MethodHookParam param) throws Throwable;
     }
     public interface AfterHook{
-        void onAfter(XC_MethodHook.MethodHookParam param);
+        void onAfter(XC_MethodHook.MethodHookParam param) throws Throwable;
     }
 }
