@@ -3,11 +3,14 @@ package com.hicore.LogUtils;
 import com.hicore.qtool.XposedInit.HookEnv;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import de.robv.android.xposed.XposedBridge;
 
 public class LogOutputFile {
     public static final int LEVEL_DEBUG = 1;
@@ -23,6 +26,7 @@ public class LogOutputFile {
     private static HashMap<Integer,LogOutputFile> instance = new HashMap<>();
     static {
         //初始化日志保存的目录
+        if (!new File(HookEnv.ExtraDataPath + "Log/").exists()) new File(HookEnv.ExtraDataPath + "Log/").mkdirs();
         if (HookEnv.ExtraDataPath != null){
             instance.put(LEVEL_DEBUG, new LogOutputFile(HookEnv.ExtraDataPath + "Log/Debug.log"));
             instance.put(LEVEL_INFO,new LogOutputFile(HookEnv.ExtraDataPath + "Log/Info.log"));
@@ -40,7 +44,9 @@ public class LogOutputFile {
         if (CheckIsAvailable()){
             try {
                 writer.write(Text);
-            } catch (IOException e) { }
+            } catch (IOException e) {
+                XposedBridge.log(e);
+            }
         }
     }
     public static void Print(int Level,String Text){
@@ -53,12 +59,13 @@ public class LogOutputFile {
             if (ErrCount.get() > 10)return false;
             writer.newLine();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(LogPath)));
                 writer.newLine();
                 return true;
             } catch (IOException ioe) {
+                XposedBridge.log(ioe);
                 ErrCount.getAndIncrement();
                 return false;
             }

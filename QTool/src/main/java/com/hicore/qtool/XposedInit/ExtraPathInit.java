@@ -105,6 +105,7 @@ public class ExtraPathInit {
         fullScreenDialog.show();
     }
     public static void CheckAndSave(Activity mAct,Dialog dismissDialog,String Path){
+        if (Path.endsWith("/"))Path = Path.substring(0,Path.length()-1);
         new File(Path).mkdirs();
         if (!CheckPermission(Path)){
             if (ContextCompat.checkSelfPermission(mAct,"android.permission.WRITE_EXTERNAL_STORAGE")== PackageManager.PERMISSION_DENIED){

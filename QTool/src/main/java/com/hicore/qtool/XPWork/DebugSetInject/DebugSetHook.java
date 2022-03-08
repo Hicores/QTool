@@ -9,6 +9,7 @@ import com.hicore.HookUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.Utils.Utils;
+import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
@@ -26,7 +27,8 @@ public class DebugSetHook extends BaseHookItem {
     public boolean startHook() {
         Method hookMethod = getHookMethod();
         XPBridge.HookAfter(hookMethod,param ->{
-
+            ViewGroup group = (ViewGroup) param.args[1];
+            Utils.ShowToast(group.getContext().getString(R.string.TestResInject));
         });
         return true;
     }
