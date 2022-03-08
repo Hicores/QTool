@@ -27,6 +27,9 @@ QQ功能增强优化 免费开源软件 请勿倒卖或用于违法违禁行为"
         <meta-data
             android:name="xposedminversion"
             android:value="83" />
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/xposedscope" />
     </application>
 
 </manifest>

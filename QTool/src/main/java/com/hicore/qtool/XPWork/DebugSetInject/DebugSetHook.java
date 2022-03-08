@@ -8,12 +8,10 @@ import com.hicore.HookItem;
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
-
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 public class DebugSetHook extends BaseHookItem {
@@ -25,7 +23,9 @@ public class DebugSetHook extends BaseHookItem {
     @Override
     public boolean startHook() {
         Method hookMethod = getHookMethod();
-
+        XPBridge.HookAfter(hookMethod,param ->{
+            Utils.ShowTaost("Item Click");
+        });
         return super.startHook();
     }
 
