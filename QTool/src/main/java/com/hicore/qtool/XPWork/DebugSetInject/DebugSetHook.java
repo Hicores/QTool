@@ -41,6 +41,6 @@ public class DebugSetHook extends BaseHookItem {
         return super.isLoaded();
     }
     public Method getHookMethod(){
-        Method m = MMethod.FindMethod(MClass.loadClass(""))
+        return null;
     }
 }
