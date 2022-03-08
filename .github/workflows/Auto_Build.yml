@@ -29,4 +29,4 @@ jobs:
         if: ${{ !github.event.pull_request }}
         with:
           path: 'QTool/build/outputs/apk/release/*.apk'
-          name: QAuxiliary-release-${{ github.event.head_commit.id }}
+          name: QTool-release-${{ github.event.head_commit.id }}
