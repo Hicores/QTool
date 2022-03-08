@@ -119,4 +119,28 @@ public class HookLoader {
             }
         }
     }
+    public static ArrayList<CheckResult> CheckForItemsStatus(){
+        ArrayList<CheckResult> result = new ArrayList<>();
+        for (String clzName : loadHookInstances.keySet()){
+            CheckResult subResult = new CheckResult();
+            subResult.ClassName = clzName;
+            BaseHookItem item = loadHookInstances.get(clzName);
+            if (item != null){
+                subResult.Name = item.getTag();
+                subResult.IsAvailable = item.check();
+                subResult.IsEnable = item.isEnable();
+                subResult.ErrorInfo = item.getErrorInfo();
+                result.add(subResult);
+            }
+        }
+        return result;
+    }
+
+    public static class CheckResult{
+        public String Name;
+        public String ClassName;
+        public boolean IsAvailable;
+        public boolean IsEnable;
+        public String ErrorInfo;
+    }
 }

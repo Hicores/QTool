@@ -1,10 +1,6 @@
 package com.hicore.qtool.XPWork.DebugSetInject;
 
-import android.content.IntentFilter;
-
 import com.hicore.HookItem;
-import com.hicore.ReflectUtils.MClass;
-import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
