@@ -25,7 +25,6 @@ public class InjectRes {
                 m.invoke(manager,HookEnv.ToolApkPath);
             }
         }catch (Exception e){
-            XposedBridge.log(e);
             LogUtils.fetal_error("Inject_Res", Log.getStackTraceString(e));
         }
     }

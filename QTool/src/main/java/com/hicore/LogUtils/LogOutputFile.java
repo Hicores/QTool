@@ -61,7 +61,8 @@ public class LogOutputFile {
             return true;
         } catch (Exception e) {
             try {
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(LogPath)));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(LogPath,true)));
+
                 writer.newLine();
                 return true;
             } catch (IOException ioe) {
