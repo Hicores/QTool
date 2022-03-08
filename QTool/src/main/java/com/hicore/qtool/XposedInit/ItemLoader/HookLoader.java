@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import de.robv.android.xposed.XposedBridge;
+
 public class HookLoader {
     private static final String TAG = "HookLoader";
     private static LinkedHashMap<String,BaseHookItem> loadHookInstances;
@@ -70,14 +72,23 @@ public class HookLoader {
                 for (String clzName : runOnMainProc){
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                        item.startHook();
+                        try{
+                            item.startHook();
+                        }catch (Throwable th){
+                            LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                        }
+
                     }
                 }
 
                 for (String clzName : runOnAllProc){
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                        item.startHook();
+                        try{
+                            item.startHook();
+                        }catch (Throwable th){
+                            LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                        }
                     }
                 }
             }
@@ -85,7 +96,11 @@ public class HookLoader {
                 for (String clzName : runOnAllProc){
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                        item.startHook();
+                        try{
+                            item.startHook();
+                        }catch (Throwable th){
+                            LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                        }
                     }
                 }
             }
@@ -99,14 +114,22 @@ public class HookLoader {
             for (String clzName : runOnMainProc){
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                    item.startHook();
+                    try{
+                        item.startHook();
+                    }catch (Throwable th){
+                        LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                    }
                 }
             }
 
             for (String clzName : runOnAllProc){
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                    item.startHook();
+                    try{
+                        item.startHook();
+                    }catch (Throwable th){
+                        LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                    }
                 }
             }
         }
@@ -114,7 +137,11 @@ public class HookLoader {
             for (String clzName : runOnAllProc){
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
-                    item.startHook();
+                    try{
+                        item.startHook();
+                    }catch (Throwable th){
+                        LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
+                    }
                 }
             }
         }

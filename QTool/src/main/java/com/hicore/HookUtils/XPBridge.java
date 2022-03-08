@@ -19,8 +19,8 @@ public class XPBridge {
     public static void HookAfter(Method m,AfterHook after){
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
                 after.onAfter(param);
             }
         });
@@ -40,8 +40,8 @@ public class XPBridge {
         AtomicReference<XC_MethodHook.Unhook> cacheUnHook = new AtomicReference<>();
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
                 after.onAfter(param);
                 cacheUnHook.get().unhook();
             }

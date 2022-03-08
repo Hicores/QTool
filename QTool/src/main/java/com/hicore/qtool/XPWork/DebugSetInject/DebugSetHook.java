@@ -13,6 +13,8 @@ import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
 
+import de.robv.android.xposed.XposedBridge;
+
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 public class DebugSetHook extends BaseHookItem {
     @Override
@@ -24,14 +26,14 @@ public class DebugSetHook extends BaseHookItem {
     public boolean startHook() {
         Method hookMethod = getHookMethod();
         XPBridge.HookAfter(hookMethod,param ->{
-            Utils.ShowTaost("Item Click");
+
         });
-        return super.startHook();
+        return true;
     }
 
     @Override
     public boolean isEnable() {
-        return super.isEnable();
+        return true;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class DebugSetHook extends BaseHookItem {
         Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.settings.message.AssistantSettingFragment"),
                 "doOnCreateView",void.class,new Class[]{
                         LayoutInflater.class, ViewGroup.class, Bundle.class
-                });
+        });
         return m;
     }
 }

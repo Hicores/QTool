@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class MClass {
-    private static HashMap<String,Class> clzMap;
+    private static HashMap<String,Class> clzMap = new HashMap<>();
     public static Class loadClass(String ClassName){
         Class clz = clzMap.get(ClassName);
         if (clz != null)return clz;
