@@ -1,11 +1,13 @@
 package com.hicore.qtool.XPWork.DebugSetInject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.hicore.HookItem;
 import com.hicore.HookUtils.XPBridge;
+import com.hicore.ReflectUtils.InjectRes;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.Utils.Utils;
@@ -28,6 +30,8 @@ public class DebugSetHook extends BaseHookItem {
         Method hookMethod = getHookMethod();
         XPBridge.HookAfter(hookMethod,param ->{
             ViewGroup group = (ViewGroup) param.args[1];
+            Context context = group.getContext();
+            InjectRes.StartInject(context);
             Utils.ShowToast(group.getContext().getString(R.string.TestResInject));
         });
         return true;

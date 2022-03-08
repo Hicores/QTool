@@ -33,7 +33,7 @@ android {
         additionalParameters += '--minimal-main-dex'
     }
     aaptOptions {
-        additionalParameters '--allow-reserved-package-id','--package-id','0x55'
+        additionalParameters '--allow-reserved-package-id','--package-id','0x48'
     }
 }
 

@@ -22,7 +22,7 @@ public class EnvHook {
                 //优先初始化Path
                 ExtraPathInit.InitPath();
                 //然后注入资源
-                InjectRes.StartInject(HookEnv.ToolApkPath);
+                InjectRes.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelayDialog();
                 if (HookEnv.ExtraDataPath != null){
