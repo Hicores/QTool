@@ -39,6 +39,21 @@ public class MField {
     public static <T> T GetField(Object CheckObj,String FieldName,Class FieldType)throws Exception{
         return GetField(CheckObj,CheckObj.getClass(),FieldName,FieldType);
     }
+    public static <T> T GetStaticField(Class clz,String FieldName){
+        try{
+            Class checkClz = clz;
+            while (checkClz != null){
+                for (Field f : clz.getDeclaredFields()){
+                    if (f.getName().equals(FieldName)){
+                        f.setAccessible(true);
+                        return (T) f.get(null);
+                    }
+                }
+                checkClz = checkClz.getSuperclass();
+            }
+        }catch (Exception e){ }
+        throw new RuntimeException("Can't find field "+ FieldName+" in class "+clz.getName());
+    }
     public static void SetField(Object CheckObj,Class CheckClass,String FieldName,Class FieldClass,Object Value)throws Exception{
         StringBuilder builder = new StringBuilder();
         builder.append(CheckClass.getName()).append(":").append(FieldName).append("(").append(FieldClass.getName()).append(")");
