@@ -27,14 +27,9 @@
 
 package bsh.classpath;
 
-import java.io.*;
-import java.io.File;
 import java.util.*;
-import java.awt.*;
 import bsh.BshClassManager;
 import bsh.classpath.BshClassPath.ClassSource;
-import bsh.classpath.BshClassPath.DirClassSource;
-import bsh.classpath.BshClassPath.GeneratedClassSource;
 
 /**
 	A classloader which can load one or more classes from specified sources.
