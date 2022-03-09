@@ -7,24 +7,26 @@
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/selectLocal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="本地脚本"></Button>
+            android:text="本地脚本" />
+
         <Button
             android:id="@+id/selectOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="在线脚本"></Button>
+            android:text="在线脚本" />
 
         <Button
             android:id="@+id/openDebugTool"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="脚本调试"></Button>
+            android:text="编写说明" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ContainLayout"
@@ -33,7 +35,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@+id/TopToolBar">
-
     </LinearLayout>
 
 </RelativeLayout>

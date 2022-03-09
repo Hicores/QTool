@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@drawable/menu_item_base"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/infoBar"
+        android:orientation="vertical">
+
+        <TextView
+            android:singleLine="true"
+            android:id="@+id/plugin_title_online"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="这是标题.Java"
+            android:textColor="#5B00AE"
+            android:textSize="24dp" />
+
+        <TextView
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plugin_uploader"
+            android:text="上传者:小菜豆(1071791)"
+            android:textSize="9dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plugin_download_count"
+            android:text="下载次数:114514次"
+            android:textSize="9dp" />
+
+        <TextView
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plugin_version_online"
+            android:text="版本号:14.38.250"
+            android:textSize="9dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:id="@+id/HideBar_Online"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/infoBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/plugin_upload_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            android:text="上传时间:2077-13-32 16:18:22" />
+
+        <TextView
+            android:id="@+id/plugin_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            android:text="脚本大小:114.514GB" />
+
+        <TextView
+            android:id="@+id/plugin_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="9dp"
+            android:text="描述:嗯嗯嗯呃啊啊嗯嗯" />
+        <LinearLayout
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/plugin_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下载该脚本" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
