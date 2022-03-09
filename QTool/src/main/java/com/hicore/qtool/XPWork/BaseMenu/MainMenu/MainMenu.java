@@ -41,16 +41,7 @@ public class MainMenu extends Activity {
             ResUtils.StartInject(this);
             setTheme(R.style.Theme_QTool);
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-
-            new XPopup.Builder(this).asConfirm("测试标题", "测试",
-                    new OnConfirmListener() {
-                        @Override
-                        public void onConfirm() {
-                            Utils.ShowToast("click confirm");
-                        }
-                    })
-                    .show();
+            setContentView(R.layout.main_menu);
         }catch (Exception e){
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
