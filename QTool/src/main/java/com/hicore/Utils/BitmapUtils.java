@@ -1,8 +1,36 @@
 package com.hicore.Utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+
 public class BitmapUtils {
+    //    把本地图片毛玻璃化
+    public static Bitmap toBlur(Bitmap originBitmap, int scaleRatio) {
+        //        int scaleRatio = 10;
+        // 增大scaleRatio缩放比，使用一样更小的bitmap去虚化可以到更好的得模糊效果，而且有利于占用内存的减小；
+        int blurRadius = 8;//通常设置为8就行。
+        //增大blurRadius，可以得到更高程度的虚化，不过会导致CPU更加intensive
+
+       /* 其中前三个参数很明显，其中宽高我们可以选择为原图尺寸的1/10；
+        第四个filter是指缩放的效果，filter为true则会得到一个边缘平滑的bitmap，
+        反之，则会得到边缘锯齿、pixelrelated的bitmap。
+        这里我们要对缩放的图片进行虚化，所以无所谓边缘效果，filter=false。*/
+        if (scaleRatio <= 0) {
+            scaleRatio = 10;
+        }
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(originBitmap,
+                originBitmap.getWidth() / scaleRatio,
+                originBitmap.getHeight() / scaleRatio,
+                false);
+        Bitmap blurBitmap = doBlur(scaledBitmap, blurRadius, true);
+        return blurBitmap;
+    }
+
     public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
 
         // Stack Blur v1.0 from

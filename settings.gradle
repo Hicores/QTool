@@ -5,6 +5,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
         maven { url "https://jitpack.io" }
+        maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
     }
 }
 rootProject.name = "QTool"

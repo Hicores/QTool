@@ -11,7 +11,6 @@ public class XPBridge {
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
                 before.onBefore(param);
             }
         });
@@ -20,7 +19,6 @@ public class XPBridge {
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
                 after.onAfter(param);
             }
         });
@@ -30,7 +28,6 @@ public class XPBridge {
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
                 before.onBefore(param);
                 cacheUnHook.get().unhook();
             }
@@ -41,7 +38,6 @@ public class XPBridge {
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                super.afterHookedMethod(param);
                 after.onAfter(param);
                 cacheUnHook.get().unhook();
             }

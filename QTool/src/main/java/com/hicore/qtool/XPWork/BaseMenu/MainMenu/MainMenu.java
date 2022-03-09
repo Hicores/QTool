@@ -16,15 +16,11 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.Utils.BitmapUtils;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.R;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 public class MainMenu extends Activity {
     private static final String TAG = "MainActivityProxy";
@@ -55,7 +51,7 @@ public class MainMenu extends Activity {
 
             LinearLayout mRoot = findViewById(R.id.sRoot_);
 
-            mRoot.setBackground(new BitmapDrawable(null,BitmapUtils.doBlur(BitmapFactory.decodeResource(getResources(),R.drawable.def_bg),96,false)));
+            mRoot.setBackground(new BitmapDrawable(null,BitmapUtils.toBlur(BitmapFactory.decodeResource(getResources(),R.drawable.def_bg),24)));
             //mRoot.setBackground(new BitmapDrawable(null,BitmapFactory.decodeResource(getResources(),R.drawable.def_bg)));
 
         }catch (Exception e){
