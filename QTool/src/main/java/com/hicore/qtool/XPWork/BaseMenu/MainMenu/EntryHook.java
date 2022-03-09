@@ -28,7 +28,6 @@ public class EntryHook extends BaseHookItem {
 
     @Override
     public boolean startHook() {
-        Utils.ShowToast("Start Hook");
         Method m = getHookMethod();
         XPBridge.HookAfter(m,param -> {
             try{
@@ -39,7 +38,7 @@ public class EntryHook extends BaseHookItem {
                 ViewGroup mRoot = (ViewGroup) item.getParent();
 
                 mRoot.addView(FormItemUtils.createMultiItem(act,"QTool",BuildConfig.VERSION_NAME,v->{
-                    Utils.ShowToast("Click");
+                    MainMenu.createActivity(act);
                 }));
             }catch (Exception e){
 

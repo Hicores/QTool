@@ -175,6 +175,13 @@ public class HookLoader {
         }
         return result;
     }
+    public static void CallHookStart(String ClzName){
+        BaseHookItem item = cacheHookInst.get(ClzName);
+        if (!item.isLoaded()){
+            item.setTryLoad();
+            item.setLoad(item.startHook());
+        }
+    }
 
     public static class CheckResult{
         public String Name;

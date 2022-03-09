@@ -1,11 +1,16 @@
 package com.hicore.qtool.XposedInit;
 
+import static com.hicore.qtool.HookEnv.moduleLoader;
+
+import android.app.AndroidAppHelper;
 import android.content.Context;
 
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
@@ -30,16 +35,19 @@ public class EnvHook {
                     LogUtils.debug(TAG,"Init from FixSubClassLoade");
                     HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
                 }
+                moduleLoader = EnvHook.class.getClassLoader();
                 //优先初始化Path
                 ExtraPathInit.InitPath();
 
-
                 //然后注入资源
                 LogUtils.debug(TAG,"BaseHook Start");
+                EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext,false,true);
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
+
                 HookForDelayDialog();
                 if (HookEnv.ExtraDataPath != null){
+                    InitActivityProxy();
                     //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
                     HookLoader.SearchAndLoadAllHook();
                 }
@@ -47,6 +55,10 @@ public class EnvHook {
 
             }
         });
+    }
+    private static void InitActivityProxy(){
+        EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.photo.CameraPreviewActivity", moduleLoader, HookEnv.mLoader);
+        EzXHelperInit.INSTANCE.initSubActivity();
     }
     private static void HookForDelayDialog(){
         XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {

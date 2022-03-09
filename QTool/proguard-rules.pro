@@ -23,6 +23,7 @@
 -keep class com.android.** {*;}
 -keep class org.** { *; }
 -keep class bsh.** { *; }
+-keep class com.github.**{*;}
 
 
 -keepclassmembers enum * {

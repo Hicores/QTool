@@ -10,6 +10,8 @@ import com.hicore.qtool.XposedInit.HookEntry;
 public class HookEnv {
     public static ClassLoader mLoader;
     public static HookEntry.FixSubClassLoader fixLoader;
+    public static ClassLoader moduleLoader;
+
     public static String ProcessName;
 
     public static String ExtraDataPath;
