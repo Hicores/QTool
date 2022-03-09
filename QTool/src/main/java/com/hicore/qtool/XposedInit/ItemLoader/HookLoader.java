@@ -74,7 +74,8 @@ public class HookLoader {
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
                         try{
-                            item.startHook();
+                            item.setTryLoad();
+                            item.setLoad(item.startHook());
                         }catch (Throwable th){
                             LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                         }
@@ -86,7 +87,8 @@ public class HookLoader {
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
                         try{
-                            item.startHook();
+                            item.setTryLoad();
+                            item.setLoad(item.startHook());
                         }catch (Throwable th){
                             LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                         }
@@ -97,8 +99,10 @@ public class HookLoader {
                 for (String clzName : runOnAllProc){
                     BaseHookItem item = cacheHookInst.get(clzName);
                     if (BasicInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
+
                         try{
-                            item.startHook();
+                            item.setTryLoad();
+                            item.setLoad(item.startHook());
                         }catch (Throwable th){
                             LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                         }
@@ -116,7 +120,8 @@ public class HookLoader {
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
                     try{
-                        item.startHook();
+                        item.setTryLoad();
+                        item.setLoad(item.startHook());
                     }catch (Throwable th){
                         LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                     }
@@ -127,7 +132,8 @@ public class HookLoader {
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
                     try{
-                        item.startHook();
+                        item.setTryLoad();
+                        item.setLoad(item.startHook());
                     }catch (Throwable th){
                         LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                     }
@@ -139,7 +145,8 @@ public class HookLoader {
                 BaseHookItem item = cacheHookInst.get(clzName);
                 if (DelayInit.contains(clzName) && item != null && item.isEnable() && !item.isLoaded()){
                     try{
-                        item.startHook();
+                        item.setTryLoad();
+                        item.setLoad(item.startHook());
                     }catch (Throwable th){
                         LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                     }

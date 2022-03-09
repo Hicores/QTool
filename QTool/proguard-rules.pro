@@ -34,3 +34,4 @@
   public static final android.os.Parcelable$Creator *;
 }
 -keep class * implements java.io.Serializable { *; }
+-keep class * extends com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { *; }

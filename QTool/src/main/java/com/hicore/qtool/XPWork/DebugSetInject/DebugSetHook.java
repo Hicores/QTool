@@ -42,7 +42,7 @@ public class DebugSetHook extends BaseHookItem {
             ResUtils.StartInject(context);
             View oneItem = MField.GetFirstField(param.thisObject,MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"));
             LinearLayout parent = (LinearLayout) oneItem.getParent();
-            parent.addView(FormItemUtils.createListItem(context,"QTool基础设置",v->{
+            parent.addView(FormItemUtils.createSingleItem(context,"QTool基础设置", v->{
                 Dialog fullScreen = new Dialog(context,3);
                 LinearLayout mRoot = new LinearLayout(context);
                 mRoot.setOrientation(LinearLayout.VERTICAL);
@@ -96,10 +96,6 @@ public class DebugSetHook extends BaseHookItem {
         return getHookMethod() != null;
     }
 
-    @Override
-    public boolean isLoaded() {
-        return super.isLoaded();
-    }
     public Method getHookMethod(){
         Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.settings.message.AssistantSettingFragment"),
                 "doOnCreateView",void.class,new Class[]{
