@@ -16,6 +16,9 @@ android {
 
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -54,6 +57,5 @@ dependencies {
 
     implementation 'com.github.kyuubiran:EzXHelper:0.7.2'
     implementation 'com.github.li-xiaojun:XPopup:2.7.6'
-    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 
 }

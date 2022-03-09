@@ -25,6 +25,7 @@
 -keep class bsh.** { *; }
 -keep class com.github.**{*;}
 -keep class androidx.**{*;}
+-keep class androidx.renderscript.** { *; }
 
 
 -keepclassmembers enum * {
