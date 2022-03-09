@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MField;
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 import java.util.Map;
 

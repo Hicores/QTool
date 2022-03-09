@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.hicore.ConfigUtils.GlobalConfig;
 import com.hicore.Utils.Utils;
+import com.hicore.qtool.HookEnv;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,11 +2,11 @@ package com.hicore.qtool.XposedInit;
 
 import android.content.Context;
 
-import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -24,6 +24,12 @@ public class EnvHook {
 
                 //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                 HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
+
+                ClassLoader fixLoader = EnvHook.class.getClassLoader().getParent();
+                if (fixLoader instanceof HookEntry.FixSubClassLoader){
+                    LogUtils.debug(TAG,"Init from FixSubClassLoade");
+                    HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
+                }
                 //优先初始化Path
                 ExtraPathInit.InitPath();
 

@@ -1,14 +1,15 @@
-package com.hicore.qtool.XposedInit;
+package com.hicore.qtool;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
 
 import com.hicore.ConfigUtils.ConfigCore;
+import com.hicore.qtool.XposedInit.HookEntry;
 
 public class HookEnv {
     public static ClassLoader mLoader;
+    public static HookEntry.FixSubClassLoader fixLoader;
     public static String ProcessName;
 
     public static String ExtraDataPath;

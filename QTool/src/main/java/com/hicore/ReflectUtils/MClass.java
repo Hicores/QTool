@@ -1,10 +1,9 @@
 package com.hicore.ReflectUtils;
 
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class MClass {

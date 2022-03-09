@@ -4,13 +4,10 @@ import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import de.robv.android.xposed.XposedBridge;
 
 public class HookLoader {
     private static final String TAG = "HookLoader";

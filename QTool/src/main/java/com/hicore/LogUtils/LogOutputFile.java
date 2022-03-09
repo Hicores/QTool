@@ -1,6 +1,6 @@
 package com.hicore.LogUtils;
 
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 import java.io.BufferedWriter;
 import java.io.File;

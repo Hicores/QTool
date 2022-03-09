@@ -1,8 +1,8 @@
 package com.hicore.qtool.XposedInit;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
-import com.hicore.ReflectUtils.MClass;
 import com.hicore.Utils.DataUtils;
+import com.hicore.qtool.HookEnv;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,7 +64,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     public void initZygote(StartupParam startupParam) throws Throwable {
         cacheParam = startupParam;
     }
-    private static class FixSubClassLoader extends ClassLoader{
+    public static class FixSubClassLoader extends ClassLoader{
         ClassLoader parentLoader;
         ClassLoader childLoader;
         Method findClass;

@@ -1,18 +1,11 @@
 package com.hicore.ReflectUtils;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.qtool.R;
-import com.hicore.qtool.XposedInit.HookEnv;
-
-import java.lang.reflect.Method;
-
-import de.robv.android.xposed.XposedBridge;
 
 public class ResUtils {
     public static void StartInject(Context ctx){

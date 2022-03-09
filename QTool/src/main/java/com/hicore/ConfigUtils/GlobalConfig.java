@@ -2,7 +2,7 @@ package com.hicore.ConfigUtils;
 
 import android.content.SharedPreferences;
 
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 public class GlobalConfig {
     private static String TAG = "QTool";

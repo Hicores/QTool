@@ -1,8 +1,6 @@
 package com.hicore.ConfigUtils;
 
-import android.view.View;
-
-import com.hicore.qtool.XposedInit.HookEnv;
+import com.hicore.qtool.HookEnv;
 
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
