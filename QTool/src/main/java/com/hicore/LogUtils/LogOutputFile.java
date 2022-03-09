@@ -62,12 +62,14 @@ public class LogOutputFile {
         try {
             if (ErrCount.get() > 10)return false;
             writer.newLine();
+            writer.flush();
             return true;
         } catch (Exception e) {
             try {
                 writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(LogPath,true)));
 
                 writer.newLine();
+                writer.flush();
                 return true;
             } catch (IOException ioe) {
                 XposedBridge.log(ioe);
