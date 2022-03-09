@@ -22,11 +22,3 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew :QTool:assembleRelease
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        # don't upload the artifacts if it's a pull request
-        if: ${{ !github.event.pull_request }}
-        with:
-          path: 'QTool/build/outputs/apk/release/*.apk'
-          name: QTool-release-${{ github.event.head_commit.id }}
