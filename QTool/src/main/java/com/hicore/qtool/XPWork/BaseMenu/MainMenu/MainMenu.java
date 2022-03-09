@@ -54,7 +54,7 @@ public class MainMenu extends Activity {
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        try{
+        try {
             ResUtils.StartInject(this);
             setTheme(R.style.AnimActivity);
             super.onCreate(savedInstanceState);
@@ -64,24 +64,29 @@ public class MainMenu extends Activity {
             setContentView(R.layout.main_menu);
 
             LinearLayout mRoot = findViewById(R.id.sRoot_);
-            mRoot.setBackground(new BitmapDrawable(null,map));
+            mRoot.setBackground(new BitmapDrawable(null, map));
             blurRoot = findViewById(R.id.BlurContain);
-            blurRoot.setBackground(new BitmapDrawable(null,BitmapUtils.toBlur(map,10)));
-            blurRoot.startAnimation(AnimationUtils.loadAnimation(this,R.anim.anim_fade_out));
-        }catch (Exception e){
+            blurRoot.setBackground(new BitmapDrawable(null, BitmapUtils.toBlur(map, 10)));
+            blurRoot.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_out));
+        } catch (Exception e) {
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
     }
-
+    private boolean IsBacking = false;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (IsBacking)return true;
         if (keyCode == KeyEvent.KEYCODE_BACK){
             Animation anim = AnimationUtils.loadAnimation(this,R.anim.anim_fade_in);
             anim.setFillAfter(true);
             blurRoot.startAnimation(anim);
+            IsBacking = true;
 
             new Handler(Looper.getMainLooper())
-                    .postDelayed(this::finish,600);
+                    .postDelayed(()->{
+                        IsBacking = false;
+                        finish();
+                    },600);
             return true;
         }
         return super.onKeyDown(keyCode, event);
