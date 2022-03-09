@@ -141,7 +141,4 @@
                 android:text="https://github.com/Hicores/QTool"></TextView>
         </LinearLayout>
     </LinearLayout>
-
-
-
 </LinearLayout>
