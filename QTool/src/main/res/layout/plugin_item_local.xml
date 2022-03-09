@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@drawable/menu_item_base"
+    android:layout_height="wrap_content">
+
+</RelativeLayout>
