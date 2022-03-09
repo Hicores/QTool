@@ -87,30 +87,13 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         }
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
-            try{
-                if (childLoader != null){
-                    Class clz = (Class) findClass.invoke(childLoader,name);
-                    if (clz != null){
-                        return clz;
-                    }
-                }
-
-            }catch (Exception notFound){
-                try{
-                    if (parentLoader != null){
-                        Class clz = parentLoader.loadClass(name);
-                        if (clz != null){
-                            return clz;
-                        }
-                    }
-                }catch (Exception e){
-
-                }
-            }
-            return hostLoader.loadClass(name);
+            return tryLoad(name);
         }
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            return tryLoad(name);
+        }
+        private Class tryLoad(String name)throws ClassNotFoundException{
             try{
                 if (childLoader != null){
                     Class clz = (Class) findClass.invoke(childLoader,name);
@@ -127,9 +110,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                             return clz;
                         }
                     }
-                }catch (Exception e){
-
-                }
+                }catch (Exception e){ }
             }
             return hostLoader.loadClass(name);
         }
