@@ -2,6 +2,7 @@ package com.hicore.qtool.XposedInit;
 
 import android.content.Context;
 
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
@@ -20,10 +21,15 @@ public class EnvHook {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 HookEnv.AppContext = (Context) param.args[0];
+
+                //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
+                HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
                 //优先初始化Path
                 ExtraPathInit.InitPath();
+
+
                 //然后注入资源
-                LogUtils.debug(TAG,"Path Init Success");
+                LogUtils.debug(TAG,"BaseHook Start");
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelayDialog();
@@ -31,14 +37,17 @@ public class EnvHook {
                     //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
                     HookLoader.SearchAndLoadAllHook();
                 }
+                LogUtils.debug(TAG,"BaseHook End");
 
             }
         });
     }
     private static void HookForDelayDialog(){
         XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {
+            LogUtils.debug(TAG,"DelayHook Start");
             if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog();
             else HookLoader.CallAllDelayHook();
+            LogUtils.debug(TAG,"DelayHook End");
         });
     }
 }

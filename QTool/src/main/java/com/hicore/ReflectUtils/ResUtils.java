@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.HookEnv;
@@ -19,10 +20,7 @@ public class ResUtils {
             try{
                 ctx.getResources().getString(R.string.TestResInject);
             }catch (Exception e){
-                AssetManager manager = ctx.getResources().getAssets();
-                Method m = manager.getClass().getDeclaredMethod("addAssetPath",String.class);
-                m.setAccessible(true);
-                m.invoke(manager,HookEnv.ToolApkPath);
+                EzXHelperInit.INSTANCE.addModuleAssetPath(ctx);
             }
         }catch (Exception e){
             LogUtils.fetal_error("Inject_Res", Log.getStackTraceString(e));

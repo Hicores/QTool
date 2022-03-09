@@ -12,12 +12,19 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled false
+
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,9 +35,6 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         preDexLibraries = false
-        additionalParameters += '--multi-dex'
-        additionalParameters += '--set-max-idx-number=35000'
-        additionalParameters += '--minimal-main-dex'
     }
     aaptOptions {
         additionalParameters '--allow-reserved-package-id','--package-id','0x48'
@@ -51,5 +55,7 @@ dependencies {
 
     annotationProcessor project(':ItemProcesser')
     implementation project(":ItemProcesser")
+
+    implementation 'com.github.kyuubiran:EzXHelper:0.7.2'
 
 }
