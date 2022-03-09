@@ -1,9 +1,17 @@
 package com.hicore.qtool.XposedInit;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
+import com.hicore.ReflectUtils.MClass;
+import com.hicore.Utils.DataUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import dalvik.system.InMemoryDexClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XposedBridge;
@@ -17,8 +25,38 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             XposedBridge.log("[QTool]initZygote may not be invoke, please check your Xposed Framework!");
             return;
         }
-        String ModelPath = cacheParam.modulePath;
 
+        //强行修补类加载器,防止部分框架把模块类加载器整合到QQ的类加载器中导致部分同名模块加载错误
+        boolean isUseDefLoadMode = new File(lpparam.appInfo.dataDir+"/def").exists();
+        if (isUseDefLoadMode){
+            FixSubLoadClass.loadZygote(cacheParam);
+            FixSubLoadClass.loadPackage(lpparam);
+        }else {
+            byte[] dexBuffer = null;
+            ZipInputStream zInp = new ZipInputStream(new FileInputStream(cacheParam.modulePath));
+            ZipEntry entry;
+            while ((entry = zInp.getNextEntry()) != null){
+                if (entry.getName().equals("classes.dex")){
+                    dexBuffer = DataUtils.readAllBytes(zInp);
+                    zInp.close();
+                    break;
+                }
+            }
+            if (dexBuffer != null && dexBuffer[0] == 'd' && dexBuffer[1] == 'e'&& dexBuffer[2] == 'x'){
+                FixSubClassLoader subLoader = new FixSubClassLoader(HookEntry.class.getClassLoader());
+                InMemoryDexClassLoader memoryLoader = new InMemoryDexClassLoader(ByteBuffer.wrap(dexBuffer),subLoader);
+                subLoader.setChild(memoryLoader);
+
+                Class<?> clzEntry = memoryLoader.loadClass("com.hicore.qtool.XposedInit.HookEntry$FixSubLoadClass");
+                Method m = clzEntry.getMethod("loadZygote",subLoader.loadClass("de.robv.android.xposed.IXposedHookZygoteInit$StartupParam"));
+                m.invoke(null,cacheParam);
+                m = clzEntry.getDeclaredMethod("loadPackage",subLoader.loadClass("de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam"));
+                m.invoke(null,lpparam);
+            }else {
+                FixSubLoadClass.loadZygote(cacheParam);
+                FixSubLoadClass.loadPackage(lpparam);
+            }
+        }
 
 
     }
@@ -29,9 +67,13 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     private static class FixSubClassLoader extends ClassLoader{
         ClassLoader parentLoader;
         ClassLoader childLoader;
-
         Method findClass;
-        {
+        protected FixSubClassLoader(ClassLoader parent) {
+            super(parent);
+            parentLoader = parent;
+        }
+        private void setChild(ClassLoader child){
+            childLoader = child;
             try {
                 findClass = childLoader.getClass().getDeclaredMethod("findClass", String.class);
                 findClass.setAccessible(true);
@@ -39,21 +81,16 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 e.printStackTrace();
             }
         }
-
-        protected FixSubClassLoader(ClassLoader parent,ClassLoader child) {
-            super(parent);
-            parentLoader = parent;
-            childLoader = child;
-        }
-
-
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             try{
-                Class clz = (Class) findClass.invoke(childLoader,name);
-                if (clz != null){
-                    return clz;
+                if (childLoader != null){
+                    Class clz = (Class) findClass.invoke(childLoader,name);
+                    if (clz != null){
+                        return clz;
+                    }
                 }
+
             }catch (Exception notFound){
 
             }
@@ -62,9 +99,11 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             try{
-                Class clz = (Class) findClass.invoke(childLoader,name);
-                if (clz != null){
-                    return clz;
+                if (childLoader != null){
+                    Class clz = (Class) findClass.invoke(childLoader,name);
+                    if (clz != null){
+                        return clz;
+                    }
                 }
             }catch (Exception notFound){ }
             return super.loadClass(name, resolve);
