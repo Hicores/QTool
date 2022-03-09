@@ -1,6 +1,7 @@
 package com.hicore.qtool.XPWork.BaseMenu.MainMenu;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.R;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 public class MainMenu extends Activity {
     private static final String TAG = "MainActivityProxy";
@@ -30,6 +33,7 @@ public class MainMenu extends Activity {
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
 
+
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,12 +43,14 @@ public class MainMenu extends Activity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle("测试Dialog")
-                    .setMessage("ceshi")
-                    .setNegativeButton("测试", (dialog, which) -> {
-                        Utils.ShowToast("你点击了测试");
-                    }).show();
+            new XPopup.Builder(this).asConfirm("测试标题", "测试",
+                    new OnConfirmListener() {
+                        @Override
+                        public void onConfirm() {
+                            Utils.ShowToast("click confirm");
+                        }
+                    })
+                    .show();
         }catch (Exception e){
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }

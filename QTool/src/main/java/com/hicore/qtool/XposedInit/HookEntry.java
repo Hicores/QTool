@@ -1,6 +1,7 @@
 package com.hicore.qtool.XposedInit;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.Utils.DataUtils;
 import com.hicore.qtool.HookEnv;
 
@@ -69,6 +70,8 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         ClassLoader childLoader;
         ClassLoader hostLoader;
         Method findClass;
+
+        ClassLoader bootClassLoader = ClassLoader.getSystemClassLoader();
         protected FixSubClassLoader(ClassLoader parent) {
             super(parent);
             parentLoader = parent;
@@ -87,21 +90,31 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         }
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
+            try{
+                return bootClassLoader.loadClass(name);
+            }catch (Exception e){
+
+            }
             return tryLoad(name);
         }
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            try{
+                return bootClassLoader.loadClass(name);
+            }catch (Exception e){
+
+            }
             return tryLoad(name);
         }
         private Class tryLoad(String name)throws ClassNotFoundException{
             try{
+                XposedBridge.log("Try load "+name);
                 if (childLoader != null){
                     Class clz = (Class) findClass.invoke(childLoader,name);
                     if (clz != null){
                         return clz;
                     }
                 }
-
             }catch (Exception notFound){
                 try{
                     if (parentLoader != null){
