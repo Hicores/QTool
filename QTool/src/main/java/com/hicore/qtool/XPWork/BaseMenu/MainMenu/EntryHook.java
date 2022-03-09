@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.HookItem;
 import com.hicore.HookUtils.XPBridge;

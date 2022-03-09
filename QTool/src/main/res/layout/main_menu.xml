@@ -5,26 +5,67 @@
     android:id="@+id/sRoot_"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:fitsSystemWindows="true"
-        android:gravity="center_vertical">
-        <View
-            android:layout_width="1dp"
-            android:layout_height="40dp"></View>
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/q">
-        </ImageView>
-        <ImageView
-            android:layout_marginTop="5dp"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:background="@drawable/tool"></ImageView>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/BlurContain">
+        <LinearLayout
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:fitsSystemWindows="true"
+            android:gravity="center_vertical">
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"></View>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/q">
+            </ImageView>
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:background="@drawable/tool"></ImageView>
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_below="@+id/titleBar">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:background="@drawable/menu_item_base"
+                    android:gravity="center_vertical"
+                    android:layout_height="60dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="30dp"
+                        android:background="@drawable/menu_icon_plugin"></ImageView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="30dp"
+                        android:text="Java脚本"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:textColor="#240B3B"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+    </RelativeLayout>
+
 </LinearLayout>

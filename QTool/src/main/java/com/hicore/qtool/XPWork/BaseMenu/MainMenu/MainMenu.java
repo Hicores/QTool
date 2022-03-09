@@ -1,18 +1,28 @@
 package com.hicore.qtool.XPWork.BaseMenu.MainMenu;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 
@@ -24,6 +34,8 @@ import com.hicore.qtool.R;
 
 public class MainMenu extends Activity {
     private static final String TAG = "MainActivityProxy";
+    private static Bitmap map = null;
+    RelativeLayout blurRoot;
     @Override
     public ClassLoader getClassLoader() {
         return HookEnv.fixLoader;
@@ -32,6 +44,7 @@ public class MainMenu extends Activity {
     public static void createActivity(Activity parentAct){
         try{
             Intent intent = new Intent(parentAct,MainMenu.class);
+            map = BitmapUtils.onCut(parentAct);
             parentAct.startActivity(intent);
         }catch (Exception e){
             LogUtils.error(TAG, Log.getStackTraceString(e));
@@ -43,21 +56,43 @@ public class MainMenu extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         try{
             ResUtils.StartInject(this);
-            setTheme(R.style.Theme_QTool);
+            setTheme(R.style.AnimActivity);
             super.onCreate(savedInstanceState);
+
             setTitleFea();
+
             setContentView(R.layout.main_menu);
 
-
             LinearLayout mRoot = findViewById(R.id.sRoot_);
-
-            mRoot.setBackground(new BitmapDrawable(null,BitmapUtils.toBlur(BitmapFactory.decodeResource(getResources(),R.drawable.def_bg),24)));
-            //mRoot.setBackground(new BitmapDrawable(null,BitmapFactory.decodeResource(getResources(),R.drawable.def_bg)));
-
+            mRoot.setBackground(new BitmapDrawable(null,map));
+            blurRoot = findViewById(R.id.BlurContain);
+            blurRoot.setBackground(new BitmapDrawable(null,BitmapUtils.toBlur(map,10)));
+            blurRoot.startAnimation(AnimationUtils.loadAnimation(this,R.anim.anim_fade_out));
         }catch (Exception e){
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            Animation anim = AnimationUtils.loadAnimation(this,R.anim.anim_fade_in);
+            anim.setFillAfter(true);
+            blurRoot.startAnimation(anim);
+
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(this::finish,600);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        overridePendingTransition(0,0);
+    }
+
     private void setTitleFea(){
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

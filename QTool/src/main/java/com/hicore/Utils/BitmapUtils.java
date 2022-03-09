@@ -1,12 +1,16 @@
 package com.hicore.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import android.graphics.Rect;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.view.Display;
+import android.view.View;
 
 public class BitmapUtils {
     //    把本地图片毛玻璃化
@@ -264,5 +268,26 @@ public class BitmapUtils {
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
 
         return (bitmap);
+    }
+    public static Bitmap onCut(Activity activity){
+        //获取window最底层的view
+        View view=activity.getWindow().getDecorView();
+        view.buildDrawingCache();
+
+        //状态栏高度
+        Rect rect=new Rect();
+        view.getWindowVisibleDisplayFrame(rect);
+        int stateBarHeight=rect.top;
+        Display display=activity.getWindowManager().getDefaultDisplay();
+
+        //获取屏幕宽高
+        int widths=display.getWidth();
+        int height=display.getHeight();
+
+        //设置允许当前窗口保存缓存信息
+        view.setDrawingCacheEnabled(true);
+
+        //去掉状态栏高度
+        return view.getDrawingCache();
     }
 }
