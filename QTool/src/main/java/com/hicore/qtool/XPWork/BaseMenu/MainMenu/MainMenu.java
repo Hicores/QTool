@@ -7,10 +7,19 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
-import com.hicore.Utils.Utils;
+import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.R;
 
 public class MainMenu extends AppCompatActivity {
+    private ClassLoader cacheLoader = null;
+    @Override
+    public ClassLoader getClassLoader() {
+        if (cacheLoader == null) {
+            cacheLoader = HookEnv.fixLoader;
+        }
+        return cacheLoader;
+    }
+
     public static void createActivity(Activity parentAct){
 
         Intent intent = new Intent(parentAct,MainMenu.class);
@@ -18,7 +27,9 @@ public class MainMenu extends AppCompatActivity {
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        setTheme(R.style.Theme_QTool);
         super.onCreate(savedInstanceState);
-        Utils.ShowToast("Activity Proxy Success");
+        setContentView(R.layout.activity_main);
     }
 }

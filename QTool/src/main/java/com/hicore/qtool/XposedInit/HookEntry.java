@@ -67,6 +67,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     public static class FixSubClassLoader extends ClassLoader{
         ClassLoader parentLoader;
         ClassLoader childLoader;
+        ClassLoader hostLoader;
         Method findClass;
         protected FixSubClassLoader(ClassLoader parent) {
             super(parent);
@@ -81,6 +82,9 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 e.printStackTrace();
             }
         }
+        public void addHostLoader(ClassLoader host){
+            hostLoader = host;
+        }
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             try{
@@ -92,9 +96,18 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 }
 
             }catch (Exception notFound){
+                try{
+                    if (parentLoader != null){
+                        Class clz = parentLoader.loadClass(name);
+                        if (clz != null){
+                            return clz;
+                        }
+                    }
+                }catch (Exception e){
 
+                }
             }
-            return super.loadClass(name);
+            return hostLoader.loadClass(name);
         }
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -105,8 +118,20 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                         return clz;
                     }
                 }
-            }catch (Exception notFound){ }
-            return super.loadClass(name, resolve);
+
+            }catch (Exception notFound){
+                try{
+                    if (parentLoader != null){
+                        Class clz = parentLoader.loadClass(name);
+                        if (clz != null){
+                            return clz;
+                        }
+                    }
+                }catch (Exception e){
+
+                }
+            }
+            return hostLoader.loadClass(name);
         }
 
     }

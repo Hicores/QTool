@@ -34,6 +34,7 @@ public class EnvHook {
                 if (fixLoader instanceof HookEntry.FixSubClassLoader){
                     LogUtils.debug(TAG,"Init from FixSubClassLoade");
                     HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
+                    HookEnv.fixLoader.addHostLoader(HookEnv.mLoader);
                 }
                 moduleLoader = EnvHook.class.getClassLoader();
                 //优先初始化Path
