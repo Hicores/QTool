@@ -12,7 +12,7 @@ public class PluginInfo {
     public boolean IsBlackMode;
     public ArrayList<String> ListStr;
 
-    public boolean IsLoadSuccess;
+    public boolean IsRunning;
     public boolean IsLoading;
 
     public String PluginName;
