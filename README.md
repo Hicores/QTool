@@ -28,7 +28,7 @@ QTool 是一个开源 Xposed 模块
 - [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html)
 
 ```
-Copyright (C) 2019-2022 qwq233@qwq2333.top
+Copyright (C) 2022-2022 hicores@163.top
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
