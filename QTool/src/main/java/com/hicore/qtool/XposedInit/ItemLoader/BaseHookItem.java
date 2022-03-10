@@ -8,7 +8,7 @@ public abstract class BaseHookItem {
     public abstract boolean isEnable();
     public abstract boolean check();
     public String getErrorInfo(){
-        return getTag()+"未继承getErrorInfo";
+        return "null";
     }
 
 

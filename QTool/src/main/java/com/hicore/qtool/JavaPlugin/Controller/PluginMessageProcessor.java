@@ -1,7 +1,14 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class PluginMessageProcessor {
+    private static ExecutorService executor = Executors.newSingleThreadExecutor();
     public static void onMessage(Object msg){
+        executor.submit(()->onMessage0(msg));
+    }
+    private static void onMessage0(Object msg){
 
     }
     public static void onExitEvent(String GroupUin,String UserUin,String OPUin){
