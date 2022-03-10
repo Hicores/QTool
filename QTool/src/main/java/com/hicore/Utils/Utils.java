@@ -1,6 +1,7 @@
 package com.hicore.Utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -12,6 +13,11 @@ import com.hicore.qtool.HookEnv;
 import java.util.Map;
 
 public class Utils {
+    public static int dip2sp(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density /
+                context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (dpValue * scale + 0.5f);
+    }
     public static <T> void ShowToast(T Value){
         String ToastText = String.valueOf(Value);
         new Handler(Looper.getMainLooper()).post(()-> Toast.makeText(HookEnv.AppContext, ToastText, Toast.LENGTH_SHORT).show());

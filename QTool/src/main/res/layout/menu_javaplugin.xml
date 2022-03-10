@@ -28,13 +28,19 @@
             android:layout_marginStart="10dp"
             android:text="编写说明" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/ContainLayout"
+    <ScrollView
+        android:layout_below="@+id/TopToolBar"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/TopToolBar">
-    </LinearLayout>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ContainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+
 
 </RelativeLayout>
