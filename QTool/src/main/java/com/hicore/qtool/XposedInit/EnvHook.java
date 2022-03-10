@@ -3,16 +3,29 @@ package com.hicore.qtool.XposedInit;
 import static com.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.AndroidAppHelper;
+import android.app.Application;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.HookUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
+import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.channel.AbstractChannelListener;
+import com.microsoft.appcenter.channel.Channel;
+import com.microsoft.appcenter.crashes.Crashes;
+import com.microsoft.appcenter.ingestion.Ingestion;
+import com.microsoft.appcenter.ingestion.models.Device;
+import com.microsoft.appcenter.ingestion.models.Log;
+import com.microsoft.appcenter.ingestion.models.WrapperSdk;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -37,6 +50,7 @@ public class EnvHook {
                     HookEnv.fixLoader.addHostLoader(HookEnv.mLoader);
                 }
                 moduleLoader = EnvHook.class.getClassLoader();
+                InitAppCenter();
                 //优先初始化Path
                 ExtraPathInit.InitPath();
 
@@ -56,6 +70,26 @@ public class EnvHook {
 
             }
         });
+    }
+    private static void InitAppCenter(){
+        try {
+            AppCenter.start((Application) HookEnv.AppContext, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
+                    Analytics.class, Crashes.class);
+            Channel objChannel = MField.GetField(AppCenter.getInstance(),"mChannel");
+            objChannel.addListener(new AbstractChannelListener(){
+                @Override
+                public void onPreparedLog(@NonNull com.microsoft.appcenter.ingestion.models.Log log, @NonNull String groupName, int flags) {
+                    Device device = log.getDevice();
+                    device.setAppVersion(BuildConfig.VERSION_NAME);
+                    device.setAppBuild(String.valueOf(BuildConfig.VERSION_CODE));
+                    device.setAppNamespace(BuildConfig.APPLICATION_ID);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
     private static void InitActivityProxy(){
         EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.photo.CameraPreviewActivity", moduleLoader, HookEnv.mLoader);
