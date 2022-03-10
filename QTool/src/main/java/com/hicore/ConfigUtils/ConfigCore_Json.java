@@ -20,6 +20,17 @@ public class ConfigCore_Json implements ConfigCore{
      */
 
     @Override
+    public void removeKey(String PathName, String Key) {
+        try{
+            String PathData = ConfigUtils_MapFile.ReadFile(PathName);
+            JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
+            MapJson.remove(Key);
+            ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
+        }catch (Exception e){
+        }
+    }
+
+    @Override
     public boolean getBoolean(String PathName, String Key,boolean Def) {
         try{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);

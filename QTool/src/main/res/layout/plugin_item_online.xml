@@ -75,7 +75,7 @@
             android:text="脚本大小:114.514GB" />
 
         <TextView
-            android:id="@+id/plugin_desc"
+            android:id="@+id/plugin_desc_online"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"

@@ -3,6 +3,7 @@ package com.hicore.ConfigUtils;
 import java.util.List;
 
 public interface ConfigCore {
+    void removeKey(String PathName,String Key);
     boolean getBoolean(String PathName,String Key,boolean Def);
     void setBoolean(String PathName,String Key,boolean Value);
 

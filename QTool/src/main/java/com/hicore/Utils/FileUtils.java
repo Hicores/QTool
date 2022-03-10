@@ -1,5 +1,6 @@
 package com.hicore.Utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,14 +14,17 @@ public class FileUtils {
         }catch (Exception e){
         }
     }
-    public static String ReadFileString(String File){
+    public static String ReadFileString(File f){
         try{
-            FileInputStream fInp = new FileInputStream(File);
+            FileInputStream fInp = new FileInputStream(f);
             String Content = new String(DataUtils.readAllBytes(fInp),StandardCharsets.UTF_8);
             fInp.close();
             return Content;
         }catch (Exception e){
             return null;
         }
+    }
+    public static String ReadFileString(String f){
+        return ReadFileString(new File(f));
     }
 }
