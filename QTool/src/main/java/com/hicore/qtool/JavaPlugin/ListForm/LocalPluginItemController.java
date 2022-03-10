@@ -22,6 +22,8 @@ import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.JavaPlugin.Controller.PluginController;
+import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.JavaPlugin.Controller.PluginSetController;
 import com.hicore.qtool.R;
 
@@ -40,6 +42,8 @@ public final class LocalPluginItemController {
     private View btn_load;
     private View btn_loading;
     private View btn_stop;
+
+    private PluginInfo mInfo;
     public static LocalPluginItemController create(Context context){
         LocalPluginItemController controller = new LocalPluginItemController(context);
         return controller;
@@ -65,21 +69,37 @@ public final class LocalPluginItemController {
         btn_load.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
 
-        new Handler(Looper.getMainLooper())
-                .postDelayed(()->{
-                    btn_loading.setVisibility(View.GONE);
-                    btn_stop.setVisibility(View.VISIBLE);
-                },2000);
+        new Thread(()->{
+            boolean loadResult = PluginController.LoadOnce(mInfo);
+            if (loadResult){
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(()->{
+                            btn_loading.setVisibility(View.GONE);
+                            btn_stop.setVisibility(View.VISIBLE);
+                        },2000);
+            }else {
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(()->{
+                            btn_loading.setVisibility(View.GONE);
+                            btn_load.setVisibility(View.VISIBLE);
+                        },2000);
+            }
+        }).start();
+
     }
     private void ClickStop(){
         btn_stop.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
 
-        new Handler(Looper.getMainLooper())
-                .postDelayed(()->{
-                    btn_loading.setVisibility(View.GONE);
-                    btn_load.setVisibility(View.VISIBLE);
-                },2000);
+        new Thread(()->{
+            PluginController.endPlugin(mInfo);
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(()->{
+                        btn_loading.setVisibility(View.GONE);
+                        btn_load.setVisibility(View.VISIBLE);
+                    },2000);
+        }).start();
+
     }
     private void ClickMain(){
         if (IsChangeSize)return;
