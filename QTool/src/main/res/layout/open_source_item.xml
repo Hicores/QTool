@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ClickToGithub"
+    android:layout_marginTop="40dp"
+    android:layout_width="300dp"
+    android:background="@drawable/btnclick"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:layout_height="90dp">
+    <ImageView
+        android:layout_marginLeft="30dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/github" />
+    <LinearLayout
+
+        android:layout_marginLeft="30dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/open_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Hicores/QTool"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:textColor="#404040"/>
+        <TextView
+            android:id="@+id/open_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#808080"
+            android:text="https://github.com/Hicores/QTool" />
+    </LinearLayout>
+</LinearLayout>

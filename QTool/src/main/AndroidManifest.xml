@@ -17,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OpenSource">
+        </activity>
         <meta-data
             android:name="xposedmodule"
             android:value="true"/>

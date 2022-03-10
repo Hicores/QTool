@@ -202,8 +202,8 @@ public final class LocalPluginItemController {
     }
     public LinearLayout.LayoutParams getParams(){
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        param.setMargins(Utils.dip2sp(mRoot.getContext(),16),Utils.dip2sp(mRoot.getContext(),5),
-                Utils.dip2sp(mRoot.getContext(),16),Utils.dip2sp(mRoot.getContext(),5));
+        param.setMargins(Utils.dip2px(mRoot.getContext(),16),Utils.dip2px(mRoot.getContext(),5),
+                Utils.dip2px(mRoot.getContext(),16),Utils.dip2px(mRoot.getContext(),5));
         return param;
     }
     public RelativeLayout getRoot(){
