@@ -37,7 +37,7 @@ public class JavaPluginAct extends Activity {
                     LocalPluginItemController controller = LocalPluginItemController.create(this);
                     boolean loadResult = controller.checkAndLoadPluginInfo(f.getAbsolutePath());
                     if (loadResult){
-                        itemLayout.addView(controller.getRoot());
+                        itemLayout.addView(controller.getRoot(),controller.getParams());
                     }
                 }
             }

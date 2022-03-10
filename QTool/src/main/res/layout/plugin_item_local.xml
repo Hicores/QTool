@@ -117,6 +117,7 @@
                 android:text="启用消息黑名单"
                 android:textColor="@color/black" />
             <TextView
+                android:clickable="true"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
