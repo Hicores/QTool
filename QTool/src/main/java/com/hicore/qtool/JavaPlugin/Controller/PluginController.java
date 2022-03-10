@@ -8,6 +8,7 @@ import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.QQManager.QQInfoUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -105,7 +106,7 @@ public class PluginController {
 
         space.setMethod("GetChatType",new BshMethod(PluginMethod.class.getMethod("getChatType"),env));
         space.setMethod("GetGroupUin",new BshMethod(PluginMethod.class.getMethod("getGroupUin"),env));
-        space.setMethod("GetFriendUin",new BshMethod(PluginMethod.class.getMethod("getFriendUinF"),env));
+        space.setMethod("GetFriendUin",new BshMethod(PluginMethod.class.getMethod("getFriendUin"),env));
 
         space.setMethod("getSkey",new BshMethod(PluginMethod.class.getMethod("getSkey"),env));
         space.setMethod("getPskey",new BshMethod(PluginMethod.class.getMethod("getPskey", String.class),env));
@@ -153,6 +154,7 @@ public class PluginController {
         instance.set("SDKVer",10);
         instance.set("loader",HookEnv.mLoader);
         instance.set("AppPath",info.LocalPath);
+        instance.set("MyUin", QQInfoUtils.getCurrentUin());
 
         instance.eval(LoadContent);
     }
@@ -175,13 +177,13 @@ public class PluginController {
     private static void InvokeToPlugin(Interpreter Instance,String MethodName, Object... param){
         try {
             NameSpace space = Instance.getNameSpace();
-            Class[] clz = new Class[param.length];
+            Class<?>[] clz = new Class[param.length];
             for (int i=0;i< param.length;i++)clz[i] = param[i].getClass();
 
             Loop:
             for (BshMethod method : space.getMethods()){
                 if (method.getName().equals(MethodName)){
-                    Class[] params = method.getParameterTypes();
+                    Class<?>[] params = method.getParameterTypes();
                     if (params.length == clz.length){
                         for (int i=0;i<param.length;i++){
                             if (!MClass.CheckClass(params[i],clz[i])) continue Loop;

@@ -62,6 +62,7 @@ public class EnvHook {
 
                 HookForDelayDialog();
                 if (HookEnv.ExtraDataPath != null){
+                    HostInfo.Init();
                     InitActivityProxy();
                     //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
                     HookLoader.SearchAndLoadAllHook();

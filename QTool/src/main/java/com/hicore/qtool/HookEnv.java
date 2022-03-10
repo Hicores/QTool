@@ -23,4 +23,7 @@ public class HookEnv {
     public static boolean IsMainProcess;
     public static ConfigCore Config;
     public static SharedPreferences globalConfig;
+
+    public static Object AppInterface;
+    public static Object SessionInfo;
 }

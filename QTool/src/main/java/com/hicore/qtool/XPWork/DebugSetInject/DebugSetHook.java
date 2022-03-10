@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,9 @@ public class DebugSetHook extends BaseHookItem {
         StringBuilder builder = new StringBuilder();
         for (HookLoader.CheckResult result: HookLoader.CheckForItemsStatus()){
             builder.append(result.Name).append("->开启:").append(result.IsEnable).append("  ,可用:").append(result.IsAvailable).append("\n");
+            if (!TextUtils.isEmpty(result.ErrorInfo)){
+                builder.append("报告异常信息:\n").append(result.ErrorInfo).append("-------------------------\n");
+            }
         }
         return builder.toString();
     }
