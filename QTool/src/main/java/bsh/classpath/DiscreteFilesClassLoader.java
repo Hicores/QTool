@@ -27,9 +27,21 @@
 
 package bsh.classpath;
 
+import com.android.dx.cf.direct.DirectClassFile;
+import com.android.dx.cf.direct.StdAttributeFactory;
+import com.android.dx.command.dexer.DxContext;
+import com.android.dx.dex.DexOptions;
+import com.android.dx.dex.cf.CfOptions;
+import com.android.dx.dex.cf.CfTranslator;
+import com.android.dx.dex.file.DexFile;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.util.*;
 import bsh.BshClassManager;
 import bsh.classpath.BshClassPath.ClassSource;
+import dalvik.system.InMemoryDexClassLoader;
+import de.robv.android.xposed.XposedBridge;
 
 /**
 	A classloader which can load one or more classes from specified sources.
@@ -70,6 +82,30 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 		if ( source != null )
 		{
 			byte [] code = source.getCode( name );
+			try {
+				DexOptions dexOptions = new DexOptions();
+				DexFile dexFile = new DexFile(dexOptions);
+				DxContext dxContext = new DxContext();
+				DirectClassFile directClassFile = new DirectClassFile(code, String.format("%s.class", name.replace(".", "/")), true);
+				directClassFile.setAttributeFactory(StdAttributeFactory.THE_ONE);
+
+				dexFile.add(CfTranslator.translate(dxContext, directClassFile, code, new CfOptions(), dexOptions, dexFile));
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				dexFile.writeTo(byteArrayOutputStream, null, true);
+				byteArrayOutputStream.close();
+				byte[] byteArray = byteArrayOutputStream.toByteArray();
+				if(byteArray!=null)
+				{
+					ClassLoader mLoader = new InMemoryDexClassLoader(ByteBuffer.wrap(byteArray),new FixClassloader(getClass().getClassLoader(), this.classManager));
+					Class<?> loadClass = mLoader.loadClass(name);
+					this.classManager.classMap.put(name, loadClass);
+					return loadClass;
+				}
+				return defineClass(name, code, 0, code.length);
+
+			} catch (Exception ioe) {
+				XposedBridge.log(ioe);
+			}
 			return defineClass( name, code, 0, code.length );
 		} else
 			// Let superclass BshClassLoader (URLClassLoader) findClass try 
@@ -79,6 +115,21 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 
 	public String toString() {
 		return super.toString() + "for files: "+map;
+	}
+
+	private static class FixClassloader extends ClassLoader {
+		private BshClassManager classManager;
+		public FixClassloader(ClassLoader classLoader, BshClassManager bshClassManager) {
+			super(classLoader);
+			this.classManager = bshClassManager;
+		}
+		@Override
+		public Class<?> loadClass(String str, boolean z) throws ClassNotFoundException {
+			if (this.classManager.classMap.containsKey(str)) {
+				return this.classManager.classMap.get(str);
+			}
+			return super.loadClass(str, z);
+		}
 	}
 
 }

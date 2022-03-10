@@ -9,7 +9,6 @@ import java.util.HashMap;
 import bsh.BshMethod;
 import bsh.Interpreter;
 import bsh.NameSpace;
-import de.robv.android.xposed.XC_MethodHook;
 
 public class PluginController {
     private static HashMap<String,PluginInfo> runningInfo = new HashMap<>();

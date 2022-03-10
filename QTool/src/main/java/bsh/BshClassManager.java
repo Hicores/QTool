@@ -113,6 +113,8 @@ public class BshClassManager
 	/** @see #associateClass( Class ) */
 	protected transient Hashtable associatedClasses = new Hashtable();
 
+	public HashMap<String, Class> classMap = new HashMap<>();
+
 	/**
 		Create a new instance of the class manager.  
 		Class manager instnaces are now associated with the interpreter.
