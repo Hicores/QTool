@@ -105,7 +105,7 @@ public class BshMethod
 		Create a BshMethod that delegates to a real Java method upon invocation.
 		This is used to represent imported object methods.
 	*/
-	BshMethod( Method method, Object object )
+	public BshMethod( Method method, Object object )
 	{
 		this( method.getName(), method.getReturnType(), null/*paramNames*/,
 			method.getParameterTypes(), null/*method.block*/, 
