@@ -8,54 +8,35 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     tools:context=".MainActivity">
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        ></View>
-
     <LinearLayout
+        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal|center_vertical"
-        >
-
+        android:gravity="center_horizontal|center_vertical">
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-
             android:background="@drawable/q">
         </ImageView>
         <ImageView
             android:layout_width="120dp"
             android:layout_height="60dp"
-            android:background="@drawable/tool"></ImageView>
-
-
+            android:background="@drawable/tool" />
     </LinearLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        ></View>
-
     <LinearLayout
+        android:layout_marginTop="40dp"
         android:layout_width="300dp"
         android:background="@drawable/itemback"
         android:gravity="center_vertical"
         android:layout_height="80dp">
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
         <ImageView
+            android:layout_marginLeft="30dp"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/alarm"></ImageView>
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
+            android:background="@drawable/alarm" />
         <TextView
+            android:layout_marginLeft="30dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="通信状态:无法通信"
@@ -63,28 +44,19 @@
             android:textSize="20sp"
             android:textColor="#cc3333"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        ></View>
-
     <LinearLayout
+        android:layout_marginTop="20dp"
         android:layout_width="300dp"
         android:background="@drawable/itemback"
         android:gravity="center_vertical"
         android:layout_height="100dp">
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
         <ImageView
+            android:layout_marginLeft="30dp"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/info"></ImageView>
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
+            android:background="@drawable/info" />
         <LinearLayout
+            android:layout_marginLeft="30dp"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
@@ -100,31 +72,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#808080"
-                android:text="更新模块后请重启QQ"></TextView>
+                android:text="更新模块后请重启QQ" />
         </LinearLayout>
     </LinearLayout>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        ></View>
     <LinearLayout
+        android:id="@+id/ClickToGithub"
+        android:layout_marginTop="40dp"
         android:layout_width="300dp"
         android:background="@drawable/btnclick"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center_vertical"
         android:layout_height="90dp">
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
         <ImageView
+            android:layout_marginLeft="30dp"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/github"></ImageView>
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"></View>
+            android:background="@drawable/github" />
         <LinearLayout
+            android:layout_marginLeft="30dp"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
@@ -141,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#808080"
-                android:text="https://github.com/Hicores/QTool"></TextView>
+                android:text="https://github.com/Hicores/QTool" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

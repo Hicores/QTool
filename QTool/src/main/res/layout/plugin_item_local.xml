@@ -34,7 +34,7 @@
             android:textSize="9dp" />
     </LinearLayout>
     <ImageView
-        android:id="@+id/plugin_start"
+        android:id="@+id/plugin_load"
         android:layout_marginTop="10dp"
         android:background="@drawable/plugin_load"
         android:layout_width="30dp"
@@ -47,7 +47,6 @@
         android:visibility="gone"
         android:id="@+id/plugin_loading"
         android:layout_marginTop="10dp"
-        android:background="@drawable/plugin_load"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="-40dp"

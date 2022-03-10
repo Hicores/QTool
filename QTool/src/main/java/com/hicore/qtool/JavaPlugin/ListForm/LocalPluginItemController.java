@@ -36,6 +36,10 @@ public final class LocalPluginItemController {
     private RelativeLayout mRoot;
     private String PluginPath;
     private int MeasureHeight;
+
+    private View btn_load;
+    private View btn_loading;
+    private View btn_stop;
     public static LocalPluginItemController create(Context context){
         LocalPluginItemController controller = new LocalPluginItemController(context);
         return controller;
@@ -46,6 +50,36 @@ public final class LocalPluginItemController {
         LayoutInflater inflater = LayoutInflater.from(context);
         mRoot = (RelativeLayout) inflater.inflate(R.layout.plugin_item_local,null);
         mRoot.setOnClickListener(v-> ClickMain());
+        btn_load = mRoot.findViewById(R.id.plugin_load);
+        btn_loading = mRoot.findViewById(R.id.plugin_loading);
+        btn_stop = mRoot.findViewById(R.id.plugin_stop);
+
+        btn_load.setOnClickListener(v->ClickLoad());
+        btn_stop.setOnClickListener(v->ClickStop());
+
+
+    }
+    private boolean IsLoading = false;
+    private boolean IsLoaded = false;
+    private void ClickLoad(){
+        btn_load.setVisibility(View.GONE);
+        btn_loading.setVisibility(View.VISIBLE);
+
+        new Handler(Looper.getMainLooper())
+                .postDelayed(()->{
+                    btn_loading.setVisibility(View.GONE);
+                    btn_stop.setVisibility(View.VISIBLE);
+                },2000);
+    }
+    private void ClickStop(){
+        btn_stop.setVisibility(View.GONE);
+        btn_loading.setVisibility(View.VISIBLE);
+
+        new Handler(Looper.getMainLooper())
+                .postDelayed(()->{
+                    btn_loading.setVisibility(View.GONE);
+                    btn_load.setVisibility(View.VISIBLE);
+                },2000);
     }
     private void ClickMain(){
         if (IsChangeSize)return;
