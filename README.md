@@ -9,7 +9,7 @@
 
 -----
 
-QAuxiliary 是一个基于 QNotified 的开源 Xposed 模块
+QTool 是一个开源 Xposed 模块
 
 ## 说明
 
