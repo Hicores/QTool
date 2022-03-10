@@ -24,6 +24,7 @@
 -keep class org.** { *; }
 -keep class bsh.** { *; }
 -keep class com.github.**{*;}
+-keep class com.microsoft.appcenter.**{ *; }
 
 
 -keepclassmembers enum * {

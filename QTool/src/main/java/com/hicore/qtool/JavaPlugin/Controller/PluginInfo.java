@@ -21,11 +21,8 @@ public class PluginInfo {
     public Interpreter Instance;
     public HashMap<String,FunctionInfo> ItemFunctions = new HashMap<>();
 
-    public boolean IsAvailable(String GroupUin,int isTroop){
-        if (isTroop == 1 || isTroop == 10014){
-            return IsBlackMode != ListStr.contains(GroupUin);
-        }
-        return true;
+    public boolean IsAvailable(String GroupUin){
+        return IsBlackMode != ListStr.contains(GroupUin);
     }
 
     public static class FunctionInfo{
