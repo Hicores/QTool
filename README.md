@@ -6,18 +6,25 @@
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Channel&color=0088cc)](https://t.me/QToolR)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
 </div>
-QQ工具模块
+
+-----
+
 QAuxiliary 是一个基于 QNotified 的开源 Xposed 模块
+
 ## 说明
+
 - 支持Android >= 8.0
 - 支持QQ >= 8.7.0
+- 
 ## 功能列表
 - 1.Java脚本加载
+
 ## 提示
 - 1.仅供学习使用,禁止用于违法违规内容,如果发现大量违法违规使用,将采取禁止账号使用本软件,或者移除被滥用功能的措施
 - 2.该项目完全免费开源,禁止二改销售,商业使用,同时本项目也不接收任何赞助
 - 3.该项目维护人员较少,可能无法经常更新,如果需要某个功能可以自己pr,审核代码通过后即可上线
-##许可证
+
+## 许可证
 - [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html)
 
 ```
