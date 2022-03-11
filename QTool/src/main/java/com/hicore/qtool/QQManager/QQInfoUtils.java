@@ -1,7 +1,5 @@
 package com.hicore.qtool.QQManager;
 
-import android.util.Log;
-
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
