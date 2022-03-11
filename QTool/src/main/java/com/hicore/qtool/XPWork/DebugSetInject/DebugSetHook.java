@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.hicore.ConfigUtils.GlobalConfig;
 import com.hicore.HookItem;
-import com.hicore.HookUtils.XPBridge;
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;

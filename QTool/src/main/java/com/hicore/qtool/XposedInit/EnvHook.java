@@ -2,14 +2,13 @@ package com.hicore.qtool.XposedInit;
 
 import static com.hicore.qtool.HookEnv.moduleLoader;
 
-import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
-import com.hicore.HookUtils.XPBridge;
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.ResUtils;
@@ -22,10 +21,7 @@ import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.channel.AbstractChannelListener;
 import com.microsoft.appcenter.channel.Channel;
 import com.microsoft.appcenter.crashes.Crashes;
-import com.microsoft.appcenter.ingestion.Ingestion;
 import com.microsoft.appcenter.ingestion.models.Device;
-import com.microsoft.appcenter.ingestion.models.Log;
-import com.microsoft.appcenter.ingestion.models.WrapperSdk;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;

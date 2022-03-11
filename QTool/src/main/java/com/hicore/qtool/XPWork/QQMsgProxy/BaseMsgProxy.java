@@ -1,7 +1,7 @@
 package com.hicore.qtool.XPWork.QQMsgProxy;
 
 import com.hicore.HookItem;
-import com.hicore.HookUtils.XPBridge;
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;

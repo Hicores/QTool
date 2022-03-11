@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.hicore.qtool.BuildConfig;
 import com.hicore.HookItem;
-import com.hicore.HookUtils.XPBridge;
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;

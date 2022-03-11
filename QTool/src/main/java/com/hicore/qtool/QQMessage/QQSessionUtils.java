@@ -26,22 +26,22 @@ public class QQSessionUtils {
             Object mObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
             if(TextUtils.isEmpty(UserUin))
             {
-                Session_Field.isTroop().set(mObj,1);
-                Session_Field.friendUin().set(mObj,GroupUin);
-                Session_Field.TroopCode().set(mObj,GroupUin);
+                Table_Session_Field.isTroop().set(mObj,1);
+                Table_Session_Field.friendUin().set(mObj,GroupUin);
+                Table_Session_Field.TroopCode().set(mObj,GroupUin);
 
             }
             else if (TextUtils.isEmpty(GroupUin))
             {
-                Session_Field.isTroop().set(mObj,0);
-                Session_Field.friendUin().set(mObj,UserUin);
+                Table_Session_Field.isTroop().set(mObj,0);
+                Table_Session_Field.friendUin().set(mObj,UserUin);
             }
             else
             {
-                Session_Field.isTroop().set(mObj,1000);
-                Session_Field.friendUin().set(mObj,UserUin);
-                Session_Field.InTroopUin().set(mObj,GroupUin);
-                Session_Field.TroopCode().set(mObj,GroupUin);
+                Table_Session_Field.isTroop().set(mObj,1000);
+                Table_Session_Field.friendUin().set(mObj,UserUin);
+                Table_Session_Field.InTroopUin().set(mObj,GroupUin);
+                Table_Session_Field.TroopCode().set(mObj,GroupUin);
             }
             return mObj;
         }catch (Exception e){
@@ -53,18 +53,18 @@ public class QQSessionUtils {
         try{
             if(IsDirectMsg){
                 Object mObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
-                Session_Field.isTroop().set(mObj,10014);
-                Session_Field.GuildID().set(mObj,GuildID);
-                Session_Field.ChannelID().set(mObj,ChannelID);
-                Session_Field.CodeName().set(mObj,ChannelID);
+                Table_Session_Field.isTroop().set(mObj,10014);
+                Table_Session_Field.GuildID().set(mObj,GuildID);
+                Table_Session_Field.ChannelID().set(mObj,ChannelID);
+                Table_Session_Field.CodeName().set(mObj,ChannelID);
                 Bundle bundle = MField.GetField(mObj,"J",Bundle.class);
                 bundle.putInt("guild_direct_message_flag",1);
                 return mObj;
             }else {
                 Object mObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
-                Session_Field.isTroop().set(mObj,10014);
-                Session_Field.GuildID().set(mObj,GuildID);
-                Session_Field.ChannelID().set(mObj,ChannelID);
+                Table_Session_Field.isTroop().set(mObj,10014);
+                Table_Session_Field.GuildID().set(mObj,GuildID);
+                Table_Session_Field.ChannelID().set(mObj,ChannelID);
                 return mObj;
             }
         }catch (Exception e){
@@ -74,7 +74,7 @@ public class QQSessionUtils {
 
     }
     @HookItem(isDelayInit = false,isRunInAllProc = false)
-    public static class Session_Field extends BaseHookItem {
+    public static class Table_Session_Field extends BaseHookItem {
         private static Class<?> SessionInfo(){
             return MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
         }

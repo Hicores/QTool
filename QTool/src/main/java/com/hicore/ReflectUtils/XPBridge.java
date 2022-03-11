@@ -1,4 +1,4 @@
-package com.hicore.HookUtils;
+package com.hicore.ReflectUtils;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
