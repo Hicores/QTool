@@ -8,7 +8,13 @@ public class PluginMessageProcessor {
     public static void onMessage(Object msg){
         executor.submit(()->onMessage0(msg));
     }
+    public static void submit(Runnable run){
+        executor.submit(run);
+    }
     private static void onMessage0(Object msg){
+
+    }
+    public static void onMuteEvent(String GroupUin,String UserUin,String OPUin,long time){
 
     }
     public static void onExitEvent(String GroupUin,String UserUin,String OPUin){
