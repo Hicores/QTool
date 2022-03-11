@@ -89,5 +89,14 @@ public class PluginInfo {
         public String[] AdminList;
         public Object sourceInfo;
     }
+    public static class RequestInfo{
+        public String GroupUin;
+        public String UserUin;
+        public String Answer;
+        public String RequestText;
+        public String RequestSource;
+
+        public Object source;
+    }
 
 }
