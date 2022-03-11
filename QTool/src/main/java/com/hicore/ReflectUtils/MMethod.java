@@ -71,6 +71,36 @@ public class MMethod {
         }
         return null;
     }
+    public static Method FindMethod(Class<?> FindClass,String MethodName,Class<?>[] ParamTypes){
+        if (FindClass == null)return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append(FindClass.getName()).append(".").append(MethodName).append("(");
+        for (Class<?> clz : ParamTypes)builder.append(clz.getName()).append(";");
+        builder.append(")ReturnTypeNotSet");
+        String SignText = builder.toString();
+        if (MethodCache.containsKey(SignText))return MethodCache.get(SignText);
+
+        Class<?> Current_Find = FindClass;
+        while (Current_Find != null){
+            Loop:
+            for(Method method : Current_Find.getDeclaredMethods()){
+                if ((method.getName().equals(MethodName) || MethodName == null)){
+                    Class<?>[] params = method.getParameterTypes();
+
+                    if (params.length == ParamTypes.length){
+                        for (int i=0;i< params.length;i++){
+                            if (!MClass.CheckClass(params[i],ParamTypes[i]))continue Loop;
+                        }
+                        MethodCache.put(SignText,method);
+                        method.setAccessible(true);
+                        return method;
+                    }
+                }
+            }
+            Current_Find = Current_Find.getSuperclass();
+        }
+        return null;
+    }
     private static class NoMethodError extends RuntimeException{
         public NoMethodError(String message) {
             super(message);

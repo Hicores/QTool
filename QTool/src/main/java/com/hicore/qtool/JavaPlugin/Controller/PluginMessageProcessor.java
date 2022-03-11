@@ -14,13 +14,13 @@ public class PluginMessageProcessor {
     public static void onExitEvent(String GroupUin,String UserUin,String OPUin){
 
     }
-    public static void onJoinEvent(String GroupUin,String UserUin,String Invitor){
+    public static void onJoinEvent(String GroupUin,String UserUin,String Invitor,String AcceptOPUin){
 
     }
     public static void onRevoke(Object msg){
 
     }
-    public static void onJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){
+    public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){
 
     }
     private static PluginMessage decodeGuildMsg(Object msg){
