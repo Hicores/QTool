@@ -181,7 +181,11 @@ public class HookLoader {
         BaseHookItem item = cacheHookInst.get(ClzName);
         if (!item.isLoaded()){
             item.setTryLoad();
-            item.setLoad(item.startHook());
+            try {
+                item.setLoad(item.startHook());
+            } catch (Throwable th) {
+                LogUtils.error(TAG,"An error happen when invoke "+ClzName+".startHook:\n"+Log.getStackTraceString(th));
+            }
         }
     }
 
