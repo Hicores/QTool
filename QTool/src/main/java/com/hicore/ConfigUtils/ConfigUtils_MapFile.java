@@ -2,6 +2,8 @@ package com.hicore.ConfigUtils;
 
 import com.hicore.qtool.HookEnv;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -14,6 +16,8 @@ public class ConfigUtils_MapFile {
         try{
             MappedByteBuffer buffer = bufferCache.get(ItemName);
             if (buffer == null){
+                File par = new File(HookEnv.ExtraDataPath+"配置文件目录/");
+                if (!par.exists())par.mkdirs();
                 RandomAccessFile access = new RandomAccessFile(HookEnv.ExtraDataPath+"配置文件目录/"+ItemName,"rw");
                 FileChannel channel = access.getChannel();
                 buffer = channel.map(FileChannel.MapMode.READ_WRITE,0,64 * 1024);
@@ -21,11 +25,13 @@ public class ConfigUtils_MapFile {
                 bufferCache.put(ItemName,buffer);
             }
             buffer.clear();
-            byte[] bArr = new byte[64 * 1024];
-            buffer.get(bArr);
-            String str = new String(bArr, StandardCharsets.UTF_8);
-            str = str.substring(0,str.indexOf(0));
-            return str;
+            ByteArrayOutputStream write = new ByteArrayOutputStream();
+            for (int i=0;i<64 * 1024;i++){
+                byte read = buffer.get();
+                if (read != 0) write.write(read);
+                else break;
+            }
+            return write.toString();
         }catch (Exception e){
             return null;
         }
@@ -35,6 +41,8 @@ public class ConfigUtils_MapFile {
         try{
             MappedByteBuffer buffer = bufferCache.get(ItemName);
             if (buffer == null){
+                File par = new File(HookEnv.ExtraDataPath+"配置文件目录/");
+                if (!par.exists())par.mkdirs();
                 RandomAccessFile access = new RandomAccessFile(HookEnv.ExtraDataPath+"配置文件目录/"+ItemName,"rw");
                 FileChannel channel = access.getChannel();
                 buffer = channel.map(FileChannel.MapMode.READ_WRITE,0,64 * 1024);

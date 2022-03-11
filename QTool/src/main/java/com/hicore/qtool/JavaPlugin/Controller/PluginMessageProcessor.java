@@ -118,7 +118,7 @@ public class PluginMessageProcessor {
             }
             PluginController.onMessage(early,data);
         }catch (Exception e){
-            LogUtils.error("MessageDecoder","Can't decode msg:\n"+e);
+            LogUtils.error("MessageDecoder","Can't decode msg:\n"+e+"("+msg.getClass().getName()+")");
         }
 
     }
@@ -265,7 +265,7 @@ public class PluginMessageProcessor {
                 PluginController.checkAndInvoke(data.GroupUin,"onRevokeMsg",data);
             }
         }catch (Exception e){
-            LogUtils.error("MessageDecoder","Can't decode msg:\n"+e);
+            LogUtils.error("MessageDecoder","Can't decode msg:\n"+e+"("+msg.getClass().getName()+")");
         }
     }
     public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){

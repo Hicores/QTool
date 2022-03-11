@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -25,6 +26,7 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.JavaPlugin.Controller.PluginSetController;
+import com.hicore.qtool.JavaPlugin.Controller.PluginStoreUtils;
 import com.hicore.qtool.R;
 
 import java.io.File;
@@ -60,6 +62,7 @@ public final class LocalPluginItemController {
 
         btn_load.setOnClickListener(v->ClickLoad());
         btn_stop.setOnClickListener(v->ClickStop());
+
 
 
     }
@@ -213,12 +216,40 @@ public final class LocalPluginItemController {
             }
 
             InitMeasure();
+            saveWhiteAndBlackList();
             return true;
 
         } catch (IOException e) {
             LogUtils.warning(TAG,"Can't decode plugin prop file:"+propPath.getAbsolutePath());
             return false;
         }
+    }
+    private void saveWhiteAndBlackList(){
+        RadioButton boxWhite = mRoot.findViewById(R.id.plugin_message_while);
+        boxWhite.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed()){
+                PluginSetController.SetBlackMode(mInfo.PluginID,false);
+            }
+        });
+
+        RadioButton boxBlack = mRoot.findViewById(R.id.plugin_message_black);
+        boxBlack.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed()){
+                PluginSetController.SetBlackMode(mInfo.PluginID,true);
+            }
+        });
+
+        if (PluginSetController.IsBlackMode(mInfo.PluginID)){
+            boxBlack.setChecked(true);
+            boxWhite.setChecked(false);
+        }else {
+            boxWhite.setChecked(true);
+            boxBlack.setChecked(false);
+        }
+
+        CheckBox autoLoad = mRoot.findViewById(R.id.plugin_autoload);
+        autoLoad.setChecked(PluginSetController.IsAutoLoad(mInfo.PluginID));
+        autoLoad.setOnCheckedChangeListener((buttonView, isChecked) -> PluginSetController.SetAutoLoad(mInfo.PluginID,isChecked));
     }
     public String getPluginID(){return mInfo.PluginID;}
     public LinearLayout.LayoutParams getParams(){

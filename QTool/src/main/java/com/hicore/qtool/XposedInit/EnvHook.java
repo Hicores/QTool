@@ -15,6 +15,7 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.Tracker.MTracker;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
@@ -97,6 +98,7 @@ public class EnvHook {
             if (!HookEnv.IsMainProcess)return;
             AppCenter.start((Application) HookEnv.Application, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
                     Analytics.class, Crashes.class);
+            MTracker.Track_Load();
         } catch (Exception e) {
             LogUtils.error("AppCenter","Init Failed:\n"+ Log.getStackTraceString(e));
         }
@@ -117,8 +119,6 @@ public class EnvHook {
                 InitAppCenter();
 
                 XposedBridge.log("[QTool]Delay Hook End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
-
-
             });
         }
 
