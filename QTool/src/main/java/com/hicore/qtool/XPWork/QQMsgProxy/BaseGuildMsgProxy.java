@@ -21,10 +21,13 @@ public class BaseGuildMsgProxy extends BaseHookItem {
     @Override
     public boolean startHook() {
         Method[] m = getMethod();
-        XPBridge.HookBefore(m[0],param -> PluginMessageProcessor.onMessage(param.args[0]));
+        XPBridge.HookBefore(m[0],param -> {
+            PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(param.args[0]));
+        });
         XPBridge.HookBefore(m[1],param -> {
             if (!param.args[1].getClass().getSimpleName().equals("MessageRecord")){
-                PluginMessageProcessor.onMessage(param.args[1]);
+                PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(param.args[1]));
+
             }
         });
         return true;

@@ -73,16 +73,16 @@ public final class LocalPluginItemController {
             boolean loadResult = PluginController.LoadOnce(mInfo);
             if (loadResult){
                 new Handler(Looper.getMainLooper())
-                        .postDelayed(()->{
+                        .post(()->{
                             btn_loading.setVisibility(View.GONE);
                             btn_stop.setVisibility(View.VISIBLE);
-                        },2000);
+                        });
             }else {
                 new Handler(Looper.getMainLooper())
-                        .postDelayed(()->{
+                        .post(()->{
                             btn_loading.setVisibility(View.GONE);
                             btn_load.setVisibility(View.VISIBLE);
-                        },2000);
+                        });
             }
         }).start();
 
@@ -92,7 +92,7 @@ public final class LocalPluginItemController {
         btn_loading.setVisibility(View.VISIBLE);
 
         new Thread(()->{
-            PluginController.endPlugin(mInfo);
+            PluginController.endPlugin(mInfo.PluginID);
             new Handler(Looper.getMainLooper())
                     .postDelayed(()->{
                         btn_loading.setVisibility(View.GONE);
@@ -191,6 +191,21 @@ public final class LocalPluginItemController {
             setDesc(FileUtils.ReadFileString(new File(PluginRootPath,"desc.txt")));
             String PluginID = props.getProperty("id", NameUtils.GetRandomName());
             setBlackOrWhileMode(PluginSetController.IsBlackMode(PluginID));
+
+            PluginInfo NewInfo = new PluginInfo();
+            NewInfo.LocalPath = PluginRootPath;
+            NewInfo.PluginID = PluginID;
+            NewInfo.PluginName = props.getProperty("name","未设定名字");
+            NewInfo.PluginAuthor = props.getProperty("author","未设定作者");
+            NewInfo.PluginVersion = props.getProperty("version","未设定版本号");
+            NewInfo.IsRunning = PluginController.IsRunning(PluginID);
+
+            mInfo = NewInfo;
+            //如果插件已经加载则显示停止按钮
+            if (NewInfo.IsRunning){
+                btn_load.setVisibility(View.GONE);
+                btn_stop.setVisibility(View.VISIBLE);
+            }
 
             InitMeasure();
             return true;

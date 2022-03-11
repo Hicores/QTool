@@ -32,6 +32,13 @@ public class PluginController {
         }
         return false;
     }
+    public static PluginInfo SearchInfoFromID(String PluginID){
+        for(String VerifyID : runningInfo.keySet()){
+            PluginInfo info = runningInfo.get(VerifyID);
+            if (PluginID.equals(info.PluginID))return info;
+        }
+        return null;
+    }
     public static boolean LoadOnce(PluginInfo info){
         try{
             if (IsRunning(info.PluginID)){
@@ -54,12 +61,14 @@ public class PluginController {
             LoadInner(fileContent,mainJava.getAbsolutePath(),info.PluginVerifyID);
             return true;
         }catch (Throwable th){
-            forceEnd(info);
             Utils.ShowToast("脚本加载错误,已停止执行:\n"+Log.getStackTraceString(th));
+            forceEnd(info);
+
             return false;
         }
     }
-    public static void endPlugin(PluginInfo Info){
+    public static void endPlugin(String PluginID){
+        PluginInfo Info = SearchInfoFromID(PluginID);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<?> future = executor.submit(()-> InvokeToPlugin(Info.Instance,"onUnload"));
         int count = 0;
@@ -78,9 +87,12 @@ public class PluginController {
 
     }
     private static void forceEnd(PluginInfo info){
-        info.IsRunning = false;
-        info.Instance.getNameSpace().clear();
-        runningInfo.remove(info.PluginVerifyID);
+        if (info != null){
+            info.IsRunning = false;
+            info.Instance.getNameSpace().clear();
+            runningInfo.remove(info.PluginVerifyID);
+        }
+
     }
     private static String checkAndRemoveNode(String Content){
         return Content;

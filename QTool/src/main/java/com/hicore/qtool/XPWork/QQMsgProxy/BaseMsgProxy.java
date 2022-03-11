@@ -21,7 +21,7 @@ public class BaseMsgProxy extends BaseHookItem {
     public boolean startHook() {
         XPBridge.HookBefore(getMethod(),param -> {
             Object MessageRecord = param.args[0];
-            PluginMessageProcessor.onMessage(MessageRecord);
+            PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(MessageRecord));
         });
         return false;
     }
