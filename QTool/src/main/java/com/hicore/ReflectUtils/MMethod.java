@@ -17,6 +17,16 @@ public class MMethod {
         }
         return (T) method.invoke(obj,params);
     }
+    public static <T> T CallMethod(Object obj,String MethodName,Class<?>[] ParamTypes,Object... params) throws Exception{
+        Method method = FindMethod(obj.getClass(),MethodName,ParamTypes);
+        if (method == null){
+            StringBuilder builder = new StringBuilder(MethodName).append("(");
+            for (Class<?> clzErr : ParamTypes)builder.append(clzErr.getName()).append(";");
+            builder.append(")");
+            throw new NoMethodError("No Such Method "+builder+" in class "+obj.getClass().getName());
+        }
+        return (T) method.invoke(obj,params);
+    }
     public static <T> T CallMethod(Object obj,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception {
         Assert.notNull(obj,"obj can't be null when ignore the clz");
         return CallMethod(obj,obj.getClass(), MethodName, ReturnType, ParamTypes, params);

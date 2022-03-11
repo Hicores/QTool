@@ -50,16 +50,19 @@ public class QQSessionUtils {
             return null;
         }
     }
-    public static String getGroupUin(){
+    public static String getGroupUin(Object Session){
         try {
-            int SessionType = (int) Table_Session_Field.isTroop().get(HookEnv.SessionInfo);
+            int SessionType = (int) Table_Session_Field.isTroop().get(Session);
             if(SessionType==0)return "";
-            if(SessionType==1)return (String) Table_Session_Field.friendUin().get(HookEnv.SessionInfo);
-            if(SessionType==1000)return (String) Table_Session_Field.InTroopUin().get(HookEnv.SessionInfo);
+            if(SessionType==1)return (String) Table_Session_Field.friendUin().get(Session);
+            if(SessionType==1000)return (String) Table_Session_Field.InTroopUin().get(Session);
             return "";
         } catch (Exception e) {
             return "";
         }
+    }
+    public static String getGroupUin(){
+        return getGroupUin(HookEnv.SessionInfo);
     }
     public static String getFriendUin(){
         try {
@@ -72,31 +75,39 @@ public class QQSessionUtils {
             return "";
         }
     }
-    public static int getSessionID()
-    {
+    public static int getSessionID(Object Session) {
         try {
-            return (int) Table_Session_Field.isTroop().get(HookEnv.SessionInfo);
+            return (int) Table_Session_Field.isTroop().get(Session);
         } catch (Exception e) {
             return -1;
         }
     }
-    public static String getGuildID(){
+    public static int getSessionID() {
+        return getSessionID(HookEnv.SessionInfo);
+    }
+    public static String getGuildID(Object Session){
         try {
-            int SessionType = (int)Table_Session_Field.isTroop().get(HookEnv.SessionInfo);
-            if(SessionType==10014)return (String) Table_Session_Field.GuildID().get(HookEnv.SessionInfo);
+            int SessionType = (int)Table_Session_Field.isTroop().get(Session);
+            if(SessionType==10014)return (String) Table_Session_Field.GuildID().get(Session);
+            return "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    public static String getGuildID(){
+        return getGuildID(HookEnv.SessionInfo);
+    }
+    public static String getChannelID(Object session){
+        try {
+            int SessionType = (int)Table_Session_Field.isTroop().get(session);
+            if(SessionType==10014)return (String) Table_Session_Field.ChannelID().get(session);
             return "";
         } catch (Exception e) {
             return "";
         }
     }
     public static String getChannelID(){
-        try {
-            int SessionType = (int)Table_Session_Field.isTroop().get(HookEnv.SessionInfo);
-            if(SessionType==10014)return (String) Table_Session_Field.ChannelID().get(HookEnv.SessionInfo);
-            return "";
-        } catch (Exception e) {
-            return "";
-        }
+        return getChannelID(HookEnv.SessionInfo);
     }
     private static Object Build_SessionInfo_Guild(String GuildID,String ChannelID,boolean IsDirectMsg){
         try{
