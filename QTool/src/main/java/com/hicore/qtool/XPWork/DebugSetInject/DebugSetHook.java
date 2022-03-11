@@ -88,11 +88,6 @@ public class DebugSetHook extends BaseHookItem {
     }
 
     @Override
-    public String getErrorInfo() {
-        return "No Info";
-    }
-
-    @Override
     public boolean check() {
         return getHookMethod() != null;
     }

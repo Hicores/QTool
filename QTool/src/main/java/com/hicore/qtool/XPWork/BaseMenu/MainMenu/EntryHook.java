@@ -51,10 +51,6 @@ public class EntryHook extends BaseHookItem {
         return true;
     }
 
-    @Override
-    public String getErrorInfo() {
-        return "No Info";
-    }
 
     @Override
     public boolean check() {

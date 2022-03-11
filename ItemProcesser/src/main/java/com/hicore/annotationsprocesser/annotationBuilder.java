@@ -2,6 +2,7 @@ package com.hicore.annotationsprocesser;
 
 import com.google.auto.service.AutoService;
 import com.hicore.HookItem;
+import com.sun.tools.javac.code.Symbol;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -48,17 +49,18 @@ public class annotationBuilder extends AbstractProcessor {
                     "static {\n"
             );
             for (Element anno :roundEnvironment.getElementsAnnotatedWith(element)){
+                Symbol.ClassSymbol symbol = (Symbol.ClassSymbol) anno;
                 HookItem item = anno.getAnnotation(HookItem.class);
                 if (item.isRunInAllProc()){
-                    clzName.append("runOnAllProc.add(\"").append(anno).append("\");\n");
+                    clzName.append("runOnAllProc.add(\"").append(symbol.flatName()).append("\");\n");
                 }else {
-                    clzName.append("runOnMainProc.add(\"").append(anno).append("\");\n");
+                    clzName.append("runOnMainProc.add(\"").append(symbol.flatName()).append("\");\n");
                 }
 
                 if (item.isDelayInit()){
-                    clzName.append("DelayInit.add(\"").append(anno).append("\");\n");
+                    clzName.append("DelayInit.add(\"").append(symbol.flatName()).append("\");\n");
                 }else {
-                    clzName.append("BasicInit.add(\"").append(anno).append("\");\n");
+                    clzName.append("BasicInit.add(\"").append(symbol.flatName()).append("\");\n");
                 }
             }
             clzName.append("\n}}");

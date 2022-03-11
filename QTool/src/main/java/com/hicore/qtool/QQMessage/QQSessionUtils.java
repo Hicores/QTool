@@ -74,7 +74,7 @@ public class QQSessionUtils {
 
     }
     @HookItem(isDelayInit = false,isRunInAllProc = false)
-    private static class Session_Field extends BaseHookItem {
+    public static class Session_Field extends BaseHookItem {
         private static Class<?> SessionInfo(){
             return MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
         }

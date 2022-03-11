@@ -6,6 +6,8 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.qtool.HookEnv;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +32,7 @@ public class HookLoader {
             runOnMainProc = MField.GetField(null,findClz,"runOnMainProc",ArrayList.class);
             for (String clzName : BasicInit){
                 if (!cacheHookInst.containsKey(clzName)){
-                    Class clz = mLoader.loadClass(clzName);
+                    Class<?> clz = mLoader.loadClass(clzName);
                     if (BaseHookItem.class.isAssignableFrom(clz)){
                         LogUtils.debug(TAG,"Found BasicInit class:"+clzName+" and load to cache.");
                         BaseHookItem mItem = (BaseHookItem) clz.newInstance();
@@ -40,7 +42,7 @@ public class HookLoader {
             }
             for (String clzName : DelayInit){
                 if (!cacheHookInst.containsKey(clzName)){
-                    Class clz = mLoader.loadClass(clzName);
+                    Class<?> clz = mLoader.loadClass(clzName);
                     if (BaseHookItem.class.isAssignableFrom(clz)){
                         LogUtils.debug(TAG,"Found DelayInit class:"+clzName+" and load to cache.");
                         BaseHookItem mItem = (BaseHookItem) clz.newInstance();
@@ -50,7 +52,7 @@ public class HookLoader {
             }
             for (String clzName : runOnAllProc){
                 if (!cacheHookInst.containsKey(clzName)){
-                    Class clz = mLoader.loadClass(clzName);
+                    Class<?> clz = mLoader.loadClass(clzName);
                     if (BaseHookItem.class.isAssignableFrom(clz)){
                         LogUtils.debug(TAG,"Found runOnAllProc class:"+clzName+" and load to cache.");
                         BaseHookItem mItem = (BaseHookItem) clz.newInstance();
@@ -60,7 +62,7 @@ public class HookLoader {
             }
             for (String clzName : runOnMainProc){
                 if (!cacheHookInst.containsKey(clzName)){
-                    Class clz = mLoader.loadClass(clzName);
+                    Class<?> clz = mLoader.loadClass(clzName);
                     if (BaseHookItem.class.isAssignableFrom(clz)){
                         LogUtils.debug(TAG,"Found runOnMainProc class:"+clzName+" and load to cache.");
                         BaseHookItem mItem = (BaseHookItem) clz.newInstance();
