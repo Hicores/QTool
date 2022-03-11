@@ -17,7 +17,7 @@ import java.util.List;
 public class QQGroupManager {
     public static void Group_Kick(String GroupUin,String UserUin,boolean isBlack){
         try{
-            Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"),QQInfoUtils.getAppRuntime());
+            Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
             ArrayList<Long> KickList = new ArrayList<>();
             KickList.add(Long.parseLong(UserUin));
             Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler","a",void.class,new Class[]{
@@ -37,7 +37,7 @@ public class QQGroupManager {
     }
     public static void Group_Kick(String GroupUin,String[] UserUin,boolean isBlack){
         try{
-            Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"),QQInfoUtils.getAppRuntime());
+            Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
             ArrayList<Long> KickList = new ArrayList<>();
             for(String Uin :UserUin)KickList.add(Long.parseLong(Uin));
             Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler","a",void.class,new Class[]{
@@ -62,7 +62,7 @@ public class QQGroupManager {
             return;
         }
         try{
-            Object TroopGagManager = MMethod.CallMethod(QQInfoUtils.getAppRuntime(),"getBusinessHandler",
+            Object TroopGagManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getBusinessHandler",
                     MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"TROOP_GAG_HANDLER"));
             if (TextUtils.isEmpty(UserUin)){
@@ -88,7 +88,7 @@ public class QQGroupManager {
     }
     public static void Group_Change_Name(String GroupUin,String UserUin,String name){
         try{
-            Object mCallObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler"),new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface")},QQInfoUtils.getAppRuntime());
+            Object mCallObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler"),new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface")}, QQEnvUtils.getAppRuntime());
             Object TroopCardObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberCardInfo"),new Class[0],new Object[0]);
             MField.SetField(TroopCardObj,"name",name);
             MField.SetField(TroopCardObj,"troopuin",GroupUin);

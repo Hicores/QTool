@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.QQManager.QQGroupManager;
-import com.hicore.qtool.QQManager.QQInfoUtils;
+import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQTicketManager;
 import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.QQMessage.QQMsgSendUtils;
@@ -211,7 +211,7 @@ public class PluginMethod {
     }
     public void sendLike(String UserUin,int count){
         for (int i=0;i<count;i++){
-            QQInfoUtils.sendLike(UserUin);
+            QQEnvUtils.sendLike(UserUin);
         }
     }
     public void sendAntEmo(String GroupUin,String UserUin,int servID){

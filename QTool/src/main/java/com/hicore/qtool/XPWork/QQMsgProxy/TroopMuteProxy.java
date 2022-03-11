@@ -5,7 +5,7 @@ import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
-import com.hicore.qtool.QQManager.QQInfoUtils;
+import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ public class TroopMuteProxy extends BaseHookItem {
             if (b){
                 PluginMessageProcessor.submit(()->PluginMessageProcessor.onMuteEvent(GroupUin, "",AdminUin,TimeRest));
             }else {
-                PluginMessageProcessor.submit(()->PluginMessageProcessor.onMuteEvent(GroupUin, QQInfoUtils.getCurrentUin(),AdminUin,TimeRest));
+                PluginMessageProcessor.submit(()->PluginMessageProcessor.onMuteEvent(GroupUin, QQEnvUtils.getCurrentUin(),AdminUin,TimeRest));
             }
 
         });

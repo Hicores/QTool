@@ -6,7 +6,7 @@ import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
-import com.hicore.qtool.QQManager.QQInfoUtils;
+import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.XposedInit.HostInfo;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
@@ -39,13 +39,13 @@ public class BaseRevokeProxy extends BaseHookItem {
             if(istroop == 1){
                 FriendUin = GroupUin;
             }else if(istroop == 0){
-                if(OpUin.equals(QQInfoUtils.getCurrentUin())){
+                if(OpUin.equals(QQEnvUtils.getCurrentUin())){
                     FriendUin = GroupUin;
                 }else{
                     FriendUin = OpUin;
                 }
             } else{
-                if(OpUin.equals(QQInfoUtils.getCurrentUin())){
+                if(OpUin.equals(QQEnvUtils.getCurrentUin())){
                     FriendUin = GroupUin;
                 }else{
                     FriendUin = OpUin;

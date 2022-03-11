@@ -8,7 +8,7 @@ import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
-import com.hicore.qtool.QQManager.QQInfoUtils;
+import com.hicore.qtool.QQManager.QQEnvUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -213,7 +213,7 @@ public class PluginController {
         instance.set("SDKVer",10);
         instance.set("loader",HookEnv.mLoader);
         instance.set("AppPath",info.LocalPath);
-        instance.set("MyUin", QQInfoUtils.getCurrentUin());
+        instance.set("MyUin", QQEnvUtils.getCurrentUin());
 
         instance.eval(LoadContent);
     }

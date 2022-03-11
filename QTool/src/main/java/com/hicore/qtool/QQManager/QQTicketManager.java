@@ -6,13 +6,13 @@ import com.hicore.ReflectUtils.MMethod;
 
 public class QQTicketManager {
     public static Object GetTicketManager() throws Exception {
-        return MMethod.CallMethod(QQInfoUtils.getAppRuntime(),"getManager", MClass.loadClass("mqq.manager.Manager"),new Class[]{int.class},2);
+        return MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getManager", MClass.loadClass("mqq.manager.Manager"),new Class[]{int.class},2);
     }
     public static String getSkey()
     {
         try{
             Object TickManager = GetTicketManager();
-            return MMethod.CallMethod(TickManager,"getSkey",String.class,new Class[]{String.class},QQInfoUtils.getCurrentUin());
+            return MMethod.CallMethod(TickManager,"getSkey",String.class,new Class[]{String.class}, QQEnvUtils.getCurrentUin());
         } catch (Exception e) {
             LogUtils.error("GetSkey",e);
             return "";
@@ -22,7 +22,7 @@ public class QQTicketManager {
     {
         try{
             Object TickManager = GetTicketManager();
-            return MMethod.CallMethod(TickManager,"getPskey",String.class,new Class[]{String.class,String.class},QQInfoUtils.getCurrentUin(),Domain);
+            return MMethod.CallMethod(TickManager,"getPskey",String.class,new Class[]{String.class,String.class}, QQEnvUtils.getCurrentUin(),Domain);
         } catch (Exception e) {
             LogUtils.error("GetPsKey",e);
             return "";
@@ -41,7 +41,7 @@ public class QQTicketManager {
     {
         try{
             Object TickManager = GetTicketManager();
-            return MMethod.CallMethod(TickManager,"getSuperkey",String.class,new Class[]{String.class},QQInfoUtils.getCurrentUin());
+            return MMethod.CallMethod(TickManager,"getSuperkey",String.class,new Class[]{String.class}, QQEnvUtils.getCurrentUin());
         } catch (Exception e) {
             LogUtils.error("GetSuperKey",e);
             return "";
@@ -51,7 +51,7 @@ public class QQTicketManager {
     {
         try{
             Object TickManager = GetTicketManager();
-            return MMethod.CallMethod(TickManager,"getPt4Token",String.class,new Class[]{String.class,String.class},QQInfoUtils.getCurrentUin(),Domain);
+            return MMethod.CallMethod(TickManager,"getPt4Token",String.class,new Class[]{String.class,String.class}, QQEnvUtils.getCurrentUin(),Domain);
         } catch (Exception e) {
            LogUtils.error("getPt4Token",e);
            return "";
