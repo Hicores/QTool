@@ -26,8 +26,7 @@ public class PluginInfo {
 
 
     public boolean IsAvailable(String GroupUin){
-        return true;
-        //return IsBlackMode != ListStr.contains(GroupUin);
+        return IsBlackMode != ListStr.contains(GroupUin);
     }
     public static class EarlyInfo{
         public int istroop;

@@ -39,7 +39,7 @@
             android:layout_marginLeft="30dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="通信状态:无法通信"
+            android:text="测试版本,请等待完善"
             android:gravity="center_vertical"
             android:textSize="20sp"
             android:textColor="#cc3333"/>
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="模块版本:1.0.0"
+                android:text="模块版本:0.0.1"
                 android:gravity="center_vertical"
                 android:textSize="20sp"
                 android:textColor="#3333cc"/>
