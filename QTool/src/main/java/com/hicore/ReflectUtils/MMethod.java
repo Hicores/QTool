@@ -26,6 +26,11 @@ public class MMethod {
         for (int i=0;i<ParamTypes.length;i++)ParamTypes[i] = params[i].getClass();
         return CallMethod(obj,obj.getClass(), MethodName, ReturnType, ParamTypes, params);
     }
+    public static <T> T CallMethod(Object obj,Class<?> clz,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
+        Class<?>[] ParamTypes = new Class[params.length];
+        for (int i=0;i<ParamTypes.length;i++)ParamTypes[i] = params[i].getClass();
+        return CallMethod(obj,clz, MethodName, ReturnType, ParamTypes, params);
+    }
     public static <T> T CallMethod(Object obj,Class<?> clz,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception {
         Method method = FindMethod(clz,MethodName,ReturnType,ParamTypes);
         Assert.notNull(clz,"clz can't be null");

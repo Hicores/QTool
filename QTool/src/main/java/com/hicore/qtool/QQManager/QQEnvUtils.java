@@ -34,7 +34,7 @@ public class QQEnvUtils {
     }
     public static Object getAppRuntime() throws Exception {
         Object sApplication = MMethod.CallMethod(null, MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"),
-                "getApplication",MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"),new Class[0]);
+                "getApplication",MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"));
         return MMethod.CallMethod(sApplication,"getRuntime",MClass.loadClass("mqq.app.AppRuntime"));
     }
     public static Object GetIGpsManager() throws Exception {
@@ -56,7 +56,7 @@ public class QQEnvUtils {
 
     }
     public static long GetServerTime() throws Exception {
-        return MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.msf.core.NetConnInfoCenter"),"getServerTime",long.class,new Class[0]);
+        return MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.msf.core.NetConnInfoCenter"),"getServerTime",long.class);
     }
     public static Object getBusinessHandler(String Clz) throws Exception {
         Method Invoked = null;
