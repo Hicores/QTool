@@ -89,7 +89,7 @@ public class EnvHook {
 
     }
     private static void InitActivityProxy(){
-        EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.photo.CameraPreviewActivity", moduleLoader, HookEnv.mLoader);
+        EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.AboutActivity", moduleLoader, HookEnv.mLoader);
         EzXHelperInit.INSTANCE.initSubActivity();
     }
     private static void HookForDelayDialog(){
