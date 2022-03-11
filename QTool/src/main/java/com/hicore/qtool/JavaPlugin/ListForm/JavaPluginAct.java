@@ -3,14 +3,19 @@ package com.hicore.qtool.JavaPlugin.ListForm;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.R;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JavaPluginAct extends Activity {
     private LinearLayout itemLayout;
@@ -18,6 +23,24 @@ public class JavaPluginAct extends Activity {
         Intent intent = new Intent(host, JavaPluginAct.class);
         host.startActivity(intent);
     }
+    static AtomicReference<onNotify> notifyInstance = new AtomicReference<>();
+    interface onNotify{
+        void onNotifyLoadSuccess(String PluginID);
+    }
+    public static void NotifyLoadSuccess(String PluginID){
+        onNotify notify = notifyInstance.get();
+        if (notify != null){
+            notify.onNotifyLoadSuccess(PluginID);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        notifyInstance.getAndSet(null);
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.Theme_QTool);
@@ -28,6 +51,7 @@ public class JavaPluginAct extends Activity {
 
     }
     private void searchForLocal(){
+        HashMap<String, LocalPluginItemController> controllers = new HashMap<>();
         itemLayout.removeAllViews();
         File searchPath = new File(HookEnv.ExtraDataPath+"/Plugin");
         File[] searchResult = searchPath.listFiles();
@@ -38,10 +62,18 @@ public class JavaPluginAct extends Activity {
                     boolean loadResult = controller.checkAndLoadPluginInfo(f.getAbsolutePath());
                     if (loadResult){
                         itemLayout.addView(controller.getRoot(),controller.getParams());
+                        controllers.put(controller.getPluginID(),controller);
                     }
                 }
             }
         }
+        notifyInstance.set(PluginID -> {
+            LocalPluginItemController controller = controllers.get(PluginID);
+            if (controller != null){
+                new Handler(Looper.getMainLooper())
+                        .post(controller::notifyLoadSuccessOrDestroy);
+            }
+        });
     }
     private void searchForOnline(){
 

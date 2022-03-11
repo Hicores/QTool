@@ -108,7 +108,6 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         }
         private Class tryLoad(String name)throws ClassNotFoundException{
             try{
-                XposedBridge.log("Try load "+name);
                 if (childLoader != null){
                     Class clz = (Class) findClass.invoke(childLoader,name);
                     if (clz != null){

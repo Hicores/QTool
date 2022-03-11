@@ -63,8 +63,6 @@ public final class LocalPluginItemController {
 
 
     }
-    private boolean IsLoading = false;
-    private boolean IsLoaded = false;
     private void ClickLoad(){
         btn_load.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
@@ -94,10 +92,10 @@ public final class LocalPluginItemController {
         new Thread(()->{
             PluginController.endPlugin(mInfo.PluginID);
             new Handler(Looper.getMainLooper())
-                    .postDelayed(()->{
+                    .post(()->{
                         btn_loading.setVisibility(View.GONE);
                         btn_load.setVisibility(View.VISIBLE);
-                    },2000);
+                    });
         }).start();
 
     }
@@ -189,7 +187,7 @@ public final class LocalPluginItemController {
             setAuthor("作者:"+props.getProperty("author","未设定作者"));
             setVersion("版本号:"+props.getProperty("version","未设定版本号"));
             setDesc(FileUtils.ReadFileString(new File(PluginRootPath,"desc.txt")));
-            String PluginID = props.getProperty("id", NameUtils.GetRandomName());
+            String PluginID = props.getProperty("id", new File(PluginRootPath).getName());
             setBlackOrWhileMode(PluginSetController.IsBlackMode(PluginID));
 
             PluginInfo NewInfo = new PluginInfo();
@@ -199,12 +197,19 @@ public final class LocalPluginItemController {
             NewInfo.PluginAuthor = props.getProperty("author","未设定作者");
             NewInfo.PluginVersion = props.getProperty("version","未设定版本号");
             NewInfo.IsRunning = PluginController.IsRunning(PluginID);
+            NewInfo.IsLoading = PluginController.IsLoading(PluginID);
 
             mInfo = NewInfo;
             //如果插件已经加载则显示停止按钮
             if (NewInfo.IsRunning){
                 btn_load.setVisibility(View.GONE);
                 btn_stop.setVisibility(View.VISIBLE);
+            }
+
+            if (NewInfo.IsLoading){
+                btn_load.setVisibility(View.GONE);
+                btn_stop.setVisibility(View.GONE);
+                btn_loading.setVisibility(View.VISIBLE);
             }
 
             InitMeasure();
@@ -215,6 +220,7 @@ public final class LocalPluginItemController {
             return false;
         }
     }
+    public String getPluginID(){return mInfo.PluginID;}
     public LinearLayout.LayoutParams getParams(){
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         param.setMargins(Utils.dip2px(mRoot.getContext(),16),Utils.dip2px(mRoot.getContext(),5),
@@ -267,5 +273,10 @@ public final class LocalPluginItemController {
             RadioButton button = mRoot.findViewById(R.id.plugin_message_while);
             button.setChecked(true);
         }
+    }
+    public void notifyLoadSuccessOrDestroy(){
+        btn_loading.setVisibility(View.GONE);
+        btn_load.setVisibility(View.GONE);
+        btn_stop.setVisibility(View.VISIBLE);
     }
 }

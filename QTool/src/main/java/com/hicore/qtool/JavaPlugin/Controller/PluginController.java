@@ -1,6 +1,5 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
-import android.util.Base64DataException;
 import android.util.Log;
 
 import com.hicore.ReflectUtils.MClass;
@@ -8,6 +7,7 @@ import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
 import com.hicore.qtool.QQManager.QQInfoUtils;
 
 import java.io.File;
@@ -15,10 +15,8 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import bsh.BshMethod;
-import bsh.EvalError;
 import bsh.Interpreter;
 import bsh.NameSpace;
 
@@ -29,6 +27,13 @@ public class PluginController {
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
             if (PluginID.equals(info.PluginID))return info.IsRunning;
+        }
+        return false;
+    }
+    public static boolean IsLoading(String PluginID){
+        for(String VerifyID : runningInfo.keySet()){
+            PluginInfo info = runningInfo.get(VerifyID);
+            if (PluginID.equals(info.PluginID))return info.IsLoading;
         }
         return false;
     }
@@ -59,6 +64,9 @@ public class PluginController {
             runningInfo.put(info.PluginVerifyID,info);
             LoadFirst(info);
             LoadInner(fileContent,mainJava.getAbsolutePath(),info.PluginVerifyID);
+            info.IsRunning = true;
+            info.IsLoading = false;
+            JavaPluginAct.NotifyLoadSuccess(info.PluginID);
             return true;
         }catch (Throwable th){
             Utils.ShowToast("脚本加载错误,已停止执行:\n"+Log.getStackTraceString(th));
@@ -171,12 +179,14 @@ public class PluginController {
         instance.eval(LoadContent);
     }
     public static void checkAndInvoke(String GroupUin,int type,String MethodName,Object... param){
+
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
             if (info.IsRunning){
                 if (info.IsAvailable(GroupUin)){
                     try{
                         InvokeToPlugin(info.Instance,MethodName,param);
+
                     }catch (RuntimeException runtime){
                         Throwable cause = runtime.getCause();
                         PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(cause));
@@ -185,6 +195,7 @@ public class PluginController {
                 }
             }
         }
+
     }
     private static void InvokeToPlugin(Interpreter Instance,String MethodName, Object... param){
         try {
