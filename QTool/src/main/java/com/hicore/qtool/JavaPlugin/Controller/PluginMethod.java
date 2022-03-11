@@ -2,10 +2,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.app.Activity;
 
-import androidx.annotation.DoNotInline;
-
 import com.hicore.Utils.Utils;
-import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQGroupManager;
 import com.hicore.qtool.QQManager.QQInfoUtils;
 import com.hicore.qtool.QQManager.QQTicketManager;
@@ -13,6 +10,7 @@ import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.QQMessage.QQMsgSendUtils;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
+import com.hicore.qtool.XPWork.QQMsgProxy.JoinEventProxy;
 
 import java.util.ArrayList;
 
@@ -215,12 +213,11 @@ public class PluginMethod {
         for (int i=0;i<count;i++){
             QQInfoUtils.sendLike(UserUin);
         }
-
     }
     public void sendAntEmo(String GroupUin,String UserUin,int servID){
-
+        QQMsgSender.sendAntEmo(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),servID);
     }
     public void HandlerRequest(Object request,boolean isAccept,String reason,boolean isBlack){
-
+        JoinEventProxy.sendResponse(request, isAccept, reason, isBlack);
     }
 }

@@ -4,9 +4,7 @@ public abstract class BaseHookItem {
     public BaseHookItem(){ }
     private boolean isLoad = false;
     private boolean isTryLoad = false;
-    public String getTag(){
-        return getClass().getSimpleName();
-    }
+    public String getTag(){ return getClass().getSimpleName(); }
     public abstract boolean startHook() throws Throwable;
     public abstract boolean isEnable();
     public abstract boolean check();

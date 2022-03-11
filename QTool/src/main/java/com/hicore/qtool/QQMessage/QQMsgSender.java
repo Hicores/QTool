@@ -43,4 +43,7 @@ public class QQMsgSender {
     public static void sendShakeWindow(String GroupUin){
 
     }
+    public static void sendAntEmo(Object _Session,int ID){
+
+    }
 }
