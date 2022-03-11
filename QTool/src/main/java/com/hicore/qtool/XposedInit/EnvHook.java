@@ -24,6 +24,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import com.microsoft.appcenter.ingestion.models.Device;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 public class EnvHook {
@@ -34,6 +35,8 @@ public class EnvHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
+                XposedBridge.log("BaseHook Start,Process:"+HookEnv.ProcessName);
+                long timeStart = System.currentTimeMillis();
                 HookEnv.AppContext = (Context) param.args[0];
 
                 //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
@@ -51,19 +54,18 @@ public class EnvHook {
                 ExtraPathInit.InitPath();
 
                 //然后注入资源
-                LogUtils.debug(TAG,"BaseHook Start");
                 EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext,false,true);
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-
-                HookForDelayDialog();
+                HookForDelay();
                 if (HookEnv.ExtraDataPath != null){
+
                     HostInfo.Init();
                     InitActivityProxy();
                     //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
                     HookLoader.SearchAndLoadAllHook();
                 }
-                LogUtils.debug(TAG,"BaseHook End");
+                XposedBridge.log("BaseHook Init End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
 
             }
         });
@@ -92,12 +94,16 @@ public class EnvHook {
         EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.AboutActivity", moduleLoader, HookEnv.mLoader);
         EzXHelperInit.INSTANCE.initSubActivity();
     }
-    private static void HookForDelayDialog(){
-        XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {
-            LogUtils.debug(TAG,"DelayHook Start");
-            if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog();
-            else HookLoader.CallAllDelayHook();
-            LogUtils.debug(TAG,"DelayHook End");
-        });
+    private static void HookForDelay(){
+        if (HookEnv.IsMainProcess){
+            XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {
+                long timeStart = System.currentTimeMillis();
+                if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog();
+                else HookLoader.CallAllDelayHook();
+                XposedBridge.log("Delay Hook End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
+
+            });
+        }
+
     }
 }
