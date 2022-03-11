@@ -5,9 +5,10 @@ import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 @HookItem(isRunInAllProc = false,isDelayInit = false)
 public class QQManagerApiChecker extends BaseHookItem {
+    private static final String TAG = "QQManagerApiChecker";
     @Override
     public String getTag() {
-        return null;
+        return TAG;
     }
 
     @Override

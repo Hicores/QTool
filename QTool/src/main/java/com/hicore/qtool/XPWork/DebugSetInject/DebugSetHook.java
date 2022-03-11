@@ -67,7 +67,7 @@ public class DebugSetHook extends BaseHookItem {
 
                 TextView titleClzInfo = new TextView(context);
                 titleClzInfo.setTextColor(Color.parseColor("#6666ff"));
-                titleClzInfo.setText("Hook状态");
+                titleClzInfo.setText("模块加载状态");
                 titleClzInfo.setTextSize(24);
                 mRoot.addView(titleClzInfo,getMarginParam());
 

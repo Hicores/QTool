@@ -8,7 +8,7 @@ public class QQMsgApiChecker extends BaseHookItem {
     private static String TAG = "QQMsgApiChecker";
     @Override
     public String getTag() {
-        return null;
+        return TAG;
     }
 
     @Override
