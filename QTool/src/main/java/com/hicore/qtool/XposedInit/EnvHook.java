@@ -42,7 +42,10 @@ public class EnvHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                XposedBridge.log("BaseHook Start,Process:"+HookEnv.ProcessName);
+                if (HookEnv.IsMainProcess){
+                    XposedBridge.log("[QTool]BaseHook Start");
+                }
+
                 long timeStart = System.currentTimeMillis();
                 try{
                     HookEnv.Application = (Application) param.thisObject;
@@ -75,7 +78,10 @@ public class EnvHook {
                         HookLoader.SearchAndLoadAllHook();
                     }
                 }finally {
-                    XposedBridge.log("BaseHook Init End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
+                    if (HookEnv.IsMainProcess){
+                        XposedBridge.log("[QTool]BaseHook Init End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
+                    }
+
                 }
 
 
@@ -109,7 +115,8 @@ public class EnvHook {
                 if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog();
                 else HookLoader.CallAllDelayHook();
                 InitAppCenter();
-                XposedBridge.log("Delay Hook End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
+
+                XposedBridge.log("[QTool]Delay Hook End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
 
 
             });
