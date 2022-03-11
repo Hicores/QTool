@@ -2,6 +2,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.util.Log;
 
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;

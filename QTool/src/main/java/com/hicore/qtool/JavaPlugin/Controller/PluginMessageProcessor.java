@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class PluginMessageProcessor {
     private static ExecutorService executor = Executors.newSingleThreadExecutor();
     public static void onMessage(Object msg){
-        executor.submit(()->onMessage0(msg));
+        onMessage0(msg);
     }
     public static void submit(Runnable run){
         executor.submit(run);

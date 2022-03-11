@@ -1,6 +1,7 @@
 package com.hicore.qtool.XPWork.QQProxy;
 
 import com.hicore.HookItem;
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
@@ -23,7 +24,7 @@ public class BaseMsgProxy extends BaseHookItem {
             Object MessageRecord = param.args[0];
             PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(MessageRecord));
         });
-        return false;
+        return true;
     }
 
     @Override

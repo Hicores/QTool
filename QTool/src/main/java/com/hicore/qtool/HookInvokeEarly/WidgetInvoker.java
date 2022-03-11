@@ -11,17 +11,22 @@ import java.lang.reflect.Method;
 public class WidgetInvoker extends BaseHookItem {
     @Override
     public boolean startHook() throws Throwable {
-        Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.qqsettingme.config.QQSettingMeMenuConfigBean");
-        Method mFound = null;
-        for(Method m : clz.getDeclaredMethods())
-        {
-            if(m.getReturnType().isArray() && m.getParameterCount()==0) {
-                mFound = m;
+        try{
+            Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.qqsettingme.config.QQSettingMeMenuConfigBean");
+            Method mFound = null;
+            for(Method m : clz.getDeclaredMethods())
+            {
+                if(m.getReturnType().isArray() && m.getParameterCount()==0) {
+                    mFound = m;
+                }
             }
+            if (mFound != null){
+                mFound.invoke(clz.newInstance());
+            }
+        }catch (Exception e){
+
         }
-        if (mFound != null){
-            mFound.invoke(clz.newInstance());
-        }
+
         return true;
     }
 

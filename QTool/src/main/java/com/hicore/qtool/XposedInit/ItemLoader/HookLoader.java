@@ -168,6 +168,7 @@ public class HookLoader {
                     subResult.IsAvailable = item.check();
                     subResult.IsEnable = item.isEnable();
                     subResult.ErrorInfo = item.getErrorInfo();
+                    subResult.IsLoaded = item.isLoaded();
                 }catch (Throwable th){
                     subResult.IsAvailable = false;
                     subResult.ErrorInfo = th.toString();
@@ -194,6 +195,7 @@ public class HookLoader {
         public String ClassName;
         public boolean IsAvailable;
         public boolean IsEnable;
+        public boolean IsLoaded;
         public String ErrorInfo;
     }
 }
