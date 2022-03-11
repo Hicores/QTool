@@ -1,4 +1,4 @@
-package com.hicore.qtool.XPWork.QQMsgProxy;
+package com.hicore.qtool.XPWork.QQProxy;
 
 import com.hicore.HookItem;
 import com.hicore.ReflectUtils.MClass;
@@ -8,7 +8,6 @@ import com.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)

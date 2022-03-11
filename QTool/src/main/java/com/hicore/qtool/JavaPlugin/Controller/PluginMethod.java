@@ -10,7 +10,7 @@ import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.QQMessage.QQMsgSendUtils;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
-import com.hicore.qtool.XPWork.QQMsgProxy.JoinEventProxy;
+import com.hicore.qtool.XPWork.QQProxy.JoinEventProxy;
 
 import java.util.ArrayList;
 

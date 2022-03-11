@@ -37,35 +37,40 @@ public class EnvHook {
                 super.beforeHookedMethod(param);
                 XposedBridge.log("BaseHook Start,Process:"+HookEnv.ProcessName);
                 long timeStart = System.currentTimeMillis();
-                HookEnv.AppContext = (Context) param.args[0];
+                try{
 
-                //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
-                HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
+                    HookEnv.AppContext = (Context) param.args[0];
 
-                ClassLoader fixLoader = EnvHook.class.getClassLoader().getParent();
-                if (fixLoader instanceof HookEntry.FixSubClassLoader){
-                    LogUtils.debug(TAG,"Init from FixSubClassLoade");
-                    HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
-                    HookEnv.fixLoader.addHostLoader(HookEnv.mLoader);
+                    //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
+                    HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
+
+                    ClassLoader fixLoader = EnvHook.class.getClassLoader().getParent();
+                    if (fixLoader instanceof HookEntry.FixSubClassLoader){
+                        HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
+                        HookEnv.fixLoader.addHostLoader(HookEnv.mLoader);
+                    }
+                    moduleLoader = EnvHook.class.getClassLoader();
+                    InitAppCenter();
+                    //优先初始化Path
+                    ExtraPathInit.InitPath();
+
+                    //然后注入资源
+                    EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext,false,true);
+                    ResUtils.StartInject(HookEnv.AppContext);
+                    //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
+                    HookForDelay();
+                    if (HookEnv.ExtraDataPath != null){
+
+                        HostInfo.Init();
+                        InitActivityProxy();
+                        //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
+                        HookLoader.SearchAndLoadAllHook();
+                    }
+                }finally {
+                    XposedBridge.log("BaseHook Init End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
                 }
-                moduleLoader = EnvHook.class.getClassLoader();
-                InitAppCenter();
-                //优先初始化Path
-                ExtraPathInit.InitPath();
 
-                //然后注入资源
-                EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext,false,true);
-                ResUtils.StartInject(HookEnv.AppContext);
-                //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                HookForDelay();
-                if (HookEnv.ExtraDataPath != null){
 
-                    HostInfo.Init();
-                    InitActivityProxy();
-                    //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
-                    HookLoader.SearchAndLoadAllHook();
-                }
-                XposedBridge.log("BaseHook Init End,time cost:"+(System.currentTimeMillis() - timeStart)+"ms");
 
             }
         });

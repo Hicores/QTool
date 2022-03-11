@@ -1,4 +1,4 @@
-package com.hicore.qtool.XPWork.QQMsgProxy;
+package com.hicore.qtool.XPWork.QQProxy;
 
 import com.hicore.HookItem;
 import com.hicore.ReflectUtils.XPBridge;

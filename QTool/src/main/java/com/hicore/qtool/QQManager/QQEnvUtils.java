@@ -4,6 +4,7 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -69,5 +70,14 @@ public class QQEnvUtils {
         }
         Object MessageFacade = Invoked.invoke(HookEnv.AppInterface,Clz);
         return MessageFacade;
+    }
+    public static Object GetRevokeHelper(){
+        try{
+            Object obj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"), BaseChatPie.cacheChatPie);
+            return obj;
+        }catch (Exception ex)
+        {
+            return null;
+        }
     }
 }
