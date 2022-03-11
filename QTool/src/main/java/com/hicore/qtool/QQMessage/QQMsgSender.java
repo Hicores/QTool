@@ -165,7 +165,7 @@ public class QQMsgSender {
             });
             Object MessageRecord =CallMethod.invoke(null,-2020);
             MField.SetField(MessageRecord,"msg","窗口抖动");
-            Object mShakeParam = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.ShakeWindowMsg"),new Class[0]);
+            Object mShakeParam = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.ShakeWindowMsg"));
             MField.SetField(mShakeParam,"mReserve",0);
             MField.SetField(mShakeParam,"mType",0);
             MField.SetField(MessageRecord,"mShakeWindowMsg",mShakeParam);
@@ -174,7 +174,7 @@ public class QQMsgSender {
                     QQEnvUtils.getCurrentUin(),GroupUin,QQEnvUtils.getCurrentUin(),"[窗口抖动]",System.currentTimeMillis()/1000,-2020,
                     1,System.currentTimeMillis()/1000
             );
-            MMethod.CallMethod(MessageRecord,MessageRecord.getClass(),"prewrite",void.class,new Class[0]);
+            MMethod.CallMethod(MessageRecord,"prewrite",void.class);
             QQMessageUtils.AddAndSendMsg(MessageRecord);
         }catch (Exception e){
             LogUtils.error("sendShakeWindow",e);

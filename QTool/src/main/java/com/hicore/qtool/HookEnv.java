@@ -1,5 +1,6 @@
 package com.hicore.qtool;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -19,6 +20,7 @@ public class HookEnv {
     public static String ToolApkPath;
 
     public static Context AppContext;
+    public static Application Application;
 
     public static boolean IsMainProcess;
     public static ConfigCore Config;

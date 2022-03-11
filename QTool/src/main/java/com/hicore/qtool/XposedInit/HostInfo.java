@@ -1,5 +1,6 @@
 package com.hicore.qtool.XposedInit;
 
+import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -22,7 +23,7 @@ public class HostInfo {
             ApplicationInfo sAppInfo = pm.getApplicationInfo("com.tencent.mobileqq",PackageManager.GET_META_DATA);
             String UUID = sAppInfo.metaData.getString("com.tencent.rdm.uuid");
 
-            Version = Version_1+"."+UUID.substring(0,UUID.indexOf("_"));
+            Version = Version_1;
             Version_Code = Integer.parseInt(UUID.substring(0,UUID.indexOf("_")));
         } catch (Throwable e) {
             LogUtils.fetal_error(TAG,e);
@@ -31,4 +32,5 @@ public class HostInfo {
     public static int getVerCode(){
         return Version_Code;
     }
+    public static String getVersion(){return Version;}
 }
