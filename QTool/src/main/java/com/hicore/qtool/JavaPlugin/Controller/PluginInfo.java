@@ -19,17 +19,14 @@ public class PluginInfo {
     public String PluginAuthor;
     public String PluginVersion;
     public Interpreter Instance;
-    public HashMap<String,FunctionInfo> ItemFunctions = new HashMap<>();
+    public HashMap<String, PluginController.ItemInfo> ItemFunctions = new HashMap<>();
+    public String ItemClickFunctionName = "";
+
+    public String AccessToken = "";
+
 
     public boolean IsAvailable(String GroupUin){
         return IsBlackMode != ListStr.contains(GroupUin);
-    }
-
-    public static class FunctionInfo{
-        public String FunctionName;
-        public String FunctionCallback;
-
-        public int FunctionType;
     }
     public static class MessageData{
         public String MessageContent;

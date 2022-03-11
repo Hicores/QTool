@@ -6,8 +6,7 @@ import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.HookEnv;
 
 public class QQMessageUtils {
-    public static Object GetMessageByTimeSeq(String uin,int istroop,long msgseq)
-    {
+    public static Object GetMessageByTimeSeq(String uin,int istroop,long msgseq) {
         try{
             if(HookEnv.AppInterface==null)return null;
             Object MessageFacade = MMethod.CallMethod(HookEnv.AppInterface, "getMessageFacade",
@@ -19,7 +18,9 @@ public class QQMessageUtils {
             LogUtils.error("QQMessageUtils","GetMessageByTimeSeq error:\n"+e);
             return null;
         }
-
+    }
+    public static void revokeMsg(Object obj){
 
     }
+
 }

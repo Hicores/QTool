@@ -39,4 +39,7 @@ public class QQInfoUtils {
                 "getApplication",MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"),new Class[0]);
         return MMethod.CallMethod(sApplication,"getRuntime",MClass.loadClass("mqq.app.AppRuntime"));
     }
+    public static void sendLike(String Uin){
+
+    }
 }

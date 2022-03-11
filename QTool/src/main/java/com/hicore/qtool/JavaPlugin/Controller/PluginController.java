@@ -23,6 +23,43 @@ import bsh.NameSpace;
 public class PluginController {
     private static HashMap<String,PluginInfo> runningInfo = new HashMap<>();
 
+
+    public static String AddItem(String PluginVerifyID,String ItemName,String Callback,int type){
+        PluginInfo info =runningInfo.get(PluginVerifyID);
+        if (info!= null){
+            String ID = NameUtils.getRandomString(32);
+            ItemInfo NewInfo = new ItemInfo();
+            NewInfo.CallbackName = Callback;
+            NewInfo.ItemID = ID;
+            NewInfo.itemType = type;
+            NewInfo.ItemName = ItemName;
+            info.ItemFunctions.put(ID,NewInfo);
+            return ID;
+        }
+        return null;
+    }
+    public static void setItemClickFunctionName(String PluginVerifyID,String Callback){
+        PluginInfo info =runningInfo.get(PluginVerifyID);
+        if (info!= null){
+            info.ItemClickFunctionName = Callback;
+        }
+    }
+    public static void RemoveItem(String PluginVerifyID,String ItemID){
+        PluginInfo info =runningInfo.get(PluginVerifyID);
+        if (info!= null){
+            info.ItemFunctions.remove(ItemID);
+        }
+    }
+    public static void loadExtra(String PluginVerifyID,String path){
+
+    }
+    public static class ItemInfo{
+        public int itemType;
+        public String ItemName;
+        public String ItemID;
+        public String CallbackName;
+    }
+
     public static boolean IsRunning(String PluginID){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -132,6 +169,8 @@ public class PluginController {
         space.setMethod("getPskey",new BshMethod(PluginMethod.class.getMethod("getPskey", String.class),env));
         space.setMethod("getSuperkey",new BshMethod(PluginMethod.class.getMethod("getSuperkey"),env));
         space.setMethod("getPT4Token",new BshMethod(PluginMethod.class.getMethod("getPT4Token", String.class),env));
+        space.setMethod("getBKN",new BshMethod(PluginMethod.class.getMethod("getBKN"),env));
+        space.setMethod("getGTK",new BshMethod(PluginMethod.class.getMethod("getGTK", String.class),env));
 
         space.setMethod("setCard",new BshMethod(PluginMethod.class.getMethod("setCard", String.class, String.class, String.class),env));
         space.setMethod("setTitle",new BshMethod(PluginMethod.class.getMethod("setTitle", String.class, String.class, String.class),env));

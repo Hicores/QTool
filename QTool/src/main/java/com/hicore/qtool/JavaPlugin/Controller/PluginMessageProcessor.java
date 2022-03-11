@@ -29,10 +29,10 @@ public class PluginMessageProcessor {
     public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){
 
     }
-    private static PluginMessage decodeGuildMsg(Object msg){
+    private static PluginInfo.MessageData decodeGuildMsg(Object msg){
         return null;
     }
-    private static PluginMessage decodeCommonMsg(Object msg){
+    private static PluginInfo.MessageData decodeCommonMsg(Object msg){
         return null;
     }
 }

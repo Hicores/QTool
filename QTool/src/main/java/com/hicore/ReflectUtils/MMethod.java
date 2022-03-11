@@ -41,6 +41,9 @@ public class MMethod {
         return (T) method.invoke(obj,params);
     }
     private static final HashMap<String,Method> MethodCache = new HashMap<>();
+    public static Method FindMethod(String FindClass,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes){
+        return FindMethod(MClass.loadClass(FindClass),MethodName,ReturnType,ParamTypes);
+    }
     public static Method FindMethod(Class<?> FindClass,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes){
         if (FindClass == null)return null;
         StringBuilder builder = new StringBuilder();

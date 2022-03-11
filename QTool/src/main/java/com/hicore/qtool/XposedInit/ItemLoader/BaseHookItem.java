@@ -7,7 +7,7 @@ public abstract class BaseHookItem {
     public String getTag(){
         return getClass().getSimpleName();
     }
-    public abstract boolean startHook();
+    public abstract boolean startHook() throws Throwable;
     public abstract boolean isEnable();
     public abstract boolean check();
     public String getErrorInfo(){

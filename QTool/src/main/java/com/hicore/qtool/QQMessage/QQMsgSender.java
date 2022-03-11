@@ -9,10 +9,10 @@ public class QQMsgSender {
     public static void sendPic(Object _Session,Object picRecord){
 
     }
-    public static void sendXml(Object _Session,Object structMsg){
+    public static void sendStruct(Object _Session,Object structMsg){
 
     }
-    public static void sendJson(Object _Session,Object arkAppMsg){
+    public static void sendArkApp(Object _Session,Object arkAppMsg){
 
     }
     public static void sendVoice(Object _Session,String path){
@@ -24,9 +24,7 @@ public class QQMsgSender {
     public static void sendReply(Object _Session,Object replyRecord){
 
     }
-    public static void sendLike(String Uin){
 
-    }
     public static void sendTuya(Object _Session,Object strikeMsg){
 
     }
