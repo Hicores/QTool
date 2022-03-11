@@ -23,7 +23,7 @@ public class PluginMessageProcessor {
     public static void onJoinEvent(String GroupUin,String UserUin,String Invitor,String AcceptOPUin){
 
     }
-    public static void onRevoke(Object msg){
+    public static void onRevoke(Object msg,String OPUin){
 
     }
     public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){
