@@ -59,7 +59,6 @@ public class PluginController {
         public String ItemID;
         public String CallbackName;
     }
-
     public static boolean IsRunning(String PluginID){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -217,15 +216,13 @@ public class PluginController {
 
         instance.eval(LoadContent);
     }
-    public static void checkAndInvoke(String GroupUin,int type,String MethodName,Object... param){
-
+    public static void checkAndInvoke(String GroupUin,String MethodName,Object... param){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
-            if (info.IsRunning){
+            if (info.IsRunning && !info.IsLoading){
                 if (info.IsAvailable(GroupUin)){
                     try{
                         InvokeToPlugin(info.Instance,MethodName,param);
-
                     }catch (RuntimeException runtime){
                         Throwable cause = runtime.getCause();
                         PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(cause));
@@ -258,6 +255,12 @@ public class PluginController {
             }
         }catch (Throwable th){
             throw new RuntimeException(th);
+        }
+    }
+    public static void onMessage(PluginInfo.EarlyInfo early, PluginInfo.MessageData data) {
+        checkAndInvoke(early.GroupUin, "Callback_OnRawMsg", data.msg);
+        if (data.MessageType != 0) {
+            checkAndInvoke(early.GroupUin, "onMsg", data);
         }
     }
 }

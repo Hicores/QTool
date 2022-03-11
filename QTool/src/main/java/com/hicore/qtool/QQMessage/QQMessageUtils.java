@@ -3,6 +3,7 @@ package com.hicore.qtool.QQMessage;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.Classes;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
@@ -43,8 +44,7 @@ public class QQMessageUtils {
         }
 
     }
-    public static void AddMsg(Object MessageRecord)
-    {
+    public static void AddMsg(Object MessageRecord) {
         try{
             Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade","a",void.class,new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
@@ -57,8 +57,7 @@ public class QQMessageUtils {
             LogUtils.error("AddMsg",th);
         }
     }
-    public static void AddAndSendMsg(Object MessageRecord)
-    {
+    public static void AddAndSendMsg(Object MessageRecord) {
         try {
             Object MessageFacade = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
@@ -72,8 +71,7 @@ public class QQMessageUtils {
         }
 
     }
-    private static void RevokeTroopFile(Object MessageRecord)
-    {
+    private static void RevokeTroopFile(Object MessageRecord) {
         try{
             Object RevokeHelper = QQEnvUtils.GetRevokeHelper();
             MMethod.CallMethod(RevokeHelper,"a",void.class,new Class[]{
@@ -89,6 +87,25 @@ public class QQMessageUtils {
                         MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade","d",void.class,new Class[]{Classes.MessageRecord()}):
                         MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade","f",void.class,new Class[]{Classes.MessageRecord()});
         return m;
+    }
+    public static String getCardMsg(Object msg){
+        try{
+            String clzName = msg.getClass().getSimpleName();
+            if (clzName.equalsIgnoreCase("MessageForStructing")) {
+                Object Structing = MField.GetField(msg, "structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
+                String xml = MMethod.CallMethod(Structing, MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"), "getXml", String.class);
+                return xml;
+            }
+            if (clzName.equalsIgnoreCase("MessageForArkApp")) {
+                Object ArkAppMsg = MField.GetField(msg, "ark_app_message", MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"));
+                String json = MMethod.CallMethod(ArkAppMsg, MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"), "toAppXml", String.class);
+                return json;
+            }
+            return "";
+        }catch (Exception e){
+            return "";
+        }
+
     }
 
 }

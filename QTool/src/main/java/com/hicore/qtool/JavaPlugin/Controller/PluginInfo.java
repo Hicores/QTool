@@ -28,6 +28,11 @@ public class PluginInfo {
     public boolean IsAvailable(String GroupUin){
         return IsBlackMode != ListStr.contains(GroupUin);
     }
+    public static class EarlyInfo{
+        public int istroop;
+        public String GroupUin;
+        public String UserUin;
+    }
     public static class MessageData{
         public String MessageContent;
         public String GroupUin;
