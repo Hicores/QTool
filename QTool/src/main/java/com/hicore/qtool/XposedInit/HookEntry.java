@@ -27,7 +27,6 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             return;
         }
 
-        //强行修补类加载器,防止部分框架把模块类加载器整合到QQ的类加载器中导致部分同名模块加载错误
         boolean isUseDefLoadMode = new File(lpparam.appInfo.dataDir+"/def").exists();
         if (isUseDefLoadMode){
             FixSubLoadClass.loadZygote(cacheParam);

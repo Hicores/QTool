@@ -1,6 +1,7 @@
 package com.hicore.qtool.JavaPlugin.ListForm;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,12 +28,15 @@ import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.JavaPlugin.Controller.PluginSetController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginStoreUtils;
+import com.hicore.qtool.QQTools.QQSelectHelper;
 import com.hicore.qtool.R;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 public final class LocalPluginItemController {
@@ -44,6 +48,7 @@ public final class LocalPluginItemController {
     private View btn_load;
     private View btn_loading;
     private View btn_stop;
+
 
     private PluginInfo mInfo;
     public static LocalPluginItemController create(Context context){
@@ -225,6 +230,7 @@ public final class LocalPluginItemController {
         }
     }
     private void saveWhiteAndBlackList(){
+        //设置黑白名单状态
         RadioButton boxWhite = mRoot.findViewById(R.id.plugin_message_while);
         boxWhite.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()){
@@ -247,9 +253,35 @@ public final class LocalPluginItemController {
             boxBlack.setChecked(false);
         }
 
+        //设置自动加载状态
         CheckBox autoLoad = mRoot.findViewById(R.id.plugin_autoload);
         autoLoad.setChecked(PluginSetController.IsAutoLoad(mInfo.PluginID));
         autoLoad.setOnCheckedChangeListener((buttonView, isChecked) -> PluginSetController.SetAutoLoad(mInfo.PluginID,isChecked));
+
+        //设置设置名单列表回调
+        TextView setListButton = mRoot.findViewById(R.id.plugin_message_list_set);
+        setListButton.setOnClickListener(v->{
+            QQSelectHelper helper = new QQSelectHelper(mRoot.getContext(),true,false,true);
+            helper.startShow(new QQSelectHelper.onSelected() {
+                @Override
+                public void onGroupSelect(ArrayList<String> uin) {
+
+                }
+
+                @Override
+                public void onFriendSelect(ArrayList<String> uin) {
+
+                }
+
+                @Override
+                public void onGuildSelect(HashMap<String, ArrayList<String>> guilds) {
+
+                }
+            });
+        });
+
+
+
     }
     public String getPluginID(){return mInfo.PluginID;}
     public LinearLayout.LayoutParams getParams(){

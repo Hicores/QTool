@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+    <view class="com.hicore.qtool.QQTools.QQSelectHelper$RoundImageView"
+        android:id="@+id/HeadView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+    <TextView
+        android:id="@+id/SetName"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="60dp"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:text="这里显示名字"
+        android:gravity="center_vertical"></TextView>
+    <CheckBox
+        android:id="@+id/SelectSwitch"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="-55dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textSize="50dp"
+        android:scaleX="1.8"
+        android:scaleY="1.8"
+        ></CheckBox>
+
+
+</LinearLayout>

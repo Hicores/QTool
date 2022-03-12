@@ -4,15 +4,13 @@ import static com.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
+
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
-import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.Tracker.MTracker;
@@ -55,11 +53,6 @@ public class EnvHook {
                     //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                     HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
 
-                    ClassLoader fixLoader = EnvHook.class.getClassLoader().getParent();
-                    if (fixLoader instanceof HookEntry.FixSubClassLoader){
-                        HookEnv.fixLoader = (HookEntry.FixSubClassLoader) fixLoader;
-                        HookEnv.fixLoader.addHostLoader(HookEnv.mLoader);
-                    }
                     moduleLoader = EnvHook.class.getClassLoader();
 
                     //优先初始化Path

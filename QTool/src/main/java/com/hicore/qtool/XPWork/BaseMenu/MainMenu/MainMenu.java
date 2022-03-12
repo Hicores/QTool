@@ -33,7 +33,7 @@ public class MainMenu extends Activity {
     RelativeLayout blurRoot;
     @Override
     public ClassLoader getClassLoader() {
-        return HookEnv.fixLoader;
+        return HookEnv.moduleLoader;
     }
 
     public static void createActivity(Activity parentAct){
