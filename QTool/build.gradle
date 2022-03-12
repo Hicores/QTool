@@ -63,4 +63,6 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
+    implementation 'com.github.Cutta:GifView:1.4'
+
 }
