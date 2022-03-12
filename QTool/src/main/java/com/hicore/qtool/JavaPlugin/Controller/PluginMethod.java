@@ -13,6 +13,7 @@ import com.hicore.qtool.QQMessage.QQSessionUtils;
 import com.hicore.qtool.XPWork.QQProxy.JoinEventProxy;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PluginMethod {
 
@@ -59,6 +60,16 @@ public class PluginMethod {
         }
     }
     public ArrayList<PluginInfo.GroupInfo> getGroupList(){
+        ArrayList<PluginInfo.GroupInfo> infos = new ArrayList<>();
+        Iterator<PluginInfo.GroupInfo> it = infos.iterator();
+        while (it.hasNext()){
+            PluginInfo.GroupInfo item = it.next();
+            if (info_.IsBlackMode) {
+                if (info_.ListStr.contains(item.GroupUin))it.remove();
+            }else {
+                if (!info_.ListStr.contains(item.GroupUin))it.remove();
+            }
+        }
         return PluginApiHelper.getGroupList();
     }
     public ArrayList<PluginInfo.GroupMemberInfo> getGroupMemberList(String GroupUin){
