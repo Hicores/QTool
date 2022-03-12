@@ -52,7 +52,17 @@ public class PluginController {
         }
     }
     public static void loadExtra(String PluginVerifyID,String path){
-
+        File f = new File(path);
+        if (!f.exists()){
+            Utils.ShowToast("调用load加载的:"+path+"不存在");
+            return;
+        }
+        String fileContent = FileUtils.ReadFileString(f);
+        try {
+            LoadInner(fileContent,path,PluginVerifyID);
+        } catch (Exception e) {
+            throw new RuntimeException("load "+path+" error",e);
+        }
     }
     public static class ItemInfo{
         public int itemType;
@@ -108,6 +118,7 @@ public class PluginController {
         }catch (Throwable th){
             Utils.ShowToast("脚本加载错误,已停止执行:\n"+Log.getStackTraceString(th));
             forceEnd(info);
+            PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(th));
 
             return false;
         }
@@ -215,7 +226,7 @@ public class PluginController {
         instance.set("AppPath",info.LocalPath);
         instance.set("MyUin", QQEnvUtils.getCurrentUin());
 
-        instance.eval(LoadContent);
+        instance.eval(LoadContent,LocalPath);
     }
     public static void checkAndInvoke(String GroupUin,String MethodName,Object... param){
         for(String VerifyID : runningInfo.keySet()){

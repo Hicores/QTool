@@ -27,6 +27,8 @@
 
 package bsh.classpath;
 
+import android.util.Log;
+
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
 import com.android.dx.command.dexer.DxContext;
@@ -34,6 +36,7 @@ import com.android.dx.dex.DexOptions;
 import com.android.dx.dex.cf.CfOptions;
 import com.android.dx.dex.cf.CfTranslator;
 import com.android.dx.dex.file.DexFile;
+import com.hicore.LogUtils.LogUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -81,6 +84,7 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 
 		if ( source != null )
 		{
+			LogUtils.debug("ClassBuilder", Log.getStackTraceString(new Throwable()));
 			byte [] code = source.getCode( name );
 			try {
 				DexOptions dexOptions = new DexOptions();

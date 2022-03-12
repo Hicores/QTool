@@ -131,7 +131,7 @@ public class TargetError extends EvalError
 		Interpreter i = new Interpreter();
 		try {
 			i.set("target", t);
-			return (String)i.eval( getTarget );
+			return (String)i.eval( getTarget ,"no file");
 		} catch ( EvalError e ) {
 			throw new InterpreterError("xprintarget: "+e.toString() );
 		}
