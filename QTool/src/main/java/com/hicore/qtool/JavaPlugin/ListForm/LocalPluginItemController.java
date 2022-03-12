@@ -277,7 +277,7 @@ public final class LocalPluginItemController {
                 public void onGuildSelect(HashMap<String, ArrayList<String>> guilds) {
 
                 }
-            });
+            },1);
         });
 
 

@@ -18,8 +18,10 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,7 +83,6 @@ public class QQSelectHelper {
         @Override
         protected Class<?> findClass(String name) throws ClassNotFoundException {
             try{
-                XposedBridge.log(name);
                 Class<?> clz = super.findClass(name);
                 if (clz != null)return clz;
             }catch (Exception e){
@@ -95,7 +96,6 @@ public class QQSelectHelper {
 
         @Override
         public ClassLoader getClassLoader() {
-            XposedBridge.log("dfawhfuwaiorhuwharuwaofwaouhrfoauwr");
             if (mFixLoader != null)return mFixLoader;
             return super.getClassLoader();
         }
@@ -128,50 +128,68 @@ public class QQSelectHelper {
     public void setSelectedGuildChannel(HashMap<String,ArrayList<String>> selectGuild){
         this.selectGuild = selectGuild;
     }
-    public void startShow(onSelected callback){
-        Context fixContext = new FixContext(mContext);
+    public void startShow(onSelected callback,int defTab){
+        try{
+            if (defTab < 1 || defTab > 3)throw new RuntimeException("defTab must be 1-3");
 
-        LayoutInflater inflater = null;
-        try {
-            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
-                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                param.setResult(inflater1.cloneInContext(fixContext));
-            });
-            inflater = LayoutInflater.from(fixContext);
-            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
-                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                param.setResult(inflater1.cloneInContext(fixContext));
-            });
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        LayoutInflater finalInflater = inflater;
-        BottomPopupView view =new BottomPopupView(fixContext){
-            @Override
-            protected int getImplLayoutId() {
-                return R.layout.select_dialog;
+            Context fixContext = new FixContext(mContext);
+
+            LayoutInflater inflater = null;
+            try {
+                XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
+                    LayoutInflater inflater1 = (LayoutInflater) param.getResult();
+                    param.setResult(inflater1.cloneInContext(fixContext));
+                });
+                inflater = LayoutInflater.from(fixContext);
+                XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
+                    LayoutInflater inflater1 = (LayoutInflater) param.getResult();
+                    param.setResult(inflater1.cloneInContext(fixContext));
+                });
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            protected void onCreate() {
-                super.onCreate();
-                LinearLayout mContainer = findViewById(R.id.selectContent);
-                ArrayList<QQGroupUtils.GroupInfo> groupList = QQGroupUtils.Group_Get_List();
-                for (QQGroupUtils.GroupInfo info : groupList){
-                    LinearLayout item = (LinearLayout) finalInflater.inflate(R.layout.select_item,null);
-
-                    RoundImageView image = item.findViewById(R.id.HeadView);
-                    image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140",info.Uin,info.Uin));
-                    TextView Name = item.findViewById(R.id.SetName);
-                    Name.setText(info.Name+"("+info.Uin+")");
-
-                    mContainer.addView(item);
+            LayoutInflater finalInflater = inflater;
+            BottomPopupView view =new BottomPopupView(fixContext){
+                @Override
+                protected int getImplLayoutId() {
+                    return R.layout.select_dialog;
                 }
-            }
-        };
-        new XPopup.Builder(fixContext)
-                .asCustom(view)
-                .show();
+
+                @Override
+                protected void onCreate() {
+                    super.onCreate();
+                    LinearLayout mContainer = findViewById(R.id.selectContent);
+                    if (defTab == 1) ((RadioButton)findViewById(R.id.select_group)).setChecked(true);
+                    if (defTab == 2) ((RadioButton)findViewById(R.id.select_friend)).setChecked(true);
+                    if (defTab == 3) ((RadioButton)findViewById(R.id.select_guild)).setChecked(true);
+
+                    if (defTab == 1){
+                        ArrayList<QQGroupUtils.GroupInfo> groupList = QQGroupUtils.Group_Get_List();
+                        for (QQGroupUtils.GroupInfo info : groupList){
+                            LinearLayout item = (LinearLayout) finalInflater.inflate(R.layout.select_item,null);
+
+                            RoundImageView image = item.findViewById(R.id.HeadView);
+                            image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140",info.Uin,info.Uin));
+                            TextView Name = item.findViewById(R.id.SetName);
+                            Name.setText(info.Name+"("+info.Uin+")");
+
+                            mContainer.addView(item);
+                        }
+                    }else if (defTab == 2){
+
+                    }else if (defTab == 3){
+
+                    }
+
+                }
+            };
+            new XPopup.Builder(fixContext)
+                    .asCustom(view)
+                    .show();
+        }catch (Exception e){
+            Utils.ShowToast("选择器加载失败：\n"+e);
+        }
+
 
 
     }

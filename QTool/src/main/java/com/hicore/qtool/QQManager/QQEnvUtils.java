@@ -2,12 +2,16 @@ package com.hicore.qtool.QQManager;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+
+import de.robv.android.xposed.XposedHelpers;
 
 public class QQEnvUtils {
     private static final String TAG = "QQInfoUtils";
@@ -21,9 +25,35 @@ public class QQEnvUtils {
         }
     }
     public static String getCurrentTinyID(){
-        return null;
+        try {
+            Object IGpsService = getRuntimeService(MClass.loadClass("com.tencent.mobileqq.qqguildsdk.api.IGPSService"));
+            return MMethod.CallMethod(IGpsService,"getSelfTinyId",String.class);
+        } catch (Exception e) {
+            return "";
+        }
     }
     public static ArrayList<FriendInfo> getFriendList(){
+        try{
+            Object FriendManager = MMethod.CallMethod(HookEnv.AppInterface,"getManager",
+                    XposedHelpers.findClass("mqq.manager.Manager",HookEnv.mLoader),
+                    new Class[]{int.class},
+                    new Object[]{MField.GetField(null,MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"FRIENDS_MANAGER",int.class)}
+            );
+            Object mService = MField.GetFirstField(FriendManager,FriendManager.getClass(),MClass.loadClass("com.tencent.mobileqq.friend.api.IFriendDataService"));
+            ArrayList friendList = MMethod.CallMethod(mService,"getAllFriends", List.class);
+            ArrayList<FriendInfo> NewInfos = new ArrayList<>();
+            for (Object friends : friendList){
+                FriendInfo NewItem = new FriendInfo();
+                NewItem.Name = MField.GetField(friends,"name",String.class);
+                NewItem.Uin = MField.GetField(friends,"uin",String.class);
+                NewItem.GroupID = MField.GetField(friends,"groupid",int.class);
+                NewInfos.add(NewItem);
+            }
+            return NewInfos;
+        }catch (Exception e){
+            LogUtils.error("getFriendList",e);
+        }
+
         return null;
     }
     public static class FriendInfo{
