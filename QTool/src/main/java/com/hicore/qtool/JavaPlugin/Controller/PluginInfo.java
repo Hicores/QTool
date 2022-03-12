@@ -2,6 +2,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import bsh.Interpreter;
 
@@ -10,7 +11,7 @@ public class PluginInfo {
     public String PluginVerifyID;
     public String LocalPath;
     public boolean IsBlackMode;
-    public ArrayList<String> ListStr;
+    public List<String> ListStr;
 
     public boolean IsRunning;
     public boolean IsLoading;

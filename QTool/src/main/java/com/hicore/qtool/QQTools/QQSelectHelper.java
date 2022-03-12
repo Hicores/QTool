@@ -57,6 +57,7 @@ public class QQSelectHelper {
         void onGroupSelect(ArrayList<String> uin);
         void onFriendSelect(ArrayList<String> uin);
         void onGuildSelect(HashMap<String,HashSet<String>> guilds);
+        void onAllSelected();
     }
     private static class FixResClassLoader extends ClassLoader{
         protected FixResClassLoader(ClassLoader parent) {
@@ -313,6 +314,7 @@ public class QQSelectHelper {
                         if (isShowFriend)callback.onFriendSelect(selectFriend);
                         if (isShowTroop)callback.onGroupSelect(selectGroup);
                         if (isShowGuild)callback.onGuildSelect(selectGuild);
+                        callback.onAllSelected();
                     }catch (Exception e){
                         LogUtils.warning("QQSelectHelper","dismiss callback exception:\n"+e);
                     }

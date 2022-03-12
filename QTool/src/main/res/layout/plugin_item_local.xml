@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
-                android:text="启用消息白名单"
+                android:text="启用群聊白名单"
                 android:textColor="@color/black" />
 
             <RadioButton
@@ -113,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
-                android:text="启用消息黑名单"
+                android:text="启用群聊黑名单"
                 android:textColor="@color/black" />
             <TextView
                 android:clickable="true"

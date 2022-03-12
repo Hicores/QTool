@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hicore.Utils.DataUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
@@ -13,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import de.robv.android.xposed.XposedBridge;
 
 public class ConfigCore_Json implements ConfigCore{
     /*
@@ -121,29 +124,31 @@ public class ConfigCore_Json implements ConfigCore{
     }
 
     @Override
-    public List getList(String PathName, String Key,boolean isCreate) {
+    public List<String> getList(String PathName, String Key,boolean isCreate) {
         try{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
-            String Data = MapJson.optString(Key);
-            if (TextUtils.isEmpty(Data)) return isCreate ? new ArrayList() :null;
-            ObjectInputStream objRead = new ObjectInputStream(new ByteArrayInputStream(DataUtils.HexToByteArray(Data)));
-            return (List) objRead.readObject();
+            JSONArray Data = MapJson.optJSONArray(Key);
+            if (Data == null)return isCreate ? new ArrayList<>() :null;
+            ArrayList<String> newArr = new ArrayList<>();
+            for (int i=0;i<Data.length();i++)newArr.add(Data.getString(i));
+
+            return newArr;
         }catch (Exception e){
-            return isCreate ? new ArrayList() :null;
+            return isCreate ? new ArrayList<>() :null;
         }
     }
 
     @Override
-    public void setList(String PathName, String Key, List Value) {
+    public void setList(String PathName, String Key, List<String> Value) {
         try{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            ObjectOutputStream objWrite = new ObjectOutputStream(bOut);
-            objWrite.writeObject(Value);
 
-            MapJson.put(Key,DataUtils.ByteArrayToHex(bOut.toByteArray()));
+            JSONArray NewArr = new JSONArray();
+            for (String s : Value)NewArr.put(s);
+            MapJson.put(Key,NewArr);
+
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
         }catch (Exception e){
         }

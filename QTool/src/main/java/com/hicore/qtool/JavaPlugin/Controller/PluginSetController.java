@@ -3,6 +3,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 import com.hicore.qtool.HookEnv;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PluginSetController {
     public static boolean IsBlackMode(String PluginID){
@@ -25,7 +26,14 @@ public class PluginSetController {
     public static ArrayList<String> getAutoLoadList(){
         return new ArrayList<>();
     }
-    public static ArrayList<String> getModeList(String PluginID){
-        return new ArrayList<>();
+    public static List<String> getModeList(String PluginID){
+        return HookEnv.Config.getList("Plugin_Mode_List",PluginID, true);
+    }
+    public static void setModeList(String PluginID,ArrayList<String> list){
+        if (list.size() == 0){
+            HookEnv.Config.removeKey("Plugin_Mode_List",PluginID);
+        }else {
+            HookEnv.Config.setList("Plugin_Mode_List",PluginID,list);
+        }
     }
 }

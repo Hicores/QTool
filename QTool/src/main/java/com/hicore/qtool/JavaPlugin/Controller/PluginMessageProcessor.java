@@ -1,6 +1,7 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
@@ -258,14 +259,14 @@ public class PluginMessageProcessor {
                 if(SourceInfo != null){
                     data.MessageType = 6;
                     data.MessageContent =  MField.GetField(msg,"msg",String.class);
-                    data.ReplyTo = String.valueOf(MField.GetField(SourceInfo,"mSourceMsgSenderUin"));
+                    data.ReplyTo = String.valueOf((Long)MField.GetField(SourceInfo,"mSourceMsgSenderUin"));
                 }
             }
             if (data.MessageType != 0){
                 PluginController.checkAndInvoke(data.GroupUin,"onRevokeMsg",data);
             }
         }catch (Exception e){
-            LogUtils.error("MessageDecoder","Can't decode msg:\n"+e+"("+msg.getClass().getName()+")");
+            LogUtils.error("MessageDecoder","Can't decode msg:\n"+ e+"("+msg.getClass().getName()+")");
         }
     }
     public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){

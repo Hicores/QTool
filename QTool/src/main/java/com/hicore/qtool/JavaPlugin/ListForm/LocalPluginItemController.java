@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -261,12 +262,39 @@ public final class LocalPluginItemController {
 
         //设置设置名单列表回调
         TextView setListButton = mRoot.findViewById(R.id.plugin_message_list_set);
+
+
+
+
         setListButton.setOnClickListener(v->{
             QQSelectHelper helper = new QQSelectHelper(mRoot.getContext(),true,false,true);
+
+            ArrayList<String> list = (ArrayList<String>) PluginSetController.getModeList(mInfo.PluginID);
+            HashMap<String,HashSet<String>> selectGuildList = new HashMap<>();
+            ArrayList<String> GroupList = new ArrayList<>();
+
+            for (String s : list){
+                if (s.contains("&")){
+                    String[] cut = s.split("&");
+                    if (cut.length > 1){
+                        HashSet<String> set = selectGuildList.computeIfAbsent(cut[0], k -> new HashSet<>());
+                        set.add(cut[1]);
+                    }
+                }else {
+                    GroupList.add(s);
+                }
+            }
+
+
+
+            helper.setSelectedGroup(GroupList);
+            helper.setSelectedGuildChannel(selectGuildList);
+
             helper.startShow(new QQSelectHelper.onSelected() {
+                ArrayList<String> selected = new ArrayList<>();
                 @Override
                 public void onGroupSelect(ArrayList<String> uin) {
-
+                    selected.addAll(uin);
                 }
 
                 @Override
@@ -276,7 +304,20 @@ public final class LocalPluginItemController {
 
                 @Override
                 public void onGuildSelect(HashMap<String, HashSet<String>> guilds) {
+                    for(String guildID : guilds.keySet()){
+                        HashSet<String> chs = guilds.get(guildID);
+                        if (chs != null){
+                            for (String channelId : chs){
+                                selected.add(guildID+"&"+channelId);
+                            }
+                        }
 
+                    }
+                }
+
+                @Override
+                public void onAllSelected() {
+                    PluginSetController.setModeList(mInfo.PluginID, selected);
                 }
             },1);
         });
