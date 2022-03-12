@@ -28,8 +28,11 @@ public class XPBridge {
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                before.onBefore(param);
-                cacheUnHook.get().unhook();
+                Unhook unhook = cacheUnHook.getAndSet(null);
+                if (unhook != null){
+                    unhook.unhook();
+                    before.onBefore(param);
+                }
             }
         }));
     }
@@ -38,8 +41,12 @@ public class XPBridge {
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                after.onAfter(param);
-                cacheUnHook.get().unhook();
+                Unhook unhook = cacheUnHook.getAndSet(null);
+                if (unhook != null){
+                    unhook.unhook();
+                    after.onAfter(param);
+                }
+
             }
         }));
     }
