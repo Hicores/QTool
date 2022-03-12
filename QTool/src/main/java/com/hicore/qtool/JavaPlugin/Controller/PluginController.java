@@ -99,6 +99,7 @@ public class PluginController {
             }
             info.PluginVerifyID = NameUtils.getRandomString(32);
             info.Instance = new Interpreter();
+            info.Instance.setClassLoader(HookEnv.mLoader);
             info.IsLoading = true;
             info.IsBlackMode = PluginSetController.IsBlackMode(info.PluginID);
             info.ListStr = PluginSetController.getModeList(info.PluginID);

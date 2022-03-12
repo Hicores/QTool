@@ -91,7 +91,15 @@ public class EnvHook {
             if (!HookEnv.IsMainProcess)return;
             AppCenter.start((Application) HookEnv.Application, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
                     Analytics.class, Crashes.class);
-            MTracker.Track_Load();
+            new Thread(()->{
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MTracker.Track_Load();
+            }).start();
+
         } catch (Exception e) {
             LogUtils.error("AppCenter","Init Failed:\n"+ Log.getStackTraceString(e));
         }

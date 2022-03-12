@@ -84,7 +84,6 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 
 		if ( source != null )
 		{
-			LogUtils.debug("ClassBuilder", Log.getStackTraceString(new Throwable()));
 			byte [] code = source.getCode( name );
 			try {
 				DexOptions dexOptions = new DexOptions();
