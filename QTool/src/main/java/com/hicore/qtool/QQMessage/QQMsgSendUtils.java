@@ -193,7 +193,7 @@ public class QQMsgSendUtils {
             Object MessagePicRecord =  QQMsgBuilder.buildPic(QQSessionUtils.Build_SessionInfo(GroupUin,""),PicPath);
             Object Resp1 = MClass.NewInstance(MClass.loadClass("localpb.richMsg.RichMsg$PicRec"));
 
-            MMethod.CallMethod(Resp1,"mergeFrom",new Class[]{byte[].class},new Object[]{MField.GetField(MessagePicRecord,"msgData",byte[].class)});
+            MMethod.CallMethodNoReturnSingle(Resp1,"mergeFrom",new Class[]{byte[].class},new Object[]{MField.GetField(MessagePicRecord,"msgData",byte[].class)});
 
             Object RespType = MClass.NewInstance(MClass.loadClass("tencent.im.msg.hummer.resv3.CustomFaceExtPb$ResvAttr"));
             Object ShowType = MField.GetField(RespType,"msg_image_show",MClass.loadClass("tencent.im.msg.hummer.resv3.CustomFaceExtPb$AnimationImageShow"));
@@ -201,14 +201,14 @@ public class QQMsgSendUtils {
             MMethod.CallMethod(Int32_ShowType,"set",void.class,new Class[]{int.class},Integer.valueOf(type+40000));
             MMethod.CallMethod(ShowType,ShowType.getClass(),"setHasFlag",void.class,new Class[]{boolean.class},true);
 
-            byte[] PICDatas = MMethod.CallMethod(RespType,"toByteArray",byte[].class);
+            byte[] PICDatas = MMethod.CallMethodNoParam(RespType,"toByteArray",byte[].class);
 
             Object oobj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.pb.ByteStringMicro"), new Object[]{PICDatas});
             Object PBField = MField.GetField(Resp1,"bytes_pb_reserved",MClass.loadClass("com.tencent.mobileqq.pb.PBBytesField"));
             MMethod.CallMethod(PBField,"set",void.class,new Class[]{MClass.loadClass("com.tencent.mobileqq.pb.ByteStringMicro")},oobj);
 
 
-            PICDatas = MMethod.CallMethod(Resp1,"toByteArray",byte[].class);
+            PICDatas = MMethod.CallMethodNoParam(Resp1,"toByteArray",byte[].class);
 
             Object MessageRecord = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.MessageForTroopEffectPic"));
 
@@ -221,7 +221,7 @@ public class QQMsgSendUtils {
             MField.SetField(MessageRecord,"msgUid",(long)((long)(MField.GetField(MessagePicRecord,"msgUid",long.class))+1));
             MField.SetField(MessageRecord,"shmsgseq",MField.GetField(MessagePicRecord,"shmsgseq",long.class));
             MField.SetField(MessageRecord,"msgUid",MField.GetField(MessagePicRecord,"msgUid",long.class));
-            MMethod.CallMethod(MessageRecord,"doParse",void.class);
+            MMethod.CallMethodNoParam(MessageRecord,"doParse",void.class);
             MField.SetField(MessageRecord,"msgtype",-5015);
 
             QQMsgSender.sendPic(QQSessionUtils.Build_SessionInfo(GroupUin,""),MessageRecord);

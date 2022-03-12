@@ -69,7 +69,7 @@ public class QQMsgBuilder {
             MField.SetField(PICMsg,"md5", DataUtils.getFileMD5(new File(PicPath)));
             MField.SetField(PICMsg,"uuid", DataUtils.getFileMD5(new File(PicPath))+".jpg");
             MField.SetField(PICMsg,"localUUID", UUID.randomUUID().toString());
-            MMethod.CallMethod(PICMsg,"prewrite",void.class);
+            MMethod.CallMethodNoParam(PICMsg,"prewrite",void.class);
             return PICMsg;
         }
         catch (Exception e)
@@ -134,7 +134,7 @@ public class QQMsgBuilder {
                 MixMessageRecord = m.invoke(null,HookEnv.AppInterface,QQSessionUtils.getGroupUin(session),QQEnvUtils.getCurrentUin(),1);
             }
             MField.SetField(MixMessageRecord,"msgElemList",msgElems);
-            MixMessageRecord = MMethod.CallMethod(MixMessageRecord,"rebuildMixedMsg",MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"));
+            MixMessageRecord = MMethod.CallMethodNoParam(MixMessageRecord,"rebuildMixedMsg",MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"));
             return MixMessageRecord;
         }catch (Exception e){
             LogUtils.error("buildMix",e);

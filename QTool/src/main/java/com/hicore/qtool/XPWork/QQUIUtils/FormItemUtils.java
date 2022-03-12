@@ -13,7 +13,7 @@ public class FormItemUtils {
     public static View createSingleItem(Context context, String title, View.OnClickListener listener){
         try {
             View NewItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"),context);
-            MMethod.CallMethod(NewItem,"setLeftText",void.class,title);
+            MMethod.CallMethodSingle(NewItem,"setLeftText",void.class,title);
             NewItem.setOnClickListener(listener);
             return NewItem;
         } catch (Exception e) {
@@ -24,8 +24,8 @@ public class FormItemUtils {
     public static View createMultiItem(Context context,String title,String rightLine,View.OnClickListener listener){
         try {
             View NewItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"),context);
-            MMethod.CallMethod(NewItem,"setLeftText",void.class,title);
-            MMethod.CallMethod(NewItem,"setRightText",void.class,rightLine);
+            MMethod.CallMethodSingle(NewItem,"setLeftText",void.class,title);
+            MMethod.CallMethodSingle(NewItem,"setRightText",void.class,rightLine);
             NewItem.setOnClickListener(listener);
             return NewItem;
         } catch (Exception e) {

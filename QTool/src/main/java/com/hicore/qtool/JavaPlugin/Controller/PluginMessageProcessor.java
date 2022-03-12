@@ -37,7 +37,7 @@ public class PluginMessageProcessor {
             data.UserUin = early.UserUin;
             data.AppInterface = HookEnv.AppInterface;
             data.msg = msg;
-            data.IsSend = MMethod.CallMethod(msg, "isSendFromLocal", boolean.class);
+            data.IsSend = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
             data.SessionInfo = HookEnv.SessionInfo;
             String clzName = msg.getClass().getSimpleName();
             data.SenderNickName = QQGroupUtils.Group_Get_Member_Name(data.GroupUin, data.UserUin);
@@ -136,7 +136,7 @@ public class PluginMessageProcessor {
                 info.UserUin = MField.GetField(msg,"senderuin",String.class);
                 return info;
             }else if (istroop == 1000){
-                boolean IsOnline = MMethod.CallMethod(msg, "isSendFromLocal", boolean.class);
+                boolean IsOnline = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
                 if (IsOnline) {
                     info.GroupUin = MField.GetField(msg, "senderuin", String.class);
                     info.UserUin = QQEnvUtils.getCurrentUin();
@@ -182,7 +182,7 @@ public class PluginMessageProcessor {
             data.UserUin = early.UserUin;
             data.AppInterface = HookEnv.AppInterface;
             data.msg = msg;
-            data.IsSend = MMethod.CallMethod(msg, "isSendFromLocal", boolean.class);
+            data.IsSend = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
             data.SessionInfo = HookEnv.SessionInfo;
             String clzName = msg.getClass().getSimpleName();
             data.SenderNickName = QQGroupUtils.Group_Get_Member_Name(data.GroupUin, data.UserUin);

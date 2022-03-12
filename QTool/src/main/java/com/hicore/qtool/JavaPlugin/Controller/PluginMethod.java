@@ -210,9 +210,7 @@ public class PluginMethod {
         PluginController.setItemClickFunctionName(info_.PluginVerifyID,callbackName);
     }
     public void sendLike(String UserUin,int count){
-        for (int i=0;i<count;i++){
-            QQEnvUtils.sendLike(UserUin);
-        }
+        QQEnvUtils.sendLike(UserUin,count);
     }
     public void sendAntEmo(String GroupUin,String UserUin,int servID){
         QQMsgSender.sendAntEmo(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),servID);

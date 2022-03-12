@@ -96,7 +96,7 @@ public class QQMsgSender {
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     int.class
             });
-            Object Call = MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"),"a",MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender") );
+            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"),"a",MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
             mMethod.invoke(Call,HookEnv.AppInterface,mixRecord,_Session,0);
         }catch (Exception e){
             LogUtils.error("sendMix",e);
@@ -105,7 +105,7 @@ public class QQMsgSender {
     }
     public static void sendReply(Object _Session,Object replyRecord){
         try{
-            Object Call = MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"),"a",MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
+            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"),"a",MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
             Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender","a",void.class,new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
@@ -152,8 +152,8 @@ public class QQMsgSender {
     }
     public static void sendFile(Object _Session,Object fileRecord){
         try{
-            Object Instance = MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"),"a",MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"));
-            MMethod.CallMethod(Instance,"a",void.class,fileRecord,HookEnv.AppInterface,0,_Session);
+            Object Instance = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"),"a",MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"));
+            MMethod.CallMethodParams(Instance,"a",void.class,fileRecord,HookEnv.AppInterface,0,_Session);
         }catch (Exception e){
             LogUtils.error("sendFile",e);
         }
@@ -174,7 +174,7 @@ public class QQMsgSender {
                     QQEnvUtils.getCurrentUin(),GroupUin,QQEnvUtils.getCurrentUin(),"[窗口抖动]",System.currentTimeMillis()/1000,-2020,
                     1,System.currentTimeMillis()/1000
             );
-            MMethod.CallMethod(MessageRecord,"prewrite",void.class);
+            MMethod.CallMethodNoParam(MessageRecord,"prewrite",void.class);
             QQMessageUtils.AddAndSendMsg(MessageRecord);
         }catch (Exception e){
             LogUtils.error("sendShakeWindow",e);

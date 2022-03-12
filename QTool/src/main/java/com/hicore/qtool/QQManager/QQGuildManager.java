@@ -16,11 +16,11 @@ public class QQGuildManager {
             if (TextUtils.isEmpty(UserTinyID)){
                 Object IGpsManager = QQEnvUtils.GetIGpsManager();
                 Object ResultProxy = Proxy.newProxyInstance(HookEnv.mLoader, new Class[]{MClass.loadClass("com.tencent.mobileqq.qqguildsdk.callback.IResultWithSecurityCallback")}, (proxy, method, args) -> null);
-                MMethod.CallMethod(IGpsManager,"setMemberShutUp",void.class,GuildID,UserTinyID, QQEnvUtils.GetServerTime()+Time,ResultProxy);
+                MMethod.CallMethodParams(IGpsManager,"setMemberShutUp",void.class,GuildID,UserTinyID, QQEnvUtils.GetServerTime()+Time,ResultProxy);
             }else {
                 Object IGpsManager = QQEnvUtils.GetIGpsManager();
                 Object ResultProxy = Proxy.newProxyInstance(HookEnv.mLoader, new Class[]{MClass.loadClass("com.tencent.mobileqq.qqguildsdk.callback.IResultWithSecurityCallback")}, (proxy, method, args) -> null);
-                MMethod.CallMethod(IGpsManager,"setGuildShutUp",void.class,GuildID,Time,ResultProxy);
+                MMethod.CallMethodParams(IGpsManager,"setGuildShutUp",void.class,GuildID,Time,ResultProxy);
             }
         }catch (Exception e){
             LogUtils.error("Guild_Mute",e);
@@ -32,7 +32,7 @@ public class QQGuildManager {
             Object ResultProxy = Proxy.newProxyInstance(HookEnv.mLoader, new Class[]{MClass.loadClass("com.tencent.mobileqq.qqguildsdk.callback.IResultWithSecurityCallback")}, (proxy, method, args) -> null);
             ArrayList<String> list = new ArrayList<>();
             list.add(UserTinyID);
-            MMethod.CallMethod(IGpsManager,"kickGuildUsers",void.class,GuildID,list,isBlack,ResultProxy);
+            MMethod.CallMethodParams(IGpsManager,"kickGuildUsers",void.class,GuildID,list,isBlack,ResultProxy);
         }catch (Exception e){
             LogUtils.error("Guild_Kick",e);
         }

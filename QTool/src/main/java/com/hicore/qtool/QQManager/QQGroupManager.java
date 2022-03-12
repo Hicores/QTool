@@ -66,9 +66,9 @@ public class QQGroupManager {
                     MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"TROOP_GAG_HANDLER"));
             if (TextUtils.isEmpty(UserUin)){
-                MMethod.CallMethod(TroopGagManager,"a",void.class, GroupUin,time);
+                MMethod.CallMethodParams(TroopGagManager,"a",void.class, GroupUin,time);
             }else {
-                MMethod.CallMethod(TroopGagManager,"a",boolean.class, GroupUin,UserUin,time);
+                MMethod.CallMethodParams(TroopGagManager,"a",boolean.class, GroupUin,UserUin,time);
             }
         }catch (Exception e){
             LogUtils.error("Group_Mute",e);

@@ -38,7 +38,7 @@ public class QQGroupUtils {
                     MClass.loadClass("mqq.manager.Manager"),
                     new Class[]{int.class},
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
-            Object GroupMemberInfoR = MMethod.CallMethod(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin,UserUin);
+            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin,UserUin);
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();
@@ -62,7 +62,7 @@ public class QQGroupUtils {
                     MClass.loadClass("mqq.manager.Manager"),
                     new Class[]{int.class},
                     new Object[]{MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER")});
-            ArrayList<?> rawList =  MMethod.CallMethod(TroopManager,"g", ArrayList.class);
+            ArrayList<?> rawList =  MMethod.CallMethodNoParam(TroopManager,"g", ArrayList.class);
             ArrayList<GroupInfo> NewList = new ArrayList<>();
             for (Object item : rawList){
                 GroupInfo NewItem = new GroupInfo();

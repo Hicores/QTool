@@ -18,7 +18,7 @@ public class QQEnvUtils {
     public static String getCurrentUin(){
         try{
             Object AppRuntime = getAppRuntime();
-            return MMethod.CallMethod(AppRuntime,"getCurrentAccountUin",String.class);
+            return MMethod.CallMethodNoParam(AppRuntime,"getCurrentAccountUin",String.class);
         }catch (Exception e){
             LogUtils.fetal_error(TAG,e);
             return "";
@@ -27,7 +27,7 @@ public class QQEnvUtils {
     public static String getCurrentTinyID(){
         try {
             Object IGpsService = getRuntimeService(MClass.loadClass("com.tencent.mobileqq.qqguildsdk.api.IGPSService"));
-            return MMethod.CallMethod(IGpsService,"getSelfTinyId",String.class);
+            return MMethod.CallMethodNoParam(IGpsService,"getSelfTinyId",String.class);
         } catch (Exception e) {
             return "";
         }
@@ -40,7 +40,7 @@ public class QQEnvUtils {
                     new Object[]{MField.GetField(null,MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"FRIENDS_MANAGER",int.class)}
             );
             Object mService = MField.GetFirstField(FriendManager,FriendManager.getClass(),MClass.loadClass("com.tencent.mobileqq.friend.api.IFriendDataService"));
-            ArrayList friendList = MMethod.CallMethod(mService,"getAllFriends", List.class);
+            ArrayList friendList = MMethod.CallMethodNoParam(mService,"getAllFriends", List.class);
             ArrayList<FriendInfo> NewInfos = new ArrayList<>();
             for (Object friends : friendList){
                 FriendInfo NewItem = new FriendInfo();
@@ -63,9 +63,10 @@ public class QQEnvUtils {
         public Object source;
     }
     public static Object getAppRuntime() throws Exception {
-        Object sApplication = MMethod.CallMethod(null, MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"),
+        Object sApplication = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"),
                 "getApplication",MClass.loadClass("com.tencent.common.app.BaseApplicationImpl"));
-        return MMethod.CallMethod(sApplication,"getRuntime",MClass.loadClass("mqq.app.AppRuntime"));
+
+        return MMethod.CallMethodNoParam(sApplication,"getRuntime",MClass.loadClass("mqq.app.AppRuntime"));
     }
     public static Object GetIGpsManager() throws Exception {
         return getRuntimeService(MClass.loadClass("com.tencent.mobileqq.qqguildsdk.api.IGPSService"));
@@ -82,11 +83,38 @@ public class QQEnvUtils {
         Object MessageFacade = Invoked.invoke(getAppRuntime(),Clz,"");
         return MessageFacade;
     }
-    public static void sendLike(String Uin){
+    public static void sendLike(String QQUin,int Count){
+        byte[] sCookie = {12, 24, 0, 1, 6, 1, 49, 22, 1, 49};
+        long Selfuin = Long.parseLong(getCurrentUin());
+        long TargetUin = Long.parseLong(QQUin);
 
+        try {
+            Method m = MMethod.FindMethod("com.tencent.mobileqq.app.CardHandler","a",void.class,new Class[]{
+                    long.class,long.class,byte[].class,int.class,int.class,int.class
+            });
+            Object CardHandler = MMethod.CallMethodSingle(HookEnv.AppInterface,"getBusinessHandler",
+                    MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"CARD_HANLDER"));
+
+            m.invoke(CardHandler,Selfuin,TargetUin,sCookie,IsFriends(QQUin)?1:10,Count,0);
+        } catch (Exception exception) {
+            LogUtils.error("SendLike",exception);
+        }
+    }
+    public static boolean IsFriends(String uin)
+    {
+        try {
+            Object FriendsManager = MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.friend.api.impl.FriendDataServiceImpl"),"getService",
+                    MClass.loadClass("com.tencent.mobileqq.friend.api.impl.FriendDataServiceImpl"),new Class[]{MClass.loadClass("mqq.app.AppRuntime")},QQEnvUtils.getAppRuntime()
+            );
+            return MMethod.CallMethod(FriendsManager,"isFriend",boolean.class,new Class[]{String.class},uin);
+        } catch (Exception exception) {
+            LogUtils.error("CheckIsFriend",exception);
+            return false;
+        }
     }
     public static long GetServerTime() throws Exception {
-        return MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.msf.core.NetConnInfoCenter"),"getServerTime",long.class);
+        return MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.msf.core.NetConnInfoCenter"),"getServerTime",long.class);
     }
     public static Object getBusinessHandler(String Clz) throws Exception {
         Method Invoked = null;

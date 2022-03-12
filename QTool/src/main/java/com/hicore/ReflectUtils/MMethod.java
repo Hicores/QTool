@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class MMethod {
-    public static <T> T CallMethod(Object obj,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception{
+    public static <T> T CallMethodNoName(Object obj,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception{
         Method method = FindMethod(obj.getClass(),null,ReturnType,ParamTypes);
         Assert.notNull(ReturnType,"ReturnType can't be null");
         if (method == null){
@@ -17,7 +17,7 @@ public class MMethod {
         }
         return (T) method.invoke(obj,params);
     }
-    public static <T> T CallMethod(Object obj,String MethodName,Class<?>[] ParamTypes,Object... params) throws Exception{
+    public static <T> T CallMethodNoReturn(Object obj,String MethodName,Class<?>[] ParamTypes,Object... params) throws Exception{
         Method method = FindMethod(obj.getClass(),MethodName,ParamTypes);
         if (method == null){
             StringBuilder builder = new StringBuilder(MethodName).append("(");
@@ -27,19 +27,34 @@ public class MMethod {
         }
         return (T) method.invoke(obj,params);
     }
+    public static <T,V> T CallMethodNoReturnSingle(Object obj,String MethodName,Class<?>[] ParamTypes,V param) throws Exception{
+        return CallMethodNoReturn(obj,MethodName,ParamTypes,new Object[]{param});
+    }
     public static <T> T CallMethod(Object obj,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception {
         Assert.notNull(obj,"obj can't be null when ignore the clz");
         return CallMethod(obj,obj.getClass(), MethodName, ReturnType, ParamTypes, params);
     }
-    public static <T> T CallMethod(Object obj,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
+    public static <T> T CallMethodNoParam(Object obj,String MethodName,Class<?> ReturnType) throws Exception {
+        return CallMethodParams(obj,MethodName,ReturnType);
+    }
+    public static <T,V> T CallMethodSingle(Object obj,String MethodName,Class<?> ReturnType,V Value) throws Exception {
+        return CallMethodParams(obj,MethodName,ReturnType,new Object[]{Value});
+    }
+    public static <T> T CallMethodParams(Object obj,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
         Class<?>[] ParamTypes = new Class[params.length];
         for (int i=0;i<ParamTypes.length;i++)ParamTypes[i] = params[i].getClass();
         return CallMethod(obj,obj.getClass(), MethodName, ReturnType, ParamTypes, params);
     }
-    public static <T> T CallMethod(Object obj,Class<?> clz,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
+    public static <T> T CallMethodNoParamType(Object obj,Class<?> clz,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
         Class<?>[] ParamTypes = new Class[params.length];
         for (int i=0;i<ParamTypes.length;i++)ParamTypes[i] = params[i].getClass();
         return CallMethod(obj,clz, MethodName, ReturnType, ParamTypes, params);
+    }
+    public static <T> T CallStaticMethod(Class<?> clz,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
+        return CallMethodNoParamType(null,clz,MethodName,ReturnType,params);
+    }
+    public static <T> T CallStaticMethodNoParam(Class<?> clz,String MethodName,Class<?> ReturnType) throws Exception {
+        return CallMethodNoParamType(null,clz,MethodName,ReturnType);
     }
     public static <T> T CallMethod(Object obj,Class<?> clz,String MethodName,Class<?> ReturnType,Class<?>[] ParamTypes,Object... params) throws Exception {
         Method method = FindMethod(clz,MethodName,ReturnType,ParamTypes);

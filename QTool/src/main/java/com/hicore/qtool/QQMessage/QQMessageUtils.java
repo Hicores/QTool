@@ -15,7 +15,7 @@ public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin,int istroop,long msgseq) {
         try{
             if(HookEnv.AppInterface==null)return null;
-            Object MessageFacade = MMethod.CallMethod(HookEnv.AppInterface, "getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
             return MMethod.CallMethod(MessageFacade,"c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
                     String.class,int.class,long.class
@@ -27,14 +27,14 @@ public class QQMessageUtils {
     }
     public static void revokeMsg(Object msg){
         try{
-            Object MessageFacade = MMethod.CallMethod(HookEnv.AppInterface,"getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
             if(msg.getClass().toString().contains("MessageForTroopFile"))
             {
                 RevokeTroopFile(msg);
             }
 
-            Object MsgCache = MMethod.CallMethod(HookEnv.AppInterface,"getMsgCache",
+            Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMsgCache",
                     MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
 
             MMethod.CallMethod(MsgCache,"b",void.class,new Class[]{boolean.class},true);
@@ -50,7 +50,7 @@ public class QQMessageUtils {
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                     String.class
             });
-            Object MessageFacade = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(),"getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
             InvokeMethod.invoke(MessageFacade,MessageRecord,QQEnvUtils.getCurrentUin());
         } catch (Throwable th) {
@@ -59,7 +59,7 @@ public class QQMessageUtils {
     }
     public static void AddAndSendMsg(Object MessageRecord) {
         try {
-            Object MessageFacade = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(),"getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
             Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade","a",void.class,new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
@@ -93,12 +93,12 @@ public class QQMessageUtils {
             String clzName = msg.getClass().getSimpleName();
             if (clzName.equalsIgnoreCase("MessageForStructing")) {
                 Object Structing = MField.GetField(msg, "structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
-                String xml = MMethod.CallMethod(Structing, MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"), "getXml", String.class);
+                String xml = MMethod.CallMethodNoParam(Structing, "getXml", String.class);
                 return xml;
             }
             if (clzName.equalsIgnoreCase("MessageForArkApp")) {
                 Object ArkAppMsg = MField.GetField(msg, "ark_app_message", MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"));
-                String json = MMethod.CallMethod(ArkAppMsg, MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"), "toAppXml", String.class);
+                String json = MMethod.CallMethodNoParam(ArkAppMsg, "toAppXml", String.class);
                 return json;
             }
             return "";
