@@ -50,16 +50,21 @@ public class annotationBuilder extends AbstractProcessor {
             );
             for (Element anno :roundEnvironment.getElementsAnnotatedWith(element)){
                 Symbol.ClassSymbol symbol = (Symbol.ClassSymbol) anno;
+
                 HookItem item = anno.getAnnotation(HookItem.class);
                 if (item.isRunInAllProc()){
+                    System.out.println("add class "+symbol.flatName()+" to all proc hook item list.");
                     clzName.append("runOnAllProc.add(\"").append(symbol.flatName()).append("\");\n");
                 }else {
+                    System.out.println("add class "+symbol.flatName()+" to main proc hook item list.");
                     clzName.append("runOnMainProc.add(\"").append(symbol.flatName()).append("\");\n");
                 }
 
                 if (item.isDelayInit()){
+                    System.out.println("add class "+symbol.flatName()+" to delay hook item list.");
                     clzName.append("DelayInit.add(\"").append(symbol.flatName()).append("\");\n");
                 }else {
+                    System.out.println("add class "+symbol.flatName()+" to common hook item list.");
                     clzName.append("BasicInit.add(\"").append(symbol.flatName()).append("\");\n");
                 }
             }
