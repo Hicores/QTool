@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <com.cunoraz.gifview.library.GifView
+        android:id="@+id/Loading"
+        android:layout_width="243dp"
+        android:layout_height="match_parent">
+    </com.cunoraz.gifview.library.GifView>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/Loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="90dp">
+
+        <TextView
+            android:id="@+id/dl_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:text="文件名:群聊自助签到.pk" />
+        <TextView
+            android:id="@+id/dl_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="文件大小:100GB" />
+
+        <TextView
+            android:id="@+id/dl_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="已下载:99GB" />
+        <TextView
+            android:id="@+id/dl_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="下载速度:1kb/s" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

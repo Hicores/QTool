@@ -59,59 +59,7 @@ public class QQSelectHelper {
         void onGuildSelect(HashMap<String,HashSet<String>> guilds);
         void onAllSelected();
     }
-    private static class FixResClassLoader extends ClassLoader{
-        protected FixResClassLoader(ClassLoader parent) {
-            super(parent);
-        }
 
-        @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
-            try{
-                Class<?> clz = super.loadClass(name);
-                if (clz != null)return clz;
-            }catch (Exception e){
-
-            }
-            return findClass(name);
-        }
-
-        @Override
-        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-            try{
-                Class<?> clz = super.loadClass(name, resolve);
-                if (clz != null)return clz;
-            }catch (Exception e){
-
-            }
-            return findClass(name);
-
-        }
-
-        @Override
-        protected Class<?> findClass(String name) throws ClassNotFoundException {
-            try{
-                Class<?> clz = super.findClass(name);
-                if (clz != null)return clz;
-            }catch (Exception e){
-
-            }
-            return HookEnv.moduleLoader.loadClass(name);
-        }
-    }
-    private static class FixContext extends ContextWrapper {
-        private ClassLoader mFixLoader;
-
-        @Override
-        public ClassLoader getClassLoader() {
-            if (mFixLoader != null)return mFixLoader;
-            return super.getClassLoader();
-        }
-
-        public FixContext(Context base) {
-            super(base);
-            mFixLoader = new FixResClassLoader(base.getClassLoader());
-        }
-    }
     private boolean isShowTroop;
     private boolean isShowFriend;
     private boolean isShowGuild;
@@ -237,19 +185,14 @@ public class QQSelectHelper {
         try{
             if (defTab < 1 || defTab > 3)throw new RuntimeException("defTab must be 1-3");
 
-            Context fixContext = new FixContext(mContext);
-
-
+            Context fixContext = new ContUtil.FixContext(mContext);
             try {
+                inflater = ContUtil.getContextInflater(mContext);
                 XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
                     LayoutInflater inflater1 = (LayoutInflater) param.getResult();
                     param.setResult(inflater1.cloneInContext(fixContext));
                 });
-                inflater = LayoutInflater.from(fixContext);
-                XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
-                    LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                    param.setResult(inflater1.cloneInContext(fixContext));
-                });
+                //在下面的BottomPopupView会调用一次LayoutInflater.from()
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

@@ -3,6 +3,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 import com.hicore.qtool.HookEnv;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PluginSetController {
@@ -23,8 +24,8 @@ public class PluginSetController {
         if (IsAutoLoad) HookEnv.Config.setBoolean("Plugin_Auto_Load_List",PluginID,true);
         else HookEnv.Config.removeKey("Plugin_Auto_Load_List",PluginID);
     }
-    public static ArrayList<String> getAutoLoadList(){
-        return new ArrayList<>();
+    public static List<String> getAutoLoadList(){
+        return Arrays.asList(HookEnv.Config.getKeys("Plugin_Auto_Load_List"));
     }
     public static List<String> getModeList(String PluginID){
         return HookEnv.Config.getList("Plugin_Mode_List",PluginID, true);
