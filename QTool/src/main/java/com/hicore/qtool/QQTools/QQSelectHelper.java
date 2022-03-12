@@ -19,6 +19,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -33,14 +34,18 @@ import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
+import com.hicore.qtool.QQManager.QQGuildManager;
 import com.hicore.qtool.R;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.core.BottomPopupView;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,7 +56,7 @@ public class QQSelectHelper {
     public interface onSelected{
         void onGroupSelect(ArrayList<String> uin);
         void onFriendSelect(ArrayList<String> uin);
-        void onGuildSelect(HashMap<String,ArrayList<String>> guilds);
+        void onGuildSelect(HashMap<String,HashSet<String>> guilds);
     }
     private static class FixResClassLoader extends ClassLoader{
         protected FixResClassLoader(ClassLoader parent) {
@@ -110,10 +115,14 @@ public class QQSelectHelper {
     private boolean isShowFriend;
     private boolean isShowGuild;
     private Context mContext;
+    LayoutInflater inflater = null;
+    LinearLayout mContainer;
+
+    private int CurrentType = 0;
 
     private ArrayList<String> selectGroup = new ArrayList<>();
     private ArrayList<String> selectFriend = new ArrayList<>();
-    private HashMap<String,ArrayList<String>> selectGuild = new HashMap<>();
+    private HashMap<String,HashSet<String>> selectGuild = new HashMap<>();
     public QQSelectHelper(Context context,boolean isTroop,boolean isFriend,boolean isGuild){
         mContext = context;
         isShowTroop = isTroop;
@@ -126,8 +135,102 @@ public class QQSelectHelper {
     public void setSelectedFriend(ArrayList<String> selectFriend){
         this.selectFriend = selectFriend;
     }
-    public void setSelectedGuildChannel(HashMap<String,ArrayList<String>> selectGuild){
+    public void setSelectedGuildChannel(HashMap<String, HashSet<String>> selectGuild){
         this.selectGuild = selectGuild;
+    }
+    private List<CheckBox> checkBoxs;
+    private void SwitchToGroup(){
+        mContainer.removeAllViews();
+        ArrayList<QQGroupUtils.GroupInfo> groupList = QQGroupUtils.Group_Get_List();
+        checkBoxs = new ArrayList<>();
+        for (QQGroupUtils.GroupInfo info : groupList){
+            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+
+            RoundImageView image = item.findViewById(R.id.HeadView);
+            image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140",info.Uin,info.Uin));
+            TextView Name = item.findViewById(R.id.SetName);
+            Name.setText(info.Name+"("+info.Uin+")");
+
+            CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
+            itemSwitch.setChecked(selectGroup.contains(info.Uin));
+            itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
+                if (ischeck) selectGroup.add(info.Uin);
+                else selectGroup.remove(info.Uin);
+            });
+            checkBoxs.add(itemSwitch);
+
+            mContainer.addView(item);
+        }
+
+        CurrentType = 1;
+    }
+    private void SwitchToFriend(){
+        mContainer.removeAllViews();
+        ArrayList<QQEnvUtils.FriendInfo> friendList = QQEnvUtils.getFriendList();
+        checkBoxs = new ArrayList<>();
+        for (QQEnvUtils.FriendInfo info : friendList){
+            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+
+            RoundImageView image = item.findViewById(R.id.HeadView);
+            image.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140",info.Uin));
+            TextView Name = item.findViewById(R.id.SetName);
+            Name.setText(info.Name+"("+info.Uin+")");
+
+            CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
+            itemSwitch.setChecked(selectFriend.contains(info.Uin));
+            itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
+                if (ischeck) selectFriend.add(info.Uin);
+                else selectFriend.remove(info.Uin);
+            });
+            checkBoxs.add(itemSwitch);
+
+            mContainer.addView(item);
+        }
+        CurrentType = 2;
+    }
+    private void SwitchToGuild(){
+        mContainer.removeAllViews();
+        ArrayList<QQGuildManager.Guild_Info> guildList = QQGuildManager.Guild_Get_List();
+        for (QQGuildManager.Guild_Info info : guildList){
+
+            ArrayList<QQGuildManager.Channel_Info> channelList = QQGuildManager.Channel_Get_List(info.GuildID);
+            for (QQGuildManager.Channel_Info channel : channelList){
+                LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+
+                RoundImageView image = item.findViewById(R.id.HeadView);
+                image.setImagePath(info.AvatarUrl);
+                TextView Name = item.findViewById(R.id.SetName);
+                Name.setText(info.GuildName+"&"+channel.ChannelName+"("+info.GuildID+"->"+channel.ChannelID+")");
+
+                CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
+                itemSwitch.setChecked(IsChannelSelect(info.GuildID,channel.ChannelID));
+                itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
+                    SetChannelSelect(info.GuildID,channel.ChannelID,ischeck);
+                });
+                checkBoxs.add(itemSwitch);
+
+                mContainer.addView(item);
+            }
+        }
+        CurrentType = 3;
+    }
+    private boolean IsChannelSelect(String GuildID,String ChannelID){
+        HashSet<String> channelInfo = selectGuild.get(GuildID);
+        if (channelInfo == null)return false;
+        return channelInfo.contains(ChannelID);
+    }
+    private void SetChannelSelect(String GuildID,String ChannelID,boolean isSet){
+        if (isSet){
+            HashSet<String> channelInfo = selectGuild.computeIfAbsent(GuildID, k -> new HashSet<>());
+            channelInfo.add(ChannelID);
+        }else {
+            HashSet<String> channelInfo = selectGuild.get(GuildID);
+            if (channelInfo == null)return;
+            channelInfo.remove(ChannelID);
+            if (channelInfo.size() == 0){
+                selectGuild.remove(GuildID);
+            }
+        }
     }
     public void startShow(onSelected callback,int defTab){
         try{
@@ -135,7 +238,7 @@ public class QQSelectHelper {
 
             Context fixContext = new FixContext(mContext);
 
-            LayoutInflater inflater = null;
+
             try {
                 XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
                     LayoutInflater inflater1 = (LayoutInflater) param.getResult();
@@ -149,7 +252,6 @@ public class QQSelectHelper {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-            LayoutInflater finalInflater = inflater;
             BottomPopupView view =new BottomPopupView(fixContext){
                 @Override
                 protected int getImplLayoutId() {
@@ -159,44 +261,67 @@ public class QQSelectHelper {
                 @Override
                 protected void onCreate() {
                     super.onCreate();
-                    LinearLayout mContainer = findViewById(R.id.selectContent);
+                    mContainer = findViewById(R.id.selectContent);
                     if (defTab == 1) ((RadioButton)findViewById(R.id.select_group)).setChecked(true);
                     if (defTab == 2) ((RadioButton)findViewById(R.id.select_friend)).setChecked(true);
                     if (defTab == 3) ((RadioButton)findViewById(R.id.select_guild)).setChecked(true);
 
+                    if (!isShowTroop)((RadioButton)findViewById(R.id.select_group)).setVisibility(GONE);
+                    if (!isShowFriend)((RadioButton)findViewById(R.id.select_friend)).setVisibility(GONE);
+                    if (!isShowGuild)((RadioButton)findViewById(R.id.select_guild)).setVisibility(GONE);
+
                     if (defTab == 1){
-                        ArrayList<QQGroupUtils.GroupInfo> groupList = QQGroupUtils.Group_Get_List();
-                        for (QQGroupUtils.GroupInfo info : groupList){
-                            LinearLayout item = (LinearLayout) finalInflater.inflate(R.layout.select_item,null);
-
-                            RoundImageView image = item.findViewById(R.id.HeadView);
-                            image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140",info.Uin,info.Uin));
-                            TextView Name = item.findViewById(R.id.SetName);
-                            Name.setText(info.Name+"("+info.Uin+")");
-
-                            mContainer.addView(item);
-                        }
+                        SwitchToGroup();
                     }else if (defTab == 2){
-                        ArrayList<QQEnvUtils.FriendInfo> friendList = QQEnvUtils.getFriendList();
-                        for (QQEnvUtils.FriendInfo info : friendList){
-                            LinearLayout item = (LinearLayout) finalInflater.inflate(R.layout.select_item,null);
-
-                            RoundImageView image = item.findViewById(R.id.HeadView);
-                            image.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140",info.Uin));
-                            TextView Name = item.findViewById(R.id.SetName);
-                            Name.setText(info.Name+"("+info.Uin+")");
-
-                            mContainer.addView(item);
-                        }
+                        SwitchToFriend();
                     }else if (defTab == 3){
+                        SwitchToGuild();
+                    }
+                    ((RadioButton)findViewById(R.id.select_group)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked){
+                            SwitchToGroup();
+                        }
+                    });
+                    ((RadioButton)findViewById(R.id.select_friend)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked){
+                            SwitchToFriend();
+                        }
+                    });
+                    ((RadioButton)findViewById(R.id.select_guild)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked){
+                            SwitchToGuild();
+                        }
+                    });
 
+
+                    findViewById(R.id.selectAll).setOnClickListener(v->{
+                        for (CheckBox ch : checkBoxs){
+                            ch.setChecked(true);
+                        }
+                    });
+                    findViewById(R.id.selectBack).setOnClickListener(v->{
+                        for (CheckBox ch : checkBoxs){
+                            ch.setChecked(!ch.isChecked());
+                        }
+                    });
+                }
+
+                @Override
+                protected void onDismiss() {
+                    super.onDismiss();
+                    try {
+                        if (isShowFriend)callback.onFriendSelect(selectFriend);
+                        if (isShowTroop)callback.onGroupSelect(selectGroup);
+                        if (isShowGuild)callback.onGuildSelect(selectGuild);
+                    }catch (Exception e){
+                        LogUtils.warning("QQSelectHelper","dismiss callback exception:\n"+e);
                     }
 
                 }
             };
-            new XPopup.Builder(fixContext)
-                    .asCustom(view)
-                    .show();
+            XPopup.Builder NewPop = new XPopup.Builder(fixContext);
+            BasePopupView base = NewPop.asCustom(view);
+            base.show();
         }catch (Exception e){
             Utils.ShowToast("选择器加载失败：\n"+e);
         }

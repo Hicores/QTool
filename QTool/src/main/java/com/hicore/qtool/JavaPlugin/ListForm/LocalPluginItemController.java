@@ -37,6 +37,7 @@ import java.io.StringReader;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 
 public final class LocalPluginItemController {
@@ -274,7 +275,7 @@ public final class LocalPluginItemController {
                 }
 
                 @Override
-                public void onGuildSelect(HashMap<String, ArrayList<String>> guilds) {
+                public void onGuildSelect(HashMap<String, HashSet<String>> guilds) {
 
                 }
             },1);

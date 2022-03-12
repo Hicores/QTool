@@ -101,8 +101,7 @@ public class QQEnvUtils {
             LogUtils.error("SendLike",exception);
         }
     }
-    public static boolean IsFriends(String uin)
-    {
+    public static boolean IsFriends(String uin) {
         try {
             Object FriendsManager = MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.friend.api.impl.FriendDataServiceImpl"),"getService",
                     MClass.loadClass("com.tencent.mobileqq.friend.api.impl.FriendDataServiceImpl"),new Class[]{MClass.loadClass("mqq.app.AppRuntime")},QQEnvUtils.getAppRuntime()

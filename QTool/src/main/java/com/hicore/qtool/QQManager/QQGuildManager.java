@@ -9,6 +9,7 @@ import com.hicore.qtool.HookEnv;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QQGuildManager {
     public static void Guild_Mute(String GuildID,String UserTinyID,long Time){
@@ -44,5 +45,66 @@ public class QQGuildManager {
         }catch (Exception e){
             LogUtils.error("Guild_Revoke",e);
         }
+    }
+    public static String Guild_Get_Avatar(String GuildID){
+        try {
+            Object IGpsManager = QQEnvUtils.GetIGpsManager();
+            Object GuildInfo = MMethod.CallMethodSingle(IGpsManager,"getGuildInfo",MClass.loadClass("com.tencent.mobileqq.qqguildsdk.data.IGProGuildInfo"),GuildID);
+            return MMethod.CallMethodSingle(GuildInfo,"getAvatarUrl",String.class,0);
+        } catch (Exception e) {
+            return "";
+        }
+
+    }
+    public static ArrayList<Guild_Info> Guild_Get_List(){
+        try{
+            Object IGpsManager = QQEnvUtils.GetIGpsManager();
+            List mList = MMethod.CallMethodNoParam(IGpsManager,"getGuildList",List.class);
+            ArrayList<Guild_Info> NewInfos = new ArrayList<>();
+            for(Object item : mList){
+                Guild_Info NewItem = new Guild_Info();
+                NewItem.AvatarUrl =  MMethod.CallMethodSingle(item,"getAvatarUrl",String.class,0);
+                NewItem.CreateTime =  MMethod.CallMethodNoParam(item,"getCreateTime",long.class);
+                NewItem.GuildID =  MMethod.CallMethodNoParam(item,"getGuildID",String.class);
+                NewItem.GuildName =  MMethod.CallMethodNoParam(item,"getGuildName",String.class);
+                NewInfos.add(NewItem);
+            }
+            return NewInfos;
+        }catch (Exception e){
+            LogUtils.error("Guild_Get_List",e);
+            return null;
+        }
+    }
+    public static ArrayList<Channel_Info> Channel_Get_List(String GuildID){
+        try{
+            Object IGpsManager = QQEnvUtils.GetIGpsManager();
+            List mList = MMethod.CallMethodSingle(IGpsManager,"getChannelList",List.class,GuildID);
+            ArrayList<Channel_Info> NewInfos = new ArrayList<>();
+            for(Object item : mList){
+                Channel_Info NewItem = new Channel_Info();
+                NewItem.ChannelID = MMethod.CallMethodNoParam(item,"getChannelUin",String.class);
+                NewItem.ChannelName = MMethod.CallMethodNoParam(item,"getChannelName",String.class);
+                NewItem.CreateTime = MMethod.CallMethodNoParam(item,"getCreateTime",long.class);
+                NewItem.type = MMethod.CallMethodNoParam(item,"getType",int.class);
+                NewInfos.add(NewItem);
+            }
+            return NewInfos;
+        }catch (Exception e){
+            LogUtils.error("getChannelList",e);
+            return null;
+        }
+    }
+
+    public static class Guild_Info{
+        public String GuildID;
+        public String GuildName;
+        public long CreateTime;
+        public String AvatarUrl;
+    }
+    public static class Channel_Info{
+        public String ChannelID;
+        public String ChannelName;
+        public long CreateTime;
+        public int type;
     }
 }

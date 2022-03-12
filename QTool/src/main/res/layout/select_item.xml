@@ -11,6 +11,7 @@
         android:layout_marginRight="5dp"
         android:layout_width="50dp"
         android:layout_height="50dp"/>
+
     <TextView
         android:id="@+id/SetName"
         android:layout_marginLeft="10dp"
@@ -18,20 +19,20 @@
         android:layout_height="match_parent"
         android:layout_marginRight="60dp"
         android:textColor="@color/black"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:text="这里显示名字"
-        android:gravity="center_vertical"></TextView>
+        android:gravity="center_vertical" />
+
     <CheckBox
         android:id="@+id/SelectSwitch"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="-55dp"
+        android:layout_marginStart="-55dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:textSize="50dp"
+        android:textSize="50sp"
         android:scaleX="1.8"
-        android:scaleY="1.8"
-        ></CheckBox>
+        android:scaleY="1.8" />
 
 
 </LinearLayout>
