@@ -31,6 +31,7 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 import com.hicore.qtool.R;
 import com.lxj.xpopup.XPopup;
@@ -176,7 +177,17 @@ public class QQSelectHelper {
                             mContainer.addView(item);
                         }
                     }else if (defTab == 2){
+                        ArrayList<QQEnvUtils.FriendInfo> friendList = QQEnvUtils.getFriendList();
+                        for (QQEnvUtils.FriendInfo info : friendList){
+                            LinearLayout item = (LinearLayout) finalInflater.inflate(R.layout.select_item,null);
 
+                            RoundImageView image = item.findViewById(R.id.HeadView);
+                            image.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140",info.Uin));
+                            TextView Name = item.findViewById(R.id.SetName);
+                            Name.setText(info.Name+"("+info.Uin+")");
+
+                            mContainer.addView(item);
+                        }
                     }else if (defTab == 3){
 
                     }
