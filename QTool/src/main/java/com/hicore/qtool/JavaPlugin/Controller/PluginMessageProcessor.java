@@ -34,6 +34,10 @@ public class PluginMessageProcessor {
             data.MessageTime = MField.GetField(msg, "time", long.class);
             data.IsGroup = early.istroop == 1 || early.istroop == 10014;
             data.IsChannel = early.istroop == 10014;
+            if (data.IsChannel){
+                data.ChannelID = early.ChannelID;
+                data.GuildID = early.GuildID;
+            }
             data.GroupUin = early.GroupUin;
             data.UserUin = early.UserUin;
             data.AppInterface = HookEnv.AppInterface;
@@ -152,6 +156,8 @@ public class PluginMessageProcessor {
                 String ChannelID = MField.GetField(msg,"frienduin");
                 info.GroupUin = GUILD_ID + "&" + ChannelID;
                 info.UserUin = MField.GetField(msg,"senderuin");
+                info.GuildID = GUILD_ID;
+                info.ChannelID = ChannelID;
             }else {
                 info.GroupUin = "";
                 info.UserUin = "";

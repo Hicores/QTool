@@ -321,6 +321,7 @@ public class PluginController {
             try{
                 if (type == 1){
                     InvokeToPlugin(info.Instance,Name,GroupUin,"",1);
+                    InvokeToPlugin(info.Instance,Name,GroupUin);
                 }else if (type == 0){
                     InvokeToPlugin(info.Instance,Name,"",UserUin,2);
                 }else if (type == 1000){

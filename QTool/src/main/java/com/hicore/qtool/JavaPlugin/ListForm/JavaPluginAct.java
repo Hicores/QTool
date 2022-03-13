@@ -2,6 +2,7 @@ package com.hicore.qtool.JavaPlugin.ListForm;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -48,6 +49,13 @@ public class JavaPluginAct extends Activity {
         setContentView(R.layout.menu_javaplugin);
         itemLayout = findViewById(R.id.ContainLayout);
         searchForLocal();
+
+        findViewById(R.id.openApiDesc)
+                .setOnClickListener(v->{
+                    Uri u = Uri.parse("https://shimo.im/docs/913JVOpxNdiavN3E/");
+                    Intent in = new Intent(Intent.ACTION_VIEW,u);
+                    startActivity(in);
+                });
 
     }
     private void searchForLocal(){

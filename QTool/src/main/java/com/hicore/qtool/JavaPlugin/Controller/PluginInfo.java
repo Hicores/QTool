@@ -33,6 +33,8 @@ public class PluginInfo {
         public int istroop;
         public String GroupUin;
         public String UserUin;
+        public String GuildID;
+        public String ChannelID;
     }
     public static class MessageData{
         public String MessageContent;
