@@ -1,7 +1,7 @@
 <div align="center">
     <h1> QTool </h1>
 
-[![license](https://img.shields.io/github/license/Hicores/QTool.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![license](https://img.shields.io/github/license/Hicores/QTool.svg)] (https://www.gnu.org/licenses/agpl-3.0.html)
 [![GitHub release](https://img.shields.io/github/release/Hicores/QTool.svg)](https://github.com/Hicores/QTool/releases/latest)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Channel&color=0088cc)](https://t.me/QToolR)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
@@ -15,9 +15,10 @@ QTool 是一个开源 Xposed 模块
 
 - 支持Android >= 8.0
 - 支持QQ >= 8.7.0
-- 
+
 ## 功能列表
 - 1.Java脚本加载
+- 2.
 
 ## 提示
 - 1.仅供学习使用,禁止用于违法违规内容,如果发现大量违法违规使用,将采取禁止账号使用本软件,或者移除被滥用功能的措施
