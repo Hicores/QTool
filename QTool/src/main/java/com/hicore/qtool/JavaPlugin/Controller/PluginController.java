@@ -105,7 +105,7 @@ public class PluginController {
             info.ListStr = PluginSetController.getModeList(info.PluginID);
             File mainJava = new File(info.LocalPath,"main.java");
             if (!mainJava.exists()){
-                Utils.ShowToast("当前脚本目录不存在 main.java 文件,无法加载");
+                Utils.ShowToast("当前脚本目录不存在 main.java 文件,无法加载,脚本:"+info.PluginName);
                 return false;
             }
             String fileContent = FileUtils.ReadFileString(mainJava);
@@ -117,7 +117,7 @@ public class PluginController {
             JavaPluginAct.NotifyLoadSuccess(info.PluginID);
             return true;
         }catch (Throwable th){
-            Utils.ShowToast("脚本加载错误,已停止执行:\n"+Log.getStackTraceString(th));
+            Utils.ShowToast("脚本 "+info.PluginName+" 加载错误,已停止执行:\n"+Log.getStackTraceString(th));
             forceEnd(info);
             PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(th));
 
@@ -275,5 +275,17 @@ public class PluginController {
         if (data.MessageType != 0) {
             checkAndInvoke(early.GroupUin, "onMsg", data);
         }
+    }
+    public static HashMap<String,PluginInfo> checkHasAvailMenu(String Uin,int istroop){
+        HashMap<String,PluginInfo> avail = new HashMap<>();
+        for(String key : runningInfo.keySet()){
+            PluginInfo info = runningInfo.get(key);
+            if (info != null && !info.IsLoading && info.IsRunning){
+                if (info.IsAvailable(Uin)){
+                    avail.put(key,info);
+                }
+            }
+        }
+        return avail;
     }
 }

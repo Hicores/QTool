@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="这是标题.Java"
-            android:textColor="#5B00AE"
+            android:textColor="@color/font_plugin"
             android:textSize="24dp" />
 
         <TextView
@@ -77,7 +77,7 @@
             android:id="@+id/plugin_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/font_plugin"
             android:textSize="9dp"
             android:text="脚本作者:小菜豆" />
 
@@ -85,7 +85,7 @@
             android:id="@+id/plugin_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/font_plugin"
             android:textSize="9dp"
             android:text="描述:嗯嗯嗯呃啊啊嗯嗯" />
 
@@ -93,7 +93,7 @@
             android:id="@+id/plugin_autoload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/font_plugin"
             android:text="QQ启动时自动加载" />
         <RadioGroup
             android:orientation="horizontal"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
                 android:text="启用群聊白名单"
-                android:textColor="@color/black" />
+                android:textColor="@color/font_plugin" />
 
             <RadioButton
                 android:id="@+id/plugin_message_black"
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
                 android:text="启用群聊黑名单"
-                android:textColor="@color/black" />
+                android:textColor="@color/font_plugin" />
             <TextView
                 android:clickable="true"
                 android:layout_marginLeft="10dp"

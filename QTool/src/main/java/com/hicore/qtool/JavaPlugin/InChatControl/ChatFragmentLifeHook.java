@@ -19,31 +19,12 @@ public class ChatFragmentLifeHook extends BaseHookItem {
 
         Method[] hookMethod = getHookMethod();
         XPBridge.HookAfter(hookMethod[0],param -> {
-            Utils.ShowToast("BaseChatPie onResume");
+            onShow();
         });
         XPBridge.HookAfter(hookMethod[1],param -> {
-            Utils.ShowToast("BaseChatPie onPause");
+            onHide();
         });
         return true;
-    }
-    boolean IsShow = false;
-    private void checkAndDispatch(Object chkObj){
-        try {
-            boolean IsInLayout = MMethod.CallMethodNoParam(chkObj,"isVisible",boolean.class);
-            if (!IsInLayout){
-                if (IsShow){
-                    IsShow = false;
-                    onHide();
-                }
-            }else {
-                if (!IsShow){
-                    IsShow = true;
-                    onShow();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     @Override
     public boolean isEnable() {
@@ -56,10 +37,16 @@ public class ChatFragmentLifeHook extends BaseHookItem {
         return m[0] != null && m[1] != null;
     }
     private void onShow(){
-        Utils.ShowToast("onShow");
+        new Handler(Looper.getMainLooper())
+                .post(()->{
+                   FloatWindowControl.onShowEvent(true);
+                });
     }
     private void onHide(){
-        Utils.ShowToast("onHide");
+        new Handler(Looper.getMainLooper())
+                .post(()->{
+                    FloatWindowControl.onShowEvent(false);
+                });
     }
     public Method[] getHookMethod(){
         Method[] m = new Method[3];

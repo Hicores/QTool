@@ -193,7 +193,7 @@ public final class LocalPluginItemController {
             Properties props = new Properties();
             String propString = FileUtils.ReadFileString(propPath.getAbsolutePath());
             props.load(new StringReader(propString));
-            setTitle(props.getProperty("name","未设定名字"), Color.BLACK);
+            setTitle(props.getProperty("name","未设定名字"));
             setAuthor("作者:"+props.getProperty("author","未设定作者"));
             setVersion("版本号:"+props.getProperty("version","未设定版本号"));
             setDesc(FileUtils.ReadFileString(new File(PluginRootPath,"desc.txt")));
@@ -348,10 +348,9 @@ public final class LocalPluginItemController {
         TextView titleView = mRoot.findViewById(R.id.plugin_title);
         titleView.setTextColor(color);
     }
-    private void setTitle(String title,int color){
+    private void setTitle(String title){
         TextView titleView = mRoot.findViewById(R.id.plugin_title);
         titleView.setText(title);
-        titleView.setTextColor(color);
 
     }
     private void setVersion(String version){

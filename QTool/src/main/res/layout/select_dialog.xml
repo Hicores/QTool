@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/bg_plugin"
     android:layout_height="match_parent">
     <RadioGroup
         android:layout_marginTop="50dp"
@@ -12,18 +12,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/selectBar">
         <RadioButton
+            android:textColor="@color/font_plugin"
             android:id="@+id/select_group"
             android:text="选择群聊"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </RadioButton>
         <RadioButton
+            android:textColor="@color/font_plugin"
             android:id="@+id/select_friend"
             android:text="选择好友"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </RadioButton>
         <RadioButton
+            android:textColor="@color/font_plugin"
             android:id="@+id/select_guild"
             android:text="选择频道"
             android:layout_width="wrap_content"

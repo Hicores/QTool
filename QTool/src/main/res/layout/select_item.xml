@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginRight="60dp"
-        android:textColor="@color/black"
+        android:textColor="@color/font_plugin"
         android:textSize="16sp"
         android:text="这里显示名字"
         android:gravity="center_vertical" />
