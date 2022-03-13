@@ -16,7 +16,7 @@ public class TroopMsgProxy extends BaseHookItem {
         Method m = getMethod();
         XPBridge.HookBefore(m, param -> {
             Object ChatMsg = param.args[2];
-            PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(ChatMsg));
+
         });
         return true;
     }

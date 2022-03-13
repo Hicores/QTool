@@ -6,6 +6,7 @@ import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
@@ -14,6 +15,7 @@ import java.lang.reflect.Method;
 @HookItem(isRunInAllProc = false,isDelayInit = false)
 public class BaseMsgProxy extends BaseHookItem {
     private static final String TAG = "BaseMsgProxy";
+    private static final long StartTime = System.currentTimeMillis();
     @Override
     public String getTag() {
         return TAG;
@@ -23,11 +25,8 @@ public class BaseMsgProxy extends BaseHookItem {
     public boolean startHook() {
         XPBridge.HookBefore(getMethod(),param -> {
             Object MessageRecord = param.args[0];
-            int isTroop = MField.GetField(MessageRecord,"istroop",int.class);
-            //这里接收群聊消息有时会把历史消息也接收进来
-            if (isTroop == 0 || isTroop == 1000){
-                PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(MessageRecord));
-            }
+            if (System.currentTimeMillis() - StartTime < 10 * 1000)return;
+            PluginMessageProcessor.submit(()->PluginMessageProcessor.onMessage(MessageRecord));
 
         });
         return true;
