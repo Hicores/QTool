@@ -18,6 +18,7 @@ import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import com.lxj.xpopup.XPopup;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.channel.AbstractChannelListener;
@@ -83,9 +84,6 @@ public class EnvHook {
             }
         });
     }
-    private static void patchAppCenter(){
-
-    }
     private static void InitAppCenter(){
         try {
             if (!HookEnv.IsMainProcess)return;
@@ -107,8 +105,11 @@ public class EnvHook {
 
     }
     private static void InitActivityProxy(){
-        EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.AboutActivity", moduleLoader, HookEnv.mLoader);
-        EzXHelperInit.INSTANCE.initSubActivity();
+        if (HookEnv.IsMainProcess){
+            EzXHelperInit.INSTANCE.initActivityProxyManager(BuildConfig.APPLICATION_ID,"com.tencent.mobileqq.activity.AboutActivity", moduleLoader, HookEnv.mLoader);
+            EzXHelperInit.INSTANCE.initSubActivity();
+        }
+
     }
     private static void HookForDelay(){
         if (HookEnv.IsMainProcess){

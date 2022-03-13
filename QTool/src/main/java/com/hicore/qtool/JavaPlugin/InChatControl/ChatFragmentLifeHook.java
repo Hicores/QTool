@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.hicore.HookItem;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.Utils.Utils;
@@ -19,10 +20,10 @@ public class ChatFragmentLifeHook extends BaseHookItem {
 
         Method[] hookMethod = getHookMethod();
         XPBridge.HookAfter(hookMethod[0],param -> {
-            onShow();
+            onShow(param.thisObject);
         });
         XPBridge.HookAfter(hookMethod[1],param -> {
-            onHide();
+            onHide(param.thisObject);
         });
         return true;
     }
@@ -36,17 +37,28 @@ public class ChatFragmentLifeHook extends BaseHookItem {
         Method[] m = getHookMethod();
         return m[0] != null && m[1] != null;
     }
-    private void onShow(){
+    private void onShow(Object pie){
         new Handler(Looper.getMainLooper())
-                .post(()->{
-                   FloatWindowControl.onShowEvent(true);
-                });
+                .postDelayed(()->{
+                    try {
+                        Object Session = MField.GetFirstField(pie,MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
+                        FloatWindowControl.onShowEvent(true,Session);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                },500);
     }
-    private void onHide(){
+    private void onHide(Object pie){
         new Handler(Looper.getMainLooper())
-                .post(()->{
-                    FloatWindowControl.onShowEvent(false);
-                });
+                .postDelayed(()->{
+                    try {
+                        Object Session = MField.GetFirstField(pie,MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
+                        FloatWindowControl.onShowEvent(false,Session);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },500);
     }
     public Method[] getHookMethod(){
         Method[] m = new Method[3];

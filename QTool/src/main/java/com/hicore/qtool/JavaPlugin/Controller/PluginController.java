@@ -157,6 +157,7 @@ public class PluginController {
     private static void LoadFirst(PluginInfo info) throws Exception {
         NameSpace space = info.Instance.getNameSpace();
         PluginMethod env = new PluginMethod(info);
+        info.ItemFunctions.clear();
         space.setMethod("sendMsg",new BshMethod(PluginMethod.class.getMethod("sendMsg", String.class, String.class, String.class),env));
         space.setMethod("sendPic",new BshMethod(PluginMethod.class.getMethod("sendPic", String.class, String.class, String.class),env));
         space.setMethod("sendCard",new BshMethod(PluginMethod.class.getMethod("sendCard", String.class, String.class, String.class),env));
@@ -276,12 +277,12 @@ public class PluginController {
             checkAndInvoke(early.GroupUin, "onMsg", data);
         }
     }
-    public static HashMap<String,PluginInfo> checkHasAvailMenu(String Uin,int istroop){
+    public static HashMap<String,PluginInfo> checkHasAvailMenu(String Uin,boolean isTroop){
         HashMap<String,PluginInfo> avail = new HashMap<>();
         for(String key : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(key);
             if (info != null && !info.IsLoading && info.IsRunning){
-                if (info.IsAvailable(Uin)){
+                if (info.IsAvailable(Uin) || !isTroop){
                     avail.put(key,info);
                 }
             }

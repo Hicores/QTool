@@ -7,8 +7,10 @@
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/itemback.xml" value="0.108" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/menu_item_base.xml" value="0.108" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/menu_item_round.xml" value="0.1495" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/ripple_amin.xml" value="0.1" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/round_corners.xml" value="0.1" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/textlines.xml" value="0.1875" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/activity_opensource.xml" value="0.21014492753623187" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/file_download.xml" value="0.3416666666666667" />
@@ -16,8 +18,11 @@
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/menu_javaplugin.xml" value="0.12907608695652173" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/menu_main.xml" value="0.1" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/open_source_item.xml" value="0.21014492753623187" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_inchat_menu.xml" value="0.33" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_inchat_menu_item.xml" value="0.21666666666666667" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_item.xml" value="0.12907608695652173" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_item_local.xml" value="0.18" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_item_menu_item.xml" value="0.2484375" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/plugin_item_online.xml" value="0.3037542662116041" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/select_dialog.xml" value="0.14" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/select_item.xml" value="0.25833333333333336" />

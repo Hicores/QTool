@@ -3,22 +3,38 @@ package com.hicore.qtool.JavaPlugin.InChatControl;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.JavaPlugin.Controller.PluginController;
+import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
+import com.hicore.qtool.QQMessage.QQSessionUtils;
+import com.hicore.qtool.QQTools.ContUtil;
 import com.hicore.qtool.R;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.core.BottomPopupView;
 
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +55,7 @@ public class FloatWindowControl {
 
 
 
-    public static void onShowEvent(boolean IsShow){
+    public static void onShowEvent(boolean IsShow,Object session){
         Activity act = Utils.getTopActivity();
         if (MIN_Y == -1)
         {
@@ -55,7 +71,8 @@ public class FloatWindowControl {
             MAX_Y = MIN_Y + metrics.heightPixels -  Utils.dip2px(act,32);
         }
 
-        if (IsShow){
+        if (IsShow && IsAvailable(QQSessionUtils.getGroupUin(session),!(QQSessionUtils.getSessionID(session) == 0 || QQSessionUtils.getSessionID(session) == 1000))){
+
             if (act == cacheAct){
                 if (!IsAdd.getAndSet(true))
                 {
@@ -84,6 +101,12 @@ public class FloatWindowControl {
 
         }
     }
+    static HashMap<String,PluginInfo> cachePlugin;
+    private static boolean IsAvailable(String TroopUin,boolean IsTroop){
+        HashMap<String, PluginInfo> AvailPlugin = PluginController.checkHasAvailMenu(TroopUin,IsTroop);
+        cachePlugin = AvailPlugin;
+        return !AvailPlugin.isEmpty();
+    }
     private static void removeTimer(){
         if (IsSetTimer){
             timeHide.cancel();
@@ -110,7 +133,7 @@ public class FloatWindowControl {
         mPluginButton.setOnClickListener(v->{
             if (actionClick.get())
             {
-                Utils.ShowToast("Click");
+                ShowButtonDialog();
             }
 
         });
@@ -226,5 +249,65 @@ public class FloatWindowControl {
 
 
         return layoutParams;
+    }
+    private static void ShowButtonDialog(){
+        Context fixContext = new ContUtil.FixContext(cacheAct);
+        LayoutInflater inflater = ContUtil.getContextInflater(cacheAct);
+        try{
+            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class), param -> {
+                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
+                param.setResult(inflater1.cloneInContext(fixContext));
+            });
+        }catch (Exception e){}
+        BottomPopupView view = new BottomPopupView(fixContext){
+            @Override
+            protected int getImplLayoutId() {
+                return R.layout.plugin_inchat_menu;
+            }
+
+            @Override
+            protected int getMaxHeight() {
+                return fixContext.getResources().getDisplayMetrics().heightPixels / 2 - 200;
+            }
+
+            @Override
+            protected void onCreate() {
+                LinearLayout mList = findViewById(R.id.plugin_menu_list);
+
+                for (String VerifyKey : cachePlugin.keySet()){
+                    PluginInfo info = cachePlugin.get(VerifyKey);
+
+                    RelativeLayout item = (RelativeLayout) inflater.inflate(R.layout.plugin_inchat_menu_item,null);
+                    TextView title = item.findViewById(R.id.plugin_title);
+                    title.setText(info.PluginName);
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    param.setMargins(Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10),Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10));
+
+
+                    LinearLayout menu_items = item.findViewById(R.id.menu_items);
+                    for (String itemKey : info.ItemFunctions.keySet()){
+                        PluginController.ItemInfo itemInfo = info.ItemFunctions.get(itemKey);
+                        if (itemInfo.itemType == 1){
+                            TextView newView = (TextView) inflater.inflate(R.layout.plugin_item_menu_item,null);
+                            newView.setText(" - "+itemInfo.ItemName);
+
+                            LinearLayout.LayoutParams parambb = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            parambb.setMargins(Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5));
+
+                            menu_items.addView(newView,parambb);
+                        }
+                    }
+
+                    mList.addView(item,param);
+                }
+                super.onCreate();
+            }
+        };
+        XPopup.Builder NewPop = new XPopup.Builder(fixContext);
+        BasePopupView base = NewPop.asCustom(view);
+        base.show();
+
+
+
     }
 }
