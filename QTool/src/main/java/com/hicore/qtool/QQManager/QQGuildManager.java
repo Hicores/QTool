@@ -94,7 +94,24 @@ public class QQGuildManager {
             return null;
         }
     }
-
+    public static String GetGuildName(String GuildID){
+        ArrayList<Guild_Info> list = Guild_Get_List();
+        for (Guild_Info info : list){
+            if (info.GuildID.equals(GuildID)){
+                return info.GuildName;
+            }
+        }
+        return GuildID;
+    }
+    public static String GetChannelName(String GuildID,String ChannelID){
+        ArrayList<Channel_Info> list = Channel_Get_List(GuildID);
+        for (Channel_Info info : list){
+            if (info.ChannelID.equals(ChannelID)){
+                return info.ChannelName;
+            }
+        }
+        return ChannelID;
+    }
     public static class Guild_Info{
         public String GuildID;
         public String GuildName;

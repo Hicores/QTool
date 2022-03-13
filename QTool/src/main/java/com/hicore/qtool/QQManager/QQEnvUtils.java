@@ -32,6 +32,23 @@ public class QQEnvUtils {
             return "";
         }
     }
+    public static String getFriendName(String FriendUin){
+        try{
+            Object FriendManager = MMethod.CallMethod(HookEnv.AppInterface,"getManager",
+                    XposedHelpers.findClass("mqq.manager.Manager",HookEnv.mLoader),
+                    new Class[]{int.class},
+                    new Object[]{MField.GetField(null,MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"FRIENDS_MANAGER",int.class)}
+            );
+            Object mService = MField.GetFirstField(FriendManager,FriendManager.getClass(),MClass.loadClass("com.tencent.mobileqq.friend.api.IFriendDataService"));
+            Object friend = MMethod.CallMethodSingle(mService,"getFriend", MClass.loadClass("com.tencent.mobileqq.data.Friends"),FriendUin);
+            return MField.GetField(friend,"name",String.class);
+        }catch (Exception e){
+            LogUtils.error("getFriendName",e);
+            return FriendUin;
+        }
+
+
+    }
     public static ArrayList<FriendInfo> getFriendList(){
         try{
             Object FriendManager = MMethod.CallMethod(HookEnv.AppInterface,"getManager",

@@ -65,11 +65,14 @@ public class QQSessionUtils {
         return getGroupUin(HookEnv.SessionInfo);
     }
     public static String getFriendUin(){
+        return getFriendUin(HookEnv.SessionInfo);
+    }
+    public static String getFriendUin(Object Session){
         try {
-            int SessionType = (int)Table_Session_Field.isTroop().get(HookEnv.SessionInfo);
-            if(SessionType==0)return (String) Table_Session_Field.friendUin().get(HookEnv.SessionInfo);
+            int SessionType = (int)Table_Session_Field.isTroop().get(Session);
+            if(SessionType==0)return (String) Table_Session_Field.friendUin().get(Session);
             if(SessionType==1)return "";
-            if(SessionType==1000)return (String) Table_Session_Field.friendUin().get(HookEnv.SessionInfo);
+            if(SessionType==1000)return (String) Table_Session_Field.friendUin().get(Session);
             return "";
         } catch (Exception e) {
             return "";

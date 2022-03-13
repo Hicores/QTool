@@ -34,9 +34,8 @@ public class QQGroupUtils {
     }
     public static GroupMemberInfo Group_Get_Member_Info(String GroupUin,String UserUin){
         try{
-            Object TroopManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getManager",
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    new Class[]{int.class},
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
             Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin,UserUin);
             GroupInfo gInfo = Group_Get_Info(GroupUin);
@@ -58,9 +57,8 @@ public class QQGroupUtils {
     }
     public static ArrayList<GroupInfo> Group_Get_List(){
         try{
-            Object TroopManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getManager",
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    new Class[]{int.class},
                     new Object[]{MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER")});
             ArrayList<?> rawList =  MMethod.CallMethodNoParam(TroopManager,"g", ArrayList.class);
             ArrayList<GroupInfo> NewList = new ArrayList<>();
@@ -81,9 +79,8 @@ public class QQGroupUtils {
     }
     public static GroupInfo Group_Get_Info(String GroupUin){
         try{
-            Object TroopManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getManager",
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    new Class[]{int.class},
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
             Object GroupInfoR = MMethod.CallMethod(TroopManager,TroopManager.getClass(),"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),new Class[]{String.class},GroupUin);
             GroupInfo NewItem = new GroupInfo();

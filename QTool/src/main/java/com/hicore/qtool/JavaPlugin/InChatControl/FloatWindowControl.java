@@ -27,6 +27,10 @@ import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
+import com.hicore.qtool.QQManager.QQEnvUtils;
+import com.hicore.qtool.QQManager.QQGroupManager;
+import com.hicore.qtool.QQManager.QQGroupUtils;
+import com.hicore.qtool.QQManager.QQGuildManager;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
 import com.hicore.qtool.QQTools.ContUtil;
 import com.hicore.qtool.R;
@@ -56,6 +60,7 @@ public class FloatWindowControl {
 
 
     public static void onShowEvent(boolean IsShow,Object session){
+        CacheSession = session;
         Activity act = Utils.getTopActivity();
         if (MIN_Y == -1)
         {
@@ -126,6 +131,7 @@ public class FloatWindowControl {
         IsSetTimer = true;
     }
     private static AtomicBoolean actionClick = new AtomicBoolean();
+    private static Object CacheSession;
     @SuppressLint("ClickableViewAccessibility")
     private static void InitImageButton(Context context){
         mPluginButton = new ImageView(context);
@@ -133,7 +139,7 @@ public class FloatWindowControl {
         mPluginButton.setOnClickListener(v->{
             if (actionClick.get())
             {
-                ShowButtonDialog();
+                ShowButtonDialog(CacheSession);
             }
 
         });
@@ -250,7 +256,7 @@ public class FloatWindowControl {
 
         return layoutParams;
     }
-    private static void ShowButtonDialog(){
+    private static void ShowButtonDialog(Object Session){
         Context fixContext = new ContUtil.FixContext(cacheAct);
         LayoutInflater inflater = ContUtil.getContextInflater(cacheAct);
         try{
@@ -273,6 +279,24 @@ public class FloatWindowControl {
             @Override
             protected void onCreate() {
                 LinearLayout mList = findViewById(R.id.plugin_menu_list);
+                TextView sub_groupuin = findViewById(R.id.sub_groupuin);
+                String sub_title = "当前";
+                int type = QQSessionUtils.getSessionID(Session);
+                if (type == 1){
+
+                    sub_title = "群聊:" + QQGroupUtils.Group_Get_Name(QQSessionUtils.getGroupUin(Session)) +"("+QQSessionUtils.getGroupUin(Session)+")";
+                }else if (type == 0){
+
+                    sub_title = "好友:" + QQEnvUtils.getFriendName(QQSessionUtils.getFriendUin(Session)) +"("+QQSessionUtils.getFriendUin(Session)+")";
+                }else if (type == 1000){
+                    sub_title = "私聊:" +QQGroupUtils.Group_Get_Member_Name(QQSessionUtils.getGroupUin(Session),QQSessionUtils.getFriendUin(Session))+"("+QQSessionUtils.getFriendUin(Session)+")";
+                    sub_title += "->"+QQGroupUtils.Group_Get_Name(QQSessionUtils.getGroupUin(Session)) +"("+QQSessionUtils.getGroupUin(Session)+")";
+                }else if (type == 10014){
+                    sub_title = "[频道]:"+ QQGuildManager.GetGuildName(QQSessionUtils.getGuildID(Session))+"("+QQSessionUtils.getGuildID(Session)+")";
+                    sub_title += "->"+QQGuildManager.GetChannelName(QQSessionUtils.getGuildID(Session),QQSessionUtils.getChannelID(Session))
+                            +"("+QQSessionUtils.getChannelID(Session)+")";
+                }
+                sub_groupuin.setText(sub_title);
 
                 for (String VerifyKey : cachePlugin.keySet()){
                     PluginInfo info = cachePlugin.get(VerifyKey);
@@ -284,6 +308,8 @@ public class FloatWindowControl {
                     param.setMargins(Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10),Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10));
 
 
+                    PluginController.InvokeToPreCheckItem(Session,info.ItemClickFunctionName,info);
+
                     LinearLayout menu_items = item.findViewById(R.id.menu_items);
                     for (String itemKey : info.ItemFunctions.keySet()){
                         PluginController.ItemInfo itemInfo = info.ItemFunctions.get(itemKey);
@@ -294,10 +320,10 @@ public class FloatWindowControl {
                             LinearLayout.LayoutParams parambb = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             parambb.setMargins(Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5),Utils.dip2px(getContext(),5));
 
+                            newView.setOnClickListener(v-> PluginController.InvokeToPluginItem(Session,itemInfo.CallbackName,info));
                             menu_items.addView(newView,parambb);
                         }
                     }
-
                     mList.addView(item,param);
                 }
                 super.onCreate();
@@ -306,8 +332,5 @@ public class FloatWindowControl {
         XPopup.Builder NewPop = new XPopup.Builder(fixContext);
         BasePopupView base = NewPop.asCustom(view);
         base.show();
-
-
-
     }
 }

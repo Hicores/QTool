@@ -10,13 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="下面是插件添加的菜单"
+        android:text="下面是脚本添加的菜单"
+        android:textColor="@color/font_plugin" />
+
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:id="@+id/sub_groupuin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sub_title"
+        android:text="当前群聊:10086"
+        android:textSize="12dp"
         android:textColor="@color/font_plugin" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sub_title">
+        android:layout_below="@+id/sub_groupuin">
 
         <LinearLayout
             android:id="@+id/plugin_menu_list"
