@@ -1,7 +1,7 @@
 <div align="center">
     <h1> QTool </h1>
 
-[![license](https://img.shields.io/github/license/Hicores/QTool.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![license](https://img.shields.io/github/license/Hicores/QTool.svg?)](https://www.gnu.org/licenses/agpl-3.0.html)
 [![GitHub release](https://img.shields.io/github/release/Hicores/QTool.svg)](https://github.com/Hicores/QTool/releases/latest)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Channel&color=0088cc)](https://t.me/QToolR)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
