@@ -273,7 +273,7 @@ public class FloatWindowControl {
 
             @Override
             protected int getMaxHeight() {
-                return fixContext.getResources().getDisplayMetrics().heightPixels / 2 - 200;
+                return fixContext.getResources().getDisplayMetrics().heightPixels / 2;
             }
 
             @Override

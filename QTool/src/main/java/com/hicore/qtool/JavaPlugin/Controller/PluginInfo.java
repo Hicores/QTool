@@ -2,6 +2,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import bsh.Interpreter;
@@ -20,7 +21,7 @@ public class PluginInfo {
     public String PluginAuthor;
     public String PluginVersion;
     public Interpreter Instance;
-    public HashMap<String, PluginController.ItemInfo> ItemFunctions = new HashMap<>();
+    public LinkedHashMap<String, PluginController.ItemInfo> ItemFunctions = new LinkedHashMap<>();
     public String ItemClickFunctionName = "";
 
     public String AccessToken = "";
