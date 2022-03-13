@@ -185,7 +185,7 @@ public class QQMsgSendUtils {
         if (card.startsWith("{")){
             QQMsgSender.sendArkApp(session,QQMsgBuilder.build_arkapp(card));
         }else {
-            QQMsgSender.sendArkApp(session,QQMsgBuilder.build_struct(card));
+            QQMsgSender.sendStruct(session,QQMsgBuilder.build_struct(card));
         }
     }
     public static void sendEffectShow(String GroupUin,String UserUin,String PicPath,int type){

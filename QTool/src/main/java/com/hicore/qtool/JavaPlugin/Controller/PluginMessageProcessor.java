@@ -265,7 +265,8 @@ public class PluginMessageProcessor {
                 if(SourceInfo != null){
                     data.MessageType = 6;
                     data.MessageContent =  MField.GetField(msg,"msg",String.class);
-                    data.ReplyTo = String.valueOf((Long)MField.GetField(SourceInfo,"mSourceMsgSenderUin"));
+                    long uin = MField.GetField(SourceInfo,"mSourceMsgSenderUin");
+                    data.ReplyTo = String.valueOf(uin);
                 }
             }
             if (data.MessageType != 0){

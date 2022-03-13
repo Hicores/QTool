@@ -59,7 +59,7 @@ public class QQGroupUtils {
         try{
             Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    new Object[]{MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER")});
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
             ArrayList<?> rawList =  MMethod.CallMethodNoParam(TroopManager,"g", ArrayList.class);
             ArrayList<GroupInfo> NewList = new ArrayList<>();
             for (Object item : rawList){

@@ -3,6 +3,7 @@ package com.hicore.ReflectUtils;
 import com.hicore.Utils.Assert;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class MMethod {
@@ -38,7 +39,12 @@ public class MMethod {
         return CallMethodParams(obj,MethodName,ReturnType);
     }
     public static <T,V> T CallMethodSingle(Object obj,String MethodName,Class<?> ReturnType,V Value) throws Exception {
-        return CallMethodParams(obj,MethodName,ReturnType,new Object[]{Value});
+        if (Value.getClass().isArray()){
+            return CallMethodParams(obj,MethodName,ReturnType,new Object[]{Value});
+        }else {
+            return CallMethodParams(obj,MethodName,ReturnType,Value);
+        }
+
     }
     public static <T> T CallMethodParams(Object obj,String MethodName,Class<?> ReturnType,Object... params) throws Exception {
         Class<?>[] ParamTypes = new Class[params.length];
