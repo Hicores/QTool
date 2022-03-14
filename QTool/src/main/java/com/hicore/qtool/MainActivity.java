@@ -36,5 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         findViewById(R.id.OpenOpenSource)
                 .setOnClickListener(v-> startActivity(new Intent(this,OpenSource.class)));
+
+
     }
 }

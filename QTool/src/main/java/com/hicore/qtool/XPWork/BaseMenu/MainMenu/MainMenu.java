@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,9 +52,10 @@ public class MainMenu extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         try {
+            super.onCreate(savedInstanceState);
             ResUtils.StartInject(this);
             setTheme(R.style.AnimActivity);
-            super.onCreate(savedInstanceState);
+
 
             setTitleFea();
 
@@ -75,6 +77,13 @@ public class MainMenu extends Activity {
 
             View itemJavaPlugin = findViewById(R.id.ItemPlugin);
             itemJavaPlugin.setOnClickListener(v-> JavaPluginAct.startActivity(this));
+
+            findViewById(R.id.GetNewVer).setOnClickListener(v->{
+                Uri u = Uri.parse("https://github.com/Hicores/QTool/actions");
+                Intent in = new Intent(Intent.ACTION_VIEW,u);
+                startActivity(in);
+            });
+
         } catch (Exception e) {
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
