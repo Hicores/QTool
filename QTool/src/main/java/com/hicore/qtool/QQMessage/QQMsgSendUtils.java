@@ -34,9 +34,14 @@ public class QQMsgSendUtils {
         QQMsgSender.sendText(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),Text,atList);
     }
     public static void decodeAndSendMsg(String GroupUin,String UserUin,String Message){
-        ArrayList<DecodeResult> msgDec = decodeForResult(Message);
-        if (msgDec.size() == 0)return;
-        preSendExecutor.submit(()->preSendMsg(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),msgDec));
+        try{
+            ArrayList<DecodeResult> msgDec = decodeForResult(Message);
+            if (msgDec.size() == 0)return;
+            preSendExecutor.submit(()->preSendMsg(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),msgDec));
+        }catch (Exception e){
+            LogUtils.error("MessageTextDecoder",e);
+        }
+
     }
     private static void preSendMsg(Object _Session,ArrayList<DecodeResult> msgList){
         if (msgList.size()==1){
@@ -98,7 +103,7 @@ public class QQMsgSendUtils {
                 //把上一次搜索结尾到这次开始的内容作为文本消息
                 DecodeResult NewResult = new DecodeResult();
                 NewResult.msgType = TYPE_TEXT;
-                NewResult.content = msg.substring(lastSearchEnd,searchPos);
+                NewResult.content = msg.substring(lastSearchEnd+1,searchPos);
                 elems.add(NewResult);
 
                 //start
@@ -122,17 +127,17 @@ public class QQMsgSendUtils {
                             if (Command.equals("PicUrl")) {
                                 NewResult = new DecodeResult();
                                 NewResult.msgType = TYPE_PIC;
-                                NewResult.content = content;
+                                NewResult.content = cut[1];
                                 elems.add(NewResult);
                             } else if (Command.equals("AtQQ")) {
                                 NewResult = new DecodeResult();
                                 NewResult.msgType = TYPE_AT;
-                                NewResult.content = content;
+                                NewResult.content = cut[1];
                                 elems.add(NewResult);
                             } else if (Command.equals("Mute")) {
                                 NewResult = new DecodeResult();
                                 NewResult.msgType = TYPE_MUTE;
-                                NewResult.content = content;
+                                NewResult.content = cut[1];
                                 elems.add(NewResult);
                             } else {
                                 NewResult = new DecodeResult();
@@ -143,7 +148,7 @@ public class QQMsgSendUtils {
                         }
                     }
                 }
-                lastSearchEnd = searchNext+1;
+                lastSearchEnd = searchNext;
                 searchPos = msg.indexOf("[",searchNext);
             }else {
                 searchNext = searchPos;

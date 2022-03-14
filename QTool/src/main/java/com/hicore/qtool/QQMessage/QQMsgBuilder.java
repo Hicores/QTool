@@ -10,6 +10,7 @@ import com.hicore.ReflectUtils.MMethod;
 import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.NameUtils;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.HostInfo;
@@ -126,7 +127,7 @@ public class QQMsgBuilder {
                     HostInfo.getVerCode() < 5670 ?
                             MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a",MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),new Class[]{Classes.QQAppinterFace(),String.class,String.class,int.class}):
                             MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","g",MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),new Class[]{Classes.QQAppinterFace(),String.class,String.class,int.class});
-            if (m == null)  MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","h",MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),new Class[]{Classes.QQAppinterFace(),String.class,String.class,int.class});
+            if (m == null) m = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","h",MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),new Class[]{Classes.QQAppinterFace(),String.class,String.class,int.class});
             Object MixMessageRecord;
             if (QQSessionUtils.getSessionID(session) ==10014){
                 MixMessageRecord = m.invoke(null,HookEnv.AppInterface,QQSessionUtils.getChannelID(session),QQEnvUtils.getCurrentUin(),10014);
