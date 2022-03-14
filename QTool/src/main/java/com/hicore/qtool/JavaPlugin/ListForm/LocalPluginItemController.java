@@ -1,34 +1,27 @@
 package com.hicore.qtool.JavaPlugin.ListForm;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Color;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.Utils.FileUtils;
-import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
-import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.JavaPlugin.Controller.PluginSetController;
-import com.hicore.qtool.JavaPlugin.Controller.PluginStoreUtils;
 import com.hicore.qtool.JavaPlugin.OnlinePluginController.PluginUploader;
 import com.hicore.qtool.QQTools.QQSelectHelper;
 import com.hicore.qtool.R;
@@ -36,7 +29,6 @@ import com.hicore.qtool.R;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -224,10 +216,23 @@ public final class LocalPluginItemController {
             }
 
             InitMeasure();
-            saveWhiteAndBlackList();
+            saveButtonEvent();
 
             mRoot.findViewById(R.id.plugin_upload).setOnClickListener(v->{
                 PluginUploader.RequestForUpload(mInfo.LocalPath);
+            });
+
+            mRoot.findViewById(R.id.plugin_remove).setOnClickListener(v->{
+                new AlertDialog.Builder(mRoot.getContext(),3)
+                        .setTitle("是否要删除 ?")
+                        .setMessage("将要删除的路径如下:\n"+mInfo.LocalPath+"\n" +
+                                "\n该脚本的文件,配置数据都将被删除,是否继续?")
+                        .setNeutralButton("确定删除", (dialog, which) -> {
+                            FileUtils.deleteFile(new File(mInfo.LocalPath));
+                            Utils.ShowToastL("已删除");
+                        }).setNegativeButton("关闭", (dialog, which) -> {
+
+                        }).show();
             });
             return true;
 
@@ -236,7 +241,7 @@ public final class LocalPluginItemController {
             return false;
         }
     }
-    private void saveWhiteAndBlackList(){
+    private void saveButtonEvent(){
         //设置黑白名单状态
         RadioButton boxWhite = mRoot.findViewById(R.id.plugin_message_while);
         boxWhite.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -329,6 +334,8 @@ public final class LocalPluginItemController {
                 }
             },1);
         });
+
+
 
 
 
