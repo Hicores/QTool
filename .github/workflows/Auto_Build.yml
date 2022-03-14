@@ -1,4 +1,4 @@
-name: Android Build CI Test
+name: Build Test
 
 on:
   push:
