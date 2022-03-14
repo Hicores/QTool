@@ -6,13 +6,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 
+import com.hicore.Utils.HttpUtils;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -49,6 +57,8 @@ public class JavaPluginAct extends Activity {
         setContentView(R.layout.menu_javaplugin);
         itemLayout = findViewById(R.id.ContainLayout);
         searchForLocal();
+        findViewById(R.id.selectLocal).setOnClickListener(v-> searchForLocal());
+        findViewById(R.id.selectOnline).setOnClickListener(v-> searchForOnline());
 
         findViewById(R.id.openApiDesc)
                 .setOnClickListener(v->{
@@ -84,6 +94,30 @@ public class JavaPluginAct extends Activity {
         });
     }
     private void searchForOnline(){
+        ProgressBar bar = new ProgressBar(this);
+        itemLayout.removeAllViews();
+        itemLayout.addView(bar);
 
+        new Thread(()->{
+            try{
+                String OnlineData = HttpUtils.getContent("https://qtool.haonb.cc/getList");
+                JSONArray newArray = new JSONArray(OnlineData);
+                for(int i=0;i<newArray.length();i++){
+                    JSONObject item = newArray.getJSONObject(i);
+                    OnlinePluginItemController.PluginInfo decInfo = new OnlinePluginItemController.PluginInfo(item.toString());
+                    new Handler(Looper.getMainLooper())
+                            .post(()->{
+                                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                param.setMargins(20,10,20,10);
+                                View v = OnlinePluginItemController.getViewInstance(this,decInfo);
+                                itemLayout.addView(v,param);
+                            });
+                }
+            }catch (Exception e){
+                Utils.ShowToastL("无法获取列表:\n"+e);
+            }finally {
+                new Handler(Looper.getMainLooper()).post(()->itemLayout.removeView(bar));
+            }
+        }).start();
     }
 }
