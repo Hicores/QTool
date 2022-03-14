@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class FileUtils {
@@ -93,5 +95,34 @@ public class FileUtils {
         }
         NewName = ""+Name.hashCode();
         return NewName;
+    }
+    public static void copy(String source, String dest)
+    {
+
+        try
+        {
+
+            File f = new File(dest);
+            f=f.getParentFile();
+            if(!f.exists())f.mkdirs();
+
+            File aaa = new File(dest);
+            if(aaa.exists()) aaa.delete();
+
+            InputStream in = new FileInputStream(new File(source));
+            OutputStream out = new FileOutputStream(new File(dest));
+            byte[] buffer = new byte[4096];
+            int len;
+            while((len = in .read(buffer)) > 0)
+            {
+                out.write(buffer, 0, len);
+            }
+            in.close();
+            out.close();
+        }
+        catch(Exception e)
+        {}
+        finally
+        {}
     }
 }

@@ -1,6 +1,7 @@
 package com.hicore.qtool.QQMessage;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -9,10 +10,12 @@ import com.hicore.ReflectUtils.Classes;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.FileUtils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.HostInfo;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -78,6 +81,11 @@ public class QQMsgSender {
     }
     public static void sendVoice(Object _Session,String path){
         try{
+            if (!path.contains("com.tencent.mobileqq/Tencent/MobileQQ/"+QQEnvUtils.getCurrentUin())){
+                String newPath = Environment.getExternalStorageDirectory() +  "/Android/data/com.tencent.mobileqq/Tencent/MobileQQ/"+ QQEnvUtils.getCurrentUin()+"/ptt/"+new File(path).getName();
+                FileUtils.copy(path,newPath);
+                path = newPath;
+            }
             Method CallMethod =
                     HostInfo.getVerCode() < 5670 ?
                             MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade","a", long.class,new Class[]{Classes.QQAppinterFace(),Classes.SessionInfo(),String.class}):
