@@ -86,13 +86,15 @@ public class JavaPluginAct extends Activity {
                     if (loadResult){
                         itemLayout.addView(controller.getRoot(),controller.getParams());
                         controllers.put(controller.getPluginID(),controller);
+
+                        if (saveIDCheck.containsKey(controller.getPluginID())){
+                            String name = saveIDCheck.get(controller.getPluginID());
+                            saveAlarm.append(name + "\nVVVVVVVVVVVVVVV\n" + controller.getPluginName()+"("+controller.getPluginPath()+")\n\n");
+                        }else {
+                            saveIDCheck.put(controller.getPluginID(),controller.getPluginName()+"("+controller.getPluginPath()+")");
+                        }
                     }
-                    if (saveIDCheck.containsKey(controller.getPluginID())){
-                        String name = saveIDCheck.get(controller.getPluginID());
-                        saveAlarm.append(name + "\nVVVVVVVVVVVVVVV\n" + controller.getPluginName()+"("+controller.getPluginPath()+")\n\n");
-                    }else {
-                        saveIDCheck.put(controller.getPluginID(),controller.getPluginName()+"("+controller.getPluginPath()+")");
-                    }
+
 
                 }
             }
