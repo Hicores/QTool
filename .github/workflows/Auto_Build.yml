@@ -21,4 +21,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew :QTool:assembleRelease
+        run: |
+          echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
+          ./gradlew :QTool:assembleRelease
+        env:
+          KEYSTORE_PATH: "../key.jks"
+          KEYSTORE_PASSWORD: ${{ secrets.SIGN_PASS }}
+          KEY_ALIAS: ${{ secrets.SIGN_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ALIA_PASS }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        if: ${{ !github.event.pull_request }}
+        with:
+          path: 'QTool/build/outputs/apk/release/*.apk'
+          name: QTool-${{ github.event.head_commit.id }}
