@@ -41,6 +41,7 @@
             android:layout_marginRight="30dp"
             android:layout_below="@+id/titleBar">
             <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
                 android:layout_height="wrap_content">
@@ -65,6 +66,29 @@
                         android:gravity="center_vertical"
                         android:textSize="20sp"
                         android:textColor="#FF00FF"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/GetNewVer"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/menu_item_base"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_height="60dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="30dp"
+                        android:background="@drawable/menu_icon_plugin"></ImageView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="30dp"
+                        android:text="新版本下载"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:textColor="#6F66FF"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
