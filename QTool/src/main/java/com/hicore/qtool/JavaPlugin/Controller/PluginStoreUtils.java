@@ -18,7 +18,7 @@ public class PluginStoreUtils {
     }
     public static String getString(String PluginID,String ConfigName,String key){
         reqPath();
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" +PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
         try{
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
             return itemJSON.getString(key);
@@ -29,7 +29,7 @@ public class PluginStoreUtils {
     public static void putString(String PluginID,String ConfigName,String key,String value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
             JSONObject itemJSON;
             try{
                 itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -46,7 +46,7 @@ public class PluginStoreUtils {
 
     }
     public static boolean getBoolean(String PluginID,String ConfigName,String key,boolean defValue){
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -58,7 +58,7 @@ public class PluginStoreUtils {
     public static void putBoolean(String PluginID,String ConfigName,String key,boolean value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
             JSONObject itemJSON;
             try{
                 itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -72,7 +72,7 @@ public class PluginStoreUtils {
         }
     }
     public static int getInt(String PluginID,String ConfigName,String key,int defValue){
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -84,7 +84,7 @@ public class PluginStoreUtils {
     public static void putInt(String PluginID,String ConfigName,String key,int value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
             JSONObject itemJSON;
             try{
                 itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -99,7 +99,7 @@ public class PluginStoreUtils {
     }
     public static long getLong(String PluginID,String ConfigName,String key,long value)
     {
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -111,7 +111,7 @@ public class PluginStoreUtils {
     public static void putLong(String PluginID,String ConfigName,String key,long value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+PluginID.hashCode()+"/" +ConfigName.hashCode()+".json";
             JSONObject itemJSON;
             try{
                 itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
