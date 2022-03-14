@@ -3,6 +3,7 @@ package com.hicore.qtool.XPWork.BaseMenu.MainMenu;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -59,11 +60,18 @@ public class MainMenu extends Activity {
             setContentView(R.layout.menu_main);
 
             LinearLayout mRoot = findViewById(R.id.sRoot_);
-            mRoot.setBackground(new BitmapDrawable(null, map));
-            blurRoot = findViewById(R.id.BlurContain);
-            blurRoot.setBackground(new BitmapDrawable(null, BitmapUtils.toBlur(map, 10)));
-            blurRoot.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_out));
 
+            blurRoot = findViewById(R.id.BlurContain);
+            try{
+                mRoot.setBackground(new BitmapDrawable(null, map));
+                blurRoot.setBackground(new BitmapDrawable(null, BitmapUtils.toBlur(map, 10)));
+                blurRoot.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_out));
+            }catch (Exception e){
+                map = BitmapFactory.decodeResource(getResources(),R.drawable.cat);
+                mRoot.setBackground(new BitmapDrawable(null, map));
+                blurRoot.setBackground(new BitmapDrawable(null, BitmapUtils.toBlur(map, 10)));
+                blurRoot.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_out));
+            }
 
             View itemJavaPlugin = findViewById(R.id.ItemPlugin);
             itemJavaPlugin.setOnClickListener(v-> JavaPluginAct.startActivity(this));
