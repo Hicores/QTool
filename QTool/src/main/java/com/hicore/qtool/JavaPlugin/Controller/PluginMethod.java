@@ -96,7 +96,7 @@ public class PluginMethod {
             QQGroupManager.Group_Change_Title(GroupUin,UserUin,title);
         }
     }
-    public String AddItem(String PluginID,String ItemName,String CallbackName){
+    public String AddItem(String ItemName,String CallbackName,String PluginID){
         return AddItem(ItemName, CallbackName);
     }
     public String AddItem(String ItemName,String CallbackName){
@@ -176,30 +176,29 @@ public class PluginMethod {
         }
         return "";
     }
-
-    public String getString(String key){
-        return PluginStoreUtils.getString(info_.PluginID,key);
+    public String getString(String ConfigName,String key){
+        return PluginStoreUtils.getString(info_.PluginID,ConfigName,key);
     }
-    public void putString(String key,String value){
-        PluginStoreUtils.putString(info_.PluginID,key,value);
+    public void putString(String ConfigName,String key,String value){
+        PluginStoreUtils.putString(info_.PluginID,ConfigName,key,value);
     }
-    public boolean getBoolean(String key,boolean def){
-        return PluginStoreUtils.getBoolean(info_.PluginID,key,def);
+    public boolean getBoolean(String ConfigName,String key,boolean def){
+        return PluginStoreUtils.getBoolean(info_.PluginID,ConfigName,key,def);
     }
-    public void putBoolean(String key,boolean value){
-        PluginStoreUtils.putBoolean(info_.PluginID,key,value);
+    public void putBoolean(String ConfigName,String key,boolean value){
+        PluginStoreUtils.putBoolean(info_.PluginID,ConfigName,key,value);
     }
-    public int getInt(String key,int def){
-        return PluginStoreUtils.getInt(info_.PluginID,key,def);
+    public int getInt(String ConfigName,String key,int def){
+        return PluginStoreUtils.getInt(info_.PluginID,ConfigName,key,def);
     }
-    public void putInt(String key,int value){
-        PluginStoreUtils.putInt(info_.PluginID,key,value);
+    public void putInt(String ConfigName,String key,int value){
+        PluginStoreUtils.putInt(info_.PluginID,ConfigName,key,value);
     }
-    public long getLong(String key,long def){
-        return PluginStoreUtils.getLong(info_.PluginID,key,def);
+    public long getLong(String ConfigName,String key,long def){
+        return PluginStoreUtils.getLong(info_.PluginID,ConfigName,key,def);
     }
-    public void putLong(String key,long value){
-        PluginStoreUtils.putLong(info_.PluginID,key,value);
+    public void putLong(String ConfigName,String key,long value){
+        PluginStoreUtils.putLong(info_.PluginID,ConfigName,key,value);
     }
     public void setFlag(String flag){
         //Nothing

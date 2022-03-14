@@ -221,7 +221,6 @@ public class PluginUploader {
                 for (int i=0;i<size / (1024 * 1024) +1;i++){
                     int read = ins.read(buffer);
                     String result = HttpUtils.PostForResult(PostURL,key,buffer,read);
-                    Utils.ShowToastL(result);
                     if (result.equals("ok"))continue;
                     if (result.contains("上传成功")){
                         ins.close();

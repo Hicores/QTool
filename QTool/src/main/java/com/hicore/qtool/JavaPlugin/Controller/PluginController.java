@@ -215,14 +215,14 @@ public class PluginController {
         space.setMethod("RemoveUserItem",new BshMethod(PluginMethod.class.getMethod("RemoveUserItem", String.class),env));
         space.setMethod("setItemCallback",new BshMethod(PluginMethod.class.getMethod("setItemCallback", String.class),env));
 
-        space.setMethod("putString",new BshMethod(PluginMethod.class.getMethod("putString", String.class, String.class),env));
-        space.setMethod("putInt",new BshMethod(PluginMethod.class.getMethod("putInt", String.class, int.class),env));
-        space.setMethod("putBoolean",new BshMethod(PluginMethod.class.getMethod("putBoolean", String.class, boolean.class),env));
-        space.setMethod("putLong",new BshMethod(PluginMethod.class.getMethod("putLong", String.class, long.class),env));
-        space.setMethod("getString",new BshMethod(PluginMethod.class.getMethod("getString", String.class),env));
-        space.setMethod("getInt",new BshMethod(PluginMethod.class.getMethod("getInt", String.class, int.class),env));
-        space.setMethod("getBoolean",new BshMethod(PluginMethod.class.getMethod("getBoolean", String.class, boolean.class),env));
-        space.setMethod("getLong",new BshMethod(PluginMethod.class.getMethod("getLong", String.class, long.class),env));
+        space.setMethod("putString",new BshMethod(PluginMethod.class.getMethod("putString", String.class, String.class, String.class),env));
+        space.setMethod("putInt",new BshMethod(PluginMethod.class.getMethod("putInt", String.class, String.class, int.class),env));
+        space.setMethod("putBoolean",new BshMethod(PluginMethod.class.getMethod("putBoolean", String.class, String.class, boolean.class),env));
+        space.setMethod("putLong",new BshMethod(PluginMethod.class.getMethod("putLong", String.class, String.class, long.class),env));
+        space.setMethod("getString",new BshMethod(PluginMethod.class.getMethod("getString", String.class, String.class),env));
+        space.setMethod("getInt",new BshMethod(PluginMethod.class.getMethod("getInt", String.class, String.class, int.class),env));
+        space.setMethod("getBoolean",new BshMethod(PluginMethod.class.getMethod("getBoolean", String.class, String.class, boolean.class),env));
+        space.setMethod("getLong",new BshMethod(PluginMethod.class.getMethod("getLong", String.class, String.class, long.class),env));
 
 
         space.setMethod("Toast",new BshMethod(PluginMethod.class.getMethod("Toast", Object.class),env));

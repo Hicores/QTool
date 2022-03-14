@@ -80,7 +80,7 @@ public class QQGroupManager {
             MMethod.CallMethod(null,MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"),"a",void.class,new Class[]{
                             HookEnv.AppInterface.getClass(),String.class,String.class,String.class,MClass.loadClass("mqq.observer.BusinessObserver")
                     },
-                    HookEnv.AppInterface.getClass(),GroupUin,UserUin,title,mProxy);
+                    HookEnv.AppInterface,GroupUin,UserUin,title,mProxy);
         }catch (Exception e){
             LogUtils.error("Group_Change_Title",e);
         }

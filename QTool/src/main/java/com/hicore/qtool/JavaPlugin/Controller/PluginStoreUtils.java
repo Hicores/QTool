@@ -16,9 +16,9 @@ public class PluginStoreUtils {
 
         }
     }
-    public static String getString(String PluginID,String key){
+    public static String getString(String PluginID,String ConfigName,String key){
         reqPath();
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" +PluginID.hashCode()+".json";
         try{
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
             return itemJSON.getString(key);
@@ -26,11 +26,17 @@ public class PluginStoreUtils {
         }
         return null;
     }
-    public static void putString(String PluginID,String key,String value){
+    public static void putString(String PluginID,String ConfigName,String key,String value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
-            JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            JSONObject itemJSON;
+            try{
+                itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            }catch (Exception e){
+                itemJSON = new JSONObject();
+            }
+
             itemJSON.put(key,value);
             FileUtils.WriteToFile(Path,itemJSON.toString());
         }catch (Exception e){
@@ -39,8 +45,8 @@ public class PluginStoreUtils {
 
 
     }
-    public static boolean getBoolean(String PluginID,String key,boolean defValue){
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
+    public static boolean getBoolean(String PluginID,String ConfigName,String key,boolean defValue){
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -49,19 +55,24 @@ public class PluginStoreUtils {
         }
         return defValue;
     }
-    public static void putBoolean(String PluginID,String key,boolean value){
+    public static void putBoolean(String PluginID,String ConfigName,String key,boolean value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
-            JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            JSONObject itemJSON;
+            try{
+                itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            }catch (Exception e){
+                itemJSON = new JSONObject();
+            }
             itemJSON.put(key,value);
             FileUtils.WriteToFile(Path,itemJSON.toString());
         }catch (Exception e){
 
         }
     }
-    public static int getInt(String PluginID,String key,int defValue){
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
+    public static int getInt(String PluginID,String ConfigName,String key,int defValue){
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -70,20 +81,25 @@ public class PluginStoreUtils {
         }
         return defValue;
     }
-    public static void putInt(String PluginID,String key,int value){
+    public static void putInt(String PluginID,String ConfigName,String key,int value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
-            JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
+            JSONObject itemJSON;
+            try{
+                itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            }catch (Exception e){
+                itemJSON = new JSONObject();
+            }
             itemJSON.put(key,value);
             FileUtils.WriteToFile(Path,itemJSON.toString());
         }catch (Exception e){
 
         }
     }
-    public static long getLong(String PluginID,String key,long value)
+    public static long getLong(String PluginID,String ConfigName,String key,long value)
     {
-        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
+        String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ ConfigName+"/" +PluginID.hashCode()+".json";
         try{
             reqPath();
             JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
@@ -92,11 +108,16 @@ public class PluginStoreUtils {
         }
         return value;
     }
-    public static void putLong(String PluginID,String key,long value){
+    public static void putLong(String PluginID,String ConfigName,String key,long value){
         try{
             reqPath();
-            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ PluginID.hashCode()+".json";
-            JSONObject itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            String Path = HookEnv.ExtraDataPath + "/PluginConfig/"+ConfigName+"/" + PluginID.hashCode()+".json";
+            JSONObject itemJSON;
+            try{
+                itemJSON = new JSONObject(FileUtils.ReadFileString(Path));
+            }catch (Exception e){
+                itemJSON = new JSONObject();
+            }
             itemJSON.put(key,value);
             FileUtils.WriteToFile(Path,itemJSON.toString());
         }catch (Exception e){
