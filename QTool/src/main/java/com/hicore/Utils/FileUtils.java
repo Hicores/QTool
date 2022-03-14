@@ -1,8 +1,12 @@
 package com.hicore.Utils;
 
+import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.XposedInit.EnvHook;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class FileUtils {
@@ -10,6 +14,14 @@ public class FileUtils {
         try{
             FileOutputStream fOut = new FileOutputStream(File);
             fOut.write(FileContent.getBytes(StandardCharsets.UTF_8));
+            fOut.close();
+        }catch (Exception e){
+        }
+    }
+    public static void WriteToFile(String File,byte[] FileContent){
+        try{
+            FileOutputStream fOut = new FileOutputStream(File);
+            fOut.write(FileContent);
             fOut.close();
         }catch (Exception e){
         }
@@ -54,5 +66,30 @@ public class FileUtils {
         }
         //删除空文件夹  for循环已经把上一层节点的目录清空。
         file.delete();
+    }
+    public static String requireForAvailPath(String Name){
+        EnvHook.requireCachePath();
+        String NewName = Name;
+        String Path = HookEnv.ExtraDataPath+"/Cache/"+NewName;
+        try {
+            if (new File(Path).createNewFile()){
+                new File(Path).delete();
+                return NewName;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        NewName = Name.substring(0,2)+Name.hashCode();
+        Path = HookEnv.ExtraDataPath+"/Cache/"+NewName;
+        try {
+            if (new File(Path).createNewFile()){
+                new File(Path).delete();
+                return NewName;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        NewName = ""+Name.hashCode();
+        return NewName;
     }
 }

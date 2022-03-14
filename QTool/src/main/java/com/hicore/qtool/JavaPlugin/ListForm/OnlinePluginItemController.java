@@ -14,14 +14,21 @@ import android.widget.TextView;
 
 import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.FileUtils;
+import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.Utils;
+import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.R;
+import com.hicore.qtool.XposedInit.EnvHook;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class OnlinePluginItemController {
     private static final String TAG = "OnlinePluginItemController";
@@ -48,7 +55,40 @@ public class OnlinePluginItemController {
 
         Button btnDown = layout.findViewById(R.id.plugin_download);
         btnDown.setOnClickListener(v->{
+            String reqForDL = HttpUtils.getContent("https://qtool.haonb.cc/reqDL?key="+cacheInfo.ID);
+            try{
+                JSONObject NewJson = new JSONObject(reqForDL);
+                if (NewJson.getInt("code") == 3){
+                    Utils.ShowToastL(NewJson.getString("msg"));
+                    return;
+                }
+                String url = NewJson.getString("url");
+                EnvHook.requireCachePath();
+                String ZipPath = HookEnv.ExtraDataPath+"/Cache/"+cacheInfo.ID.hashCode()+".zip";
+                HttpUtils.ProgressDownload(url,ZipPath ,()->{
+                    try{
+                        String rootPath = HookEnv.ExtraDataPath+"/Plugin/"+FileUtils.requireForAvailPath(cacheInfo.Name)+"/";
+                        if (!new File(rootPath).exists())new File(rootPath).mkdirs();
+                        ZipInputStream zInp = new ZipInputStream(new FileInputStream(ZipPath));
+                        ZipEntry entry;
+                        while ((entry = zInp.getNextEntry())!=null){
+                            String Name = entry.getName();
+                            String WritePath = rootPath + Name;
+                            File parent = new File(WritePath).getParentFile();
+                            if (!parent.exists())parent.mkdirs();
 
+                            FileUtils.WriteToFile(WritePath,DataUtils.readAllBytes(zInp));
+                        }
+                        zInp.close();
+                        Utils.ShowToastL("下载完成");
+                    }catch (Exception e){
+                        Utils.ShowToastL("无法释放文件\n"+e);
+                    }
+
+                },cacheView.getContext());
+            }catch (Exception e){
+                Utils.ShowToastL("无法下载:\n"+e);
+            }
         });
 
         //初始化动画
