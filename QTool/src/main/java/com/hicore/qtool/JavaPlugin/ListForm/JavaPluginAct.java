@@ -1,6 +1,8 @@
 package com.hicore.qtool.JavaPlugin.ListForm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class JavaPluginAct extends Activity {
@@ -69,6 +72,8 @@ public class JavaPluginAct extends Activity {
 
     }
     private void searchForLocal(){
+        HashMap<String,String> saveIDCheck = new HashMap();
+        StringBuilder saveAlarm = new StringBuilder();
         HashMap<String, LocalPluginItemController> controllers = new HashMap<>();
         itemLayout.removeAllViews();
         File searchPath = new File(HookEnv.ExtraDataPath+"/Plugin");
@@ -82,8 +87,23 @@ public class JavaPluginAct extends Activity {
                         itemLayout.addView(controller.getRoot(),controller.getParams());
                         controllers.put(controller.getPluginID(),controller);
                     }
+                    if (saveIDCheck.containsKey(controller.getPluginID())){
+                        String name = saveIDCheck.get(controller.getPluginID());
+                        saveAlarm.append(name + "\nVVVVVVVVVVVVVVV\n" + controller.getPluginName()+"("+controller.getPluginPath()+")\n\n");
+                    }else {
+                        saveIDCheck.put(controller.getPluginID(),controller.getPluginName()+"("+controller.getPluginPath()+")");
+                    }
+
                 }
             }
+        }
+        if (saveAlarm.length() != 0){
+            new AlertDialog.Builder(this,R.style.Theme_QTool)
+                    .setTitle("警告")
+                    .setMessage("以下脚本ID冲突,请删除一个或者修改其中一个脚本ID为非冲突ID\n"+saveAlarm)
+                    .setNeutralButton("关闭", (dialog, which) -> {
+
+                    }).show();
         }
         notifyInstance.set(PluginID -> {
             LocalPluginItemController controller = controllers.get(PluginID);

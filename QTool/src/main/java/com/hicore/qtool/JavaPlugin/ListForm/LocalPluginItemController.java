@@ -179,6 +179,9 @@ public final class LocalPluginItemController {
                         },500);
         }
     }
+    public String getPluginName(){
+        return mInfo.PluginName;
+    }
     public boolean checkAndLoadPluginInfo(String PluginRootPath){
         File propPath = new File(PluginRootPath,"info.prop");
         if (!propPath.exists())return false;
@@ -340,6 +343,7 @@ public final class LocalPluginItemController {
 
 
     }
+    public String getPluginPath(){return mInfo.LocalPath;}
     public String getPluginID(){return mInfo.PluginID;}
     public LinearLayout.LayoutParams getParams(){
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
