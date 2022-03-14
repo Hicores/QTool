@@ -14,6 +14,7 @@ import com.hicore.qtool.XPWork.QQProxy.JoinEventProxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class PluginMethod {
 
@@ -28,6 +29,7 @@ public class PluginMethod {
     }
     public void sendPic(String GroupUin,String UserUin,String Path){
         if (info_.IsAvailable(GroupUin)){
+            if (!Path.startsWith("/") && !Path.toLowerCase(Locale.ROOT).startsWith("http"))Path = info_.LocalPath+"/"+Path;
             QQMsgSendUtils.decodeAndSendMsg(GroupUin,UserUin,"[PicUrl="+Path+"]");
         }
     }
@@ -43,6 +45,7 @@ public class PluginMethod {
     }
     public void sendShow(String GroupUin,String Path,int type){
         if (info_.IsAvailable(GroupUin)){
+            if (!Path.startsWith("/") && !Path.toLowerCase(Locale.ROOT).startsWith("http"))Path = info_.LocalPath+"/"+Path;
             QQMsgSendUtils.sendEffectShow(GroupUin,"",Path,type);
         }
     }
@@ -51,6 +54,7 @@ public class PluginMethod {
     }
     public void sendVoice(String GroupUin,String UserUin,String Path){
         if (info_.IsAvailable(GroupUin)){
+            if (!Path.startsWith("/") && !Path.toLowerCase(Locale.ROOT).startsWith("http"))Path = info_.LocalPath+"/"+Path;
             QQMsgSender.sendVoice(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),Path);
         }
     }
