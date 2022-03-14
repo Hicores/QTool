@@ -74,7 +74,16 @@ public class ContUtil {
 
         }
         return LayoutInflater.from(context);
+    }
+    public static void requireForHook(Context context){
+        try{
+            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class), param -> {
+                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
+                param.setResult(inflater1.cloneInContext(context));
+            });
+        }catch (Exception e){
 
+        }
 
     }
 }

@@ -3,6 +3,7 @@ package com.hicore.Utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +37,24 @@ public class HttpUtils {
             return true;
         }catch (Exception e){
             return false;
+        }
+    }
+    public static String PostForResult(String URL,String key,byte[] buffer,int size){
+        try{
+            HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+            connection.setRequestProperty("key",key);
+            connection.setDoOutput(true);
+            OutputStream out = connection.getOutputStream();
+            out.write(buffer,0,size);
+            out.flush();
+            out.close();
+
+            InputStream ins = connection.getInputStream();
+            byte[] result = DataUtils.readAllBytes(ins);
+            ins.close();
+            return new String(result);
+        }catch (Exception e){
+            return "";
         }
     }
 }

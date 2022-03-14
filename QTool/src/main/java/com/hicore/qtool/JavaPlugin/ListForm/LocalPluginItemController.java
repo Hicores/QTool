@@ -29,6 +29,7 @@ import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.JavaPlugin.Controller.PluginSetController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginStoreUtils;
+import com.hicore.qtool.JavaPlugin.OnlinePluginController.PluginUploader;
 import com.hicore.qtool.QQTools.QQSelectHelper;
 import com.hicore.qtool.R;
 
@@ -224,6 +225,10 @@ public final class LocalPluginItemController {
 
             InitMeasure();
             saveWhiteAndBlackList();
+
+            mRoot.findViewById(R.id.plugin_upload).setOnClickListener(v->{
+                PluginUploader.RequestForUpload(mInfo.LocalPath);
+            });
             return true;
 
         } catch (IOException e) {

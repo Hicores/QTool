@@ -27,6 +27,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import com.microsoft.appcenter.ingestion.models.Device;
 import com.microsoft.appcenter.ingestion.models.WrapperSdk;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,5 +125,9 @@ public class EnvHook {
             });
         }
 
+    }
+    public static void requireCachePath(){
+        File cache = new File(HookEnv.ExtraDataPath,"Cache");
+        if (!cache.exists())cache.mkdirs();
     }
 }
