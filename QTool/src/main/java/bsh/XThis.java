@@ -28,6 +28,10 @@
 
 package bsh;
 
+import android.util.Log;
+
+import com.hicore.LogUtils.LogUtils;
+
 import java.lang.reflect.*;
 import java.lang.reflect.InvocationHandler;
 import java.io.*;
@@ -48,7 +52,6 @@ import java.util.Hashtable;
 
 	XThis stands for "eXtended This" (I had to call it something).
 
-	@see JThis	 See also JThis with explicit JFC support for compatibility.
 	@see This
 */
 public class XThis extends This
@@ -131,14 +134,8 @@ public class XThis extends This
 				// Unwrap target exception.  If the interface declares that
 				// it throws the ex it will be delivered.  If not it will be
 				// wrapped in an UndeclaredThrowable
-				throw te.getTarget();
-			} catch ( EvalError ee ) {
-				// Ease debugging...
-				// XThis.this refers to the enclosing class instance
-				if ( Interpreter.DEBUG )
-					Interpreter.debug( "EvalError in scripted interface: "
-					+ XThis.this.toString() + ": "+ ee );
-				throw ee;
+				LogUtils.warning("BshInvoker","Bsh在处理脚本调用时发生了未处理的异常:\n"+ Log.getStackTraceString(te));
+				return null;
 			}
 		}
 
