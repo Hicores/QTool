@@ -13,6 +13,7 @@ import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ import java.util.concurrent.Future;
 import bsh.BshMethod;
 import bsh.Interpreter;
 import bsh.NameSpace;
+import bsh.StringUtil;
 
 public class PluginController {
     private static HashMap<String,PluginInfo> runningInfo = new HashMap<>();
@@ -123,6 +125,19 @@ public class PluginController {
             PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(th));
 
             return false;
+        }
+    }
+    public static void reportToUpdateList(String PluginID, Boolean IsBlack, ArrayList<String> list){
+        PluginInfo info = SearchInfoFromID(PluginID);
+        if (info != null){
+            if (IsBlack != null){
+                info.IsBlackMode = IsBlack;
+            }
+
+            if (list != null){
+                info.ListStr = list;
+            }
+
         }
     }
     public static void endPlugin(String PluginID){

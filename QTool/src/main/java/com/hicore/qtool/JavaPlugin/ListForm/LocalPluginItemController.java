@@ -242,6 +242,7 @@ public final class LocalPluginItemController {
         boxWhite.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()){
                 PluginSetController.SetBlackMode(mInfo.PluginID,false);
+                PluginController.reportToUpdateList(mInfo.PluginID,false,null);
             }
         });
 
@@ -249,6 +250,7 @@ public final class LocalPluginItemController {
         boxBlack.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (buttonView.isPressed()){
                 PluginSetController.SetBlackMode(mInfo.PluginID,true);
+                PluginController.reportToUpdateList(mInfo.PluginID,true,null);
             }
         });
 
@@ -323,6 +325,7 @@ public final class LocalPluginItemController {
                 @Override
                 public void onAllSelected() {
                     PluginSetController.setModeList(mInfo.PluginID, selected);
+                    PluginController.reportToUpdateList(mInfo.PluginID,null,selected);
                 }
             },1);
         });
