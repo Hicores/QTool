@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
+import com.hicore.qtool.XposedInit.ExtraPathInit;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
@@ -64,6 +66,13 @@ public class DebugSetHook extends BaseHookItem {
                 statusStoragePath.setText("当前设置的存储路径:"+ GlobalConfig.Get_String("StorePath"));
                 statusStoragePath.setTextSize(16);
                 mRoot.addView(statusStoragePath,getMarginParam());
+
+                LinearLayout ll = new LinearLayout(context);
+                mRoot.addView(ll);
+                Button btnChangeDir = new Button(context);
+                btnChangeDir.setText("更改存储目录");
+                btnChangeDir.setOnClickListener(vx-> ExtraPathInit.ShowPathSetDialog(true));
+                ll.addView(btnChangeDir);
 
                 TextView titleClzInfo = new TextView(context);
                 titleClzInfo.setTextColor(Color.parseColor("#6666ff"));

@@ -33,7 +33,7 @@ public class ExtraPathInit {
         }
     }
     @SuppressLint("ResourceType")
-    public static void ShowPathSetDialog(){
+    public static void ShowPathSetDialog(boolean canRemove){
         Activity act = Utils.getTopActivity();
         Dialog fullScreenDialog = new Dialog(act, 3);
         LinearLayout mRoot = new LinearLayout(act);
@@ -102,7 +102,7 @@ public class ExtraPathInit {
         mRoot.addView(saveBtn,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         fullScreenDialog.setContentView(mRoot);
-        fullScreenDialog.setCancelable(false);
+        fullScreenDialog.setCancelable(canRemove);
         fullScreenDialog.show();
     }
     public static void CheckAndSave(Activity mAct,Dialog dismissDialog,String Path){

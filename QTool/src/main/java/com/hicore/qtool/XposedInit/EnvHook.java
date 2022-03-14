@@ -117,7 +117,7 @@ public class EnvHook {
             XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {
                 long timeStart = System.currentTimeMillis();
 
-                if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog();
+                if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog(false);
                 else HookLoader.CallAllDelayHook();
                 InitAppCenter();
 
