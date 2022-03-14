@@ -130,7 +130,7 @@ public class XThis extends This
 		{
 			try {
 				return invokeImpl( proxy, method, args );
-			} catch ( TargetError te ) {
+			} catch ( Throwable te ) {
 				// Unwrap target exception.  If the interface declares that
 				// it throws the ex it will be delivered.  If not it will be
 				// wrapped in an UndeclaredThrowable
