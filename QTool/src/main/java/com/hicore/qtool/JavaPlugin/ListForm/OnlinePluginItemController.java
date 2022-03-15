@@ -103,11 +103,11 @@ public class OnlinePluginItemController {
 
 
     }
-    AtomicBoolean IsExpanding = new AtomicBoolean();
-    AtomicBoolean IsExpanded = new AtomicBoolean();
+
     private void initAnim(){
 
-
+        AtomicBoolean IsExpanding = new AtomicBoolean();
+        AtomicBoolean IsExpanded = new AtomicBoolean();
         cacheView.setOnClickListener(v->{
             if (IsExpanding.get())return;
             if (IsExpanded.get()){

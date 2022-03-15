@@ -97,6 +97,7 @@
                             android:textColor="#AF00FF"/>
                     </LinearLayout>
                     <LinearLayout
+                        android:visibility="gone"
                         android:divider="@drawable/textlines"
                         android:showDividers="middle"
                         android:id="@+id/HideBar_QQHelper"

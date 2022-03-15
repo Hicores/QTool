@@ -18,6 +18,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -34,6 +36,7 @@ import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainMenu extends Activity {
     private static final String TAG = "MainActivityProxy01";
@@ -62,14 +65,100 @@ public class MainMenu extends Activity {
                 NewSwitch.setTextColor(Color.BLACK);
                 NewSwitch.setText(item.title);
                 NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
+                NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (buttonView.isPressed()){
+                        HookEnv.Config.setBoolean("Main_Switch",item.ID,isChecked);
+                    }
+                });
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
                 QQHelper_Bar.addView(NewSwitch,param);
             }
         }
-    }
-    private void RegisterAnim(){
+        RegisterAnim(findViewById(R.id.QQHelper),QQHelper_Bar);
 
+    }
+    private void RegisterAnim(View clickView,View animAA){
+        int MaxHeight = InitMeasure(animAA);
+        AtomicBoolean IsExpanded = new AtomicBoolean(false);
+        AtomicBoolean IsExpanding = new AtomicBoolean(false);
+
+        clickView.setOnClickListener(v->{
+            if (IsExpanding.get())return;
+            if (IsExpanded.get()){
+                animAA.getLayoutParams().height = MaxHeight;
+                animAA.requestLayout();
+                int targetHeight = 0;
+                IsExpanding.getAndSet(true);
+                Animation scale = new Animation(){
+                    int initialHeight;
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        animAA.getLayoutParams().height = initialHeight + (int) ((targetHeight - initialHeight) * interpolatedTime);
+                        animAA.requestLayout();
+                    }
+
+                    @Override
+                    public void initialize(int width, int height, int parentWidth, int parentHeight) {
+                        initialHeight = height;
+                        super.initialize(width, height, parentWidth, parentHeight);
+                    }
+
+                    @Override
+                    public boolean willChangeBounds() {
+                        return true;
+                    }
+                };
+                scale.setDuration(400);
+                scale.setFillAfter(true);
+                animAA.startAnimation(scale);
+                animAA.setVisibility(View.INVISIBLE);
+
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(()->{
+                            animAA.setVisibility(View.GONE);
+                            IsExpanding.getAndSet(false);
+                            IsExpanded.getAndSet(false);
+                            animAA.clearAnimation();
+                        },500);
+            }else {
+                animAA.getLayoutParams().height = 0;
+                animAA.requestLayout();
+                int targetHeight = MaxHeight;
+                IsExpanding.getAndSet(true);
+                Animation scale = new Animation(){
+                    int initialHeight;
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        animAA.getLayoutParams().height = initialHeight + (int) ((targetHeight - initialHeight) * interpolatedTime);
+                        animAA.requestLayout();
+                    }
+
+                    @Override
+                    public void initialize(int width, int height, int parentWidth, int parentHeight) {
+                        initialHeight = height;
+                        super.initialize(width, height, parentWidth, parentHeight);
+                    }
+
+                    @Override
+                    public boolean willChangeBounds() {
+                        return true;
+                    }
+                };
+                scale.setDuration(400);
+                scale.setFillAfter(true);
+                animAA.startAnimation(scale);
+                animAA.setVisibility(View.INVISIBLE);
+
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(()->{
+                            animAA.setVisibility(View.VISIBLE);
+                            IsExpanding.getAndSet(false);
+                            IsExpanded.getAndSet(true);
+                            animAA.clearAnimation();
+                        },500);
+            }
+        });
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +198,6 @@ public class MainMenu extends Activity {
             });
 
             createItems();
-            RegisterAnim();
 
         } catch (Exception e) {
             LogUtils.error(TAG, Log.getStackTraceString(e));
@@ -149,6 +237,14 @@ public class MainMenu extends Activity {
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         );
+    }
+    private int InitMeasure(View vv){
+        int width = View.MeasureSpec.makeMeasureSpec(0,
+                View.MeasureSpec.UNSPECIFIED);
+        int height = View.MeasureSpec.makeMeasureSpec(0,
+                View.MeasureSpec.UNSPECIFIED);
+        vv.measure(width,height);
+        return vv.getMeasuredHeight();
     }
 
 }
