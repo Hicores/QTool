@@ -39,14 +39,6 @@
             android:id="@+id/plugin_download_count"
             android:text="下载次数:114514次"
             android:textSize="9dp" />
-
-        <TextView
-            android:singleLine="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/plugin_version_online"
-            android:text="版本号:14.38.250"
-            android:textSize="9dp" />
     </LinearLayout>
     <LinearLayout
         android:visibility="gone"

@@ -45,11 +45,10 @@ public class OnlinePluginItemController {
         LayoutInflater inflater = LayoutInflater.from(context);
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.plugin_item_online,null);
         cacheView = layout;
-        ((TextView)layout.findViewById(R.id.plugin_title_online)).setText(NewInfo.Name);
+        ((TextView)layout.findViewById(R.id.plugin_title_online)).setText(NewInfo.Name+"("+NewInfo.Version+")");
         ((TextView)layout.findViewById(R.id.plugin_uploader)).setText("作者:"+NewInfo.Author);
         ((TextView)layout.findViewById(R.id.plugin_download_count)).setText("下载次数:"+NewInfo.DLCount);
         ((TextView)layout.findViewById(R.id.plugin_upload_time)).setText("上传时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(NewInfo.Time)));
-        ((TextView)layout.findViewById(R.id.plugin_version_online)).setText("版本号:"+NewInfo.Version);
         ((TextView)layout.findViewById(R.id.plugin_size)).setText("脚本包大小:"+ Utils.bytes2kb(NewInfo.size));
         ((TextView)layout.findViewById(R.id.plugin_desc_online)).setText(NewInfo.Desc);
 
