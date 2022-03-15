@@ -13,23 +13,14 @@ import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
-import com.hicore.Tracker.MTracker;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
-import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import com.lxj.xpopup.XPopup;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
-import com.microsoft.appcenter.channel.AbstractChannelListener;
-import com.microsoft.appcenter.channel.Channel;
 import com.microsoft.appcenter.crashes.Crashes;
-import com.microsoft.appcenter.ingestion.models.Device;
-import com.microsoft.appcenter.ingestion.models.WrapperSdk;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -96,7 +87,6 @@ public class EnvHook {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                MTracker.Track_Load();
             }).start();
 
         } catch (Exception e) {

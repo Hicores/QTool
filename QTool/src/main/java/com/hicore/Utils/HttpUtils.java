@@ -103,7 +103,6 @@ public class HttpUtils {
         al.setView(layout);
         al.show();
 
-
         new Thread(()->{
             try{
                 URL u = new URL(url);

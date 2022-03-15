@@ -1,4 +1,4 @@
-package com.hicore.Tracker;
+package com.hicore.Utils;
 
 import android.os.Build;
 
@@ -15,17 +15,6 @@ import java.nio.charset.StandardCharsets;
 import de.robv.android.xposed.XposedBridge;
 
 public class MTracker {
-    public static void Track_Load(){
-        try{
-            JSONObject TrackJson = new JSONObject();
-            TrackJson.put("Uin", QQEnvUtils.getCurrentUin());
-            TrackJson.put("QQ_Version", HostInfo.getVersion());
-            TrackJson.put("Framework",getFramework());
-            TrackJson.put("OS_Ver",String.valueOf(Build.VERSION.RELEASE));
-            HttpUtils.getContent("https://qtool.haonb.cc/track?data="+ DataUtils.ByteArrayToHex(TrackJson.toString().getBytes(StandardCharsets.UTF_8)));
-        }catch (Exception e){}
-
-    }
     private static String getFramework(){
         String Tag = CollectBridgeTag();
         if (Tag.equals("BugHook"))return "应用转生";
