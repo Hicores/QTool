@@ -24,6 +24,13 @@ public class PluginSetController {
         if (IsAutoLoad) HookEnv.Config.setBoolean("Plugin_Auto_Load_List",PluginID,true);
         else HookEnv.Config.removeKey("Plugin_Auto_Load_List",PluginID);
     }
+    public static void SetRefusePrivate(String PluginID,boolean IsRefuse){
+        if (IsRefuse) HookEnv.Config.setBoolean("Plugin_Refuse_Private",PluginID,true);
+        else HookEnv.Config.removeKey("Plugin_Refuse_Private",PluginID);
+    }
+    public static boolean IsRefusePrivate(String PluginID){
+        return HookEnv.Config.getBoolean("Plugin_Refuse_Private",PluginID,false);
+    }
     public static List<String> getAutoLoadList(){
         return Arrays.asList(HookEnv.Config.getKeys("Plugin_Auto_Load_List"));
     }

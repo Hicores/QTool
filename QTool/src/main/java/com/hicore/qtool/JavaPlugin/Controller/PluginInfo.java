@@ -1,5 +1,7 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,6 +30,9 @@ public class PluginInfo {
 
 
     public boolean IsAvailable(String GroupUin){
+        if (TextUtils.isEmpty(GroupUin)){
+            return !PluginSetController.IsRefusePrivate(PluginID);
+        }
         return IsBlackMode != ListStr.contains(GroupUin);
     }
     public static class EarlyInfo{

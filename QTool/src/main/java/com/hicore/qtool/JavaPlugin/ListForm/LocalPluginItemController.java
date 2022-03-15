@@ -275,6 +275,11 @@ public final class LocalPluginItemController {
         autoLoad.setChecked(PluginSetController.IsAutoLoad(mInfo.PluginID));
         autoLoad.setOnCheckedChangeListener((buttonView, isChecked) -> PluginSetController.SetAutoLoad(mInfo.PluginID,isChecked));
 
+        CheckBox refuse_private = mRoot.findViewById(R.id.plugin_refuse_private);
+        refuse_private.setChecked(PluginSetController.IsRefusePrivate(mInfo.PluginID));
+        refuse_private.setOnCheckedChangeListener((buttonView, isChecked) -> PluginSetController.SetRefusePrivate(mInfo.PluginID,isChecked));
+
+
         //设置设置名单列表回调
         TextView setListButton = mRoot.findViewById(R.id.plugin_message_list_set);
 

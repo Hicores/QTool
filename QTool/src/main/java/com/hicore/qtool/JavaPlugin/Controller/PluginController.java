@@ -298,7 +298,7 @@ public class PluginController {
         for(String key : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(key);
             if (info != null && !info.IsLoading && info.IsRunning){
-                if (info.IsAvailable(Uin) || !isTroop){
+                if (info.IsAvailable(Uin)){
                     avail.put(key,info);
                 }
             }
