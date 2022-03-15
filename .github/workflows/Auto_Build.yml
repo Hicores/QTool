@@ -29,9 +29,10 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.SIGN_PASS }}
           KEY_ALIAS: ${{ secrets.SIGN_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ALIA_PASS }}
+          CommitNumber: ${{ github.run_number }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: ${{ !github.event.pull_request }}
         with:
-          path: 'QTool/build/outputs/apk/release/*.apk'
-          name: QTool-${{ github.event.head_commit.id }}
+          path: 'QTool/build/outputs/apk/release/QTool-release.apk'
+          name: QTool-CI-${{ github.run_number }}
