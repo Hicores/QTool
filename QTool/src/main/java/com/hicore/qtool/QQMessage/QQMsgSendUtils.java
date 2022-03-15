@@ -157,7 +157,7 @@ public class QQMsgSendUtils {
         }
         DecodeResult NewResult = new DecodeResult();
         NewResult.msgType = TYPE_TEXT;
-        NewResult.content = msg.substring(searchNext+1);
+        NewResult.content = msg.substring(searchNext);
         elems.add(NewResult);
 
         return elems;
