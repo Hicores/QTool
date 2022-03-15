@@ -24,6 +24,8 @@ public class HookLoader {
         public String ClzName;
         public String ID;
         public boolean IsCheckDef;
+
+        public BaseUiItem UIInstance;
     }
     private static final String TAG = "HookLoader";
 
@@ -120,9 +122,20 @@ public class HookLoader {
                     }
                 }
             }
+            InitUIHookInstance();
 
         } catch (Throwable e) {
             LogUtils.fetal_error(TAG,"Can't search and load hook:\n"+ Log.getStackTraceString(e));
+        }
+    }
+
+    public static void InitUIHookInstance(){
+        HashSet<UiInfo> uiInfos = HookLoader.getUiInfos();
+        for (UiInfo NewInfo : uiInfos){
+            NewInfo.UIInstance = searchForUiInstance(NewInfo.ClzName);
+            if (NewInfo.UIInstance != null){
+                NewInfo.UIInstance.SwitchChange(HookEnv.Config.getBoolean("Main_Switch",NewInfo.ID,false));
+            }
         }
     }
     public static void CallAllDelayHook(){
@@ -225,14 +238,31 @@ public class HookLoader {
     }
     public static void CallHookStart(String ClzName){
         BaseHookItem item = cacheHookInst.get(ClzName);
-        if (!item.isLoaded()){
-            item.setTryLoad();
-            try {
-                item.setLoad(item.startHook());
-            } catch (Throwable th) {
-                LogUtils.error(TAG,"An error happen when invoke "+ClzName+".startHook:\n"+Log.getStackTraceString(th));
+        if (item != null){
+            if (!HookEnv.IsMainProcess){
+                if (runOnAllProc.contains(ClzName)){
+                    if (!item.isLoaded()){
+                        item.setTryLoad();
+                        try {
+                            item.setLoad(item.startHook());
+                        } catch (Throwable th) {
+                            LogUtils.error(TAG,"An error happen when invoke "+ClzName+".startHook:\n"+Log.getStackTraceString(th));
+                        }
+                    }
+                }
+            }else {
+                if (!item.isLoaded()){
+                    item.setTryLoad();
+                    try {
+                        item.setLoad(item.startHook());
+                    } catch (Throwable th) {
+                        LogUtils.error(TAG,"An error happen when invoke "+ClzName+".startHook:\n"+Log.getStackTraceString(th));
+                    }
+                }
             }
         }
+
+
     }
 
     public static class CheckResult{

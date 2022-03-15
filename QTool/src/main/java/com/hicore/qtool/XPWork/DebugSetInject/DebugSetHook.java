@@ -83,6 +83,7 @@ public class DebugSetHook extends BaseHookItem {
                 TextView hookInfo = new TextView(context);
                 hookInfo.setText(getClassReport());
                 hookInfo.setTextSize(12);
+                hookInfo.setTextColor(Color.BLACK);
                 mRoot.addView(hookInfo,getMarginParam());
 
                 fullScreen.setContentView(mRoot);

@@ -26,6 +26,7 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
         Method qqMethod = getMethod();
         XPBridge.HookBefore(qqMethod,param -> {
             try {
+                if (!IsEnable)return;
                 //自己进行图像转换,不给QQ把透明背景扣掉的机会
                 FileOutputStream fos = new FileOutputStream((String) param.args[0]);
                 Bitmap bitmap = (Bitmap) param.args[1];
@@ -39,6 +40,7 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
 
         Method systemMethod = Bitmap.class.getMethod("compress", Bitmap.CompressFormat.class, int.class, OutputStream.class);
         XPBridge.HookBefore(systemMethod,param -> {
+            if (!IsEnable)return;
             String CurrentCallStacks = DebugUtils.getCurrentCallStacks();
             if (CurrentCallStacks.contains("NearbyPeoplePhotoUploadProcessor") || CurrentCallStacks.contains("doInBackground") ||
                     CurrentCallStacks.contains("TroopUploadingThread")) {

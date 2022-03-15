@@ -60,20 +60,23 @@ public class MainMenu extends Activity {
         HashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
         LinearLayout QQHelper_Bar = findViewById(R.id.HideBar_QQHelper);
         for(HookLoader.UiInfo item : uiInfos){
-            if (item.Position == 1){
-                Switch NewSwitch = new Switch(this);
-                NewSwitch.setTextColor(Color.BLACK);
-                NewSwitch.setText(item.title);
-                NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
-                NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (buttonView.isPressed()){
+            item.UIInstance = HookLoader.searchForUiInstance(item.ClzName);
+            if (item.UIInstance != null){
+                if (item.Position == 1){
+                    Switch NewSwitch = new Switch(this);
+                    NewSwitch.setTextColor(Color.BLACK);
+                    NewSwitch.setText(item.title);
+                    NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
+                    NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         HookEnv.Config.setBoolean("Main_Switch",item.ID,isChecked);
-                    }
-                });
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
-                QQHelper_Bar.addView(NewSwitch,param);
+                        item.UIInstance.SwitchChange(isChecked);
+                    });
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
+                    QQHelper_Bar.addView(NewSwitch,param);
+                }
             }
+
         }
         RegisterAnim(findViewById(R.id.QQHelper),QQHelper_Bar);
 
