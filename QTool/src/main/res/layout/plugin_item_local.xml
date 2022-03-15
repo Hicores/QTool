@@ -64,7 +64,7 @@
         android:layout_toRightOf="@+id/infoBar">
     </ImageView>
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical"
         android:id="@+id/HideBar"
         android:layout_marginLeft="10dp"

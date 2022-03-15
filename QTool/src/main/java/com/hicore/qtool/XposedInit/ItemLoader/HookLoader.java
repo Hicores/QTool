@@ -4,7 +4,10 @@ import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
+import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -14,11 +17,13 @@ import java.util.HashSet;
 
 public class HookLoader {
     public static class UiInfo{
-        int type;
-        int Position;
-        String title;
-        String desc;
-        String ClzName;
+        public int type;
+        public int Position;
+        public String title;
+        public String desc;
+        public String ClzName;
+        public String ID;
+        public boolean IsCheckDef;
     }
     private static final String TAG = "HookLoader";
 
@@ -164,7 +169,7 @@ public class HookLoader {
         try{
             ClassLoader mLoader = HookLoader.class.getClassLoader();
             Class findClz = mLoader.loadClass("com.hicore.qtool.XposedInit.ItemLoader.UiItemInfo");
-            HashSet<UiInfo> NewUiList = MField.GetField(null,findClz,"getUiInfos",HashSet.class);
+            HashSet<UiInfo> NewUiList = MMethod.CallMethod(null,findClz,"getUiInfos",HashSet.class,new Class[0]);
             return NewUiList;
         }catch (Exception e){
             return new HashSet<>();

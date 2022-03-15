@@ -13,24 +13,30 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.Utils.BitmapUtils;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
 import com.hicore.qtool.R;
+import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+
+import java.util.HashSet;
 
 public class MainMenu extends Activity {
-    private static final String TAG = "MainActivityProxy";
+    private static final String TAG = "MainActivityProxy01";
     private static Bitmap map = null;
     RelativeLayout blurRoot;
     @Override
@@ -46,12 +52,31 @@ public class MainMenu extends Activity {
             LogUtils.error(TAG, Log.getStackTraceString(e));
         }
 
+    }
+    private void createItems(){
+        HashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
+        LinearLayout QQHelper_Bar = findViewById(R.id.HideBar_QQHelper);
+        for(HookLoader.UiInfo item : uiInfos){
+            if (item.Position == 1){
+                Switch NewSwitch = new Switch(this);
+                NewSwitch.setTextColor(Color.BLACK);
+                NewSwitch.setText(item.title);
+                NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
+                QQHelper_Bar.addView(NewSwitch,param);
+            }
+        }
+    }
+    private void RegisterAnim(){
 
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+
+
             ResUtils.StartInject(this);
             setTheme(R.style.AnimActivity);
 
@@ -82,6 +107,9 @@ public class MainMenu extends Activity {
                 Intent in = new Intent(Intent.ACTION_VIEW,u);
                 startActivity(in);
             });
+
+            createItems();
+            RegisterAnim();
 
         } catch (Exception e) {
             LogUtils.error(TAG, Log.getStackTraceString(e));

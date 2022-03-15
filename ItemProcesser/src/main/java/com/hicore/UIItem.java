@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 public @interface UIItem {
     int mainItemID();
     String itemName();
-    String itemDesc();
+    String itemDesc() default "";
     int itemType();
+    String ID();
+    boolean IsDefChecked() default false;
 }

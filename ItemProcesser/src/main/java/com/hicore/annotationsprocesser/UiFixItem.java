@@ -39,20 +39,22 @@ public class UiFixItem extends AbstractProcessor {
                     "\n" +
                     "public class UiItemInfo{\n" +
                     "\tpublic static HashSet<HookLoader.UiInfo> UiInfos = new HashSet<>();\n" +
-                    "\tprivate static void addUiInfo(int type,String UiName,String UiDesc,int Pos,String ClassName){\n" +
+                    "\tprivate static void addUiInfo(int type,String UiName,String UiDesc,int Pos,String ClassName,String ID,boolean IsCheckDef){\n" +
                     "\t\tHookLoader.UiInfo NewInfo = new HookLoader.UiInfo();\n" +
                     "\t\tNewInfo.type = type;\n" +
                     "\t\tNewInfo.title = UiName;\n" +
                     "\t\tNewInfo.desc = UiDesc;\n" +
                     "\t\tNewInfo.Position = Pos;\n" +
                     "\t\tNewInfo.ClzName = ClassName;\n" +
+                    "\t\tNewInfo.ID = ID;\n" +
+                    "\t\tNewInfo.IsCheckDef = IsCheckDef;\n" +
                     "\t\tUiInfos.add(NewInfo);\n" +
                     "\t}\n" +
                     "\tpublic static HashSet<HookLoader.UiInfo> getUiInfos(){\n" +
                     "\t\tUiInfos.clear();\n" +
                     "\t\t!!!这里存放初始化代码!!!\n" +
                     "\t\treturn UiInfos;\n" +
-                    "\t}\n"+
+                    "\t}\n" +
                     "}";
             StringBuilder clzName = new StringBuilder();
             for (Element anno :roundEnvironment.getElementsAnnotatedWith(element)){
@@ -63,7 +65,8 @@ public class UiFixItem extends AbstractProcessor {
                 clzName.append("addUiInfo(").append(item.itemType())
                         .append(",\"").append(item.itemName()).append("\",\"").append(item.itemDesc())
                         .append("\",").append(item.mainItemID()).append(",\"")
-                        .append(symbol.flatName()).append("\");").append("\n");
+                        .append(symbol.flatName()).append("\",\"").append(item.ID()).append("\",")
+                .append(item.IsDefChecked()).append(");\n");
 
             }
 
