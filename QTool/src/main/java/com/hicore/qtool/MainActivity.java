@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 });
         findViewById(R.id.OpenOpenSource)
                 .setOnClickListener(v-> startActivity(new Intent(this,OpenSource.class)));
+
+        ((TextView)findViewById(R.id.Show_Version)).setText("模块版本:"+BuildConfig.VERSION_NAME);
 
 
     }

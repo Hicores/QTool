@@ -62,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
             <TextView
+                android:id="@+id/Show_Version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="模块版本:0.0.1"
