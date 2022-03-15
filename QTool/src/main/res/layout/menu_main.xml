@@ -67,6 +67,37 @@
                         android:textSize="20sp"
                         android:textColor="#FF00FF"/>
                 </LinearLayout>
+                <!--这里是可展开菜单内容-->
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/QQHelper"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/menu_item_base"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/main_helper"></ImageView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="30dp"
+                            android:text="QQ辅助功能"
+                            android:gravity="center_vertical"
+                            android:textSize="20sp"
+                            android:textColor="#AF00FF"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_marginTop="20dp"
                     android:id="@+id/GetNewVer"
@@ -80,7 +111,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="30dp"
-                        android:background="@drawable/menu_icon_plugin"></ImageView>
+                        android:background="@drawable/main_down"></ImageView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
