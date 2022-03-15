@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class HookLoader {
     public static class UiInfo{
@@ -158,6 +159,17 @@ public class HookLoader {
                 }
             }
         }
+    }
+    public static HashSet<UiInfo> getUiInfos(){
+        try{
+            ClassLoader mLoader = HookLoader.class.getClassLoader();
+            Class findClz = mLoader.loadClass("com.hicore.qtool.XposedInit.ItemLoader.UiItemInfo");
+            HashSet<UiInfo> NewUiList = MField.GetField(null,findClz,"getUiInfos",HashSet.class);
+            return NewUiList;
+        }catch (Exception e){
+            return new HashSet<>();
+        }
+
     }
     public static BaseUiItem searchForUiInstance(String clzName){
         if (cacheUiItem.containsKey(clzName))return cacheUiItem.get(clzName);
