@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HookLoader {
+    public static class UiInfo{
+        int type;
+        int Position;
+        String title;
+        String desc;
+        String ClzName;
+    }
     private static final String TAG = "HookLoader";
 
     private static ArrayList<String> BasicInit;
@@ -20,6 +27,7 @@ public class HookLoader {
     private static ArrayList<String> runOnMainProc;
 
     private static HashMap<String,BaseHookItem> cacheHookInst = new HashMap<>();
+    private static HashMap<String,BaseUiItem> cacheUiItem = new HashMap<>();
 
     public static void SearchAndLoadAllHook(){
         try {
@@ -148,6 +156,31 @@ public class HookLoader {
                         LogUtils.error(TAG,"An error happen when invoke "+clzName+".startHook:\n"+Log.getStackTraceString(th));
                     }
                 }
+            }
+        }
+    }
+    public static BaseUiItem searchForUiInstance(String clzName){
+        if (cacheUiItem.containsKey(clzName))return cacheUiItem.get(clzName);
+        if (cacheHookInst.containsKey(clzName)){
+            Object obj = cacheHookInst.get(clzName);
+            if (obj instanceof BaseUiItem){
+                BaseUiItem item = (BaseUiItem) obj;
+                cacheUiItem.put(clzName,item);
+                return item;
+            }
+            return null;
+        }else {
+            try{
+                Class<?> clz = HookLoader.class.getClassLoader().loadClass(clzName);
+                Object NewObj = clz.newInstance();
+                if (NewObj instanceof BaseUiItem){
+                    BaseUiItem item = (BaseUiItem) NewObj;
+                    cacheUiItem.put(clzName,item);
+                    return item;
+                }
+                return null;
+            }catch (Exception e){
+                return null;
             }
         }
     }

@@ -35,7 +35,6 @@ public class annotationBuilder extends AbstractProcessor {
     }
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-
         for (TypeElement element : set){
             StringBuilder clzName = new StringBuilder();
             clzName.append(""+
@@ -82,9 +81,6 @@ public class annotationBuilder extends AbstractProcessor {
             }
 
         }
-
-
-
         return true;
     }
     @Override

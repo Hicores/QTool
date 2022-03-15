@@ -69,6 +69,7 @@
                 </LinearLayout>
                 <!--这里是可展开菜单内容-->
                 <LinearLayout
+                    android:orientation="vertical"
                     android:layout_marginTop="20dp"
                     android:id="@+id/QQHelper"
                     android:layout_width="match_parent"
@@ -95,7 +96,13 @@
                             android:textSize="20sp"
                             android:textColor="#AF00FF"/>
                     </LinearLayout>
-
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/HideBar"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout

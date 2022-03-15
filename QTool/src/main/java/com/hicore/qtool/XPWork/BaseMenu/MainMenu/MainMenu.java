@@ -37,7 +37,6 @@ public class MainMenu extends Activity {
     public ClassLoader getClassLoader() {
         return HookEnv.moduleLoader;
     }
-
     public static void createActivity(Activity parentAct){
         try{
             Intent intent = new Intent(parentAct,MainMenu.class);
@@ -107,13 +106,11 @@ public class MainMenu extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         overridePendingTransition(0,0);
     }
-
     private void setTitleFea(){
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -125,4 +122,5 @@ public class MainMenu extends Activity {
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         );
     }
+
 }
