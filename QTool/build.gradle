@@ -9,8 +9,8 @@ android {
         applicationId "com.hicore.qtool"
         minSdk 26
         targetSdk 26
-        versionCode 2
-        def defAppVer = "0.0.2"
+        versionCode 3
+        def defAppVer = "0.0.3"
         if (System.getenv("KEYSTORE_PATH") != null){
             versionName "${defAppVer}-CI-${System.getenv("CommitNumber")}"
         }else {
