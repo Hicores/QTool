@@ -1,13 +1,16 @@
 package com.hicore.qtool.XPWork.QQCleanerHook;
 
 import android.icu.util.Measure;
+import android.util.Log;
 
 import com.hicore.HookItem;
 import com.hicore.LogUtils.LogUtils;
+import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
+import com.hicore.qtool.EmoHelper.Hooker.HookInjectEmoTabView;
 import com.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
@@ -27,8 +30,8 @@ public class HideEmoPanelGifAndSelf extends BaseHookItem implements BaseUiItem {
     @Override
     public boolean startHook() throws Throwable {
         XPBridge.HookAfter(getMethod(),param -> {
+            List l = (List)param.getResult();
             if (IsEnable){
-                List l = (List)param.getResult();
                 Iterator it = l.iterator();
                 while (it.hasNext()){
                     Object item = it.next();

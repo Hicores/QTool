@@ -16,6 +16,7 @@ import bsh.classpath.BshClassPath;
 
 @HookItem(isDelayInit = true,isRunInAllProc = false)
 public class HookInjectEmoTabView extends BaseHookItem {
+    public static boolean IsEnable = true;
     @Override
     public boolean startHook() throws Throwable {
         Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.BasePanelView","convertEmoticonTabItem", MClass.loadClass("com.tencent.mobileqq.emoticonview.EmoticonTabAdapter$EmoticonTabItem"),
@@ -23,15 +24,14 @@ public class HookInjectEmoTabView extends BaseHookItem {
 
         XPBridge.HookAfter(m,param -> {
             Object Info = param.getResult();
-            LogUtils.debug("HookInjectEmoTabView", MField.GetField(Info,"description"));
-            LogUtils.debug("HookInjectEmoTabView", Log.getStackTraceString(new Throwable()));
+
         });
         return true;
     }
 
     @Override
     public boolean isEnable() {
-        return true;
+        return false;
     }
 
     @Override
