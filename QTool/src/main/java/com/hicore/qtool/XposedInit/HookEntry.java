@@ -28,6 +28,10 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         }
         XposedBridge.log("[QTool]Load from "+lpparam.processName);
 
+        FixSubLoadClass.loadZygote(cacheParam);
+        FixSubLoadClass.loadPackage(lpparam);
+        /*
+
         boolean isUseDefLoadMode = new File(lpparam.appInfo.dataDir+"/def").exists();
         if (isUseDefLoadMode){
             FixSubLoadClass.loadZygote(cacheParam);
@@ -58,6 +62,8 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 FixSubLoadClass.loadPackage(lpparam);
             }
         }
+
+         */
 
 
     }
