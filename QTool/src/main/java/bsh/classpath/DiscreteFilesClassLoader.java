@@ -37,6 +37,8 @@ import com.android.dx.dex.cf.CfOptions;
 import com.android.dx.dex.cf.CfTranslator;
 import com.android.dx.dex.file.DexFile;
 import com.hicore.LogUtils.LogUtils;
+import com.hicore.Utils.Utils;
+import com.hicore.qtool.HookEnv;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -107,7 +109,6 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 				return defineClass(name, code, 0, code.length);
 
 			} catch (Exception ioe) {
-				XposedBridge.log(ioe);
 			}
 			return defineClass( name, code, 0, code.length );
 		} else
@@ -131,7 +132,20 @@ public class DiscreteFilesClassLoader extends BshClassLoader
 			if (this.classManager.classMap.containsKey(str)) {
 				return this.classManager.classMap.get(str);
 			}
+			try{
+				Class<?> clz = HookEnv.mLoader.loadClass(str);
+				if (clz != null)return clz;
+			}catch (Exception e){
+
+			}
 			return super.loadClass(str, z);
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			Class<?> clz = HookEnv.mLoader.loadClass(name);
+			if (clz != null)return clz;
+			return super.loadClass(name);
 		}
 	}
 

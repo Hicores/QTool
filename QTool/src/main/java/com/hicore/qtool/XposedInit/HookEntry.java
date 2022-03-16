@@ -68,7 +68,6 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     public static class FixSubClassLoader extends ClassLoader{
         ClassLoader parentLoader;
         ClassLoader childLoader;
-        ClassLoader hostLoader;
         Method findClass;
 
         ClassLoader bootClassLoader = ClassLoader.getSystemClassLoader();
@@ -84,9 +83,6 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
-        }
-        public void addHostLoader(ClassLoader host){
-            hostLoader = host;
         }
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
@@ -114,17 +110,11 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                         return clz;
                     }
                 }
+
             }catch (Exception notFound){
-                try{
-                    if (parentLoader != null){
-                        Class clz = parentLoader.loadClass(name);
-                        if (clz != null){
-                            return clz;
-                        }
-                    }
-                }catch (Exception e){ }
+
             }
-            return hostLoader.loadClass(name);
+            return parentLoader.loadClass(name);
         }
 
     }

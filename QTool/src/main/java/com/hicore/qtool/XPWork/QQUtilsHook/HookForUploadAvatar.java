@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(itemName = "透明头像上传",mainItemID = 1,itemType = 1,ID = "Upload_Avatar")
+@UIItem(itemName = "半透明头像上传",mainItemID = 1,itemType = 1,ID = "Upload_Avatar")
 public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     boolean IsEnable = false;
     @Override
