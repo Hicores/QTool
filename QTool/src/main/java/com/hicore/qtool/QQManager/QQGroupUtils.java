@@ -104,11 +104,16 @@ public class QQGroupUtils {
     }
     public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin){
         try{
-            Object TroopManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getManager",
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    new Class[]{int.class},
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
-            ArrayList<?> MyList = MMethod.CallMethod(TroopManager,TroopManager.getClass(),"w", List.class,new Class[]{String.class},new Object[]{GroupUin});
+            ArrayList<?> MyList;
+            try{
+                MyList = MMethod.CallMethodSingle(TroopManager,"w", List.class,GroupUin);
+            }catch (Exception e){
+                MyList = MMethod.CallMethodSingle(TroopManager,"b", List.class,GroupUin);
+            }
+
             ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
             GroupInfo gInfo = Group_Get_Info(GroupUin);
             for (Object item : MyList){

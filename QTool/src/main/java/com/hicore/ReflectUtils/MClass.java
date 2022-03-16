@@ -32,7 +32,7 @@ public class MClass {
             con.setAccessible(true);
             return (T) con.newInstance(params);
         }
-        return null;
+        throw new RuntimeException("No Instance for "+clz);
     }
     public static <T> T NewInstance(Class<?> clz,Object... params) throws Exception{
         Class<?>[] paramTypes = new Class[params.length];

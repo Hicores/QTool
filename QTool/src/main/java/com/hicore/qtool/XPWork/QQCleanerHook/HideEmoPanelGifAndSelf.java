@@ -10,6 +10,7 @@ import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.EmoHelper.Hooker.HookInjectEmoTabView;
 import com.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
