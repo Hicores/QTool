@@ -108,6 +108,45 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/QQCleaner"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/menu_item_base"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/main_cleaner"></ImageView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="30dp"
+                            android:text="QQ净化功能"
+                            android:gravity="center_vertical"
+                            android:textSize="20sp"
+                            android:textColor="#AF00FF"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:divider="@drawable/textlines"
+                        android:showDividers="middle"
+                        android:id="@+id/HideBar_QQCleaner"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_marginTop="20dp"
                     android:id="@+id/GetNewVer"
                     android:layout_width="match_parent"

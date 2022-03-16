@@ -26,6 +26,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             XposedBridge.log("[QTool]initZygote may not be invoke, please check your Xposed Framework!");
             return;
         }
+        XposedBridge.log("[QTool]Load from "+lpparam.processName);
 
         boolean isUseDefLoadMode = new File(lpparam.appInfo.dataDir+"/def").exists();
         if (isUseDefLoadMode){

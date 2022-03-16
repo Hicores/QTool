@@ -80,6 +80,28 @@ public class MainMenu extends Activity {
         }
         RegisterAnim(findViewById(R.id.QQHelper),QQHelper_Bar);
 
+        LinearLayout QQCleaner_Bar = findViewById(R.id.HideBar_QQCleaner);
+        for(HookLoader.UiInfo item : uiInfos){
+            item.UIInstance = HookLoader.searchForUiInstance(item.ClzName);
+            if (item.UIInstance != null){
+                if (item.Position == 2){
+                    Switch NewSwitch = new Switch(this);
+                    NewSwitch.setTextColor(Color.BLACK);
+                    NewSwitch.setText(item.title);
+                    NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
+                    NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        HookEnv.Config.setBoolean("Main_Switch",item.ID,isChecked);
+                        item.UIInstance.SwitchChange(isChecked);
+                    });
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
+                    QQCleaner_Bar.addView(NewSwitch,param);
+                }
+            }
+
+        }
+        RegisterAnim(findViewById(R.id.QQCleaner),QQCleaner_Bar);
+
     }
     private void RegisterAnim(View clickView,View animAA){
         int MaxHeight = InitMeasure(animAA);
