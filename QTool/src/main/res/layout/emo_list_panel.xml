@@ -7,6 +7,8 @@
     android:orientation="vertical">
 
     <HorizontalScrollView
+        android:scrollbars="none"
+        android:id="@+id/emo_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout

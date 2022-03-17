@@ -2,9 +2,12 @@ package com.hicore.qtool.EmoHelper.Panel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,10 +35,12 @@ import java.util.ArrayList;
 
 public class EmoPanelView extends BottomPopupView {
     private static String SelectedName = "";
+    private ArrayList<View> titleBarList = new ArrayList<>();
     VerticalRecyclerView recyclerView;
     private ArrayList<EmoPanel.EmoInfo> data;
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
+    HorizontalScrollView scView;
 
 
     public EmoPanelView(@NonNull Context context) {
@@ -50,6 +55,7 @@ public class EmoPanelView extends BottomPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
+        scView = findViewById(R.id.emo_title);
         LinearLayout PathBar = findViewById(R.id.PathBar);
 
         ArrayList<String> barList = EmoSearchAndCache.searchForPathList();
@@ -61,9 +67,18 @@ public class EmoPanelView extends BottomPopupView {
             LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
             PathBar.addView(view,parans);
+            view.requestLayout();
+            titleBarList.add(view);
 
-            view.setOnClickListener(v-> updateShowPath(name));
+            view.setOnClickListener(v-> {
+                updateShowPath(name);
+                for (View otherItem : titleBarList){
+                    otherItem.setBackgroundColor(Color.WHITE);
+                }
+                v.setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
+            });
         }
+
 
         TextView view = new TextView(getContext());
         view.setText("+");
@@ -72,6 +87,12 @@ public class EmoPanelView extends BottomPopupView {
         LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
         PathBar.addView(view,parans);
+
+        int width = View.MeasureSpec.makeMeasureSpec(0,
+                View.MeasureSpec.UNSPECIFIED);
+        int height = View.MeasureSpec.makeMeasureSpec(0,
+                View.MeasureSpec.UNSPECIFIED);
+        PathBar.measure(width,height);
 
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -138,10 +159,27 @@ public class EmoPanelView extends BottomPopupView {
         if (NameList.isEmpty())return;
         if (TextUtils.isEmpty(Name)){
             updateShowPath(NameList.get(0));
+            titleBarList.get(0).setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
         }else if (NameList.contains(Name)){
+            for (int i = 0;i<NameList.size();i++){
+                if (NameList.get(i).equals(Name)){
+                    int finalI = i;
+                    scView.post(()->{
+                        new Handler(Looper.getMainLooper()).post(()->{
+                            scView.scrollTo(titleBarList.get(finalI).getLeft(),0);
+                            titleBarList.get(finalI).setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
+                        });
+                    });
+
+
+
+                    break;
+                }
+            }
             updateShowPath(Name);
         }else {
             updateShowPath(NameList.get(0));
+            titleBarList.get(0).setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
         }
     }
 
