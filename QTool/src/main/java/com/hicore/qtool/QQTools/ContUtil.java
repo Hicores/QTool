@@ -2,9 +2,11 @@ package com.hicore.qtool.QQTools;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.hicore.ReflectUtils.XPBridge;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 
 public class ContUtil {
@@ -74,16 +76,5 @@ public class ContUtil {
 
         }
         return LayoutInflater.from(context);
-    }
-    public static void requireForHook(Context context){
-        try{
-            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class), param -> {
-                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                param.setResult(inflater1.cloneInContext(context));
-            });
-        }catch (Exception e){
-
-        }
-
     }
 }

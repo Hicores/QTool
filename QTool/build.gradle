@@ -61,6 +61,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation files('..\\libs\\dx.jar')
+    implementation files('..\\libs\\xpopup.aar')
 
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly 'de.robv.android.xposed:api:82:sources'
@@ -70,7 +71,7 @@ dependencies {
 
 
     implementation 'com.github.kyuubiran:EzXHelper:0.7.2'
-    implementation 'com.github.li-xiaojun:XPopup:2.7.6'
+    implementation 'com.github.li-xiaojun:EasyAdapter:1.2.5'
 
     def appCenterSdkVersion = '4.3.1'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"

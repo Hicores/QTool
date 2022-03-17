@@ -54,7 +54,6 @@ public class PluginUploader {
     public static void RequestForUpload(String Path){
         Activity act = Utils.getTopActivity();
         Context fixContext = ContUtil.getFixContext(act);
-        ContUtil.requireForHook(fixContext);
         new XPopup.Builder(fixContext)
                 .asConfirm("提示", TIP, "拒绝", "同意", () -> RequestUpload(Path), () -> { },false).show();
     }

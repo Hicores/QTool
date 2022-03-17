@@ -25,6 +25,7 @@
 -keep class bsh.** { *; }
 -keep class com.github.**{*;}
 -keep class androidx.lifecycle.**{ *; }
+-keep class com.lxj.xpopup.widget.**{*;}
 
 
 -keepclassmembers enum * {

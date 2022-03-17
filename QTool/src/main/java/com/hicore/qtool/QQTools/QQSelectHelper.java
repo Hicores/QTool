@@ -186,16 +186,7 @@ public class QQSelectHelper {
             if (defTab < 1 || defTab > 3)throw new RuntimeException("defTab must be 1-3");
 
             Context fixContext = new ContUtil.FixContext(mContext);
-            try {
-                inflater = ContUtil.getContextInflater(mContext);
-                XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class),param -> {
-                    LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                    param.setResult(inflater1.cloneInContext(fixContext));
-                });
-                //在下面的BottomPopupView会调用一次LayoutInflater.from()
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+            inflater = ContUtil.getContextInflater(mContext);
             BottomPopupView view =new BottomPopupView(fixContext){
                 @Override
                 protected int getImplLayoutId() {

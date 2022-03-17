@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_plugin"
+    android:layout_width="wrap_content"
+    android:gravity="center"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/no_content_img"
+        android:layout_width="180dp"
+        android:layout_height="150dp"
+        android:background="@drawable/no_content" />
+    <TextView
+        android:layout_below="@id/no_content_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:text="未找到任何文件"
+        android:textColor="@color/font_plugin"/>
+
+</RelativeLayout>

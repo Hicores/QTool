@@ -11,17 +11,17 @@ public class HookInjectEmoTabView extends BaseHookItem {
     public static boolean IsEnable = true;
     @Override
     public boolean startHook() throws Throwable {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnable() {
-        return false;
+        return IsEnable;
     }
 
     @Override
     public boolean check() {
-        return false;
+        return true;
     }
 
 }
