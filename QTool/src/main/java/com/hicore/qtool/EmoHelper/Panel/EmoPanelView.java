@@ -90,6 +90,7 @@ public class EmoPanelView extends BottomPopupView {
                 //添加图片项目
                 for (EmoPanel.EmoInfo info : arrayList){
                     ImageView view = new ImageView(getContext());
+                    view.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     LinearLayout.LayoutParams param =
                             new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/5,XPopupUtils.getScreenWidth(getContext())/5);
 
@@ -97,13 +98,13 @@ public class EmoPanelView extends BottomPopupView {
                     if (info.type == 1){
                         Glide.with(getContext())
                                 .load(new File(info.Path))
-                                .centerCrop()
+                                .fitCenter()
                                 .into(view);
                     }else if (info.type == 2){
                         EmoOnlineLoader.submit(info,()->{
                             Glide.with(getContext())
                                     .load(new File(info.Path))
-                                    .centerCrop()
+                                    .fitCenter()
                                     .into(view);
                         });
                     }

@@ -3,15 +3,20 @@ package com.hicore.qtool.EmoHelper.Hooker;
 
 import com.hicore.HookItem;
 
+import com.hicore.UIItem;
+import com.hicore.qtool.XPWork.QQCleanerHook.HideChatCamera;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
+import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
+import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 
+@UIItem(itemName = "分类表情栏",itemType = 1,mainItemID = 1,ID = "EmoHelper")
 @HookItem(isDelayInit = true,isRunInAllProc = false)
-public class HookInjectEmoTabView extends BaseHookItem {
+public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
     public static boolean IsEnable = true;
     @Override
     public boolean startHook() throws Throwable {
-        return true;
+        return false;
     }
 
     @Override
@@ -21,7 +26,21 @@ public class HookInjectEmoTabView extends BaseHookItem {
 
     @Override
     public boolean check() {
-        return true;
+        return false;
     }
 
+    @Override
+    public void SwitchChange(boolean IsCheck) {
+        IsEnable = IsCheck;
+        if (IsCheck){
+            HookLoader.CallHookStart(HideChatCamera.class.getName());
+            HookLoader.CallHookStart(HookHandlerPicLongClick.class.getName());
+            HookLoader.CallHookStart(HookForMixedMsgLongClick.class.getName());
+        }
+    }
+
+    @Override
+    public void ListItemClick() {
+
+    }
 }
