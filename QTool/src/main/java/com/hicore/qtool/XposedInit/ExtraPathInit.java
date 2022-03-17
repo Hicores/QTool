@@ -30,6 +30,11 @@ public class ExtraPathInit {
         if (!pathFile.exists())pathFile.mkdirs();
         if (pathFile.exists()){
             HookEnv.ExtraDataPath = pathFile.getAbsolutePath() + File.separatorChar;
+            try {
+                new File(HookEnv.ExtraDataPath + ".nomedia").createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     @SuppressLint("ResourceType")
