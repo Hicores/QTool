@@ -2,6 +2,7 @@ package com.hicore.qtool.EmoHelper.Panel;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,10 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.solver.Cache;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hicore.Utils.Utils;
+import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.QQMessage.QQMsgBuilder;
+import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.R;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.MultiItemTypeAdapter;
@@ -24,8 +29,9 @@ import com.lxj.xpopup.widget.VerticalRecyclerView;
 import java.io.File;
 import java.util.ArrayList;
 
-public class EmoPanelView extends BottomPopupView {
 
+public class EmoPanelView extends BottomPopupView {
+    private static String SelectedName = "";
     VerticalRecyclerView recyclerView;
     private ArrayList<EmoPanel.EmoInfo> data;
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
@@ -56,10 +62,7 @@ public class EmoPanelView extends BottomPopupView {
             parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
             PathBar.addView(view,parans);
 
-            view.setOnClickListener(v->{
-                updateShowPath(name);
-                Utils.ShowToastL(name);
-            });
+            view.setOnClickListener(v-> updateShowPath(name));
         }
 
         TextView view = new TextView(getContext());
@@ -91,17 +94,28 @@ public class EmoPanelView extends BottomPopupView {
                             new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/5,XPopupUtils.getScreenWidth(getContext())/5);
 
                     param.setMargins(XPopupUtils.getScreenWidth(getContext())/5/5,10,0,10);
-                    Glide.with(getContext())
-                            .load(new File(info.Path))
-                            .centerCrop()
-                            .into(view);
+                    if (info.type == 1){
+                        Glide.with(getContext())
+                                .load(new File(info.Path))
+                                .centerCrop()
+                                .into(view);
+                    }else if (info.type == 2){
+                        EmoOnlineLoader.submit(info,()->{
+                            Glide.with(getContext())
+                                    .load(new File(info.Path))
+                                    .centerCrop()
+                                    .into(view);
+                        });
+                    }
+
                     container.addView(view,param);
-
-
+                    view.setOnClickListener(v->{
+                        QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                        dismiss();
+                    });
                 }
-
+                recyclerView.getScrollY();
             }
-
         };
 
         commonAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
@@ -114,14 +128,25 @@ public class EmoPanelView extends BottomPopupView {
                 return false;
             }
         });
-
         recyclerView.setAdapter(commonAdapter);
 
+        FindNameToSelectID(SelectedName);
+    }
+    private void FindNameToSelectID(String Name){
+        ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
+        if (NameList.isEmpty())return;
+        if (TextUtils.isEmpty(Name)){
+            updateShowPath(NameList.get(0));
+        }else if (NameList.contains(Name)){
+            updateShowPath(Name);
+        }else {
+            updateShowPath(NameList.get(0));
+        }
     }
 
-    private void updateShowPath(String path){
+    private void updateShowPath(String pathName){
         multiItem.clear();
-        data = EmoSearchAndCache.searchForEmo(path);
+        data = EmoSearchAndCache.searchForEmo(pathName);
         int Count = 0;
         int PageCount = 0;
         if (data != null){
@@ -141,6 +166,7 @@ public class EmoPanelView extends BottomPopupView {
         }
         commonAdapter.notifyDataSetChanged();
 
+        SelectedName = pathName;
     }
 
     //完全可见执行

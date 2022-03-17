@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class EmoSearchAndCache {
     public static ArrayList<EmoPanel.EmoInfo> searchForEmo(String PathName){
@@ -15,33 +18,28 @@ public class EmoSearchAndCache {
 
         File[] fs = new File(rawPath).listFiles();
 
+
         ArrayList<EmoPanel.EmoInfo> findEmoInfos = new ArrayList<>();
         if (fs != null){
+            Arrays.sort(fs, (o1, o2) -> {
+                long result = o2.lastModified() - o1.lastModified();
+                if (result == 0)return 0;
+                return (result < 0 ) ? -1 : 1;
+            });
+
             for (File f : fs){
                 if (f.isFile() && !f.getName().contains(".")){
                     EmoPanel.EmoInfo newInfo = new EmoPanel.EmoInfo();
-                    newInfo.IsGif = false;
+                    newInfo.type = 1;
                     newInfo.Name = f.getName();
                     newInfo.Path = f.getAbsolutePath();
                     findEmoInfos.add(newInfo);
                 }
             }
         }
-        return findEmoInfos;
-    }
-    public static boolean checkIsGif(String Path){
-        try {
-            FileInputStream sIns = new FileInputStream(Path);
-            if (sIns.read() == 'G' && sIns.read() == 'I' && sIns.read() == 'F'){
-                sIns.close();
-                return true;
-            }
-            sIns.close();
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
 
+
+        return findEmoInfos;
     }
     public static ArrayList<String> searchForPathList(){
         String rawPath = HookEnv.ExtraDataPath + "/Pic/";
