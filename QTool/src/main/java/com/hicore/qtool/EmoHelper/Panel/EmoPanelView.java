@@ -1,12 +1,17 @@
 package com.hicore.qtool.EmoHelper.Panel;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.R;
 import com.lxj.easyadapter.EasyAdapter;
@@ -16,13 +21,15 @@ import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class EmoPanelView extends BottomPopupView {
 
     VerticalRecyclerView recyclerView;
-    private ArrayList<String> data;
-    private EasyAdapter<String> commonAdapter;
+    private ArrayList<EmoPanel.EmoInfo> data;
+    private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
+    private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
 
 
     public EmoPanelView(@NonNull Context context) {
@@ -37,68 +44,116 @@ public class EmoPanelView extends BottomPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
+        LinearLayout PathBar = findViewById(R.id.PathBar);
+
+        ArrayList<String> barList = EmoSearchAndCache.searchForPathList();
+        for(String name : barList){
+            TextView view = new TextView(getContext());
+            view.setText(name);
+            view.setTextColor(Color.BLACK);
+            view.setTextSize(24);
+            LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
+            PathBar.addView(view,parans);
+
+            view.setOnClickListener(v->{
+                updateShowPath(name);
+                Utils.ShowToastL(name);
+            });
+        }
+
+        TextView view = new TextView(getContext());
+        view.setText("+");
+        view.setTextColor(Color.parseColor("#99FFFF"));
+        view.setTextSize(24);
+        LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
+        PathBar.addView(view,parans);
+
         recyclerView = findViewById(R.id.recyclerView);
 
-        data = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            data.add("这是一个自定义Bottom类型的弹窗！你可以在里面添加任何滚动的View，我已经智能处理好嵌套滚动，你只需编写UI和逻辑即可！");
-        }
-        commonAdapter = new EasyAdapter<String>(data, R.layout.zhihu_comment) {
+        commonAdapter = new EasyAdapter<ArrayList<EmoPanel.EmoInfo>>(multiItem, R.layout.emo_pic_container) {
             @Override
-            protected void bind(@NonNull ViewHolder holder, @NonNull String s, final int position) {
-                holder.setText(R.id.name, "知乎大神 - " + position)
-                        .setText(R.id.comment, s);
-                holder.getView(R.id.btnDel).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        data.remove(position);
-                        commonAdapter.notifyItemRemoved(position);
-                        commonAdapter.notifyItemRangeChanged(position, data.size());
-                    }
-                });
+            protected void bind(@NonNull ViewHolder viewHolder, ArrayList<EmoPanel.EmoInfo> arrayList, int i) {
+                LinearLayout container = (LinearLayout) viewHolder.getConvertView();
+                container.removeAllViews();
+
+                //更新宽度
+                ViewGroup.LayoutParams params = container.getLayoutParams();
+                params.height = XPopupUtils.getScreenWidth(getContext())/5+20;
+                container.requestLayout();
+
+
+                //添加图片项目
+                for (EmoPanel.EmoInfo info : arrayList){
+                    ImageView view = new ImageView(getContext());
+                    LinearLayout.LayoutParams param =
+                            new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/5,XPopupUtils.getScreenWidth(getContext())/5);
+
+                    param.setMargins(XPopupUtils.getScreenWidth(getContext())/5/5,10,0,10);
+                    Glide.with(getContext())
+                            .load(new File(info.Path))
+                            .centerCrop()
+                            .into(view);
+                    container.addView(view,param);
+
+
+                }
+
             }
+
         };
+
         commonAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                dismissWith(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-                return false;
+            public void onItemClick(@NonNull View view, @NonNull RecyclerView.ViewHolder viewHolder, int i) {
             }
 
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                //不要直接这样做，会导致消失动画未执行完就跳转界面，不流畅。
-//                dismiss();
-//                getContext().startActivity(new Intent(getContext(), DemoActivity.class))
-                //可以等消失动画执行完毕再开启新界面
-                dismissWith(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
             }
         });
+
         recyclerView.setAdapter(commonAdapter);
+
+    }
+
+    private void updateShowPath(String path){
+        multiItem.clear();
+        data = EmoSearchAndCache.searchForEmo(path);
+        int Count = 0;
+        int PageCount = 0;
+        if (data != null){
+            Count = data.size();
+            PageCount = Count / 4 +1;
+        }
+        //
+        for (int i=0;i<PageCount ;i++){
+            ArrayList<EmoPanel.EmoInfo> itemInfo = new ArrayList<>();
+            multiItem.add(itemInfo);
+        }
+
+        for (int i=0;i<data.size();i++){
+            int NowPage = i / 4;
+            ArrayList<EmoPanel.EmoInfo> cacheItem = multiItem.get(NowPage);
+            cacheItem.add(data.get(i));
+        }
+        commonAdapter.notifyDataSetChanged();
+
     }
 
     //完全可见执行
     @Override
     protected void onShow() {
         super.onShow();
-        Log.e("tag", "知乎评论 onShow");
+
     }
 
     //完全消失执行
     @Override
     protected void onDismiss() {
-        Log.e("tag", "知乎评论 onDismiss");
+
     }
 
     @Override
@@ -106,8 +161,8 @@ public class EmoPanelView extends BottomPopupView {
         return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
     }
 
-//    @Override
-//    protected boolean onBackPressed() {
-//        Toast.makeText(getContext(), "拦截返回", Toast.LENGTH_SHORT).show();
-//        return true;
+    @Override
+    protected int getPopupHeight() {
+        return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
+    }
 }

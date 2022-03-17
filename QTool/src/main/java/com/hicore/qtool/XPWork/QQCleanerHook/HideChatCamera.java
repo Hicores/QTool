@@ -13,7 +13,6 @@ import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
 import com.hicore.qtool.EmoHelper.Hooker.HookInjectEmoTabView;
-import com.hicore.qtool.EmoHelper.Panel.EmoPaneAdapter;
 import com.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;

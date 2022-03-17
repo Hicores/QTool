@@ -15,4 +15,9 @@ public class EmoPanel {
         BasePopupView base = NewPop.asCustom(NewView);
         base.show();
     }
+    public static class EmoInfo{
+        public String Path;
+        public String Name;
+        public boolean IsGif;
+    }
 }

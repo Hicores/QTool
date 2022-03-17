@@ -5,4 +5,7 @@ import java.util.concurrent.Executors;
 
 public class SyncCore {
     private static ExecutorService syncThread = Executors.newFixedThreadPool(16);
+    public static void SyncCheckTask(String PathName){
+
+    }
 }
