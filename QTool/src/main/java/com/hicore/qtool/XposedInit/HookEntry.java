@@ -1,9 +1,14 @@
 package com.hicore.qtool.XposedInit;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
+
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.Utils.DataUtils;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.QQTools.ContUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +23,7 @@ import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
 
 public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     private static StartupParam cacheParam;
@@ -149,13 +155,24 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         try {
             ClassLoader loader = HookEntry.class.getClassLoader();
             Method m = loader.getClass().getDeclaredMethod("findClass", String.class);
-            XposedBridge.hookMethod(ClassLoader.class.getMethod("loadClass", String.class, boolean.class), new XC_MethodHook() {
+            XposedBridge.hookMethod(ClassLoader.class.getDeclaredMethod("loadClass", String.class, boolean.class), new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     String Name = (String) param.args[0];
                     if (Name.startsWith("hct.")){
+                        XposedBridge.log(Name);
                         Class<?> clz = (Class<?>) m.invoke(loader,Name);
                         if (clz != null)param.setResult(clz);
+                    }
+                }
+            });
+
+            XposedBridge.hookMethod(Fragment.class.getDeclaredMethod("instantiate", Context.class, String.class, Bundle.class), new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String Name = (String) param.args[1];
+                    if (Name.startsWith("hct.")){
+                        param.args[0] = ContUtil.getFixContext((Context) param.args[0]);
                     }
                 }
             });
