@@ -170,9 +170,6 @@ public class EmoPanelView extends BottomPopupView {
                             titleBarList.get(finalI).setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
                         });
                     });
-
-
-
                     break;
                 }
             }

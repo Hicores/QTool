@@ -15,6 +15,7 @@ import java.util.zip.ZipInputStream;
 import dalvik.system.InMemoryDexClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -26,8 +27,9 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             XposedBridge.log("[QTool]initZygote may not be invoke, please check your Xposed Framework!");
             return;
         }
-        XposedBridge.log("[QTool]Load from "+lpparam.processName);
 
+        XposedBridge.log("[QTool]Load from "+lpparam.processName);
+        FixRootClassLoader();
         FixSubLoadClass.loadZygote(cacheParam);
         FixSubLoadClass.loadPackage(lpparam);
         /*
@@ -140,6 +142,25 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         public static void loadZygote(StartupParam startupParam){
             HookEnv.ToolApkPath = startupParam.modulePath;
             EzXHelperInit.INSTANCE.initZygote(startupParam);
+        }
+    }
+    private static void FixRootClassLoader(){
+
+        try {
+            ClassLoader loader = HookEntry.class.getClassLoader();
+            Method m = loader.getClass().getDeclaredMethod("findClass", String.class);
+            XposedBridge.hookMethod(ClassLoader.class.getMethod("loadClass", String.class, boolean.class), new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String Name = (String) param.args[0];
+                    if (Name.startsWith("hct.")){
+                        Class<?> clz = (Class<?>) m.invoke(loader,Name);
+                        if (clz != null)param.setResult(clz);
+                    }
+                }
+            });
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
     }
 }
