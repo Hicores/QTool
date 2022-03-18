@@ -7,19 +7,23 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 import com.hicore.qtool.QQMessage.QQMessageUtils;
+import com.hicore.qtool.QQTools.QQServletHelper;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PluginMessageProcessor {
+    static HashMap<String,String> fileDLCache = new HashMap<>();
     private static ExecutorService executor = Executors.newSingleThreadExecutor();
     public static void onMessage(Object msg){
         onMessage0(msg);
@@ -113,6 +117,12 @@ public class PluginMessageProcessor {
                 data.FileUrl = MField.GetField(msg,"url",String.class);
                 data.FileName = MField.GetField(msg,"fileName",String.class);
                 data.FileSize = MField.GetField(msg,"fileSize",long.class);
+                QQServletHelper.GetFileDownUrl(msg, URL -> {
+                    fileDLCache.put(data.FileUrl,URL);
+                    data.FileUrl = URL;
+                    submit(()->PluginController.onMessage(early,data));
+                });
+                return;
             }else if (clzName.equals("MessageForReplyText")){
                 Object SourceInfo = MField.GetField(msg,"mSourceMsgInfo");
                 if(SourceInfo != null){
@@ -261,6 +271,9 @@ public class PluginMessageProcessor {
                 data.FileUrl = MField.GetField(msg,"url",String.class);
                 data.FileName = MField.GetField(msg,"fileName",String.class);
                 data.FileSize = MField.GetField(msg,"fileSize",long.class);
+                if (fileDLCache.containsKey(data.FileUrl)){
+                    data.FileUrl = fileDLCache.get(data.FileUrl);
+                }
             }else if (clzName.equals("MessageForReplyText")){
                 Object SourceInfo = MField.GetField(msg,"mSourceMsgInfo");
                 if(SourceInfo != null){
