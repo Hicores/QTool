@@ -6,6 +6,7 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 
@@ -159,6 +160,7 @@ public class QQMsgSendUtils {
         NewResult.msgType = TYPE_TEXT;
         NewResult.content = msg.substring(searchNext == 0 ? searchNext : searchNext +1 );
         elems.add(NewResult);
+        checkElement(elems);
 
         return elems;
     }
