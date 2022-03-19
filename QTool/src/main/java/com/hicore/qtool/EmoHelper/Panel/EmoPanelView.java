@@ -1,12 +1,15 @@
 package com.hicore.qtool.EmoHelper.Panel;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,17 +17,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.solver.Cache;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hicore.Utils.Utils;
+import com.hicore.qtool.EmoHelper.CloudSync.SyncCore;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQMessage.QQMsgBuilder;
 import com.hicore.qtool.QQMessage.QQMsgSender;
+import com.hicore.qtool.QQTools.ContUtil;
 import com.hicore.qtool.R;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.MultiItemTypeAdapter;
 import com.lxj.easyadapter.ViewHolder;
+import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
@@ -41,6 +48,8 @@ public class EmoPanelView extends BottomPopupView {
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
     HorizontalScrollView scView;
+
+    static int CacheScrollTop = 0;
 
 
     public EmoPanelView(@NonNull Context context) {
@@ -71,11 +80,29 @@ public class EmoPanelView extends BottomPopupView {
             titleBarList.add(view);
 
             view.setOnClickListener(v-> {
+                CacheScrollTop =0;
                 updateShowPath(name);
                 for (View otherItem : titleBarList){
                     otherItem.setBackgroundColor(Color.WHITE);
                 }
                 v.setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
+
+            });
+            view.setOnLongClickListener(v->{
+                EditText edName = new EditText(getContext());
+                edName.setText(name);
+
+                new AlertDialog.Builder(getContext(),3)
+                        .setTitle("输入名字")
+                        .setView(edName)
+                        .setNeutralButton("改名", (dialog, which) -> {
+                             new File(HookEnv.ExtraDataPath+"Pic/"+name).renameTo(new File(HookEnv.ExtraDataPath+"Pic/"+edName.getText().toString()));
+                             dismiss();
+                        }).setNegativeButton("上传", (dialog, which) -> {
+                             SyncCore.requestShare(getContext(),edName.getText().toString());
+                        }).show();
+
+                return true;
             });
         }
 
@@ -136,7 +163,6 @@ public class EmoPanelView extends BottomPopupView {
                         dismiss();
                     });
                 }
-                recyclerView.getScrollY();
             }
         };
 
@@ -151,8 +177,29 @@ public class EmoPanelView extends BottomPopupView {
             }
         });
         recyclerView.setAdapter(commonAdapter);
-
         FindNameToSelectID(SelectedName);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                //判断是当前layoutManager是否为LinearLayoutManager
+                // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取最后一个可见view的位置
+                    int lastItemPosition = linearManager.findLastVisibleItemPosition();
+                    //获取第一个可见view的位置
+                    int firstItemPosition = linearManager.findFirstVisibleItemPosition();
+                    CacheScrollTop = lastItemPosition;
+                }
+            }
+
+        });
+
+
+
+
     }
     private void FindNameToSelectID(String Name){
         ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
@@ -178,6 +225,8 @@ public class EmoPanelView extends BottomPopupView {
             updateShowPath(NameList.get(0));
             titleBarList.get(0).setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
         }
+
+
     }
 
     private void updateShowPath(String pathName){
@@ -202,6 +251,7 @@ public class EmoPanelView extends BottomPopupView {
         }
         commonAdapter.notifyDataSetChanged();
 
+        recyclerView.postDelayed(()-> recyclerView.scrollToPosition(CacheScrollTop),100);
         SelectedName = pathName;
     }
 

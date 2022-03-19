@@ -40,6 +40,17 @@ public class FileUtils {
             return null;
         }
     }
+    public static byte[] ReadFile(File f){
+        try{
+            FileInputStream fInp = new FileInputStream(f);
+            byte[] Content = DataUtils.readAllBytes(fInp);
+            fInp.close();
+            return Content;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
     public static String ReadFileString(String f){
         return ReadFileString(new File(f));
     }
