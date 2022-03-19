@@ -37,8 +37,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_below="@+id/titleBar">
             <LinearLayout
                 android:orientation="vertical"
@@ -70,7 +70,7 @@
                 <!--这里是可展开菜单内容-->
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/QQHelper"
                     android:layout_width="match_parent"
                     android:background="@drawable/menu_item_base"
@@ -109,7 +109,7 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/QQCleaner"
                     android:layout_width="match_parent"
                     android:background="@drawable/menu_item_base"
@@ -147,7 +147,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/GetNewVer"
                     android:layout_width="match_parent"
                     android:background="@drawable/menu_item_base"

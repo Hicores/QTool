@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -74,6 +76,43 @@ public class EmoPanel {
             });
             group.addView(button);
         }
+
+        Button btnCreate = mRoot.findViewById(R.id.createNew);
+        btnCreate.setOnClickListener(v->{
+            EditText edNew = new EditText(context);
+            new AlertDialog.Builder(context,3)
+                    .setTitle("创建新目录")
+                    .setView(edNew)
+                    .setNeutralButton("确定创建", (dialog, which) -> {
+                        String newName = edNew.getText().toString();
+                        if (TextUtils.isEmpty(newName)){
+                            Utils.ShowToastL("名字不能为空");
+                            return;
+                        }
+                        String newPath = HookEnv.ExtraDataPath+"Pic/"+newName;
+                        if (new File(newPath).exists()){
+                            Utils.ShowToastL("这个名字已经存在");
+                            return;
+                        }
+                        new File(newPath).mkdirs();
+                        ArrayList<String> NewList = EmoSearchAndCache.searchForPathList();
+                        group.removeAllViews();
+
+                        for(String ItemName :NewList){
+                            RadioButton button = new RadioButton(context);
+                            button.setText(ItemName);
+                            button.setTextSize(16);
+                            button.setTextColor(context.getResources().getColor(R.color.font_plugin,null));
+                            button.setOnCheckedChangeListener((vaa,ischeck)->{
+                                if (vaa.isPressed() && ischeck){
+                                    choiceName = ItemName;
+                                }
+                            });
+                            group.addView(button);
+                        }
+                    }).show();
+
+        });
 
         new AlertDialog.Builder(context,3)
                 .setTitle("是否保存")

@@ -27,6 +27,11 @@
             android:id="@+id/emo_pre_list_choser"/>
 
     </ScrollView>
+    <Button
+        android:id="@+id/createNew"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:text="新建项目"/>
 
 
 </LinearLayout>
