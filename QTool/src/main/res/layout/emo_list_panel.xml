@@ -20,6 +20,12 @@
             android:layout_height="wrap_content">
         </LinearLayout>
     </HorizontalScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="保存到本地"
+        android:visibility="gone"
+        android:id="@+id/SaveToLocal"/>
 
 
     <com.lxj.xpopup.widget.VerticalRecyclerView

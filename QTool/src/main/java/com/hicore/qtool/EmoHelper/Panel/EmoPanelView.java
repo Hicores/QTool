@@ -1,18 +1,22 @@
 package com.hicore.qtool.EmoHelper.Panel;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,9 +25,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hicore.Utils.FileUtils;
+import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.EmoHelper.CloudSync.SyncCore;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.JavaPlugin.ListForm.LocalPluginItemController;
 import com.hicore.qtool.QQMessage.QQMsgBuilder;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.QQTools.ContUtil;
@@ -33,11 +40,23 @@ import com.lxj.easyadapter.MultiItemTypeAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
+import com.lxj.xpopup.core.PositionPopupView;
+import com.lxj.xpopup.enums.PopupAnimation;
+import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class EmoPanelView extends BottomPopupView {
@@ -48,6 +67,9 @@ public class EmoPanelView extends BottomPopupView {
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
     HorizontalScrollView scView;
+    Button btnSaveToLocal;
+
+    ExecutorService savePool = Executors.newFixedThreadPool(16);
 
     static int CacheScrollTop = 0;
 
@@ -66,6 +88,50 @@ public class EmoPanelView extends BottomPopupView {
         super.onCreate();
         scView = findViewById(R.id.emo_title);
         LinearLayout PathBar = findViewById(R.id.PathBar);
+        btnSaveToLocal = findViewById(R.id.SaveToLocal);
+        btnSaveToLocal.setOnClickListener(v->{
+            EditText ed = new EditText(getContext());
+            new AlertDialog.Builder(getContext(),3)
+                    .setTitle("输入保存的名字")
+                    .setView(ed)
+                    .setNeutralButton("保存", (dialog, which) -> {
+                        String Name = ed.getText().toString();
+                        if (TextUtils.isEmpty(Name)){
+                            Utils.ShowToastL("名字不能为空");
+                            return;
+                        }
+                        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+                        mDialog.setTitle("正在保存..");
+                        mDialog.setMessage("正在保存图片[0/0]");
+                        mDialog.setCancelable(false);
+                        mDialog.show();
+                        new Thread(()->{
+                            try{
+                                String RootPath = HookEnv.ExtraDataPath+"Pic/"+Name+"/";
+                                AtomicInteger mLock = new AtomicInteger();
+                                for (EmoPanel.EmoInfo info : data){
+                                    mLock.getAndIncrement();
+                                    EmoOnlineLoader.submit2(info,()->{
+                                        mLock.getAndDecrement();
+                                        new Handler(Looper.getMainLooper()).post(()->mDialog.setMessage("正在保存图片["+ (data.size()-mLock.get()) +"/"+data.size()+"]"));
+                                        FileUtils.copy(info.Path,RootPath+info.MD5);
+                                    });
+                                }
+                                for(int iaa=0;iaa<60;iaa++){
+                                    if (mLock.get()==0)break;
+                                    Thread.sleep(1000);
+                                }
+                                Utils.ShowToastL("保存完成");
+                            }catch (Exception e){
+
+                            }finally {
+                                new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
+                            }
+                        }).start();
+
+
+                    }).show();
+        });
 
         ArrayList<String> barList = EmoSearchAndCache.searchForPathList();
         for(String name : barList){
@@ -113,6 +179,7 @@ public class EmoPanelView extends BottomPopupView {
         view.setTextSize(24);
         LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
+        view.setOnClickListener(v-> searchOnline());
         PathBar.addView(view,parans);
 
         int width = View.MeasureSpec.makeMeasureSpec(0,
@@ -196,13 +263,164 @@ public class EmoPanelView extends BottomPopupView {
             }
 
         });
+    }
+    private void searchOnline(){
+        PositionPopupView view = new PositionPopupView(getContext()){
+            @Override
+            protected int getImplLayoutId() {
+                return R.layout.emo_bundle_list;
+            }
+
+            @Override
+            protected void onCreate() {
+                super.onCreate();
+                LinearLayout mRoot = findViewById(R.id.Bundle_Content_List);
+                TextView text = new TextView(getContext());
+                text.setText("正在加载...");
+                mRoot.addView(text);
+
+                new Thread(()->{
+                    String Content = HttpUtils.getContent("https://qtool.haonb.cc/sharePic/getList");
+                    try {
+                        JSONObject json = new JSONObject(Content);
+                        new Handler(Looper.getMainLooper()).post(()->{
+                            mRoot.removeAllViews();
+                            try {
+                                JSONArray itemArr = json.getJSONArray("data");
+                                LinearLayout mChild = null;
+                                for(int i=0;i<itemArr.length();i++){
+                                    if (i % 4 == 0){
+                                        mChild = new LinearLayout(getContext());
+                                        mRoot.addView(mChild);
+                                    }
+                                    JSONObject bundleInfo = itemArr.getJSONObject(i);
+                                    String coverPath = "https://cdn.haonb.cc/"+bundleInfo.optString("cover");
+                                    String ID = bundleInfo.getString("id");
+                                    LinearLayout.LayoutParams paramab = new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/3, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    paramab.setMargins(0,10,0,10);
+
+                                    LinearLayout mItem = new LinearLayout(getContext());
+                                    mItem.setGravity(Gravity.LEFT);
+                                    mItem.setOrientation(LinearLayout.VERTICAL);
+                                    mChild.addView(mItem,paramab);
+
+                                    ImageView cover = new ImageView(getContext());
+                                    Glide.with(HookEnv.AppContext)
+                                            .load(new URL(coverPath))
+                                            .fitCenter()
+                                            .into(cover);
+
+                                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/4,XPopupUtils.getScreenWidth(getContext())/4);
+                                    param.setMargins(0,10,0,10);
+                                    mItem.addView(cover,param);
+
+                                    cover.setOnClickListener(v-> {
+                                        LoadForOnlinePicList(ID);
+                                        dismiss();
+                                    });
 
 
 
+                                    TextView title = new TextView(getContext());
+                                    title.setText(bundleInfo.getString("name"));
+                                    mItem.addView(title);
+                                    TextView size = new TextView(getContext());
+                                    size.setText("总大小:"+Utils.bytes2kb(bundleInfo.optLong("size")));
+                                    mItem.addView(size);
 
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+
+            @Override
+            protected int getPopupWidth() {
+                return XPopupUtils.getScreenHeight(getContext());
+            }
+            @Override
+            protected int getMaxHeight() {
+                return (int) (XPopupUtils.getScreenHeight(getContext()) * .4f);
+            }
+            @Override
+            protected int getPopupHeight() {
+                return (int) (XPopupUtils.getScreenHeight(getContext()) * .4f);
+            }
+
+        };
+        new XPopup.Builder(getContext())
+                .isDestroyOnDismiss(true)
+                .popupAnimation(PopupAnimation.TranslateFromTop)
+                .asCustom(view)
+                .show();
+    }
+    private void LoadForOnlinePicList(String ID){
+        Context context = getContext();
+        ProgressDialog dialog = new ProgressDialog(context,3);
+        dialog.setTitle("正在加载...");
+        dialog.setMessage("正在加载图片列表...");
+        dialog.setCancelable(false);
+        dialog.show();
+        new Thread(()->{
+            try{
+                String listData = HttpUtils.getContent("https://qtool.haonb.cc/sharePic/getItems?id="+ID);
+                JSONObject newJson = new JSONObject(listData);
+                JSONArray dataArr = newJson.getJSONArray("data");
+                new Handler(Looper.getMainLooper()).post(()->{
+                    try{
+                        data.clear();
+                        btnSaveToLocal.setVisibility(VISIBLE);
+                        for (int i=0;i<dataArr.length();i++){
+                            JSONObject item = dataArr.getJSONObject(i);
+                            EmoPanel.EmoInfo infoItem = new EmoPanel.EmoInfo();
+                            infoItem.type = 2;
+                            infoItem.URL = "https://cdn.haonb.cc/"+item.getString("uri");
+                            infoItem.MD5 = item.getString("md5");
+                            data.add(infoItem);
+                        }
+                        for (View otherItem : titleBarList)otherItem.setBackgroundColor(Color.WHITE);
+                        multiItem.clear();
+
+                        int Count = 0;
+                        int PageCount = 0;
+                        if (data != null){
+                            Count = data.size();
+                            PageCount = Count / 4 +1;
+                        }
+                        //
+                        for (int i=0;i<PageCount ;i++){
+                            ArrayList<EmoPanel.EmoInfo> itemInfo = new ArrayList<>();
+                            multiItem.add(itemInfo);
+                        }
+
+                        for (int i=0;i<data.size();i++){
+                            int NowPage = i / 4;
+                            ArrayList<EmoPanel.EmoInfo> cacheItem = multiItem.get(NowPage);
+                            cacheItem.add(data.get(i));
+                        }
+
+                        commonAdapter.notifyDataSetChanged();
+
+                    }catch (Exception e){
+                        Utils.ShowToastL("发生错误:"+e);
+                    }
+
+                });
+            }catch (Exception e){
+
+            }finally {
+                new Handler(Looper.getMainLooper()).post(()->dialog.dismiss());
+            }
+        }).start();
     }
     private void FindNameToSelectID(String Name){
         ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
+
         if (NameList.isEmpty())return;
         if (TextUtils.isEmpty(Name)){
             updateShowPath(NameList.get(0));
@@ -230,6 +448,7 @@ public class EmoPanelView extends BottomPopupView {
     }
 
     private void updateShowPath(String pathName){
+        btnSaveToLocal.setVisibility(GONE);
         multiItem.clear();
         data = EmoSearchAndCache.searchForEmo(pathName);
         int Count = 0;
