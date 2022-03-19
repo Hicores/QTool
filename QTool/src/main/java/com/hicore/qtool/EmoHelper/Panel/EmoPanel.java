@@ -54,7 +54,7 @@ public class EmoPanel {
         NewInfo.type = 2;
         NewInfo.MD5 = MD5.toUpperCase(Locale.ROOT);
         EmoOnlineLoader.submit(NewInfo,()->{
-            Glide.with(context)
+            Glide.with(HookEnv.AppContext)
                     .load(new File(NewInfo.Path))
                     .fitCenter()
                     .into(preView);

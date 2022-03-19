@@ -117,13 +117,13 @@ public class EmoPanelView extends BottomPopupView {
 
                     param.setMargins(XPopupUtils.getScreenWidth(getContext())/5/5,10,0,10);
                     if (info.type == 1){
-                        Glide.with(getContext())
+                        Glide.with(HookEnv.AppContext)
                                 .load(new File(info.Path))
                                 .fitCenter()
                                 .into(view);
                     }else if (info.type == 2){
                         EmoOnlineLoader.submit(info,()->{
-                            Glide.with(getContext())
+                            Glide.with(HookEnv.AppContext)
                                     .load(new File(info.Path))
                                     .fitCenter()
                                     .into(view);
