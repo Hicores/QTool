@@ -51,6 +51,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -63,7 +64,7 @@ public class EmoPanelView extends BottomPopupView {
     private static String SelectedName = "";
     private ArrayList<View> titleBarList = new ArrayList<>();
     VerticalRecyclerView recyclerView;
-    private ArrayList<EmoPanel.EmoInfo> data;
+    private ArrayList<EmoPanel.EmoInfo> data = new ArrayList<>();
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
     HorizontalScrollView scView;
@@ -216,18 +217,28 @@ public class EmoPanelView extends BottomPopupView {
                                 .fitCenter()
                                 .into(view);
                     }else if (info.type == 2){
-                        EmoOnlineLoader.submit(info,()->{
+                        try {
                             Glide.with(HookEnv.AppContext)
-                                    .load(new File(info.Path))
+                                    .load(new URL(info.URL))
                                     .fitCenter()
                                     .into(view);
-                        });
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     container.addView(view,param);
                     view.setOnClickListener(v->{
-                        QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
-                        dismiss();
+                        if (info.type == 2){
+                            EmoOnlineLoader.submit(info,()->{
+                                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                                dismiss();
+                            });
+                        }else {
+                            QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                            dismiss();
+                        }
+
                     });
                 }
             }
