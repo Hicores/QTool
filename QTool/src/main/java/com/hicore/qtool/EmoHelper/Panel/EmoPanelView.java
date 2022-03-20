@@ -166,7 +166,7 @@ public class EmoPanelView extends BottomPopupView {
                              new File(HookEnv.ExtraDataPath+"Pic/"+name).renameTo(new File(HookEnv.ExtraDataPath+"Pic/"+edName.getText().toString()));
                              dismiss();
                         }).setNegativeButton("上传", (dialog, which) -> {
-                             SyncCore.requestShare(getContext(),edName.getText().toString());
+                             SyncCore.requestShare(getContext(),edName.getText().toString(),name);
                         }).show();
 
                 return true;
