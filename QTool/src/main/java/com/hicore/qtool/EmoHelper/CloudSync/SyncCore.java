@@ -32,16 +32,16 @@ import java.util.concurrent.Executors;
 
 public class SyncCore {
     public static ExecutorService syncThread = Executors.newFixedThreadPool(16);
-    public static void requestShare(Context context,String Name){
+    public static void requestShare(Context context,String Name,String LocalName){
         String shareAlarm = "你决定上传名字为 "+Name+" 的表情包,上传期间不能进行其他操作,请耐心等待上传完成,过大的图片可能无法完成上传\n\n" +
                 "在上传完成后,你无法上传新的表情包,需要等待审核后才能上传新的,审核通过后表情包即可被他人看到\n\n请确认是否上传";
         Context fixContext = ContUtil.getFixContext(context);
         new XPopup.Builder(fixContext)
                 .asConfirm("确认上传", shareAlarm, () -> {
-                    CollectInfoAndUpload(fixContext, Name);
+                    CollectInfoAndUpload(fixContext, Name,LocalName);
                 }).show();
     }
-    private static void CollectInfoAndUpload(Context context,String Name){
+    private static void CollectInfoAndUpload(Context context,String Name,String LocalName){
         ProgressDialog dialog = new ProgressDialog(context,3);
         dialog.setTitle("正在处理...");
         dialog.setCancelable(false);
@@ -50,7 +50,7 @@ public class SyncCore {
             try{
                 new Handler(Looper.getMainLooper()).post(()->dialog.setMessage("正在收集信息.."));
                 ArrayList<String> fileList = new ArrayList<>();
-                File[] fs = new File(HookEnv.ExtraDataPath+"Pic/"+Name).listFiles();
+                File[] fs = new File(HookEnv.ExtraDataPath+"Pic/"+LocalName).listFiles();
                 if (fs == null){
                     Utils.ShowToastL("表情包目录为空？？");
                     return;
