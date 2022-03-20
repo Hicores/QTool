@@ -38,7 +38,7 @@ public class OpenSource  extends AppCompatActivity {
         createItem("beanshell@2.0b6","https://github.com/beanshell/beanshell",true);
         createItem("EzXHelper@0.7.2","https://github.com/KyuubiRan/EzXHelper",true);
         createItem("XPopup@2.7.6","https://github.com/li-xiaojun/XPopup",true);
-        createItem("GifView@1.4","https://github.com/Cutta/GifView",true);
+        createItem("glide@4.13.0","https://github.com/bumptech/glide",true);
         createItem("QAuxiliary(部分代码)","https://github.com/cinit/QAuxiliary",true);
     }
     private void createItem(String title,String url,boolean isOpen){
