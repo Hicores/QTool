@@ -378,11 +378,11 @@ public class EmoPanelView extends BottomPopupView {
             }
             @Override
             protected int getMaxHeight() {
-                return (int) (XPopupUtils.getScreenHeight(getContext()) * .4f);
+                return (int) (XPopupUtils.getScreenHeight(getContext()) * .8f);
             }
             @Override
             protected int getPopupHeight() {
-                return (int) (XPopupUtils.getScreenHeight(getContext()) * .4f);
+                return (int) (XPopupUtils.getScreenHeight(getContext()) * .8f);
             }
 
         };
