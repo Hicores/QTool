@@ -10,7 +10,7 @@ android {
         minSdk 26
         targetSdk 26
         versionCode 3
-        def defAppVer = "0.0.3"
+        def defAppVer = "0.0.4"
         if (System.getenv("KEYSTORE_PATH") != null){
             versionName "${defAppVer}-CI-${System.getenv("CommitNumber")}"
         }else {

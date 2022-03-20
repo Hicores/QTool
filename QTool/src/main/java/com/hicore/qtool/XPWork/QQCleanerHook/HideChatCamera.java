@@ -49,6 +49,7 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
                 new Handler(Looper.getMainLooper()).post(()->image.invalidate());
                 image.setOnClickListener(vxx-> EmoPanel.createShow(image.getContext()));
 
+
             }
         });
 
