@@ -216,12 +216,34 @@ public class EmoPanelView extends BottomPopupView {
                                 .load(new File(info.Path))
                                 .fitCenter()
                                 .into(view);
+
+                        view.setOnLongClickListener(v->{
+                            LinearLayout root = new LinearLayout(getContext());
+                            root.setGravity(Gravity.CENTER);
+                            LinearLayout.LayoutParams paramaaaa =
+                                    new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/2,XPopupUtils.getScreenWidth(getContext())/2);
+                            ImageView newView = new ImageView(getContext());
+                            root.addView(newView,paramaaaa);
+                            Glide.with(HookEnv.AppContext)
+                                    .load(new File(info.Path))
+                                    .fitCenter()
+                                    .into(newView);
+                            new AlertDialog.Builder(getContext(),3)
+                                    .setTitle("是否删除此图片")
+                                    .setView(root)
+                                    .setNeutralButton("删除", (dialog, which) -> {
+                                        new File(info.Path).delete();
+                                        FindNameToSelectID(SelectedName);
+                                    }).show();
+                            return true;
+                        });
                     }else if (info.type == 2){
                         try {
                             Glide.with(HookEnv.AppContext)
                                     .load(new URL(info.URL))
                                     .fitCenter()
                                     .into(view);
+                            view.setOnClickListener(null);
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
