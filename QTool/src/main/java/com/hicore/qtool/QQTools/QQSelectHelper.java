@@ -2,9 +2,7 @@ package com.hicore.qtool.QQTools;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -19,19 +17,15 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.hicore.LogUtils.LogUtils;
-import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.Utils.Utils;
-import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 import com.hicore.qtool.QQManager.QQGuildManager;
@@ -48,9 +42,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import de.robv.android.xposed.XposedBridge;
-
+/*
+显示QQ好友,群聊,频道选择界面,并回调数据
+ */
 public class QQSelectHelper {
 
     public interface onSelected{
@@ -324,7 +318,7 @@ public class QQSelectHelper {
 
             });
         }
-
+        //把头像画成圆的(似乎不起作用)
         private void drawRoundByShaderMode(Canvas canvas, Bitmap bitmap) {
             //获取到Bitmap的宽高
             int bitmapWidth = bitmap.getWidth();

@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.TextureView;
 
 import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.FileUtils;
@@ -22,8 +20,6 @@ import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQTools.ContUtil;
 import com.hicore.qtool.XposedInit.EnvHook;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnCancelListener;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;

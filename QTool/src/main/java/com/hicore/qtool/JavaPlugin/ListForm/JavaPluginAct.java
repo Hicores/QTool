@@ -2,7 +2,6 @@ package com.hicore.qtool.JavaPlugin.ListForm;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import androidx.annotation.Nullable;
 import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
-import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.R;
 
 import org.json.JSONArray;
@@ -26,9 +24,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
-
+/*
+显示脚本项目的Activity
+ */
 public class JavaPluginAct extends Activity {
     private LinearLayout itemLayout;
     public static void startActivity(Activity host){
@@ -71,6 +70,7 @@ public class JavaPluginAct extends Activity {
                 });
 
     }
+    //扫描本地脚本并显示
     private void searchForLocal(){
         HashMap<String,String> saveIDCheck = new HashMap();
         StringBuilder saveAlarm = new StringBuilder();
@@ -115,6 +115,7 @@ public class JavaPluginAct extends Activity {
             }
         });
     }
+    //扫描在线脚本并显示
     private void searchForOnline(){
         ProgressBar bar = new ProgressBar(this);
         itemLayout.removeAllViews();

@@ -1,12 +1,8 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
-import android.graphics.Color;
-import android.text.TextUtils;
-
 import com.hicore.HookItem;
 import com.hicore.Utils.FileUtils;
 import com.hicore.qtool.HookEnv;
-import com.hicore.qtool.JavaPlugin.ListForm.LocalPluginItemController;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.io.File;
@@ -30,6 +26,7 @@ public class AutoLoad extends BaseHookItem {
             for (String Id : AutoLoadIDs){
                 PluginInfo Path = searchPathByID(Id);
                 if (Path == null){
+                    //如果插件不存在则从自动加载列表中移除
                     PluginSetController.SetAutoLoad(Id,false);
                 }else {
                     PluginController.LoadOnce(Path);
@@ -48,6 +45,7 @@ public class AutoLoad extends BaseHookItem {
     public boolean check() {
         return false;
     }
+    //通过插件ID在文件中扫描插件文件目录
     private PluginInfo searchPathByID(String ID){
         File[] searchResult = new File(HookEnv.ExtraDataPath+"/Plugin").listFiles();
         if (searchResult != null){

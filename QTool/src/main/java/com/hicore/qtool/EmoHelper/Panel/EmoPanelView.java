@@ -392,6 +392,7 @@ public class EmoPanelView extends BottomPopupView {
                 .asCustom(view)
                 .show();
     }
+
     private void LoadForOnlinePicList(String ID){
         Context context = getContext();
         ProgressDialog dialog = new ProgressDialog(context,3);

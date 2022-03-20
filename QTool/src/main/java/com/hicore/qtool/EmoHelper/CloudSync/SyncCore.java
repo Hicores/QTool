@@ -1,12 +1,10 @@
 package com.hicore.qtool.EmoHelper.CloudSync;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.EditText;
 
 import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.FileUtils;
@@ -16,7 +14,6 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQTools.ContUtil;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 import org.json.JSONObject;
 
@@ -25,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,6 +44,7 @@ public class SyncCore {
         dialog.show();
         new Thread(()->{
             try{
+                //扫描需要上传的文件
                 new Handler(Looper.getMainLooper()).post(()->dialog.setMessage("正在收集信息.."));
                 ArrayList<String> fileList = new ArrayList<>();
                 File[] fs = new File(HookEnv.ExtraDataPath+"Pic/"+LocalName).listFiles();
@@ -75,6 +72,7 @@ public class SyncCore {
                     return;
                 }
 
+                //执行图片上传,每一张图都是单独的post,如果有一张失败也会直接结束,需要每一张都上传完成
                 String ID = json.getString("id");
                 new Handler(Looper.getMainLooper()).post(()->dialog.setMessage("正在上传图片..."));
                 URL = "https://qtool.haonb.cc/PicSync/Upload";
@@ -91,7 +89,8 @@ public class SyncCore {
                     out.flush();
                     out.close();
                     InputStream ins = connection.getInputStream();
-                    DataUtils.readAllBytes(ins);
+                    DataUtils.readAllBytes(ins);//这里是有返回值的,但是懒得判断了,直接忽略
+
                     ins.close();
                 }
                 new Handler(Looper.getMainLooper()).post(()->dialog.setMessage("正在分享图集..."));
@@ -104,7 +103,7 @@ public class SyncCore {
             }catch (Exception e){
                 Utils.ShowToastL("发生错误:\n"+ Log.getStackTraceString(e));
             }finally {
-                new Handler(Looper.getMainLooper()).post(()->dialog.dismiss());
+                new Handler(Looper.getMainLooper()).post(dialog::dismiss);
             }
         }).start();
 

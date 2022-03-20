@@ -1,21 +1,15 @@
 package com.hicore.qtool.XPWork.QQCleanerHook;
 
-import android.util.Log;
-
 import com.hicore.HookItem;
-import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
-import com.hicore.qtool.QQManager.QQGroupUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import java.lang.reflect.Method;
-
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(ID = "HideSignTip",mainItemID = 2,itemName = "隐藏打卡提示",itemType = 1)

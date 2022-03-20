@@ -15,7 +15,9 @@ import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-
+/*
+   挂钩QQ图片消息长按菜单的获取,以及点击事件
+ */
 @HookItem(isDelayInit = true,isRunInAllProc = false)
 public class HookHandlerPicLongClick extends BaseHookItem {
     @Override

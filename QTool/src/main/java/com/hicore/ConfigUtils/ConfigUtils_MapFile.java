@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class ConfigUtils_MapFile {
-    private static HashMap<String, MappedByteBuffer> bufferCache = new HashMap<>();
+    private static final HashMap<String, MappedByteBuffer> bufferCache = new HashMap<>();
     public static synchronized String ReadFile(String ItemName){
         try{
             MappedByteBuffer buffer = bufferCache.get(ItemName);
@@ -52,7 +52,7 @@ public class ConfigUtils_MapFile {
             buffer.clear();
             buffer.put(Content.getBytes(StandardCharsets.UTF_8));
             buffer.put((byte) 0);
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 }

@@ -6,7 +6,6 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 
@@ -34,6 +33,13 @@ public class QQMsgSendUtils {
     public static void sendText(String GroupUin, String UserUin, String Text, ArrayList atList){
         QQMsgSender.sendText(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),Text,atList);
     }
+    /*
+    解析并发送结构化图文消息
+    支持注入[PicUrl=图片地址]
+    [AtQQ=QQ号] 0为全体成员
+    [Mute=0]为全体禁言
+    [UnMute=0]为全体解禁
+     */
     public static void decodeAndSendMsg(String GroupUin,String UserUin,String Message){
         try{
             ArrayList<DecodeResult> msgDec = decodeForResult(Message);
@@ -93,6 +99,7 @@ public class QQMsgSendUtils {
         QQMsgSender.sendMix(Session,mixed);
     }
     private static ArrayList<DecodeResult> decodeForResult(String msg){
+        //TODO 解析Mute和UnMute为个人QQ和全体禁言解禁
         int searchPos = 0;
         int searchNext = 0;
         int lastSearchEnd = -1;

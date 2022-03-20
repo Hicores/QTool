@@ -38,6 +38,7 @@ import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+//主菜单界面绘制
 public class MainMenu extends Activity {
     private static final String TAG = "MainActivityProxy01";
     private static Bitmap map = null;
@@ -56,6 +57,7 @@ public class MainMenu extends Activity {
         }
 
     }
+    //创建所有通过UIItem注解创建的菜单项目
     private void createItems(){
         HashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
         LinearLayout QQHelper_Bar = findViewById(R.id.HideBar_QQHelper);
@@ -103,6 +105,7 @@ public class MainMenu extends Activity {
         RegisterAnim(findViewById(R.id.QQCleaner),QQCleaner_Bar);
 
     }
+    //注册菜单展开收起动画
     private void RegisterAnim(View clickView,View animAA){
         int MaxHeight = InitMeasure(animAA);
         AtomicBoolean IsExpanded = new AtomicBoolean(false);

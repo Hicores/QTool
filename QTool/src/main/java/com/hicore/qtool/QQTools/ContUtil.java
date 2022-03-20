@@ -2,11 +2,9 @@ package com.hicore.qtool.QQTools;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.hicore.ReflectUtils.XPBridge;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 
 public class ContUtil {
@@ -62,9 +60,11 @@ public class ContUtil {
             mFixLoader = new FixResClassLoader(base.getClassLoader());
         }
     }
+    //获得注入了ClassLoader的Context,使其能加载模块中的类
     public static Context getFixContext(Context context){
         return new FixContext(context);
     }
+    //获得注入了ClassLoader的LayoutInflater,使其能加载模块中的类界面
     public static LayoutInflater getContextInflater(Context context){
         try{
             Context fixContext = new FixContext(context);

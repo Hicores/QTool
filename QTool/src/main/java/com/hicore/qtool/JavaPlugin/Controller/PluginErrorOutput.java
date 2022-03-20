@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class PluginErrorOutput {
+    //输出错误信息到对应的插件目录中
     public static synchronized void Print(String RootPath,String Msg){
         try{
             File f = new File(RootPath,"error_track.txt");

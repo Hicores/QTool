@@ -21,11 +21,11 @@ public class LogOutputFile {
 
     public static int Current_LEVEL = LEVEL_DEBUG;
     private BufferedWriter writer;
-    private String LogPath;
-    private AtomicInteger ErrCount = new AtomicInteger(-1);
+    private final String LogPath;
+    private final AtomicInteger ErrCount = new AtomicInteger(-1);
 
 
-    private static HashMap<Integer,LogOutputFile> instance = new HashMap<>();
+    private static final HashMap<Integer,LogOutputFile> instance = new HashMap<>();
     static {
         //初始化日志保存的目录
         if (!new File(HookEnv.ExtraDataPath + "Log/").exists()) new File(HookEnv.ExtraDataPath + "Log/").mkdirs();

@@ -3,8 +3,8 @@ package com.hicore.qtool.JavaPlugin.Controller;
 import android.app.Activity;
 
 import com.hicore.Utils.Utils;
-import com.hicore.qtool.QQManager.QQGroupManager;
 import com.hicore.qtool.QQManager.QQEnvUtils;
+import com.hicore.qtool.QQManager.QQGroupManager;
 import com.hicore.qtool.QQManager.QQTicketManager;
 import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.QQMessage.QQMsgSendUtils;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
+//插件Api直接导出方法
 public class PluginMethod {
 
     private PluginInfo info_;

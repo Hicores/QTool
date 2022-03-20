@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MField;
+import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.qtool.HookEnv;
 
 import java.text.DecimalFormat;

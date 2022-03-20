@@ -5,12 +5,8 @@ import android.util.Log;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
-import com.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +33,7 @@ public class HookLoader {
     private static HashMap<String,BaseHookItem> cacheHookInst = new HashMap<>();
     private static HashMap<String,BaseUiItem> cacheUiItem = new HashMap<>();
 
+    //获取被注解的类,并通过newInstance进行加载,所以需要动态加载的Hook对象一定要是public的,不能是其他属性
     public static void SearchAndLoadAllHook(){
         try {
             ClassLoader mLoader = HookLoader.class.getClassLoader();
@@ -128,7 +125,7 @@ public class HookLoader {
             LogUtils.fetal_error(TAG,"Can't search and load hook:\n"+ Log.getStackTraceString(e));
         }
     }
-
+    //初始化一次UI数据,这样在模块刚启动时就能加载需要开关的Hook了
     public static void InitUIHookInstance(){
         HashSet<UiInfo> uiInfos = HookLoader.getUiInfos();
         for (UiInfo NewInfo : uiInfos){
@@ -138,6 +135,7 @@ public class HookLoader {
             }
         }
     }
+    //延迟Hook
     public static void CallAllDelayHook(){
         if (HookEnv.IsMainProcess){
             for (String clzName : runOnMainProc){
@@ -178,6 +176,7 @@ public class HookLoader {
             }
         }
     }
+    //获取所有的Ui信息,以供显示在主菜单界面
     public static HashSet<UiInfo> getUiInfos(){
         try{
             ClassLoader mLoader = HookLoader.class.getClassLoader();
@@ -189,6 +188,7 @@ public class HookLoader {
         }
 
     }
+    //通过类名扫描得到其对应的UI信息
     public static BaseUiItem searchForUiInstance(String clzName){
         if (cacheUiItem.containsKey(clzName))return cacheUiItem.get(clzName);
         if (cacheHookInst.containsKey(clzName)){
@@ -214,6 +214,7 @@ public class HookLoader {
             }
         }
     }
+    //扫码所有被注解的HookItem类并调用其获取其状态
     public static ArrayList<CheckResult> CheckForItemsStatus(){
         ArrayList<CheckResult> result = new ArrayList<>();
         for (String clzName : cacheHookInst.keySet()){
@@ -236,6 +237,7 @@ public class HookLoader {
         }
         return result;
     }
+    //插到指定的HookItem类并尝试进行加载,一般用于主菜单界面从未打开到打开进行动态挂钩
     public static void CallHookStart(String ClzName){
         BaseHookItem item = cacheHookInst.get(ClzName);
         if (item != null){

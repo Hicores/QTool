@@ -9,7 +9,9 @@ import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-
+/*
+注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
+ */
 @UIItem(itemName = "分类表情栏",itemType = 1,mainItemID = 1,ID = "EmoHelper")
 @HookItem(isDelayInit = true,isRunInAllProc = false)
 public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {

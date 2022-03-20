@@ -8,11 +8,12 @@ import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
-
+/*
+挂钩判断聊天窗口显示/隐藏事件
+ */
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 public class ChatFragmentLifeHook extends BaseHookItem {
     @Override

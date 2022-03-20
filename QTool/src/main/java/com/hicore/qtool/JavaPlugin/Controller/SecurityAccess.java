@@ -1,18 +1,16 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 
-import org.json.JSONObject;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+//插件权限请求窗口,主要是skey等身份
 public class SecurityAccess {
     public static boolean checkAccess(String Token,String RequestText){
         long AccessExpiredTime = HookEnv.Config.getLong("Security_Access",Token,0);

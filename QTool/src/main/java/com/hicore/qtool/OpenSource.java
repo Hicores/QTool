@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hicore.Utils.Utils;
@@ -35,13 +34,13 @@ public class OpenSource  extends AppCompatActivity {
         );
         mLists = findViewById(R.id.OpenSourceList);
 
-        createItem("beanshell@2.0b6","https://github.com/beanshell/beanshell",true);
-        createItem("EzXHelper@0.7.2","https://github.com/KyuubiRan/EzXHelper",true);
-        createItem("XPopup@2.7.6","https://github.com/li-xiaojun/XPopup",true);
-        createItem("glide@4.13.0","https://github.com/bumptech/glide",true);
-        createItem("QAuxiliary(部分代码)","https://github.com/cinit/QAuxiliary",true);
+        createItem("beanshell@2.0b6","https://github.com/beanshell/beanshell");
+        createItem("EzXHelper@0.7.2","https://github.com/KyuubiRan/EzXHelper");
+        createItem("XPopup@2.7.6","https://github.com/li-xiaojun/XPopup");
+        createItem("glide@4.13.0","https://github.com/bumptech/glide");
+        createItem("QAuxiliary(部分代码)","https://github.com/cinit/QAuxiliary");
     }
-    private void createItem(String title,String url,boolean isOpen){
+    private void createItem(String title, String url){
 
         View vItem = getLayoutInflater().inflate(R.layout.open_source_item,null);
 
@@ -51,13 +50,11 @@ public class OpenSource  extends AppCompatActivity {
         TextView urlView = vItem.findViewById(R.id.open_url);
         urlView.setText(url);
 
-        if (isOpen){
-            vItem.setOnClickListener(v->{
-                Uri u = Uri.parse(url);
-                Intent in = new Intent(Intent.ACTION_VIEW,u);
-                startActivity(in);
-            });
-        }
+        vItem.setOnClickListener(v->{
+            Uri u = Uri.parse(url);
+            Intent in = new Intent(Intent.ACTION_VIEW,u);
+            startActivity(in);
+        });
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,Utils.dip2px(this,30), 0,0);
         params.height = Utils.dip2px(this,90);

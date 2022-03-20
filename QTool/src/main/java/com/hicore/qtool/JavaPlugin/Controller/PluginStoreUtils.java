@@ -1,6 +1,5 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
-import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.FileUtils;
 import com.hicore.qtool.HookEnv;
 

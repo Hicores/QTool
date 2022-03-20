@@ -2,13 +2,11 @@ package com.hicore.qtool.QQTools;
 
 import android.os.Bundle;
 
-import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.Classes;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 
 import java.util.UUID;
@@ -16,6 +14,7 @@ import java.util.UUID;
 import de.robv.android.xposed.XposedBridge;
 
 
+//发送QQServlet请求包并截获返回数据
 public class QQServletHelper {
     public interface FileGetCallback{
         void OnGetUrl(String URL);

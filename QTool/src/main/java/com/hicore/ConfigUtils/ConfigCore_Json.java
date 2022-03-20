@@ -7,21 +7,14 @@ import com.hicore.Utils.DataUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import de.robv.android.xposed.XposedBridge;
 
 public class ConfigCore_Json implements ConfigCore{
     /*
     采用JSON的方式来储存信息,由于是多读少写的情况,应该不会有多大的性能损失
      */
-
     @Override
     public void removeKey(String PathName, String Key) {
         try{
@@ -29,7 +22,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             MapJson.remove(Key);
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 
@@ -39,7 +32,7 @@ public class ConfigCore_Json implements ConfigCore{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             return MapJson.optBoolean(Key,Def);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return Def;
         }
     }
@@ -51,7 +44,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             MapJson.put(Key,Value);
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 
@@ -61,7 +54,7 @@ public class ConfigCore_Json implements ConfigCore{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             return MapJson.optString(Key,Def);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return Def;
         }
     }
@@ -73,7 +66,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             MapJson.put(Key,Value);
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
 
     }
@@ -84,7 +77,7 @@ public class ConfigCore_Json implements ConfigCore{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             return MapJson.optInt(Key,Def);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return Def;
         }
     }
@@ -96,7 +89,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             MapJson.put(Key,Value);
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
 
     }
@@ -107,7 +100,7 @@ public class ConfigCore_Json implements ConfigCore{
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             return MapJson.optLong(Key,Def);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return Def;
         }
     }
@@ -119,7 +112,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             MapJson.put(Key,Value);
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 
@@ -134,7 +127,7 @@ public class ConfigCore_Json implements ConfigCore{
             for (int i=0;i<Data.length();i++)newArr.add(Data.getString(i));
 
             return newArr;
-        }catch (Exception e){
+        }catch (Exception ignored){
             return isCreate ? new ArrayList<>() :null;
         }
     }
@@ -150,7 +143,7 @@ public class ConfigCore_Json implements ConfigCore{
             MapJson.put(Key,NewArr);
 
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 
@@ -161,7 +154,7 @@ public class ConfigCore_Json implements ConfigCore{
             JSONObject MapJson = TextUtils.isEmpty(PathData) ? new JSONObject() : new JSONObject(PathData);
             String Data = MapJson.optString(Key);
             return DataUtils.HexToByteArray(Data);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return new byte[0];
         }
     }
@@ -174,7 +167,7 @@ public class ConfigCore_Json implements ConfigCore{
 
             MapJson.put(Key,DataUtils.ByteArrayToHex(Value));
             ConfigUtils_MapFile.WriteFile(PathName,MapJson.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
         }
     }
 
@@ -189,7 +182,7 @@ public class ConfigCore_Json implements ConfigCore{
                 keys.add(its.next());
             }
             return keys.toArray(new String[0]);
-        }catch (Exception e){
+        }catch (Exception ignored){
             return new String[0];
         }
     }

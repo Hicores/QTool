@@ -16,7 +16,9 @@ import com.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
-
+/*
+Hook注入QQ的设置界面添加一个选项
+ */
 @HookItem(isRunInAllProc = false,isDelayInit = false)
 public class EntryHook extends BaseHookItem {
     private static final String TAG = "EntryHook";

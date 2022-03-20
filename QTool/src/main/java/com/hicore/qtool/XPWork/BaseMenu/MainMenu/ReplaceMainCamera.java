@@ -6,7 +6,7 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
-
+//(未实装)替换首页的相机按钮为QTool设置按钮
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 public class ReplaceMainCamera extends BaseHookItem {
     private static final String TAG = "ReplaceMainCamera";

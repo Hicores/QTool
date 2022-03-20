@@ -1,13 +1,12 @@
 package com.hicore.qtool.XposedInit;
 
-import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.qtool.HookEnv;
-
+//获取QQ的版本号信息
 public class HostInfo {
     private static final String TAG = "HostInfo";
     private static String Version;

@@ -2,7 +2,6 @@ package com.hicore.qtool.JavaPlugin.ListForm;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;

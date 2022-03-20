@@ -30,6 +30,7 @@ public class ExtraPathInit {
         if (!pathFile.exists())pathFile.mkdirs();
         if (pathFile.exists()){
             HookEnv.ExtraDataPath = pathFile.getAbsolutePath() + File.separatorChar;
+            //创建标记文件防止模块数据目录里的图片被索引
             try {
                 new File(HookEnv.ExtraDataPath + ".nomedia").createNewFile();
             } catch (IOException e) {
@@ -54,7 +55,7 @@ public class ExtraPathInit {
 
         TextView desc = new TextView(act);
         desc.setText("你需要确定一个存储路径用来存储模块配置/缓存/资源等数据,请在下面确认你需要使用的存储路径");
-        desc.setTextColor(Color.BLUE);
+        desc.setTextColor(Color.BLACK);
         desc.setTextSize(16);
         mRoot.addView(desc);
 
@@ -114,6 +115,7 @@ public class ExtraPathInit {
         if (Path.endsWith("/"))Path = Path.substring(0,Path.length()-1);
         new File(Path).mkdirs();
         if (!CheckPermission(Path)){
+            //如果没有存储权限则尝试请求一次外部文件存储权限
             if (ContextCompat.checkSelfPermission(mAct,"android.permission.WRITE_EXTERNAL_STORAGE")== PackageManager.PERMISSION_DENIED){
                 mAct.requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"},0);
             }
@@ -123,6 +125,7 @@ public class ExtraPathInit {
         GlobalConfig.Put_String("StorePath",Path);
         dismissDialog.dismiss();
     }
+    //通过创建文件判断目录是否有存储权限
     public static boolean CheckPermission(String Path){
         File check = new File(Path,".PermissionCheck");
         if (check.exists())check.delete();

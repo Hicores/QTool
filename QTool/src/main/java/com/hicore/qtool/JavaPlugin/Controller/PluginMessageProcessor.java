@@ -1,13 +1,11 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
@@ -31,6 +29,7 @@ public class PluginMessageProcessor {
     public static void submit(Runnable run){
         executor.submit(run);
     }
+    //解析消息并封装成插件可用的消息对象
     private static void onMessage0(Object msg){
         PluginInfo.EarlyInfo early = decodeEarly(msg);
         try{
@@ -138,6 +137,7 @@ public class PluginMessageProcessor {
         }
 
     }
+    //解析出消息中的发送者和群聊等信息
     private static PluginInfo.EarlyInfo decodeEarly(Object msg){
         PluginInfo.EarlyInfo info = new PluginInfo.EarlyInfo();
         try{
@@ -178,16 +178,20 @@ public class PluginMessageProcessor {
             return null;
         }
     }
+    //禁言事件
     public static void onMuteEvent(String GroupUin,String UserUin,String OPUin,long time){
         PluginController.checkAndInvoke(GroupUin,"OnTroopEvent",GroupUin,UserUin,OPUin,time);
     }
+    //退群事件
     public static void onExitEvent(String GroupUin,String UserUin,String OPUin){
         PluginController.checkAndInvoke(GroupUin,"OnTroopEvent",GroupUin,UserUin,1);
         PluginController.checkAndInvoke(GroupUin,"onMemberExit",GroupUin,UserUin,TextUtils.isEmpty(OPUin) ? 1:2,OPUin);
     }
+    //加群事件
     public static void onJoinEvent(String GroupUin,String UserUin,String Invitor,String AcceptOPUin){
         PluginController.checkAndInvoke(GroupUin,"OnTroopEvent",GroupUin,UserUin,2);
     }
+    //撤回事件
     public static void onRevoke(Object msg,String OPUin){
         PluginInfo.EarlyInfo early = decodeEarly(msg);
         try{
@@ -290,6 +294,7 @@ public class PluginMessageProcessor {
             LogUtils.error("MessageDecoder1","Can't decode msg:\n"+ e+"("+msg.getClass().getName()+")");
         }
     }
+    //(未实装)请求加群
     public static void onRequestJoin(String GroupUin,String UserUin,String Invitor,String source,String ans,String raw_ans,Object callback){
         PluginInfo.RequestInfo requestInfo = new PluginInfo.RequestInfo();
         requestInfo.RequestSource = source;

@@ -4,15 +4,13 @@ import static com.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
 import android.content.Context;
-
 import android.util.Log;
 
-
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
-import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.LogUtils.LogUtils;
-import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.ReflectUtils.ResUtils;
+import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -79,7 +77,7 @@ public class EnvHook {
     private static void InitAppCenter(){
         try {
             if (!HookEnv.IsMainProcess)return;
-            AppCenter.start((Application) HookEnv.Application, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
+            AppCenter.start(HookEnv.Application, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
                     Analytics.class, Crashes.class);
             new Thread(()->{
                 try {
@@ -102,6 +100,7 @@ public class EnvHook {
         }
 
     }
+    //在QQ完成一些初步的环境初始化后才开始执行一些代码
     private static void HookForDelay(){
         if (HookEnv.IsMainProcess){
             XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"),"doStep"),param -> {

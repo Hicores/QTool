@@ -5,19 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
-import com.hicore.LogUtils.LogUtils;
-import com.hicore.Utils.DataUtils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQTools.ContUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import dalvik.system.InMemoryDexClassLoader;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;

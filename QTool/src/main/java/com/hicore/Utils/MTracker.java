@@ -1,16 +1,6 @@
 package com.hicore.Utils;
 
-import android.os.Build;
-
-import com.hicore.Utils.DataUtils;
-import com.hicore.Utils.HttpUtils;
-import com.hicore.qtool.QQManager.QQEnvUtils;
-import com.hicore.qtool.XposedInit.HostInfo;
-
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 
 import de.robv.android.xposed.XposedBridge;
 

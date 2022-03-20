@@ -1,8 +1,6 @@
 package com.hicore.qtool.EmoHelper.Hooker;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.hicore.HookItem;
 import com.hicore.ReflectUtils.MClass;
@@ -19,6 +17,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+   挂钩QQ混合消息长按菜单的获取,以及点击事件
+ */
 @HookItem(isRunInAllProc = false,isDelayInit = true)
 public class HookForMixedMsgLongClick extends BaseHookItem {
 
@@ -52,7 +53,7 @@ public class HookForMixedMsgLongClick extends BaseHookItem {
                 }
                 if (MD5.size() == 0){
                     Utils.ShowToastL("没有图片");
-                } else if (MD5.size() == 1){
+                } else if (MD5.size() == 1){//如果为单张图片则直接显示了
                     String url = "http://gchat.qpic.cn/gchatpic_new/0/0-0-"+MD5.get(0)+"/0?term=2";
                     EmoPanel.PreSavePicToList(url,MD5.get(0),mContext);
                 }else {

@@ -1,15 +1,8 @@
 package com.hicore.Utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-
 import android.graphics.Rect;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.view.Display;
 import android.view.View;
 
 public class BitmapUtils {

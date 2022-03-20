@@ -2,7 +2,6 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.util.Log;
 
-import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;
@@ -22,12 +21,18 @@ import java.util.concurrent.Future;
 import bsh.BshMethod;
 import bsh.Interpreter;
 import bsh.NameSpace;
-import bsh.StringUtil;
 
 public class PluginController {
     private static HashMap<String,PluginInfo> runningInfo = new HashMap<>();
 
-
+    //脚本菜单信息
+    public static class ItemInfo{
+        public int itemType;
+        public String ItemName;
+        public String ItemID;
+        public String CallbackName;
+    }
+    //添加一个菜单项目到脚本信息中
     public static String AddItem(String PluginVerifyID,String ItemName,String Callback,int type){
         PluginInfo info =runningInfo.get(PluginVerifyID);
         if (info!= null){
@@ -42,18 +47,21 @@ public class PluginController {
         }
         return null;
     }
+    //添加一个菜单显示回调到脚本运行环境中
     public static void setItemClickFunctionName(String PluginVerifyID,String Callback){
         PluginInfo info =runningInfo.get(PluginVerifyID);
         if (info!= null){
             info.ItemClickFunctionName = Callback;
         }
     }
+    //移除一个脚本菜单项目
     public static void RemoveItem(String PluginVerifyID,String ItemID){
         PluginInfo info =runningInfo.get(PluginVerifyID);
         if (info!= null){
             info.ItemFunctions.remove(ItemID);
         }
     }
+    //这里负责处理被脚本使用 load 加载的项目
     public static void loadExtra(String PluginVerifyID,String path){
         File f = new File(path);
         if (!f.exists()){
@@ -67,12 +75,7 @@ public class PluginController {
             throw new RuntimeException("load "+path+" error",e);
         }
     }
-    public static class ItemInfo{
-        public int itemType;
-        public String ItemName;
-        public String ItemID;
-        public String CallbackName;
-    }
+    //通过脚本ID判断脚本是否正在运行
     public static boolean IsRunning(String PluginID){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -80,6 +83,7 @@ public class PluginController {
         }
         return false;
     }
+    //通过脚本ID判断脚本是否加载中
     public static boolean IsLoading(String PluginID){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -87,6 +91,7 @@ public class PluginController {
         }
         return false;
     }
+    //在脚本环境中扫描指定脚本ID的插件信息
     public static PluginInfo SearchInfoFromID(String PluginID){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -94,6 +99,7 @@ public class PluginController {
         }
         return null;
     }
+    //插件被从脚本列表点击加载时调用的方法进行加载
     public static boolean LoadOnce(PluginInfo info){
         try{
             if (IsRunning(info.PluginID)){
@@ -127,6 +133,7 @@ public class PluginController {
             return false;
         }
     }
+    //实时更新脚本使用群聊黑白名单的状态
     public static void reportToUpdateList(String PluginID, Boolean IsBlack, ArrayList<String> list){
         PluginInfo info = SearchInfoFromID(PluginID);
         if (info != null){
@@ -140,6 +147,7 @@ public class PluginController {
 
         }
     }
+    //安全地调用脚本onUnload来终止插件
     public static void endPlugin(String PluginID){
         PluginInfo Info = SearchInfoFromID(PluginID);
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -156,9 +164,16 @@ public class PluginController {
                 e.printStackTrace();
             }
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         forceEnd(Info);
 
     }
+    //最后清扫脚本,直接清空脚本运行环境
+    //如果这时脚本还在线程在运行,会直接抛出异常被终止
     private static void forceEnd(PluginInfo info){
         if (info != null){
             info.IsRunning = false;
@@ -167,9 +182,12 @@ public class PluginController {
         }
 
     }
+    //这里负责清理脚本不支持的泛型和注解
     private static String checkAndRemoveNode(String Content){
+        //TODO 这里需要添加内容清理脚本中的 @xxx 注解和 <>括号
         return Content;
     }
+    //脚本环境首次初始化,注册对脚本开放的接口
     private static void LoadFirst(PluginInfo info) throws Exception {
         NameSpace space = info.Instance.getNameSpace();
         PluginMethod env = new PluginMethod(info);
@@ -233,6 +251,7 @@ public class PluginController {
         space.setMethod("HandleRequest",new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class),env));
 
     }
+    //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息
     public static void LoadInner(String FileContent,String LocalPath,String BandVerifyID) throws Exception {
         String LoadContent = checkAndRemoveNode(FileContent);
         PluginInfo info = runningInfo.get(BandVerifyID);
@@ -246,6 +265,7 @@ public class PluginController {
 
         instance.eval(LoadContent,LocalPath);
     }
+    //判断该脚本是否有权利被调用回调
     public static void checkAndInvoke(String GroupUin,String MethodName,Object... param){
         for(String VerifyID : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(VerifyID);
@@ -263,6 +283,7 @@ public class PluginController {
         }
 
     }
+    //真正调用脚本中指定名字的回调
     private static void InvokeToPlugin(Interpreter Instance,String MethodName, Object... param){
         try {
             NameSpace space = Instance.getNameSpace();
@@ -287,12 +308,14 @@ public class PluginController {
             throw new RuntimeException(th);
         }
     }
+    //在收到消息时调用对应的回调
     public static void onMessage(PluginInfo.EarlyInfo early, PluginInfo.MessageData data) {
         checkAndInvoke(early.GroupUin, "Callback_OnRawMsg", data.msg);
         if (data.MessageType != 0) {
             checkAndInvoke(early.GroupUin, "onMsg", data);
         }
     }
+    //获取某一个群聊中可以被显示的菜单信息
     public static HashMap<String,PluginInfo> checkHasAvailMenu(String Uin,boolean isTroop){
         HashMap<String,PluginInfo> avail = new HashMap<>();
         for(String key : runningInfo.keySet()){
@@ -305,6 +328,7 @@ public class PluginController {
         }
         return avail;
     }
+    //调用菜单预加载回调
     public static void InvokeToPreCheckItem(Object Session,String Name,PluginInfo info){
         if (Session != null){
             String GroupUin = QQSessionUtils.getGroupUin();
@@ -328,6 +352,7 @@ public class PluginController {
             }
         }
     }
+    //传递菜单点击事件
     public static void InvokeToPluginItem(Object Session,String Name,PluginInfo info){
         if (Session != null){
             String GroupUin = QQSessionUtils.getGroupUin(Session);

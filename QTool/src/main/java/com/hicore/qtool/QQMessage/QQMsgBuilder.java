@@ -10,7 +10,6 @@ import com.hicore.ReflectUtils.MMethod;
 import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.NameUtils;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.XposedInit.HostInfo;

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import com.hicore.qtool.HookEnv;
 
 public class GlobalConfig {
-    private static String TAG = "QTool";
+    private static final String TAG = "QTool";
     public static void Put_String(String Name,String Value){
         SharedPreferences share = HookEnv.AppContext.getSharedPreferences(TAG,0);
         SharedPreferences.Editor editor = share.edit();

@@ -3,10 +3,7 @@ package com.hicore.qtool.JavaPlugin.InChatControl;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
@@ -16,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,7 +24,6 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.Controller.PluginController;
 import com.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import com.hicore.qtool.QQManager.QQEnvUtils;
-import com.hicore.qtool.QQManager.QQGroupManager;
 import com.hicore.qtool.QQManager.QQGroupUtils;
 import com.hicore.qtool.QQManager.QQGuildManager;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
@@ -42,7 +37,9 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+/*
+显示脚本菜单项目
+ */
 public class FloatWindowControl {
     static Activity cacheAct;
     static WindowManager manager;
@@ -281,6 +278,8 @@ public class FloatWindowControl {
                 LinearLayout mList = findViewById(R.id.plugin_menu_list);
                 TextView sub_groupuin = findViewById(R.id.sub_groupuin);
                 String sub_title = "当前";
+
+                //从SessionInfo中获取当前的聊天窗口信息并显示,防止有时混群发送的问题
                 int type = QQSessionUtils.getSessionID(Session);
                 if (type == 1){
 
