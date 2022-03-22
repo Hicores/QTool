@@ -1,5 +1,6 @@
 package com.hicore.qtool.XPWork.BaseMenu.MainMenu;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +25,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.util.Util;
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.Utils.BitmapUtils;
@@ -57,6 +61,42 @@ public class MainMenu extends Activity {
         }
 
     }
+    @SuppressLint("ResourceType")
+    private View getCreateItem(HookLoader.UiInfo info){
+        if (info.type == 1){
+            Switch NewSwitch = new Switch(this);
+            NewSwitch.setTextColor(Color.BLACK);
+            NewSwitch.setText(info.title);
+            NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",info.ID,false));
+            NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                HookEnv.Config.setBoolean("Main_Switch",info.ID,isChecked);
+                info.UIInstance.SwitchChange(isChecked);
+            });
+            return NewSwitch;
+        }else if (info.type == 2){
+            RelativeLayout relativeLayout = new RelativeLayout(this);
+            TextView text = new TextView(this);
+            text.setTextColor(Color.BLACK);
+            text.setText(info.title);
+            text.setOnClickListener(v-> info.UIInstance.ListItemClick());
+            text.setGravity(Gravity.TOP | Gravity.LEFT);
+            text.setId(56668);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            relativeLayout.addView(text,params);
+
+            TextView rightClick = new TextView(this);
+            rightClick.setText(">");
+            rightClick.setTextColor(Color.BLACK);
+            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            relativeLayout.addView(rightClick,params);
+
+
+            return relativeLayout;
+        }
+        return null;
+    }
     //创建所有通过UIItem注解创建的菜单项目
     private void createItems(){
         HashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
@@ -65,17 +105,10 @@ public class MainMenu extends Activity {
             item.UIInstance = HookLoader.searchForUiInstance(item.ClzName);
             if (item.UIInstance != null){
                 if (item.Position == 1){
-                    Switch NewSwitch = new Switch(this);
-                    NewSwitch.setTextColor(Color.BLACK);
-                    NewSwitch.setText(item.title);
-                    NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
-                    NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        HookEnv.Config.setBoolean("Main_Switch",item.ID,isChecked);
-                        item.UIInstance.SwitchChange(isChecked);
-                    });
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    View mAdd = getCreateItem(item);
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dip2px(this,24));
                     param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
-                    QQHelper_Bar.addView(NewSwitch,param);
+                    QQHelper_Bar.addView(mAdd,param);
                 }
             }
 
@@ -87,17 +120,10 @@ public class MainMenu extends Activity {
             item.UIInstance = HookLoader.searchForUiInstance(item.ClzName);
             if (item.UIInstance != null){
                 if (item.Position == 2){
-                    Switch NewSwitch = new Switch(this);
-                    NewSwitch.setTextColor(Color.BLACK);
-                    NewSwitch.setText(item.title);
-                    NewSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch",item.ID,false));
-                    NewSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        HookEnv.Config.setBoolean("Main_Switch",item.ID,isChecked);
-                        item.UIInstance.SwitchChange(isChecked);
-                    });
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    View mAdd = getCreateItem(item);
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Utils.dip2px(this,24));
                     param.setMargins(Utils.dip2px(this,20),10,Utils.dip2px(this,10),10);
-                    QQCleaner_Bar.addView(NewSwitch,param);
+                    QQCleaner_Bar.addView(mAdd,param);
                 }
             }
 
