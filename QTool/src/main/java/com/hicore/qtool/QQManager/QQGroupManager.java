@@ -62,7 +62,7 @@ public class QQGroupManager {
             return;
         }
         try{
-            Object TroopGagManager = MMethod.CallMethod(QQEnvUtils.getAppRuntime(),"getBusinessHandler",
+            Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getBusinessHandler",
                     MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"TROOP_GAG_HANDLER"));
             if (TextUtils.isEmpty(UserUin)){
