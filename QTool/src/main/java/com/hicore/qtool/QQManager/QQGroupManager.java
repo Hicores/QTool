@@ -62,12 +62,16 @@ public class QQGroupManager {
             return;
         }
         try{
-            Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getBusinessHandler",
-                    MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"TROOP_GAG_HANDLER"));
+
             if (TextUtils.isEmpty(UserUin)){
+                Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getBusinessHandler",
+                        MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
+                        MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"),"TROOP_GAG_HANDLER"));
                 MMethod.CallMethodParams(TroopGagManager,"a",void.class, GroupUin,time);
             }else {
+                Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
+                        MClass.loadClass("mqq.manager.Manager"),
+                        MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_GAG_MANAGER"));
                 MMethod.CallMethodParams(TroopGagManager,"a",boolean.class, GroupUin,UserUin,time);
             }
         }catch (Exception e){
