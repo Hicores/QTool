@@ -3,6 +3,8 @@ package com.hicore.qtool.JavaPlugin.Controller;
 import android.util.Log;
 
 import com.hicore.ReflectUtils.MClass;
+import com.hicore.ReflectUtils.MField;
+import com.hicore.ReflectUtils.MMethod;
 import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.NameUtils;
 import com.hicore.Utils.Utils;
@@ -10,6 +12,7 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
+import com.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -281,10 +284,28 @@ public class PluginController {
                 }
             }
         }
+    }
+    //判断该脚本是否有权利被调用回调
+    public static Object checkAndInvokeNotNull(String GroupUin,String MethodName,Object... param){
+        for(String VerifyID : runningInfo.keySet()){
+            PluginInfo info = runningInfo.get(VerifyID);
+            if (info.IsRunning && !info.IsLoading){
+                if (info.IsAvailable(GroupUin)){
+                    try{
+                        Object ret = InvokeToPlugin(info.Instance,MethodName,param);
+                        if (ret != null)return ret;
+                    }catch (RuntimeException runtime){
+                        Throwable cause = runtime.getCause();
+                        PluginErrorOutput.Print(info.LocalPath, Log.getStackTraceString(cause));
+                    }
 
+                }
+            }
+        }
+        return null;
     }
     //真正调用脚本中指定名字的回调
-    private static void InvokeToPlugin(Interpreter Instance,String MethodName, Object... param){
+    private static Object InvokeToPlugin(Interpreter Instance,String MethodName, Object... param){
         try {
             NameSpace space = Instance.getNameSpace();
             Class<?>[] clz = new Class[param.length];
@@ -298,12 +319,13 @@ public class PluginController {
                         for (int i=0;i<param.length;i++){
                             if (!MClass.CheckClass(params[i],clz[i])) continue Loop;
                         }
-                        method.invoke(param,Instance);
-                        return;
+
+                        return method.invoke(param,Instance);
                     }
                 }
 
             }
+            return null;
         }catch (Throwable th){
             throw new RuntimeException(th);
         }
@@ -372,6 +394,34 @@ public class PluginController {
             }catch (Exception e){
                 Utils.ShowToast("调用到 "+Name+" 时发生错误");
                 PluginErrorOutput.Print(info.LocalPath,"脚本 "+info.PluginName+" 回调 "+Name+" 执行过程中发生错误:\n"+Log.getStackTraceString(e));
+            }
+        }
+    }
+    public static void WaitForgetMsgInvoke(Object msg){
+        String clzName = msg.getClass().getName();
+        if (clzName.contains("MessageForText") || clzName.contains("MessageForLongTextMsg")){
+            try {
+                String msgContain = MField.GetField(msg,"msg",String.class);
+                int istroop = MField.GetField(msg,"istroop",int.class);
+                if (istroop == 1){
+                    String friendUin = MField.GetField(msg,"frienduin",String.class);
+                    Object change = checkAndInvokeNotNull(friendUin,"getMsg",msgContain,friendUin,1);
+                    if (change instanceof String){
+                        String textChange = (String) change;
+                        MField.SetField(msg,"msg",textChange);
+                        MMethod.CallMethodNoParam(msg,"prewrite",void.class);
+                    }
+                }else if (istroop == 0 || istroop == 1000){
+                    String friendUin = MField.GetField(msg,"frienduin",String.class);
+                    Object change = checkAndInvokeNotNull("","getMsg",msgContain,friendUin,1);
+                    if (change instanceof String){
+                        String textChange = (String) change;
+                        MField.SetField(msg,"msg",textChange);
+                        MMethod.CallMethodNoParam(msg,"prewrite",void.class);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
