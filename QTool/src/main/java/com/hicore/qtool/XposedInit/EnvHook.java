@@ -13,6 +13,7 @@ import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.qtool.BuildConfig;
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.XPWork.DebugSetInject.DebugSetHook;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -60,6 +61,8 @@ public class EnvHook {
                         HostInfo.Init();
                         InitActivityProxy();
                         //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
+                        new DebugSetHook().startHook();
+
                         HookLoader.SearchAndLoadAllHook();
                     }
                 }finally {

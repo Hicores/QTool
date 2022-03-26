@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 /*
 在QQ的辅助功能中注入QTool调试按钮
  */
-@HookItem(isDelayInit = false,isRunInAllProc = false)
 @SuppressLint("ResourceType")
 public class DebugSetHook extends BaseHookItem {
     private static final String TAG = "DEBUG_SET_INJECT_HOOK";
