@@ -29,6 +29,7 @@ public class FileUploadRename extends BaseHookItem implements BaseUiItem {
     public boolean startHook() throws Throwable {
         Method hookMethod = getMethod();
         XPBridge.HookBefore(hookMethod,param -> {
+            if (!IsEnable)return;
             String path = (String) param.args[0];
             if (path.toLowerCase(Locale.ROOT).endsWith("/base.apk")){
                 String Name = GetPackageInfo(path);

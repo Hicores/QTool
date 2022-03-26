@@ -20,6 +20,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class QQMsgSender {
+    public static void sendFileByPath(String Path,String TroopUin){
+        try {
+            Object Engine = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.filemanager.app.FileManagerEngine"),HookEnv.AppInterface);
+            MMethod.CallMethodParams(Engine,"a",boolean.class,Path,TroopUin,(long)0,0);
+
+        } catch (Exception e) {
+            LogUtils.error("sendFileByPath",e);
+        }
+    }
     public static void sendText(Object _Session, String text, ArrayList atList){
         try {
             Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade","a",void.class,new Class[]{

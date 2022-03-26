@@ -47,15 +47,21 @@ public class MClass {
         if (clz.isAssignableFrom(convert))return true;
         return false;
     }
-    private static Class<?> hasType(Class<?> clz){
-        try{
-            Field f = clz.getDeclaredField("TYPE");
-            if (f.getType().equals(Class.class)){
-                return (Class<?>) f.get(null);
-            }
+    private static Class<?> hasType(Class<?> clz) {
+        try {
+
+            if (clz.equals(Boolean.class))return boolean.class;
+            if (clz.equals(Integer.class))return int.class;
+            if (clz.equals(Long.class))return long.class;
+            if (clz.equals(Byte.class))return byte.class;
+            if (clz.equals(Short.class))return short.class;
+            if (clz.equals(Float.class))return float.class;
+            if (clz.equals(Double.class))return double.class;
+            if (clz.equals(Character.class))return char.class;
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
 }
