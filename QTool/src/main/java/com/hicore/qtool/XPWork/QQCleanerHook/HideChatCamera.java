@@ -40,17 +40,6 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
                     v.setVisibility(View.GONE);
                 }
             }
-
-            if (HookInjectEmoTabView.IsEnable){
-                ImageView image = new ImageView(v.getContext());
-                image.setImageResource(R.drawable.huaji);
-                image.setTag(123456);
-                l.addView(image,4,v.getLayoutParams());
-                new Handler(Looper.getMainLooper()).post(()->image.invalidate());
-                image.setOnClickListener(vxx-> EmoPanel.createShow(image.getContext()));
-
-
-            }
         });
 
         //Fuck Reporter
