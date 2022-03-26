@@ -35,10 +35,10 @@ public class UiFixItem extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         for (TypeElement element : set){
             String clzData = "package com.hicore.qtool.XposedInit.ItemLoader;\n" +
-                    "import java.util.HashSet;\n" +
+                    "import java.util.LinkedHashSet;\n" +
                     "\n" +
                     "public class UiItemInfo{\n" +
-                    "\tpublic static HashSet<HookLoader.UiInfo> UiInfos = new HashSet<>();\n" +
+                    "\tpublic static LinkedHashSet<HookLoader.UiInfo> UiInfos = new LinkedHashSet<>();\n" +
                     "\tprivate static void addUiInfo(int type,String UiName,String UiDesc,int Pos,String ClassName,String ID,boolean IsCheckDef){\n" +
                     "\t\tHookLoader.UiInfo NewInfo = new HookLoader.UiInfo();\n" +
                     "\t\tNewInfo.type = type;\n" +
@@ -50,7 +50,7 @@ public class UiFixItem extends AbstractProcessor {
                     "\t\tNewInfo.IsCheckDef = IsCheckDef;\n" +
                     "\t\tUiInfos.add(NewInfo);\n" +
                     "\t}\n" +
-                    "\tpublic static HashSet<HookLoader.UiInfo> getUiInfos(){\n" +
+                    "\tpublic static LinkedHashSet<HookLoader.UiInfo> getUiInfos(){\n" +
                     "\t\tUiInfos.clear();\n" +
                     "\t\t!!!这里存放初始化代码!!!\n" +
                     "\t\treturn UiInfos;\n" +

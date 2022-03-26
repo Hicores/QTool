@@ -10,6 +10,10 @@ import com.hicore.qtool.HookEnv;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+
+import de.robv.android.xposed.XposedBridge;
 
 public class HookLoader {
     public static class UiInfo{
@@ -31,7 +35,7 @@ public class HookLoader {
     private static ArrayList<String> runOnMainProc;
 
     private static HashMap<String,BaseHookItem> cacheHookInst = new HashMap<>();
-    private static HashMap<String,BaseUiItem> cacheUiItem = new HashMap<>();
+    private static LinkedHashMap<String,BaseUiItem> cacheUiItem = new LinkedHashMap<>();
 
     //获取被注解的类,并通过newInstance进行加载,所以需要动态加载的Hook对象一定要是public的,不能是其他属性
     public static void SearchAndLoadAllHook(){
@@ -127,7 +131,7 @@ public class HookLoader {
     }
     //初始化一次UI数据,这样在模块刚启动时就能加载需要开关的Hook了
     public static void InitUIHookInstance(){
-        HashSet<UiInfo> uiInfos = HookLoader.getUiInfos();
+        LinkedHashSet<UiInfo> uiInfos = HookLoader.getUiInfos();
         for (UiInfo NewInfo : uiInfos){
             NewInfo.UIInstance = searchForUiInstance(NewInfo.ClzName);
             if (NewInfo.UIInstance != null){
@@ -177,14 +181,15 @@ public class HookLoader {
         }
     }
     //获取所有的Ui信息,以供显示在主菜单界面
-    public static HashSet<UiInfo> getUiInfos(){
+    public static LinkedHashSet<UiInfo> getUiInfos(){
         try{
             ClassLoader mLoader = HookLoader.class.getClassLoader();
             Class findClz = mLoader.loadClass("com.hicore.qtool.XposedInit.ItemLoader.UiItemInfo");
-            HashSet<UiInfo> NewUiList = MMethod.CallMethod(null,findClz,"getUiInfos",HashSet.class,new Class[0]);
+            LinkedHashSet<UiInfo> NewUiList = MMethod.CallMethod(null,findClz,"getUiInfos",LinkedHashSet.class,new Class[0]);
             return NewUiList;
         }catch (Exception e){
-            return new HashSet<>();
+            XposedBridge.log(e);
+            return new LinkedHashSet<>();
         }
 
     }

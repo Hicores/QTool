@@ -40,6 +40,7 @@ import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //主菜单界面绘制
@@ -98,7 +99,7 @@ public class MainMenu extends Activity {
     }
     //创建所有通过UIItem注解创建的菜单项目
     private void createItems(){
-        HashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
+        LinkedHashSet<HookLoader.UiInfo> uiInfos = HookLoader.getUiInfos();
         LinearLayout QQHelper_Bar = findViewById(R.id.HideBar_QQHelper);
         for(HookLoader.UiInfo item : uiInfos){
             item.UIInstance = HookLoader.searchForUiInstance(item.ClzName);
