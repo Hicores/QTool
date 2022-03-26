@@ -92,7 +92,6 @@ public class MainMenu extends Activity {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             relativeLayout.addView(rightClick,params);
 
-
             return relativeLayout;
         }
         return null;
@@ -126,7 +125,6 @@ public class MainMenu extends Activity {
                     QQCleaner_Bar.addView(mAdd,param);
                 }
             }
-
         }
         RegisterAnim(findViewById(R.id.QQCleaner),QQCleaner_Bar);
 

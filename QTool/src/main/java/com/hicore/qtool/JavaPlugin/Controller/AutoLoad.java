@@ -43,7 +43,7 @@ public class AutoLoad extends BaseHookItem {
 
     @Override
     public boolean check() {
-        return false;
+        return true;
     }
     //通过插件ID在文件中扫描插件文件目录
     private PluginInfo searchPathByID(String ID){

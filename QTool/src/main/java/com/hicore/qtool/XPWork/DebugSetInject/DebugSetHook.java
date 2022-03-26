@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hicore.ConfigUtils.GlobalConfig;
@@ -49,7 +50,9 @@ public class DebugSetHook extends BaseHookItem {
             LinearLayout parent = (LinearLayout) oneItem.getParent();
             parent.addView(FormItemUtils.createSingleItem(context,"QTool基础设置", v->{
                 Dialog fullScreen = new Dialog(context,3);
+                ScrollView view = new ScrollView(context);
                 LinearLayout mRoot = new LinearLayout(context);
+                view.addView(mRoot);
                 mRoot.setOrientation(LinearLayout.VERTICAL);
                 mRoot.setBackgroundColor(Color.WHITE);
 
@@ -88,7 +91,7 @@ public class DebugSetHook extends BaseHookItem {
                 hookInfo.setTextColor(Color.BLACK);
                 mRoot.addView(hookInfo,getMarginParam());
 
-                fullScreen.setContentView(mRoot);
+                fullScreen.setContentView(view);
                 fullScreen.show();
             }),-1);
         });
@@ -119,10 +122,11 @@ public class DebugSetHook extends BaseHookItem {
     public String getClassReport(){
         StringBuilder builder = new StringBuilder();
         for (HookLoader.CheckResult result: HookLoader.CheckForItemsStatus()){
-            builder.append(result.Name).append("->开启:").append(result.IsEnable).append("  ,可用:").append(result.IsAvailable).append(" ,已加载:").append(result.IsLoaded).append("\n");
+            builder.append(result.Name).append("\n").append("开启:").append(result.IsEnable).append("  ,可用:").append(result.IsAvailable).append(" ,已加载:").append(result.IsLoaded).append("\n");
             if (!TextUtils.isEmpty(result.ErrorInfo)){
                 builder.append("报告异常信息:\n").append(result.ErrorInfo).append("\n-------------------------\n");
             }
+            builder.append("\n");
         }
         return builder.toString();
     }
