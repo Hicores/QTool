@@ -167,7 +167,7 @@ public class QQMsgSender {
             LogUtils.error("sendVideo",e);
         }
     }
-    public static void sendFile(Object _Session,Object fileRecord){
+    public static void repeatFile(Object _Session,Object fileRecord){
         try{
             Object Instance = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"),"a",MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"));
             MMethod.CallMethodParams(Instance,"a",void.class,fileRecord,HookEnv.AppInterface,0,_Session);
