@@ -37,7 +37,7 @@ public class QQGroupUtils {
             Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
                     MClass.loadClass("mqq.manager.Manager"),
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
-            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin,UserUin);
+            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"),GroupUin,UserUin);
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();

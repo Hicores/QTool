@@ -109,7 +109,7 @@ public class QQManagerApiChecker extends BaseHookItem {
                     MClass.loadClass("mqq.manager.Manager"),
                     MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
 
-            Method m = MMethod.FindMethod(TroopManager.getClass(),"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),
+            Method m = MMethod.FindMethod(TroopManager.getClass(),"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"),
                     new Class[]{String.class,String.class});
             return TroopManager != null && m != null;
         }catch (Exception e){
