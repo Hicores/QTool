@@ -28,7 +28,7 @@ public class EmoSearchAndCache {
             });
 
             for (File f : fs){
-                if (f.isFile() && !f.getName().contains(".")){
+                if (f.isFile() && !f.getName().endsWith(".bak")){
                     EmoPanel.EmoInfo newInfo = new EmoPanel.EmoInfo();
                     newInfo.type = 1;
                     newInfo.Name = f.getName();
