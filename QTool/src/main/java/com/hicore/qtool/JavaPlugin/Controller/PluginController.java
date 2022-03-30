@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import bsh.BshMethod;
 import bsh.Interpreter;
 import bsh.NameSpace;
+import bsh.Primitive;
 
 public class PluginController {
     private static HashMap<String,PluginInfo> runningInfo = new HashMap<>();
@@ -293,6 +294,10 @@ public class PluginController {
                 if (info.IsAvailable(GroupUin)){
                     try{
                         Object ret = InvokeToPlugin(info.Instance,MethodName,param);
+                        if (ret instanceof Primitive){
+                            Primitive primitive = (Primitive) ret;
+                            if (primitive.getValue() == null)return null;
+                        }
                         if (ret != null)return ret;
                     }catch (RuntimeException runtime){
                         Throwable cause = runtime.getCause();
