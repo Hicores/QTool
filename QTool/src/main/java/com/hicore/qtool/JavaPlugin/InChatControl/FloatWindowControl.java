@@ -197,7 +197,7 @@ public class FloatWindowControl {
                         HookEnv.Config.setInt("Window_Position","Plugin_Button_y",sParams.y);
                         HookEnv.Config.setInt("Window_Position","Plugin_Button_x",sParams.x);
                         new Handler(Looper.getMainLooper()).postDelayed(()->actionClick.getAndSet(true),200);
-                        new Handler(Looper.getMainLooper()).postDelayed(FloatWindowControl::StickToSize,80);
+                        //new Handler(Looper.getMainLooper()).postDelayed(FloatWindowControl::StickToSize,80);
 
                         requestTimer();
                         break;
