@@ -29,6 +29,7 @@ import java.util.Locale;
 
 public class EmoPanel {
     public static void createShow(Context context){
+        ResUtils.StartInject(context);
         Context fixContext = ContUtil.getFixContext(context);
         EmoPanelView NewView = new EmoPanelView(fixContext);
 
