@@ -1,5 +1,6 @@
 package com.hicore.ReflectUtils;
 
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -7,7 +8,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
 public class XPBridge {
-    public static void HookBefore(Method m,BeforeHook before){
+    public static void HookBefore(Member m,BeforeHook before){
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -15,7 +16,7 @@ public class XPBridge {
             }
         });
     }
-    public static void HookAfter(Method m,AfterHook after){
+    public static void HookAfter(Member m, AfterHook after){
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -23,7 +24,7 @@ public class XPBridge {
             }
         });
     }
-    public static void HookBeforeOnce(Method m,BeforeHook before){
+    public static void HookBeforeOnce(Member m,BeforeHook before){
         AtomicReference<XC_MethodHook.Unhook> cacheUnHook = new AtomicReference<>();
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
@@ -36,7 +37,7 @@ public class XPBridge {
             }
         }));
     }
-    public static void HookAfterOnce(Method m,AfterHook after){
+    public static void HookAfterOnce(Member m,AfterHook after){
         AtomicReference<XC_MethodHook.Unhook> cacheUnHook = new AtomicReference<>();
         cacheUnHook.set(XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
