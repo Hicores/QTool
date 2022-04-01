@@ -91,6 +91,7 @@ public class FloatWindowControl {
 
                 InitImageButton(act);
                 manager.addView(mPluginButton,getParam(act));
+
                 IsAdd.getAndSet(true);
 
                 cacheAct = act;
@@ -135,6 +136,10 @@ public class FloatWindowControl {
     private static void InitImageButton(Context context){
         mPluginButton = new ImageView(context);
         mPluginButton.setImageResource(R.drawable.plugin_btn);
+        mPluginButton.setAdjustViewBounds(true);
+        mPluginButton.setMaxHeight(Utils.dip2px(context,32));
+        mPluginButton.setMaxWidth(Utils.dip2px(context,32));
+
         mPluginButton.setOnClickListener(v->{
             if (actionClick.get())
             {
