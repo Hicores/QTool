@@ -10,6 +10,7 @@ import com.hicore.qtool.R;
 public class ResUtils {
     public static void StartInject(Context ctx){
         try{
+            if (ctx == null)return;
             try{
                 ctx.getResources().getString(R.string.TestResInject);
             }catch (Exception e){
