@@ -144,4 +144,18 @@ public class MMethod {
             super(message);
         }
     }
+    public static Method FindFirstMethod(Class clz,Class ReturnType,Class[] ParamTYPE){
+        Lopp:
+        for(Method method : clz.getDeclaredMethods()){
+            if(method.getParameterCount()==ParamTYPE.length){
+                Class[] params = method.getParameterTypes();
+                for(int i=0;i<method.getParameterCount();i++){
+                    if(!params[i].equals(ParamTYPE[i]))continue Lopp;
+                }
+
+                if(method.getReturnType().equals(ReturnType))return method;
+            }
+        }
+        return null;
+    }
 }

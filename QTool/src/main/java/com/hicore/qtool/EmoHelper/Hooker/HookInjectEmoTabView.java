@@ -4,8 +4,10 @@ package com.hicore.qtool.EmoHelper.Hooker;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -21,7 +23,6 @@ import com.hicore.UIItem;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import com.hicore.qtool.R;
-import com.hicore.qtool.XPWork.QQCleanerHook.HideChatCamera;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -30,6 +31,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
@@ -115,28 +119,45 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
         });
 
         XPBridge.HookAfter(m[5],param -> {
-            new Handler(Looper.getMainLooper())
-                    .postDelayed(()->{
-                        try{
-                            View XEdit = MField.GetFirstField(param.thisObject,MClass.loadClass("com.tencent.widget.XEditTextEx"));
-                            ViewGroup parentLayout = (ViewGroup) XEdit.getParent();
-                            for (int i=0;i<parentLayout.getChildCount();i++){
-                                View v = parentLayout.getChildAt(i);
-                                CharSequence content = v.getContentDescription();
-                                if (content != null && content.toString().contains("拉起表情面板")){
-                                    v.setOnLongClickListener((a)->{
-                                        EmoPanel.createShow(v.getContext());
-                                        return true;
-                                    });
+            if (IsEnable){
+                new Handler(Looper.getMainLooper())
+                        .postDelayed(()->{
+                            try{
+                                View XEdit = MField.GetFirstField(param.thisObject,MClass.loadClass("com.tencent.widget.XEditTextEx"));
+                                ViewGroup parentLayout = (ViewGroup) XEdit.getParent();
+                                for (int i=0;i<parentLayout.getChildCount();i++){
+                                    View v = parentLayout.getChildAt(i);
+                                    CharSequence content = v.getContentDescription();
+                                    if (content != null && content.toString().contains("拉起表情面板")){
+                                        v.setOnLongClickListener((a)->{
+                                            EmoPanel.createShow(v.getContext());
+                                            return true;
+                                        });
+                                    }
                                 }
+                            }catch (Exception e){
+                                LogUtils.error("InjectEmoPanelToGuild",e);
                             }
-                        }catch (Exception e){
-                            LogUtils.error("InjectEmoPanelToGuild",e);
-                        }
 
-                    },200);
+                        },200);
+            }
+
 
         });
+
+        XPBridge.HookAfter(m[6],param -> {
+            if (IsEnable){
+                View button = MField.GetRoundField(param.thisObject,param.thisObject.getClass(), ImageButton.class,1);
+                if (button != null){
+                    button.setOnLongClickListener(v->{
+                        EmoPanel.createShow(v.getContext());
+                        return true;
+                    });
+                }
+            }
+
+        });
+
         return true;
     }
 
@@ -181,6 +202,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
 
 
         m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent","o",void.class,new Class[0]);
+        m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper","a",void.class,new Class[0]);
 
         return m;
     }

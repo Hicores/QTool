@@ -118,6 +118,31 @@ public class MField {
         }
         throw new RuntimeException("Can't find field " + "(" + FieldClass.getName()+") in class "+CheckClass.getName());
     }
+    public static <T> T GetRoundField(Object CheckObj,Class<?> CheckClass,Class<?> FieldClass,int Round) throws Exception{
+        int pos = 0;
+        String SignText = CheckClass.getName() + ":!NoName!" + "(" + FieldClass.getName() + ")"+Round;
+        if (FieldCache.containsKey(SignText)){
+            Field f = FieldCache.get(SignText);
+            return (T) f.get(CheckObj);
+        }
+
+        Class<?> Check = CheckClass;
+        while (Check != null){
+            for (Field f : Check.getDeclaredFields()){
+                if (MClass.CheckClass(f.getType(),FieldClass)){
+                    if (pos != Round) {
+                        pos++;
+                        continue;
+                    }
+                    f.setAccessible(true);
+                    FieldCache.put(SignText,f);
+                    return (T) f.get(CheckObj);
+                }
+            }
+            Check = Check.getSuperclass();
+        }
+        throw new RuntimeException("Can't find field " + "(" + FieldClass.getName()+") in class "+CheckClass.getName());
+    }
     public static <T> T GetFirstField(Object CheckObj,Class<?> FieldClass) throws Exception{
         return GetFirstField(CheckObj,CheckObj.getClass(),FieldClass);
     }

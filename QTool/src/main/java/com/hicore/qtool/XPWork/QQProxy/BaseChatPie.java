@@ -35,7 +35,7 @@ public class BaseChatPie extends BaseHookItem {
     public boolean check() {
         return getMethod() != null;
     }
-    public Method getMethod(){
+    public static Method getMethod(){
         Method m;
         if (HostInfo.getVerCode() > 6440){
             m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.core.BaseChatPie",
