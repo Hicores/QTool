@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
@@ -59,6 +60,7 @@ public class FloatWindowControl {
     public static void onShowEvent(boolean IsShow,Object session){
         CacheSession = session;
         Activity act = Utils.getTopActivity();
+        ResUtils.StartInject(act);
         if (MIN_Y == -1)
         {
             int resourceId= act.getResources().getIdentifier("status_bar_height", "dimen", "android");
