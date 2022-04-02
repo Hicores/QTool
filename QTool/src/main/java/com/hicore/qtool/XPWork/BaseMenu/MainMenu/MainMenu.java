@@ -217,11 +217,8 @@ public class MainMenu extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-
-
             ResUtils.StartInject(this);
             setTheme(R.style.AnimActivity);
-
 
             setTitleFea();
 

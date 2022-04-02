@@ -19,14 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.hicore.**{*;}
--keep class com.android.** {*;}
 -keep class org.** { *; }
 -keep class bsh.** { *; }
 -keep class com.github.**{*;}
 -keep class androidx.lifecycle.**{ *; }
 -keep class com.lxj.xpopup.widget.**{*;}
-
+-keep class com.hicore.qtool.XposedInit.**{*;}
+-keep class * implements com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem { }
+-keep class * extends com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { }
+-keep class * extends android.app.Activity { }
+-keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupInfo{ *;}
+-keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$RequestInfo{ *;}
+-keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$MessageData{ *;}
+-keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
+-keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
 
 -keepclassmembers enum * {
     public static **[] values();
@@ -37,7 +43,6 @@
   public static final android.os.Parcelable$Creator *;
 }
 -keep class * implements java.io.Serializable { *; }
--keep class * extends com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { *; }
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {
@@ -51,4 +56,4 @@
   *** rewind();
 }
 
--flattenpackagehierarchy 'hct'
+-flattenpackagehierarchy ''

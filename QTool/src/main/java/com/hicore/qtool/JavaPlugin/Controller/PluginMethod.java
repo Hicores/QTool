@@ -2,6 +2,7 @@ package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.app.Activity;
 
+import com.hicore.LogUtils.LogUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupManager;
@@ -98,6 +99,7 @@ public class PluginMethod {
         }
     }
     public String AddItem(String ItemName,String CallbackName,String PluginID){
+        LogUtils.debug("RemoveItem",PluginID+":"+PluginID);
         return AddItem(ItemName, CallbackName);
     }
     public String AddItem(String ItemName,String CallbackName){
@@ -110,6 +112,7 @@ public class PluginMethod {
         PluginController.RemoveItem(info_.PluginVerifyID,ItemID);
     }
     public void RemoveItem(String PluginID,String ItemID){
+        LogUtils.debug("RemoveItem",PluginID+":"+ItemID);
         RemoveItem(ItemID);
     }
     public void RemoveItem(String ItemID){
@@ -202,10 +205,10 @@ public class PluginMethod {
         PluginStoreUtils.putLong(info_.PluginID,ConfigName,key,value);
     }
     public void setFlag(String flag){
-        //Nothing
+        LogUtils.debug("setFlag",flag);
     }
     public void IncludeFile(String path){
-        //Nothing
+        LogUtils.debug("IncludeFile",path);
     }
     public int getChatType(){
         return QQSessionUtils.getSessionID();

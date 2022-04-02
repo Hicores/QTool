@@ -16,6 +16,9 @@ import com.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 import java.lang.reflect.Method;
+
+import de.robv.android.xposed.XposedBridge;
+
 /*
 Hook注入QQ的设置界面添加一个选项
  */
@@ -42,7 +45,7 @@ public class EntryHook extends BaseHookItem {
                     MainMenu.createActivity(act);
                 }));
             }catch (Exception e){
-
+                XposedBridge.log(e);
             }
         });
         return true;
