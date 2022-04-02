@@ -116,11 +116,15 @@ public class PluginMessageProcessor {
                 data.FileUrl = MField.GetField(msg,"url",String.class);
                 data.FileName = MField.GetField(msg,"fileName",String.class);
                 data.FileSize = MField.GetField(msg,"fileSize",long.class);
+                /*
                 QQServletHelper.GetFileDownUrl(msg, URL -> {
                     fileDLCache.put(data.FileUrl,URL);
                     data.FileUrl = URL;
                     submit(()->PluginController.onMessage(early,data));
                 });
+
+                 */
+                submit(()->PluginController.onMessage(early,data));
                 return;
             }else if (clzName.equals("MessageForReplyText")){
                 Object SourceInfo = MField.GetField(msg,"mSourceMsgInfo");
