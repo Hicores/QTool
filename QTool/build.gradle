@@ -70,15 +70,15 @@ dependencies {
     implementation project(":ItemProcesser")
 
 
-    implementation 'com.github.kyuubiran:EzXHelper:0.7.2'
-    implementation 'com.github.li-xiaojun:EasyAdapter:1.2.5'
+    implementation 'com.github.kyuubiran:EzXHelper:0.8.0'
+    implementation 'com.github.li-xiaojun:EasyAdapter:1.2.7'
 
-    def appCenterSdkVersion = '4.3.1'
+    def appCenterSdkVersion = '4.4.3'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
 
 
 }

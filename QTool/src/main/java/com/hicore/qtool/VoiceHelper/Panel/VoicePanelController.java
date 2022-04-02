@@ -57,7 +57,10 @@ public final class VoicePanelController extends BottomPopupView {
                 ImageView clickButton = mItem.findViewById(R.id.sendButton);
                 clickButton.setVisibility(fileInfo.type == 1 ? VISIBLE:GONE);
                 if (fileInfo.type == 1){
-                    clickButton.setOnClickListener(v-> QQMsgSender.sendVoice(HookEnv.SessionInfo,fileInfo.Path));
+                    clickButton.setOnClickListener(v-> {
+                        QQMsgSender.sendVoice(HookEnv.SessionInfo,fileInfo.Path);
+                        dismiss();
+                    });
                 }
 
                 TextView title = mItem.findViewById(R.id.voice_name);
@@ -76,12 +79,9 @@ public final class VoicePanelController extends BottomPopupView {
                         UpdateProviderDate();
                     });
                 }
-
-
             }
         };
         recyclerView.setAdapter(commonAdapter);
-
 
         UpdateControlData();
     }

@@ -9,6 +9,9 @@ import com.hicore.qtool.QQTools.ContUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class VoicePanel {
     public static void createVoicePanel(){
         Context context = Utils.getTopActivity();
@@ -24,5 +27,9 @@ public class VoicePanel {
 
         BasePopupView base = NewPop.asCustom(controller);
         base.show();
+    }
+    public static void preSaveVoice(Context context,String voicePath){
+        String tmpName = "语音" + new SimpleDateFormat("yyyyMMdd HHmmss").format(new Date());
+
     }
 }
