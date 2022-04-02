@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:background="@color/white"
     android:layout_height="50dp">
     <ImageView
-        android:background="@drawable/voice_file"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/icon"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/mIcon"/>
 
     <TextView
         android:id="@+id/voice_name"
@@ -21,19 +19,19 @@
         android:layout_marginTop="5dp"
         android:textColor="@color/font_plugin"
         android:text="语音名字"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/mIcon"
         android:layout_toLeftOf="@id/sendButton"
         android:textSize="25sp"
         android:gravity="center_vertical"/>
 
     <ImageView
         android:id="@+id/sendButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/send"
         android:clickable="true"/>
 

@@ -13,6 +13,8 @@ import com.hicore.UIItem;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.R;
+import com.hicore.qtool.VoiceHelper.Panel.VoicePanel;
+import com.hicore.qtool.VoiceHelper.Panel.VoicePanelController;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -42,7 +44,7 @@ public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,1);
 
             RLayout.addView(image,params);
-            image.setOnClickListener(v-> Utils.ShowToast("Click"));
+            image.setOnClickListener(v-> VoicePanel.createVoicePanel());
         });
         return true;
     }

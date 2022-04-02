@@ -265,17 +265,6 @@ public class EmoPanelView extends BottomPopupView {
                 }
             }
         };
-
-        commonAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(@NonNull View view, @NonNull RecyclerView.ViewHolder viewHolder, int i) {
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
         recyclerView.setAdapter(commonAdapter);
         FindNameToSelectID(SelectedName);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -507,20 +496,6 @@ public class EmoPanelView extends BottomPopupView {
         recyclerView.postDelayed(()-> recyclerView.scrollToPosition(CacheScrollTop),100);
         SelectedName = pathName;
     }
-
-    //完全可见执行
-    @Override
-    protected void onShow() {
-        super.onShow();
-
-    }
-
-    //完全消失执行
-    @Override
-    protected void onDismiss() {
-
-    }
-
     @Override
     protected int getMaxHeight() {
         return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
