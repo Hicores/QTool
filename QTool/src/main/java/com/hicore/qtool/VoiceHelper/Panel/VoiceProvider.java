@@ -37,7 +37,7 @@ public class VoiceProvider {
     public ArrayList<FileInfo> getList(){
         if (Path.startsWith(PROVIDER_LOCAL_FILE)){
             String truePath = HookEnv.ExtraDataPath + "Voice/"+Path.substring(PROVIDER_LOCAL_FILE.length());
-            return LocalVoiceSearchHelper.searchForPath(truePath);
+            return LocalVoiceSearchHelper.searchForPath(truePath,Path.length() == PROVIDER_LOCAL_FILE.length());
         }else if (Path.startsWith(PROVIDER_LOCAL_SEARCH)){
             String searchName = Path.substring(PROVIDER_LOCAL_SEARCH.length());
             return LocalVoiceSearchHelper.searchForName(HookEnv.ExtraDataPath + "Voice/",searchName);

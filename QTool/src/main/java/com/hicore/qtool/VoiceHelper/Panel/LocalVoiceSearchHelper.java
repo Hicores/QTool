@@ -6,8 +6,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class LocalVoiceSearchHelper {
-    public static ArrayList<VoiceProvider.FileInfo> searchForPath(String LocalPath){
+    public static ArrayList<VoiceProvider.FileInfo> searchForPath(String LocalPath,boolean isRoot){
         ArrayList<VoiceProvider.FileInfo> resultArr = new ArrayList<>();
+        if (!isRoot){
+            VoiceProvider.FileInfo toLast = new VoiceProvider.FileInfo();
+            toLast.type = -1;
+            toLast.Name = "..";
+            resultArr.add(toLast);
+        }
+
         File[] fs = new File(LocalPath).listFiles();
         if (fs == null)return resultArr;
 

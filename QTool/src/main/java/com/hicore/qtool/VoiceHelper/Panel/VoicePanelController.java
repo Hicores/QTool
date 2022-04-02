@@ -1,6 +1,14 @@
 package com.hicore.qtool.VoiceHelper.Panel;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.tts.Voice;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +36,7 @@ public final class VoicePanelController extends BottomPopupView {
 
     private VerticalRecyclerView recyclerView;
     private EasyAdapter<VoiceProvider.FileInfo> commonAdapter;
+    private TextView showPath;
 
     private ArrayList<VoiceProvider.FileInfo> resultFile = new ArrayList<>();
     @Override
@@ -35,6 +44,7 @@ public final class VoicePanelController extends BottomPopupView {
         super.onCreate();
         initSelectBar();
         initSearchBox();
+        showPath = findViewById(R.id.currentPath);
 
         recyclerView = findViewById(R.id.recyclerView);
         commonAdapter = new EasyAdapter<VoiceProvider.FileInfo>(resultFile, R.layout.voice_panel_item) {
@@ -43,7 +53,7 @@ public final class VoicePanelController extends BottomPopupView {
                 RelativeLayout mItem = (RelativeLayout) viewHolder.getConvertView();
                 ImageView image = mItem.findViewById(R.id.mIcon);
                 if (fileInfo.type == 1)image.setImageResource(R.drawable.voice_item);
-                                  else image.setImageResource(R.drawable.folder);
+                else image.setImageResource(R.drawable.folder);
                 ImageView clickButton = mItem.findViewById(R.id.sendButton);
                 clickButton.setVisibility(fileInfo.type == 1 ? VISIBLE:GONE);
                 if (fileInfo.type == 1){
@@ -55,22 +65,57 @@ public final class VoicePanelController extends BottomPopupView {
                 //设置目录和语音的点击信息
                 if (fileInfo.type == 1){
                     mItem.setOnClickListener(null);
-                }else {
+                }else if (fileInfo.type == 2){
                     mItem.setOnClickListener(v->{
                         provider = provider.getChild(fileInfo.Name);
                         UpdateProviderDate();
                     });
+                }else if (fileInfo.type == -1){
+                    mItem.setOnClickListener(v->{
+                        provider = provider.getParent();
+                        UpdateProviderDate();
+                    });
                 }
+
+
             }
         };
         recyclerView.setAdapter(commonAdapter);
 
 
         UpdateControlData();
-
     }
-
+    private VoiceProvider cacheProvider;
     private void initSearchBox(){
+        new Handler(Looper.getMainLooper())
+                .postDelayed(()->{
+                    EditText searchBox = new EditText(getContext());
+                    searchBox.setHint("输入名字即可搜索");
+                    searchBox.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+                    searchBox.setSingleLine();
+                    searchBox.setFocusable(true);
+                    searchBox.setOnEditorActionListener((v, actionId, event) -> {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                            String search = v.getText().toString();
+                            if (search.length() == 0){
+                                if (cacheProvider != null){
+                                    provider = cacheProvider;
+                                    cacheProvider = null;
+                                    UpdateProviderDate();
+                                }
+                            }else{
+                                if (cacheProvider == null){
+                                    cacheProvider = provider;
+                                }
+                                provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_SEARCH+search);
+                                UpdateProviderDate();
+                            }
+                        }
+                        return false;
+                    });
+
+                    ((LinearLayout)findViewById(R.id.currentPath).getParent()).addView(searchBox,1);
+                },200);
 
     }
     private void initSelectBar(){
@@ -90,6 +135,7 @@ public final class VoicePanelController extends BottomPopupView {
         resultFile.clear();
         resultFile.addAll(provider.getList());
         commonAdapter.notifyDataSetChanged();
+        showPath.setText(provider.getPath());
     }
     public void UpdateControlData(){
         if (ControllerMode == 0){

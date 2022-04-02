@@ -18,6 +18,8 @@ public class VoicePanel {
 
         XPopup.Builder NewPop = new XPopup.Builder(fixContext)
                 .autoOpenSoftInput(false)
+                .autoFocusEditText(false)
+                .isDestroyOnDismiss(true)
                 .moveUpToKeyboard(false);
 
         BasePopupView base = NewPop.asCustom(controller);
