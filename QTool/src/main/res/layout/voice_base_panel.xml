@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:maxHeight="500dp"
+    android:background="@drawable/bg_round"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:scrollbars="none"
+        android:id="@+id/_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/selectItem"
+            android:divider="@drawable/textlines"
+            android:showDividers="middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </LinearLayout>
+    </HorizontalScrollView>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入名字可以搜索"
+        android:id="@+id/searchBox"/>
+
+    <com.lxj.xpopup.widget.VerticalRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+
+</LinearLayout>
