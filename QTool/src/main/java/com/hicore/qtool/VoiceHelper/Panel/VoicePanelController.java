@@ -3,10 +3,6 @@ package com.hicore.qtool.VoiceHelper.Panel;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.speech.tts.Voice;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,8 +14,6 @@ import androidx.annotation.NonNull;
 
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
-import com.hicore.qtool.QQMessage.QQMessageUtils;
-import com.hicore.qtool.QQMessage.QQMsgSendUtils;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.R;
 import com.lxj.easyadapter.EasyAdapter;
@@ -130,6 +124,28 @@ public final class VoicePanelController extends BottomPopupView {
             ControllerMode = 0;
             UpdateControlData();
         });
+
+        imageLocalFile = new ImageView(getContext());
+        imageLocalFile.setImageResource(R.drawable.voice_down);
+        param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),25),Utils.dip2px(getContext(),25));
+        param.setMargins(Utils.dip2px(getContext(),12),10,Utils.dip2sp(getContext(),5),10);
+        topBar.addView(imageLocalFile,param);
+
+        imageLocalFile.setOnClickListener(v->{
+            ControllerMode = 1;
+            UpdateControlData();
+        });
+
+        imageLocalFile = new ImageView(getContext());
+        imageLocalFile.setImageResource(R.drawable.voice_upload);
+        param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),25),Utils.dip2px(getContext(),25));
+        param.setMargins(Utils.dip2px(getContext(),12),10,Utils.dip2sp(getContext(),5),10);
+        topBar.addView(imageLocalFile,param);
+
+        imageLocalFile.setOnClickListener(v->{
+            ControllerMode = 2;
+            UpdateControlData();
+        });
     }
     public void UpdateProviderDate(){
         resultFile.clear();
@@ -141,7 +157,15 @@ public final class VoicePanelController extends BottomPopupView {
         if (ControllerMode == 0){
             provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_FILE);
             UpdateProviderDate();
+        }else if (ControllerMode == 1){
+            provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE);
+            UpdateProviderDate();
+        }else if (ControllerMode == 2){
+            UpdateUploadView();
         }
+    }
+    private void UpdateUploadView(){
+
     }
     private void UpdateList(ArrayList<VoiceProvider.FileInfo> infos){
 

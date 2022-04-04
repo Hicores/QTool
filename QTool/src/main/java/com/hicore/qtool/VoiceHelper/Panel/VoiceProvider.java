@@ -1,6 +1,9 @@
 package com.hicore.qtool.VoiceHelper.Panel;
 
+import android.text.TextUtils;
+
 import com.hicore.qtool.HookEnv;
+import com.hicore.qtool.VoiceHelper.OnlineHelper.OnlineBundleHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +44,9 @@ public class VoiceProvider {
         }else if (Path.startsWith(PROVIDER_LOCAL_SEARCH)){
             String searchName = Path.substring(PROVIDER_LOCAL_SEARCH.length());
             return LocalVoiceSearchHelper.searchForName(HookEnv.ExtraDataPath + "Voice/",searchName);
+        }else if (Path.startsWith(PROVIDER_ONLINE)){
+            String ControlCode = Path.substring(PROVIDER_ONLINE.length());
+            if (TextUtils.isEmpty(ControlCode))return OnlineBundleHelper.getAllBundle();
         }
         return new ArrayList<>();
     }
