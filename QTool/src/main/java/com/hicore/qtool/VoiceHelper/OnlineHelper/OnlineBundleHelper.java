@@ -47,6 +47,7 @@ public class OnlineBundleHelper {
         HttpURLConnection conn = (HttpURLConnection) new URL("https://qtool.haonb.cc/VoiceBundle/upload").openConnection();
         conn.setDoOutput(true);
         conn.setRequestProperty("key",key);
+        conn.setRequestProperty("accessKey",requestForRndKey());
         OutputStream out = conn.getOutputStream();
 
         out.write(FileUtils.ReadFile(new File(LocalPath)));
@@ -84,7 +85,7 @@ public class OnlineBundleHelper {
     public static ArrayList<VoiceProvider.FileInfo> getBundleContent(String BundleID){
         try{
             ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
-            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo");
+            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo?id="+BundleID);
             JSONObject mJson = new JSONObject(Content);
             JSONArray mArray = mJson.getJSONArray("data");
             for(int i=0;i<mArray.length();i++){

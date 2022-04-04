@@ -25,6 +25,8 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.R;
 import com.hicore.qtool.VoiceHelper.OnlineHelper.OnlineBundleHelper;
+import com.hicore.qtool.XposedInit.EnvHook;
+import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.core.BottomPopupView;
@@ -32,6 +34,7 @@ import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -61,14 +64,25 @@ public final class VoicePanelController extends BottomPopupView {
             protected void bind(@NonNull ViewHolder viewHolder, VoiceProvider.FileInfo fileInfo, int i) {
                 RelativeLayout mItem = (RelativeLayout) viewHolder.getConvertView();
                 ImageView image = mItem.findViewById(R.id.mIcon);
-                if (fileInfo.type == 1)image.setImageResource(R.drawable.voice_item);
+                if (fileInfo.type == 1 || fileInfo.type == 6)image.setImageResource(R.drawable.voice_item);
                 else image.setImageResource(R.drawable.folder);
+
                 ImageView clickButton = mItem.findViewById(R.id.sendButton);
-                clickButton.setVisibility(fileInfo.type == 1 ? VISIBLE:GONE);
+                clickButton.setVisibility((fileInfo.type == 1 || fileInfo.type == 6) ? VISIBLE:GONE);
                 if (fileInfo.type == 1){
                     clickButton.setOnClickListener(v-> {
                         QQMsgSender.sendVoice(HookEnv.SessionInfo,fileInfo.Path);
                         dismiss();
+                    });
+                }else if (fileInfo.type == 6){
+                    clickButton.setOnClickListener(v->{
+                        EnvHook.requireCachePath();
+                        String cachePath = HookEnv.ExtraDataPath + "Cache/"+fileInfo.Name.hashCode();
+                        HttpUtils.ProgressDownload(fileInfo.Path,cachePath,()->{
+                            QQMsgSender.sendVoice(HookEnv.SessionInfo,cachePath);
+                            new Handler(Looper.getMainLooper()).post(()->dismiss());
+
+                        },getContext());
                     });
 
                 }else {
@@ -81,7 +95,7 @@ public final class VoicePanelController extends BottomPopupView {
                 //设置目录和语音的点击信息
                 if (fileInfo.type == 1){
                     mItem.setOnClickListener(null);
-                    title.setOnLongClickListener(v->{
+                    mItem.setOnLongClickListener(v->{
                         new AlertDialog.Builder(getContext(),3)
                                 .setTitle("选择操作")
                                 .setItems(new String[]{"删除", "添加到语音包"}, (dialog, which) -> {
@@ -100,13 +114,22 @@ public final class VoicePanelController extends BottomPopupView {
                         provider = provider.getChild(fileInfo.Name);
                         UpdateProviderDate();
                     });
-                    title.setOnLongClickListener(null);
+                    mItem.setOnLongClickListener(null);
                 }else if (fileInfo.type == -1){
                     mItem.setOnClickListener(v->{
                         provider = provider.getParent();
                         UpdateProviderDate();
                     });
-                    title.setOnLongClickListener(null);
+                    mItem.setOnLongClickListener(null);
+                }else if (fileInfo.type == 5){
+                    mItem.setOnClickListener(v->{
+                        provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE + fileInfo.Path);
+                        UpdateProviderDate();
+                    });
+                    mItem.setOnLongClickListener(null);
+                }else if (fileInfo.type == 6){
+                    mItem.setOnClickListener(null);
+                    mItem.setOnLongClickListener(null);
                 }
             }
         };
@@ -269,6 +292,22 @@ public final class VoicePanelController extends BottomPopupView {
 
         }).start();
     }
+    private void PreLoadBundleList(){
+        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+        mDialog.setTitle("正在加载..");
+        mDialog.setMessage("正在加载列表...");
+        mDialog.setCancelable(false);
+        mDialog.show();
+        new Thread(()->{
+            try {
+                UpdateList();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
+            }
+        }).start();
+    }
     LinearLayout EDBar;
     private void UpdateUploadView(){
         recyclerView.setVisibility(GONE);
@@ -280,7 +319,7 @@ public final class VoicePanelController extends BottomPopupView {
         EDBar = mRoot.findViewById(R.id.EdBar);
 
         mRoot.findViewById(R.id.FlushList).setOnClickListener(v->{
-            new Thread(()->UpdateList()).start();
+            PreLoadBundleList();
         });
         mRoot.findViewById(R.id.CreateNewBundle).setOnClickListener(v->{
             EditText inputName = new EditText(getContext());
@@ -303,6 +342,8 @@ public final class VoicePanelController extends BottomPopupView {
                         new Thread(()->UpdateList()).start();
                     }).show();
         });
+
+        PreLoadBundleList();
     }
     private void UpdateList(){
         String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundle?key="+ OnlineBundleHelper.requestForRndKey());
@@ -320,6 +361,102 @@ public final class VoicePanelController extends BottomPopupView {
 
                     TextView name = mLayout.findViewById(R.id.voice_name);
                     name.setText(item.getString("name"));
+
+                    name.setOnClickListener(v->{
+                        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+                        mDialog.setTitle("正在加载..");
+                        mDialog.setMessage("正在加载列表...");
+                        mDialog.setCancelable(false);
+                        mDialog.show();
+                        new Thread(()->{
+                            try {
+                                UpdateChcek(item.getString("id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }finally {
+                                new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
+                            }
+                        }).start();
+                    });
+
+                    ImageView delete = mLayout.findViewById(R.id.deleteButton);
+                    delete.setOnClickListener(v->{
+                        new AlertDialog.Builder(getContext(),3)
+                                .setTitle("确认操作")
+                                .setMessage("是否删除?")
+                                .setNeutralButton("确定删除", (dialog, which) -> {
+                                    try {
+                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/removeBundle?BundleID="+item.getString("id")
+                                                +"&key="+OnlineBundleHelper.requestForRndKey());
+                                        JSONObject mJson = new JSONObject(ret);
+                                        Utils.ShowToast(mJson.optString("msg"));
+
+                                        PreLoadBundleList();
+                                    } catch (Exception e) {
+                                        Utils.ShowToastL("发生错误:"+e);
+                                    }
+                                }).setNegativeButton("关闭", (dialog, which) -> {
+
+                        }).show();
+                    });
+
+                    EDBar.addView(mLayout);
+                }
+            }catch (Exception e){
+                Utils.ShowToastL("发生错误:\n"+e);
+            }
+        });
+    }
+    private void UpdateChcek(String BundleID){
+        String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo?id="+ BundleID);
+        new Handler(Looper.getMainLooper()).post(()->{
+            try{
+                EDBar.removeAllViews();
+                LayoutInflater inflater = LayoutInflater.from(EDBar.getContext());
+                JSONObject NewObj = new JSONObject(Content);
+                JSONArray mArray = NewObj.getJSONArray("data");
+                for (int i=0;i<mArray.length();i++){
+                    JSONObject item = mArray.getJSONObject(i);
+                    RelativeLayout mLayout = (RelativeLayout) inflater.inflate(R.layout.voice_panel_ed_bundle,null);
+                    ImageView image = mLayout.findViewById(R.id.mIcon);
+                    image.setImageResource(R.drawable.voice_item);
+
+                    TextView name = mLayout.findViewById(R.id.voice_name);
+                    name.setText(item.getString("Name"));
+
+                    ImageView delete = mLayout.findViewById(R.id.deleteButton);
+                    delete.setOnClickListener(v->{
+                        new AlertDialog.Builder(getContext(),3)
+                                .setTitle("确认操作")
+                                .setMessage("是否删除?")
+                                .setNeutralButton("确定删除", (dialog, which) -> {
+                                    try {
+                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/removeVoice?VoiceID="+item.getString("Id")
+                                                +"&key="+OnlineBundleHelper.requestForRndKey());
+                                        JSONObject mJson = new JSONObject(ret);
+                                        Utils.ShowToast(mJson.optString("msg"));
+
+                                        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+                                        mDialog.setTitle("正在加载..");
+                                        mDialog.setMessage("正在加载列表...");
+                                        mDialog.setCancelable(false);
+                                        mDialog.show();
+                                        new Thread(()->{
+                                            try {
+                                                UpdateChcek(BundleID);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }finally {
+                                                new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
+                                            }
+                                        }).start();
+                                    } catch (Exception e) {
+                                        Utils.ShowToastL("发生错误:"+e);
+                                    }
+                                }).setNegativeButton("关闭", (dialog, which) -> {
+
+                                }).show();
+                    });
 
                     EDBar.addView(mLayout);
                 }
