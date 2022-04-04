@@ -2,6 +2,7 @@ package com.hicore.qtool.VoiceHelper.OnlineHelper;
 
 import android.text.TextUtils;
 
+import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.FileUtils;
 import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.NameUtils;
@@ -13,6 +14,11 @@ import com.hicore.qtool.VoiceHelper.Panel.VoiceProvider;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +34,33 @@ public class OnlineBundleHelper {
         }else {
             Utils.ShowToastL("网络异常");
         }
+    }
+    public static void RequestUpload(String Name,String LocalPath,String ToBundleID)throws Exception{
+        String req = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/RequestUpload?ID="+ToBundleID+"&Key="+requestForRndKey()+"&Name="+Name);
+        JSONObject newJson = new JSONObject(req);
+        if (newJson.optInt("code")==1){
+            Utils.ShowToastL("未能成功上传:"+newJson.optString("msg"));
+            return;
+        }
+        String key = newJson.getString("key");
+
+        HttpURLConnection conn = (HttpURLConnection) new URL("https://qtool.haonb.cc/VoiceBundle/upload").openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestProperty("key",key);
+        OutputStream out = conn.getOutputStream();
+
+        out.write(FileUtils.ReadFile(new File(LocalPath)));
+        out.close();
+
+        InputStream insp = conn.getInputStream();
+        byte[] bArr = DataUtils.readAllBytes(insp);
+        insp.close();
+        JSONObject retJson = new JSONObject(new String(bArr));
+        if (retJson.optInt("code")==1){
+            Utils.ShowToastL("上传错误:"+retJson.optString("msg"));
+            return;
+        }
+        Utils.ShowToastL("上传结果:"+retJson.optString("msg"));
     }
     public static ArrayList<VoiceProvider.FileInfo> getAllBundle(){
         try{
@@ -67,7 +100,7 @@ public class OnlineBundleHelper {
             return new ArrayList<>();
         }
     }
-    private static String requestForRndKey(){
+    public static String requestForRndKey(){
         String rndKey = FileUtils.ReadFileString(HookEnv.ExtraDataPath + "配置文件目录/VoiceToken");
         if (TextUtils.isEmpty(rndKey)){
             rndKey = NameUtils.getRandomString(64);

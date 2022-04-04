@@ -1,10 +1,16 @@
 package com.hicore.qtool.VoiceHelper.Panel;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -12,16 +18,23 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.hicore.Utils.FileUtils;
+import com.hicore.Utils.HttpUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.R;
+import com.hicore.qtool.VoiceHelper.OnlineHelper.OnlineBundleHelper;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public final class VoicePanelController extends BottomPopupView {
@@ -29,6 +42,7 @@ public final class VoicePanelController extends BottomPopupView {
     private VoiceProvider provider;
 
     private VerticalRecyclerView recyclerView;
+    private FrameLayout mFrame;
     private EasyAdapter<VoiceProvider.FileInfo> commonAdapter;
     private TextView showPath;
 
@@ -39,6 +53,7 @@ public final class VoicePanelController extends BottomPopupView {
         initSelectBar();
         initSearchBox();
         showPath = findViewById(R.id.currentPath);
+        mFrame = findViewById(R.id.ExtraView);
 
         recyclerView = findViewById(R.id.recyclerView);
         commonAdapter = new EasyAdapter<VoiceProvider.FileInfo>(resultFile, R.layout.voice_panel_item) {
@@ -55,23 +70,43 @@ public final class VoicePanelController extends BottomPopupView {
                         QQMsgSender.sendVoice(HookEnv.SessionInfo,fileInfo.Path);
                         dismiss();
                     });
+
+                }else {
+                    clickButton.setOnLongClickListener(null);
                 }
 
                 TextView title = mItem.findViewById(R.id.voice_name);
                 title.setText(fileInfo.Name);
+
                 //设置目录和语音的点击信息
                 if (fileInfo.type == 1){
                     mItem.setOnClickListener(null);
+                    title.setOnLongClickListener(v->{
+                        new AlertDialog.Builder(getContext(),3)
+                                .setTitle("选择操作")
+                                .setItems(new String[]{"删除", "添加到语音包"}, (dialog, which) -> {
+                                    if (which == 0){
+                                        FileUtils.deleteFile(new File(fileInfo.Path));
+                                        UpdateProviderDate();
+                                    }else if (which == 1){
+                                        AddVoiceToPacket(fileInfo.Name, fileInfo.Path);
+                                    }
+                                }).show();
+                        return true;
+                    });
+
                 }else if (fileInfo.type == 2){
                     mItem.setOnClickListener(v->{
                         provider = provider.getChild(fileInfo.Name);
                         UpdateProviderDate();
                     });
+                    title.setOnLongClickListener(null);
                 }else if (fileInfo.type == -1){
                     mItem.setOnClickListener(v->{
                         provider = provider.getParent();
                         UpdateProviderDate();
                     });
+                    title.setOnLongClickListener(null);
                 }
             }
         };
@@ -148,9 +183,28 @@ public final class VoicePanelController extends BottomPopupView {
         });
     }
     public void UpdateProviderDate(){
+        recyclerView.setVisibility(VISIBLE);
+        mFrame.setVisibility(GONE);
+
         resultFile.clear();
-        resultFile.addAll(provider.getList());
-        commonAdapter.notifyDataSetChanged();
+        ProgressDialog dialog = new ProgressDialog(getContext(),3);
+        dialog.setTitle("请稍后...");
+        dialog.setMessage("加载中...");
+        dialog.setCancelable(false);
+        if (ControllerMode == 1){
+            dialog.show();
+        }
+        new Thread(()->{
+            try{
+                resultFile.addAll(provider.getList());
+            }finally {
+                new Handler(Looper.getMainLooper()).post(()->{
+                    dialog.dismiss();
+                    commonAdapter.notifyDataSetChanged();
+                });
+            }
+        }).start();
+
         showPath.setText(provider.getPath());
     }
     public void UpdateControlData(){
@@ -164,11 +218,115 @@ public final class VoicePanelController extends BottomPopupView {
             UpdateUploadView();
         }
     }
-    private void UpdateUploadView(){
+    private void AddVoiceToPacket(String Name,String Path){
+        ProgressDialog dialog = new ProgressDialog(getContext(),3);
+        dialog.setTitle("加载中..");
+        dialog.setMessage("正在获取可用列表...");
+        dialog.setCancelable(false);
+        dialog.show();
+        new Thread(()->{
+            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundle?key="+ OnlineBundleHelper.requestForRndKey());
+            new Handler(Looper.getMainLooper())
+                    .post(()->{
+                        try{
 
+                            JSONObject json = new JSONObject(Content);
+                            JSONArray mArray = json.getJSONArray("data");
+                            ArrayList<String> bundleList = new ArrayList<>();
+                            ArrayList<String> idList = new ArrayList<>();
+
+                            for (int i=0;i<mArray.length();i++){
+                                JSONObject item = mArray.getJSONObject(i);
+                                bundleList.add(item.getString("name"));
+                                idList.add(item.getString("id"));
+                            }
+
+                            new AlertDialog.Builder(getContext(),3)
+                                    .setItems(bundleList.toArray(new String[0]), (dialog1, which) -> {
+                                        String Bundle = idList.get(which);
+                                        ProgressDialog uploadProgress = new ProgressDialog(getContext(),3);
+                                        uploadProgress.setTitle("正在处理...");
+                                        uploadProgress.setMessage("正在上传....");
+                                        uploadProgress.setCancelable(false);
+                                        uploadProgress.show();
+                                        new Thread(()->{
+                                            try{
+                                                OnlineBundleHelper.RequestUpload(Name,Path,Bundle);
+                                            }catch (Exception e){
+                                                Utils.ShowToastL("发生错误:\n"+e);
+
+                                            }finally {
+                                                new Handler(Looper.getMainLooper()).post(()->uploadProgress.dismiss());
+                                            }
+                                        }).start();
+                                    }).setTitle("选择需要添加到的包").show();
+                        }catch (Exception e) {
+                            Utils.ShowToastL("发生错误:\n"+e);
+                        }finally {
+                            dialog.dismiss();
+                        }
+                    });
+
+        }).start();
     }
-    private void UpdateList(ArrayList<VoiceProvider.FileInfo> infos){
+    LinearLayout EDBar;
+    private void UpdateUploadView(){
+        recyclerView.setVisibility(GONE);
+        mFrame.setVisibility(VISIBLE);
+        mFrame.removeAllViews();
+        View mRoot = LayoutInflater.from(getContext()).inflate(R.layout.voice_edit_bundle,null);
+        mFrame.addView(mRoot);
 
+        EDBar = mRoot.findViewById(R.id.EdBar);
+
+        mRoot.findViewById(R.id.FlushList).setOnClickListener(v->{
+            new Thread(()->UpdateList()).start();
+        });
+        mRoot.findViewById(R.id.CreateNewBundle).setOnClickListener(v->{
+            EditText inputName = new EditText(getContext());
+            inputName.setHint("输入名字");
+
+            new AlertDialog.Builder(getContext(),3)
+                    .setTitle("请输入名字")
+                    .setView(inputName)
+                    .setNeutralButton("确定创建", (dialog, which) -> {
+                        String name = inputName.getText().toString();
+                        if (name.length() < 4){
+                            Utils.ShowToastL("名字不能少于4个字");
+                            return;
+                        }
+                        if (name.length() > 20){
+                            Utils.ShowToastL("名字不能多于20个字");
+                            return;
+                        }
+                        OnlineBundleHelper.createBundle(name);
+                        new Thread(()->UpdateList()).start();
+                    }).show();
+        });
+    }
+    private void UpdateList(){
+        String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundle?key="+ OnlineBundleHelper.requestForRndKey());
+        new Handler(Looper.getMainLooper()).post(()->{
+            try{
+                EDBar.removeAllViews();
+                LayoutInflater inflater = LayoutInflater.from(EDBar.getContext());
+                JSONObject NewObj = new JSONObject(Content);
+                JSONArray mArray = NewObj.getJSONArray("data");
+                for (int i=0;i<mArray.length();i++){
+                    JSONObject item = mArray.getJSONObject(i);
+                    RelativeLayout mLayout = (RelativeLayout) inflater.inflate(R.layout.voice_panel_ed_bundle,null);
+                    ImageView image = mLayout.findViewById(R.id.mIcon);
+                    image.setImageResource(R.drawable.folder);
+
+                    TextView name = mLayout.findViewById(R.id.voice_name);
+                    name.setText(item.getString("name"));
+
+                    EDBar.addView(mLayout);
+                }
+            }catch (Exception e){
+                Utils.ShowToastL("发生错误:\n"+e);
+            }
+        });
     }
     public VoicePanelController(@NonNull Context context) {
         super(context);
