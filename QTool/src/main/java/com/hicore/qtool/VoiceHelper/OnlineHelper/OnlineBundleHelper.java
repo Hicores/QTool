@@ -63,6 +63,7 @@ public class OnlineBundleHelper {
         }
         Utils.ShowToastL("上传结果:"+retJson.optString("msg"));
     }
+
     public static ArrayList<VoiceProvider.FileInfo> getAllBundle(){
         try{
             ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
@@ -86,6 +87,25 @@ public class OnlineBundleHelper {
         try{
             ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
             String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo?id="+BundleID);
+            JSONObject mJson = new JSONObject(Content);
+            JSONArray mArray = mJson.getJSONArray("data");
+            for(int i=0;i<mArray.length();i++){
+                JSONObject item = mArray.getJSONObject(i);
+                VoiceProvider.FileInfo info = new VoiceProvider.FileInfo();
+                info.type = 6;
+                info.Name = item.getString("Name");
+                info.Path = "https://cdn.haonb.cc/"+item.getString("URI");
+                retInfo.add(info);
+            }
+            return retInfo;
+        }catch (Exception e){
+            return new ArrayList<>();
+        }
+    }
+    public static ArrayList<VoiceProvider.FileInfo> searchForName(String Name){
+        try{
+            ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
+            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/Search?name="+URLEncoder.encode(Name));
             JSONObject mJson = new JSONObject(Content);
             JSONArray mArray = mJson.getJSONArray("data");
             for(int i=0;i<mArray.length();i++){

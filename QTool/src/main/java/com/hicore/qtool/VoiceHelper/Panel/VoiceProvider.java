@@ -12,6 +12,7 @@ public class VoiceProvider {
     public static final String PROVIDER_LOCAL_FILE = "LocalFile::";
     public static final String PROVIDER_ONLINE = "OnlineFile::";
     public static final String PROVIDER_LOCAL_SEARCH = " LOCAL_SEARCH::";
+    public static final String PROVIDER_ONLINE_SEARCH = "OnlineSearch::";
 
     public static class FileInfo{
         public String Name;
@@ -48,6 +49,9 @@ public class VoiceProvider {
             String ControlCode = Path.substring(PROVIDER_ONLINE.length());
             if (TextUtils.isEmpty(ControlCode))return OnlineBundleHelper.getAllBundle();
             else return OnlineBundleHelper.getBundleContent(ControlCode);
+        }else if (Path.startsWith(PROVIDER_ONLINE_SEARCH)){
+            String ControlCode = Path.substring(PROVIDER_ONLINE_SEARCH.length());
+            return OnlineBundleHelper.searchForName(ControlCode);
         }
         return new ArrayList<>();
     }

@@ -148,20 +148,33 @@ public final class VoicePanelController extends BottomPopupView {
                     searchBox.setFocusable(true);
                     searchBox.setOnEditorActionListener((v, actionId, event) -> {
                         if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                            String search = v.getText().toString();
-                            if (search.length() == 0){
-                                if (cacheProvider != null){
-                                    provider = cacheProvider;
-                                    cacheProvider = null;
+                            if (ControllerMode == 0){
+                                String search = v.getText().toString();
+                                if (search.length() == 0){
+                                    if (cacheProvider != null){
+                                        provider = cacheProvider;
+                                        cacheProvider = null;
+                                        UpdateProviderDate();
+                                    }
+                                }else{
+                                    if (cacheProvider == null){
+                                        cacheProvider = provider;
+                                    }
+                                    provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_SEARCH+search);
                                     UpdateProviderDate();
                                 }
-                            }else{
-                                if (cacheProvider == null){
-                                    cacheProvider = provider;
+                            }else if (ControllerMode == 1){
+                                String search = v.getText().toString();
+                                if (search.trim().isEmpty()){
+                                    Utils.ShowToastL("必须输入搜索内容");
+                                    return true;
                                 }
-                                provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_SEARCH+search);
+                                provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE_SEARCH+search);
                                 UpdateProviderDate();
+                            }else {
+                                Utils.ShowToastL("这里不支持搜索");
                             }
+
                         }
                         return false;
                     });
