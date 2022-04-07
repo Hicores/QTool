@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -21,6 +23,7 @@ import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.R;
 import com.hicore.qtool.VoiceHelper.Panel.VoicePanel;
 import com.hicore.qtool.VoiceHelper.Panel.VoicePanelController;
+import com.hicore.qtool.VoiceHelper.Panel.VoiceProvider;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -77,6 +80,19 @@ public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
                 VoicePanel.preSaveVoice(mContext,PTTPath);
             }
         });
+
+        XPBridge.HookAfter(m[3],param -> {
+            if (IsEnable){
+                View button = MField.GetRoundField(param.thisObject,param.thisObject.getClass(), ImageButton.class,0);
+                if (button != null){
+                    button.setOnLongClickListener(v->{
+                        VoicePanel.createVoicePanel();
+                        return true;
+                    });
+                }
+            }
+
+        });
         return true;
     }
 
@@ -107,7 +123,7 @@ public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
 
     }
     public Member[] getMethod(){
-        Member[] m = new Member[3];
+        Member[] m = new Member[4];
         Class clz = MClass.loadClass("com.tencent.mobileqq.activity.aio.audiopanel.PressToSpeakPanel");
         for(Constructor cons : clz.getDeclaredConstructors()){
             if (cons.getParameterCount() == 2){
@@ -122,6 +138,8 @@ public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
         m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder"),"a");
         m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.PttItemBuilder","a",void.class,new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
+
+        m[3] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper","a",void.class,new Class[0]);
 
         return m;
     }
