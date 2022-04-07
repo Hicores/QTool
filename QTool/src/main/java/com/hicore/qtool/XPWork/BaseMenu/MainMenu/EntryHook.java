@@ -40,7 +40,6 @@ public class EntryHook extends BaseHookItem {
 
                 View item = MField.GetFirstField(act,MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"));
                 ViewGroup mRoot = (ViewGroup) item.getParent();
-
                 mRoot.addView(FormItemUtils.createMultiItem(act,"QTool",BuildConfig.VERSION_NAME,v->{
                     MainMenu.createActivity(act);
                 }));
