@@ -20,9 +20,20 @@
         android:textColor="@color/font_plugin"
         android:text="语音名字"
         android:layout_toRightOf="@id/mIcon"
-        android:layout_toLeftOf="@id/deleteButton"
+        android:layout_toLeftOf="@id/ShareButton"
         android:textSize="25sp"
         android:gravity="center_vertical"/>
+
+    <ImageView
+        android:id="@+id/ShareButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@+id/deleteButton"
+        android:background="@drawable/share"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true"
+        android:layout_marginTop="10dp"/>
 
     <ImageView
         android:id="@+id/deleteButton"

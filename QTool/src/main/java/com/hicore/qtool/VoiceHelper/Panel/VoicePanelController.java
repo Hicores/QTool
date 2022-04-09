@@ -292,7 +292,7 @@ public final class VoicePanelController extends BottomPopupView {
                                                 Utils.ShowToastL("发生错误:\n"+e);
 
                                             }finally {
-                                                new Handler(Looper.getMainLooper()).post(()->uploadProgress.dismiss());
+                                                new Handler(Looper.getMainLooper()).post(uploadProgress::dismiss);
                                             }
                                         }).start();
                                     }).setTitle("选择需要添加到的包").show();
@@ -317,7 +317,7 @@ public final class VoicePanelController extends BottomPopupView {
             } catch (Exception e) {
                 e.printStackTrace();
             }finally {
-                new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
+                new Handler(Looper.getMainLooper()).post(mDialog::dismiss);
             }
         }).start();
     }
@@ -352,7 +352,7 @@ public final class VoicePanelController extends BottomPopupView {
                             return;
                         }
                         OnlineBundleHelper.createBundle(name);
-                        new Thread(()->UpdateList()).start();
+                        new Thread(this::UpdateList).start();
                     }).show();
         });
 
@@ -373,7 +373,16 @@ public final class VoicePanelController extends BottomPopupView {
                     image.setImageResource(R.drawable.folder);
 
                     TextView name = mLayout.findViewById(R.id.voice_name);
-                    name.setText(item.getString("name"));
+                    if (item.getBoolean("IsRequestShow")){
+                        if (item.getBoolean("IsVerify")){
+                            name.setText("(通过)"+item.getString("name"));
+                        }else {
+                            name.setText("(审核中)"+item.getString("name"));
+                        }
+                    }else {
+                        name.setText(item.getString("name"));
+                    }
+
 
                     name.setOnClickListener(v->{
                         ProgressDialog mDialog = new ProgressDialog(getContext(),3);
@@ -390,6 +399,27 @@ public final class VoicePanelController extends BottomPopupView {
                                 new Handler(Looper.getMainLooper()).post(()->mDialog.dismiss());
                             }
                         }).start();
+                    });
+
+                    ImageView shareButton = mLayout.findViewById(R.id.ShareButton);
+                    shareButton.setOnClickListener(v->{
+                        new AlertDialog.Builder(getContext(),3)
+                                .setTitle("确认分享?")
+                                .setMessage("分享后将进行审核,审核通过后其他人即可在在线语音列表显示,通过后也可以继续上传语音到该包中")
+                                .setNeutralButton("确定分享", (dialog, which) -> {
+                                    try {
+                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/RequestShare?id="+item.getString("id")
+                                                +"&key="+OnlineBundleHelper.requestForRndKey());
+                                        JSONObject mJson = new JSONObject(ret);
+                                        Utils.ShowToastL("分享结果:"+mJson.optString("msg"));
+                                        new Thread(this::UpdateList).start();
+                                    } catch (Exception e) {
+                                        Utils.ShowToastL("发生错误:"+e);
+                                    }
+
+                                }).setNegativeButton("关闭", (dialog, which) -> {
+
+                        }).show();
                     });
 
                     ImageView delete = mLayout.findViewById(R.id.deleteButton);
@@ -436,6 +466,8 @@ public final class VoicePanelController extends BottomPopupView {
 
                     TextView name = mLayout.findViewById(R.id.voice_name);
                     name.setText(item.getString("Name"));
+                    ImageView shareButton = mLayout.findViewById(R.id.ShareButton);
+                    shareButton.setVisibility(GONE);
 
                     ImageView delete = mLayout.findViewById(R.id.deleteButton);
                     delete.setOnClickListener(v->{

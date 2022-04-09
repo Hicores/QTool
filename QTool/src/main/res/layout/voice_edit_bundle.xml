@@ -17,6 +17,10 @@
             android:layout_height="wrap_content"
             android:text="刷新列表"
             android:id="@+id/FlushList"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="长按本地语音可添加"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="vertical"

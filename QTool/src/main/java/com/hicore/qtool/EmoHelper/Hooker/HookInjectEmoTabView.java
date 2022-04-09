@@ -18,6 +18,7 @@ import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.QQReflect;
+import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
 import com.hicore.Utils.Utils;
@@ -49,11 +50,12 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
             LinearLayout l = (LinearLayout) param.thisObject;
             View v = l.getChildAt(2);
             if (IsEnable){
+                ResUtils.StartInject(v.getContext());
                 ImageView image = new ImageView(v.getContext());
                 image.setImageResource(R.drawable.huaji);
                 image.setTag(123456);
                 l.addView(image,4,v.getLayoutParams());
-                new Handler(Looper.getMainLooper()).post(()->image.invalidate());
+                new Handler(Looper.getMainLooper()).post(image::invalidate);
                 image.setOnClickListener(vxx-> EmoPanel.createShow(image.getContext()));
             }
         });
