@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginStart="30dp"
-                        android:text="CI版本下载"
+                        android:text="下载最新CI版本"
                         android:gravity="center_vertical"
                         android:textSize="20sp"
                         android:textColor="#6F66FF"/>
