@@ -242,7 +242,7 @@ public class MainMenu extends Activity {
             itemJavaPlugin.setOnClickListener(v-> JavaPluginAct.startActivity(this));
 
             findViewById(R.id.GetNewVer).setOnClickListener(v->{
-                Uri u = Uri.parse("https://github.com/Hicores/QTool/actions");
+                Uri u = Uri.parse("https://down.haonb.cc/CIDL/");
                 Intent in = new Intent(Intent.ACTION_VIEW,u);
                 startActivity(in);
             });
