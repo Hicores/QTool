@@ -45,7 +45,7 @@ jobs:
         uses: nerd4ever/ssh-action@0.1.0
         with:
           from: ./QTool/build/outputs/apk/release/
-          to:  ${{ secrets.DEPLOY_DEST }} QTool-CI-${{ github.run_number }} /
+          to:  ${{ secrets.DEPLOY_DEST }}QTool-CI-${{ github.run_number }}/
           sync: local
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
