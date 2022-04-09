@@ -36,10 +36,15 @@ jobs:
         with:
           path: 'QTool/build/outputs/apk/release/QTool-release.apk'
           name: QTool-CI-${{ github.run_number }}
+      - name: Write Commit Message To File
+        run: |
+          cat << ENDOFCOMMIT > ./QTool/build/outputs/apk/release/Commit信息.txt
+          ${{ github.event.head_commit.message }}
+          ENDOFCOMMIT
       - name: Remote SSH Pusblish
         uses: nerd4ever/ssh-action@0.1.0
         with:
-          from: ./app/build/outputs/apk/release/
+          from: ./QTool/build/outputs/apk/release/
           to:  ${{ secrets.DEPLOY_DEST }} QTool-CI-${{ github.run_number }} /
           sync: local
           host: ${{ secrets.SERVER_IP }}
