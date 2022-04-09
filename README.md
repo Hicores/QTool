@@ -5,7 +5,7 @@
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Channel&color=0088cc)](https://t.me/QToolR)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
 [![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Action&color=cc66cc)](https://github.com/Hicores/QTool/actions)
-[![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Mirror&color=9900ff)](https://github.com/Hicores/QTool/actions)
+[![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Mirror&color=9900ff)](https://down.haonb.cc/CIDL/)
 </div>
 
 -----
