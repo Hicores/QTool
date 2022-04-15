@@ -50,7 +50,7 @@ public class VoicePanel {
 
         TextView showPath = mRoot.findViewById(R.id.Tip_EdSavaName);
 
-        new AlertDialog.Builder(context,3)
+        new AlertDialog.Builder(context,Utils.getDarkModeStatus(context) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("保存语音")
                 .setView(mRoot)
                 .setNeutralButton("确定保存", (dialog, which) -> {

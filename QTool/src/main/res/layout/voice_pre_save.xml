@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/bg_plugin"
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
@@ -13,9 +13,10 @@
         android:id="@+id/Tip_Save_Name"
         android:textSize="24sp"
         android:gravity="center"
-        android:textColor="@color/black"/>
+        android:textColor="@color/font_plugin"/>
 
     <EditText
+        android:background="@color/bg_plugin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/Tip_Save_Name"
@@ -23,7 +24,7 @@
         android:id="@+id/Ed_SaveName"
         android:gravity="center"
         android:text="一条语音"
-        android:textColor="@color/black" />
+        android:textColor="@color/font_plugin" />
 
     <TextView
         android:id="@+id/Tip_EdSavaName"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="保存目录:XXXXXXXXXXXXXXXXXXXXXXXXX"
-        android:textColor="@color/black"
+        android:textColor="@color/font_plugin"
         android:layout_below="@+id/Ed_SaveName"/>
 
     <TextView
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="选择目录"
-        android:textColor="@color/black"
+        android:textColor="@color/font_plugin"
         android:layout_below="@+id/Ed_SaveName"/>
     <ScrollView
         android:background="#BEBEBE"

@@ -30,7 +30,7 @@ public class OnlineBundleHelper {
                 +"&uin="+ QQEnvUtils.getCurrentUin();
         String ret = HttpUtils.getContent(URL);
         if ("success".equals(ret)){
-            Utils.ShowToast("已创建,可以通过长按本地语音来添加语音,名字审核通过后即可在其他用户显示");
+            Utils.ShowToast("已创建,可以通过长按本地语音来添加语音");
         }else {
             Utils.ShowToastL("网络异常");
         }

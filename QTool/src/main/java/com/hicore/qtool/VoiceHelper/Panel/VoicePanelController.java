@@ -96,7 +96,7 @@ public final class VoicePanelController extends BottomPopupView {
                 if (fileInfo.type == 1){
                     mItem.setOnClickListener(null);
                     mItem.setOnLongClickListener(v->{
-                        new AlertDialog.Builder(getContext(),3)
+                        new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle("选择操作")
                                 .setItems(new String[]{"删除", "添加到语音包"}, (dialog, which) -> {
                                     if (which == 0){
@@ -223,7 +223,7 @@ public final class VoicePanelController extends BottomPopupView {
         mFrame.setVisibility(GONE);
 
         resultFile.clear();
-        ProgressDialog dialog = new ProgressDialog(getContext(),3);
+        ProgressDialog dialog = new ProgressDialog(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
         dialog.setTitle("请稍后...");
         dialog.setMessage("加载中...");
         dialog.setCancelable(false);
@@ -255,7 +255,7 @@ public final class VoicePanelController extends BottomPopupView {
         }
     }
     private void AddVoiceToPacket(String Name,String Path){
-        ProgressDialog dialog = new ProgressDialog(getContext(),3);
+        ProgressDialog dialog = new ProgressDialog(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
         dialog.setTitle("加载中..");
         dialog.setMessage("正在获取可用列表...");
         dialog.setCancelable(false);
@@ -277,7 +277,7 @@ public final class VoicePanelController extends BottomPopupView {
                                 idList.add(item.getString("id"));
                             }
 
-                            new AlertDialog.Builder(getContext(),3)
+                            new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                     .setItems(bundleList.toArray(new String[0]), (dialog1, which) -> {
                                         String Bundle = idList.get(which);
                                         ProgressDialog uploadProgress = new ProgressDialog(getContext(),3);
@@ -306,7 +306,7 @@ public final class VoicePanelController extends BottomPopupView {
         }).start();
     }
     private void PreLoadBundleList(){
-        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+        ProgressDialog mDialog = new ProgressDialog(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
         mDialog.setTitle("正在加载..");
         mDialog.setMessage("正在加载列表...");
         mDialog.setCancelable(false);
@@ -338,7 +338,7 @@ public final class VoicePanelController extends BottomPopupView {
             EditText inputName = new EditText(getContext());
             inputName.setHint("输入名字");
 
-            new AlertDialog.Builder(getContext(),3)
+            new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle("请输入名字")
                     .setView(inputName)
                     .setNeutralButton("确定创建", (dialog, which) -> {
@@ -385,7 +385,7 @@ public final class VoicePanelController extends BottomPopupView {
 
 
                     name.setOnClickListener(v->{
-                        ProgressDialog mDialog = new ProgressDialog(getContext(),3);
+                        ProgressDialog mDialog = new ProgressDialog(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
                         mDialog.setTitle("正在加载..");
                         mDialog.setMessage("正在加载列表...");
                         mDialog.setCancelable(false);
@@ -403,7 +403,7 @@ public final class VoicePanelController extends BottomPopupView {
 
                     ImageView shareButton = mLayout.findViewById(R.id.ShareButton);
                     shareButton.setOnClickListener(v->{
-                        new AlertDialog.Builder(getContext(),3)
+                        new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle("确认分享?")
                                 .setMessage("分享后将进行审核,审核通过后其他人即可在在线语音列表显示,通过后也可以继续上传语音到该包中")
                                 .setNeutralButton("确定分享", (dialog, which) -> {
@@ -471,7 +471,7 @@ public final class VoicePanelController extends BottomPopupView {
 
                     ImageView delete = mLayout.findViewById(R.id.deleteButton);
                     delete.setOnClickListener(v->{
-                        new AlertDialog.Builder(getContext(),3)
+                        new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle("确认操作")
                                 .setMessage("是否删除?")
                                 .setNeutralButton("确定删除", (dialog, which) -> {

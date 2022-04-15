@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:clickable="true"
-    android:background="@color/white"
+    android:background="@color/bg_plugin"
     android:layout_height="50dp">
     <ImageView
         android:layout_marginTop="10dp"
