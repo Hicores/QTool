@@ -2,6 +2,7 @@ package com.hicore.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -26,6 +27,10 @@ public class Utils {
             return -(int) (f * scale + 0.5f);
         }
 
+    }
+    public static boolean getDarkModeStatus(Context context) {
+        int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return mode == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static int dip2sp(Context context, float dpValue) {

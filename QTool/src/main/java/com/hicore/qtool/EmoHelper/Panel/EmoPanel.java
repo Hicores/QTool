@@ -82,7 +82,7 @@ public class EmoPanel {
         Button btnCreate = mRoot.findViewById(R.id.createNew);
         btnCreate.setOnClickListener(v->{
             EditText edNew = new EditText(context);
-            new AlertDialog.Builder(context,3)
+            new AlertDialog.Builder(context,Utils.getDarkModeStatus(context) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle("创建新目录")
                     .setView(edNew)
                     .setNeutralButton("确定创建", (dialog, which) -> {
@@ -116,7 +116,7 @@ public class EmoPanel {
 
         });
 
-        new AlertDialog.Builder(context,3)
+        new AlertDialog.Builder(context,Utils.getDarkModeStatus(context) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("是否保存")
                 .setView(mRoot)
                 .setNeutralButton("保存", (dialog, which) -> {
@@ -133,7 +133,7 @@ public class EmoPanel {
     }
     //如果要保存的是多张图片则弹出MD5选择,选择后才弹出确认图片保存框
     public static void PreSaveMultiPicList(ArrayList<String> url,ArrayList<String> MD5,Context context){
-        new AlertDialog.Builder(context,3)
+        new AlertDialog.Builder(context,Utils.getDarkModeStatus(context) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("选择需要保存的图片")
                 .setItems(MD5.toArray(new String[0]), (dialog, which) -> {
                     PreSavePicToList(url.get(which),MD5.get(which),context);

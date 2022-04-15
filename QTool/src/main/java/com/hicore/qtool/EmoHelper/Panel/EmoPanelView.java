@@ -138,7 +138,7 @@ public class EmoPanelView extends BottomPopupView {
         for(String name : barList){
             TextView view = new TextView(getContext());
             view.setText(name);
-            view.setTextColor(Color.BLACK);
+            view.setTextColor(getResources().getColor(R.color.font_plugin,null));
             view.setTextSize(24);
             LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             parans.setMargins(Utils.dip2px(getContext(),10),0,Utils.dip2px(getContext(),10),0);
@@ -150,7 +150,7 @@ public class EmoPanelView extends BottomPopupView {
                 CacheScrollTop =0;
                 updateShowPath(name);
                 for (View otherItem : titleBarList){
-                    otherItem.setBackgroundColor(Color.WHITE);
+                    otherItem.setBackgroundColor(getResources().getColor(R.color.bg_plugin,null));
                 }
                 v.setBackground(getResources().getDrawable(R.drawable.menu_item_base,null));
 
@@ -228,7 +228,7 @@ public class EmoPanelView extends BottomPopupView {
                                     .load(new File(info.Path))
                                     .fitCenter()
                                     .into(newView);
-                            new AlertDialog.Builder(getContext(),3)
+                            new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                     .setTitle("是否删除此图片")
                                     .setView(root)
                                     .setNeutralButton("删除", (dialog, which) -> {
