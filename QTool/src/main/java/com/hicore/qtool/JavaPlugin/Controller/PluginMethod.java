@@ -11,6 +11,7 @@ import com.hicore.qtool.QQMessage.QQMessageUtils;
 import com.hicore.qtool.QQMessage.QQMsgSendUtils;
 import com.hicore.qtool.QQMessage.QQMsgSender;
 import com.hicore.qtool.QQMessage.QQSessionUtils;
+import com.hicore.qtool.QQTools.QQServletHelper;
 import com.hicore.qtool.XPWork.QQProxy.JoinEventProxy;
 
 import java.util.ArrayList;
@@ -235,5 +236,15 @@ public class PluginMethod {
     }
     public void HandlerRequest(Object request,boolean isAccept,String reason,boolean isBlack){
         JoinEventProxy.sendResponse(request, isAccept, reason, isBlack);
+    }
+    public String getFileDirectUrl(Object msgData){
+        Object chatMsg;
+        if (msgData == null)return null;
+        if (msgData instanceof PluginInfo.MessageData){
+            chatMsg = ((PluginInfo.MessageData) msgData).msg;
+        }else if (msgData.getClass().getName().contains("MessageForTroopFile")){
+            chatMsg = msgData;
+        }else return null;
+        return QQServletHelper.waitForGetDownUrl(chatMsg);
     }
 }

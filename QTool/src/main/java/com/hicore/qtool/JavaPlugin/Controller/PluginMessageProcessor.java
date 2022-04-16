@@ -6,6 +6,7 @@ import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
+import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 import com.hicore.qtool.QQManager.QQEnvUtils;
 import com.hicore.qtool.QQManager.QQGroupUtils;
@@ -116,14 +117,7 @@ public class PluginMessageProcessor {
                 data.FileUrl = MField.GetField(msg,"url",String.class);
                 data.FileName = MField.GetField(msg,"fileName",String.class);
                 data.FileSize = MField.GetField(msg,"fileSize",long.class);
-                /*
-                QQServletHelper.GetFileDownUrl(msg, URL -> {
-                    fileDLCache.put(data.FileUrl,URL);
-                    data.FileUrl = URL;
-                    submit(()->PluginController.onMessage(early,data));
-                });
 
-                 */
                 submit(()->PluginController.onMessage(early,data));
                 return;
             }else if (clzName.equals("MessageForReplyText")){

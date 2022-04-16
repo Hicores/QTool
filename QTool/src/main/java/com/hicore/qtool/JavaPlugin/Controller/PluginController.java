@@ -253,6 +253,7 @@ public class PluginController {
         space.setMethod("setFlag",new BshMethod(PluginMethod.class.getMethod("setFlag", String.class),env));
         space.setMethod("IncludeFile",new BshMethod(PluginMethod.class.getMethod("IncludeFile", String.class),env));
         space.setMethod("HandleRequest",new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class),env));
+        space.setMethod("getFileUrl",new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class),env));
 
     }
     //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息
@@ -262,7 +263,7 @@ public class PluginController {
         Interpreter instance = info.Instance;
         instance.set("context", HookEnv.AppContext);
         instance.set("PluginID",BandVerifyID);
-        instance.set("SDKVer",10);
+        instance.set("SDKVer",11);
         instance.set("loader",HookEnv.mLoader);
         instance.set("AppPath",info.LocalPath);
         instance.set("MyUin", QQEnvUtils.getCurrentUin());
