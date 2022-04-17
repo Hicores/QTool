@@ -57,12 +57,21 @@ public class EmoPanel {
         NewInfo.URL = URL;
         NewInfo.type = 2;
         NewInfo.MD5 = MD5.toUpperCase(Locale.ROOT);
-        EmoOnlineLoader.submit(NewInfo,()->{
+        if (URL.startsWith("http")){
+            EmoOnlineLoader.submit(NewInfo,()->{
+                Glide.with(HookEnv.AppContext)
+                        .load(new File(NewInfo.Path))
+                        .fitCenter()
+                        .into(preView);
+            });
+        }else {
+            NewInfo.Path = URL;
             Glide.with(HookEnv.AppContext)
                     .load(new File(NewInfo.Path))
                     .fitCenter()
                     .into(preView);
-        });
+        }
+
 
         ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
         RadioGroup group = mRoot.findViewById(R.id.emo_pre_list_choser);

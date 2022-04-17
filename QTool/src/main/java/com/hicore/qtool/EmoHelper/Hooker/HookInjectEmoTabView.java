@@ -21,15 +21,19 @@ import com.hicore.ReflectUtils.QQReflect;
 import com.hicore.ReflectUtils.ResUtils;
 import com.hicore.ReflectUtils.XPBridge;
 import com.hicore.UIItem;
+import com.hicore.Utils.DataUtils;
 import com.hicore.Utils.Utils;
 import com.hicore.qtool.EmoHelper.Panel.EmoPanel;
+import com.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import com.hicore.qtool.R;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import com.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.security.spec.MGF1ParameterSpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +164,29 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
 
         });
 
+        XPBridge.HookAfter(m[7],param -> {
+            if (IsEnable){
+                Object arr = param.getResult();
+                Object ret = Array.newInstance(arr.getClass().getComponentType(),Array.getLength(arr)+1);
+                System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
+                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"),3100,"保存到QT");
+                MField.SetField(MenuItem,"c",Integer.MAX_VALUE-1);
+                Array.set(ret,0,MenuItem);
+
+                param.setResult(ret);
+            }
+        });
+        XPBridge.HookBefore(m[8],param -> {
+            int InvokeID = (int) param.args[0];
+            Context mContext = (Context) param.args[1];
+            Object chatMsg = param.args[2];
+            if (InvokeID == 3100){
+                Object mMarkFaceMessage = MField.GetField(chatMsg,"mMarkFaceMessage");
+                String LocalPath = DecodeForEncPic.decodeGifForLocalPath(MField.GetField(mMarkFaceMessage,"dwTabID"),MField.GetField(mMarkFaceMessage,"sbufID"));
+                new Handler(Looper.getMainLooper()).post(()-> EmoPanel.PreSavePicToList(LocalPath, DataUtils.getFileMD5(new File(LocalPath)),mContext));
+            }
+        });
+
         return true;
     }
 
@@ -190,7 +217,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
 
     }
     public Method[] getMethod(){
-        Method[] m = new Method[7];
+        Method[] m = new Method[9];
         m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
                 "a",void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
 
@@ -205,6 +232,10 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
 
         m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent","o",void.class,new Class[0]);
         m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper","a",void.class,new Class[0]);
+
+        m[7] =  QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder"),"a");
+        m[8] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder","a",void.class,new Class[]{
+                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 
         return m;
     }
