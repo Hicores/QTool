@@ -108,7 +108,7 @@ public class MField {
         Class<?> Check = CheckClass;
         while (Check != null){
             for (Field f : Check.getDeclaredFields()){
-                if (MClass.CheckClass(f.getType(),FieldClass)){
+                if (FieldClass == f.getType()){
                     f.setAccessible(true);
                     FieldCache.put(SignText,f);
                     return (T) f.get(CheckObj);

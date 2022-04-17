@@ -41,17 +41,20 @@ public class QQMsgSendUtils {
     [UnMute=0]为全体解禁
      */
     public static void decodeAndSendMsg(String GroupUin,String UserUin,String Message){
+        decodeAndSendMsg(GroupUin, UserUin, Message,null);
+    }
+    public static void decodeAndSendMsg(String GroupUin,String UserUin,String Message,Object extraRecord){
         try{
             ArrayList<DecodeResult> msgDec = decodeForResult(Message);
             if (msgDec.size() == 0)return;
-            preSendExecutor.submit(()->preSendMsg(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),msgDec));
+            preSendExecutor.submit(()->preSendMsg(QQSessionUtils.Build_SessionInfo(GroupUin,UserUin),msgDec,extraRecord));
         }catch (Exception e){
             LogUtils.error("MessageTextDecoder",e);
         }
 
     }
-    private static void preSendMsg(Object _Session,ArrayList<DecodeResult> msgList){
-        if (msgList.size()==1){
+    private static void preSendMsg(Object _Session,ArrayList<DecodeResult> msgList,Object extraRecord){
+        if (msgList.size()==1 && extraRecord == null){
             DecodeResult result = msgList.get(0);
             if (result.msgType == TYPE_PIC){
                 Object record = QQMsgBuilder.buildPic(_Session,result.content);
@@ -88,7 +91,10 @@ public class QQMsgSendUtils {
                 records.add(QQMsgBuilder.buildText(QQSessionUtils.getGroupUin(_Session),atText));
             }
         }
-        if (HasPic){
+        if (extraRecord != null){
+            records.add(0,extraRecord);
+            sendMix(_Session,records);
+        } else if (HasPic){
             sendMix(_Session,records);
         }else {
             QQMsgSender.sendText(_Session,summary.toString(),atInfo);
