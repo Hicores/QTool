@@ -19,9 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class org.** { *; }
 -keep class bsh.** { *; }
--keep class com.github.**{*;}
 -keep class androidx.lifecycle.**{ *; }
 -keep class com.lxj.xpopup.widget.**{*;}
 -keep class com.hicore.qtool.XposedInit.**{*;}
