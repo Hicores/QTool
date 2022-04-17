@@ -10,4 +10,8 @@
 
     <color name="font_plugin">@color/black</color>
     <color name="bg_plugin">@color/white</color>
+
+    <drawable name="text_unpress">#00000000</drawable>
+    <drawable name="text_press">#A9999999</drawable>
+
 </resources>

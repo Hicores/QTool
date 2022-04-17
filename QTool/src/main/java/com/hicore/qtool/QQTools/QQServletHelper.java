@@ -7,7 +7,6 @@ import com.hicore.ReflectUtils.MClass;
 import com.hicore.ReflectUtils.MField;
 import com.hicore.ReflectUtils.MMethod;
 import com.hicore.ReflectUtils.XPBridge;
-import com.hicore.Utils.Utils;
 import com.hicore.qtool.HookEnv;
 
 import java.util.HashMap;
@@ -109,7 +108,6 @@ public class QQServletHelper {
 
     }
     private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-
     public static String bytes2HexStr(byte[] bArr) {
         if (bArr == null || bArr.length == 0) {
             return null;
