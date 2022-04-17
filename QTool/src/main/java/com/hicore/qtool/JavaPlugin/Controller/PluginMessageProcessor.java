@@ -1,6 +1,7 @@
 package com.hicore.qtool.JavaPlugin.Controller;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hicore.LogUtils.LogUtils;
 import com.hicore.ReflectUtils.MClass;
@@ -23,12 +24,28 @@ import java.util.concurrent.Executors;
 
 public class PluginMessageProcessor {
     static HashMap<String,String> fileDLCache = new HashMap<>();
-    private static ExecutorService executor = Executors.newSingleThreadExecutor();
+    private static final ExecutorService messageProcessor = Executors.newSingleThreadExecutor();
+    private static final ExecutorService pluginDispatcher = Executors.newSingleThreadExecutor();
+    {
+        messageProcessor.submit(()-> Thread.currentThread().setName("QTool_MessageProcessor"));
+    }
     public static void onMessage(Object msg){
         onMessage0(msg);
     }
     public static void submit(Runnable run){
-        executor.submit(run);
+        messageProcessor.submit(() -> {
+            try{
+                run.run();
+            }catch (Exception e){
+                Log.e("PluginMessageProcessor",Log.getStackTraceString(e));
+            }
+        });
+    }
+    private static void submit2(Runnable run){
+        pluginDispatcher.submit(() -> {
+            Thread.currentThread().setName("QTool_Plugin_Worker");
+            run.run();
+        });
     }
     //解析消息并封装成插件可用的消息对象
     private static void onMessage0(Object msg){
@@ -117,9 +134,6 @@ public class PluginMessageProcessor {
                 data.FileUrl = MField.GetField(msg,"url",String.class);
                 data.FileName = MField.GetField(msg,"fileName",String.class);
                 data.FileSize = MField.GetField(msg,"fileSize",long.class);
-
-                submit(()->PluginController.onMessage(early,data));
-                return;
             }else if (clzName.equals("MessageForReplyText")){
                 Object SourceInfo = MField.GetField(msg,"mSourceMsgInfo");
                 if(SourceInfo != null){
@@ -129,7 +143,8 @@ public class PluginMessageProcessor {
                     data.ReplyTo = String.valueOf(uin);
                 }
             }
-            PluginController.onMessage(early,data);
+            submit2(()-> PluginController.onMessage(early,data));
+
         }catch (Exception e){
             LogUtils.error("MessageDecoder0","Can't decode msg:\n"+e+"("+msg.getClass().getName()+")");
         }

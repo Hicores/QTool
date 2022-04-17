@@ -68,8 +68,7 @@ public final class LocalPluginItemController {
     private void ClickLoad(){
         btn_load.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
-
-        new Thread(()->{
+        Thread loadThread = new Thread(()->{
             boolean loadResult = PluginController.LoadOnce(mInfo);
             if (loadResult){
                 new Handler(Looper.getMainLooper())
@@ -84,21 +83,24 @@ public final class LocalPluginItemController {
                             btn_load.setVisibility(View.VISIBLE);
                         });
             }
-        }).start();
+        });
+        loadThread.setName("QTool_Plugin_Loader");
+        loadThread.start();
 
     }
     private void ClickStop(){
         btn_stop.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
-
-        new Thread(()->{
+        Thread endThread = new Thread(()->{
             PluginController.endPlugin(mInfo.PluginID);
             new Handler(Looper.getMainLooper())
                     .post(()->{
                         btn_loading.setVisibility(View.GONE);
                         btn_load.setVisibility(View.VISIBLE);
                     });
-        }).start();
+        });
+        endThread.setName("QTool_Plugin_Terminate_thread");
+        endThread.start();
 
     }
     private void ClickMain(){
