@@ -348,7 +348,7 @@ public class PluginController {
         HashMap<String,PluginInfo> avail = new HashMap<>();
         for(String key : runningInfo.keySet()){
             PluginInfo info = runningInfo.get(key);
-            if (info != null && !info.IsLoading && info.IsRunning){
+            if (info != null && info.ItemFunctions.size() != 0 && !info.IsLoading && info.IsRunning){
                 if (info.IsAvailable(Uin)){
                     avail.put(key,info);
                 }

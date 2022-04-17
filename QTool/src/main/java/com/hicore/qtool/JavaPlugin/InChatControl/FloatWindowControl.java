@@ -306,6 +306,7 @@ public class FloatWindowControl {
 
                 for (String VerifyKey : cachePlugin.keySet()){
                     PluginInfo info = cachePlugin.get(VerifyKey);
+                    if (info.ItemFunctions.size() == 0)continue;
 
                     RelativeLayout item = (RelativeLayout) inflater.inflate(R.layout.plugin_inchat_menu_item,null);
                     TextView title = item.findViewById(R.id.plugin_title);
