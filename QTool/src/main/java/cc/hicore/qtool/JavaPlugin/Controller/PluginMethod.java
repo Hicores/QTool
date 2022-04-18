@@ -63,7 +63,12 @@ public class PluginMethod {
     }
     public void sendReply(String GroupUin,Object target,String text){
         if (info_.IsAvailable(GroupUin)){
-            QQMsgSendUtils.sendReply(GroupUin,target,text);
+            if (target instanceof PluginInfo.MessageData){
+                QQMsgSendUtils.sendReply(GroupUin,((PluginInfo.MessageData) target).msg,text);
+            }else {
+                QQMsgSendUtils.sendReply(GroupUin,target,text);
+            }
+
         }
     }
     public ArrayList<PluginInfo.GroupInfo> getGroupList(){

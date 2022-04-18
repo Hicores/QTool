@@ -333,8 +333,13 @@ public class QQMsgSendUtils {
                             String.class
                     }
             );
-            Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,mixText);
-            QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin,""),Builded);
+            if (mixText.contains("[PicUrl=")){
+                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,"");
+                QQMsgSendUtils.decodeAndSendMsg(GroupUin,"",mixText,Builded);
+            }else {
+                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,mixText);
+                QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin,""),Builded);
+            }
         }catch (Throwable th)
         {
             LogUtils.error("sendReply_",th);
