@@ -7,7 +7,7 @@
     android:background="#ff9933"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    tools:context="cc.hicore.qtool.MainActivity">
     <LinearLayout
         android:layout_marginTop="40dp"
         android:layout_width="match_parent"

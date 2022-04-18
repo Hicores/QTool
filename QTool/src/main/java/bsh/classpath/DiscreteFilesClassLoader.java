@@ -27,8 +27,6 @@
 
 package bsh.classpath;
 
-import android.util.Log;
-
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
 import com.android.dx.command.dexer.DxContext;
@@ -36,9 +34,8 @@ import com.android.dx.dex.DexOptions;
 import com.android.dx.dex.cf.CfOptions;
 import com.android.dx.dex.cf.CfTranslator;
 import com.android.dx.dex.file.DexFile;
-import com.hicore.LogUtils.LogUtils;
-import com.hicore.Utils.Utils;
-import com.hicore.qtool.HookEnv;
+
+import cc.hicore.qtool.HookEnv;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -46,7 +43,6 @@ import java.util.*;
 import bsh.BshClassManager;
 import bsh.classpath.BshClassPath.ClassSource;
 import dalvik.system.InMemoryDexClassLoader;
-import de.robv.android.xposed.XposedBridge;
 
 /**
 	A classloader which can load one or more classes from specified sources.

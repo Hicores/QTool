@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="60dp">
-    <view class="com.hicore.qtool.QQTools.QQSelectHelper$RoundImageView"
+    <view class="cc.hicore.qtool.QQTools.QQSelectHelper$RoundImageView"
         android:id="@+id/HeadView"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"

@@ -22,15 +22,15 @@
 -keep class bsh.** { *; }
 -keep class androidx.lifecycle.**{ *; }
 -keep class com.lxj.xpopup.widget.**{*;}
--keep class com.hicore.qtool.XposedInit.**{*;}
--keep class * implements com.hicore.qtool.XposedInit.ItemLoader.BaseUiItem { }
--keep class * extends com.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { }
+-keep class cc.hicore.qtool.XposedInit.**{*;}
+-keep class * implements cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem { }
+-keep class * extends cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { }
 -keep class * extends android.app.Activity { }
--keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupInfo{ *;}
--keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$RequestInfo{ *;}
--keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$MessageData{ *;}
--keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
--keep class com.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupInfo{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$RequestInfo{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$MessageData{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
 
 -keepclassmembers enum * {
     public static **[] values();

@@ -27,13 +27,11 @@
 
 package bsh.classpath;
 
-import com.hicore.qtool.HookEnv;
+import cc.hicore.qtool.HookEnv;
 
 import java.net.*;
-import java.util.*;
-import java.io.*;
+
 import bsh.BshClassManager;
-import de.robv.android.xposed.XposedBridge;
 
 /**
 	One of the things BshClassLoader does is to address a deficiency in

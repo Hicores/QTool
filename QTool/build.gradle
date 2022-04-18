@@ -6,10 +6,10 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.hicore.qtool"
+        applicationId "cc.hicore.qtool"
         minSdk 26
         targetSdk 26
-        versionCode 3
+        versionCode 4
         def defAppVer = "0.0.5"
         if (System.getenv("KEYSTORE_PATH") != null){
             versionName "${defAppVer}-CI-${System.getenv("CommitNumber")}"
@@ -30,11 +30,7 @@ android {
                 enableV3Signing = true
             }
         }
-
         resConfigs "zh-rCN", "zh"
-
-
-
     }
 
     buildTypes {

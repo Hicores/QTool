@@ -30,7 +30,7 @@ package bsh;
 
 import android.util.Log;
 
-import com.hicore.LogUtils.LogUtils;
+import cc.hicore.LogUtils.LogUtils;
 
 import java.lang.reflect.*;
 import java.lang.reflect.InvocationHandler;
