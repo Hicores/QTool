@@ -32,14 +32,16 @@ import java.util.Locale;
 @UIItem(itemName = "带图回复", itemType = 1, ID = "RepeatWithPic", mainItemID = 1)
 public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
     private static final HashMap<String, String> picCookies = new HashMap<>();
-    boolean IsEnable;
+    public static volatile boolean IsEnable;
 
     public static void AddToPreSendList(String LocalPath) {
         String cookie = Integer.toString(LocalPath.hashCode());
         picCookies.put(cookie, LocalPath);
         AddToEditText(cookie);
     }
-
+    public static boolean IsAvailable(){
+        return IsEnable && IsNowReplying() &&(QQSessionUtils.getSessionID() == 1 || QQSessionUtils.getSessionID() == 0);
+    }
     private static void AddToEditText(String Cookie) {
         if (ed != null) {
             String Text = "[PicCookie=" + Cookie + "]";
@@ -60,27 +62,22 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
         XPBridge.HookAfter(m[3], param -> {
             ed = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.widget.XEditTextEx"));
             chatPie = param.thisObject;
-            picCookies.clear();
         });
         XPBridge.HookBefore(m[1], param -> {
-            if (IsEnable && IsNowReplying()) {
-                if (QQSessionUtils.getSessionID() == 1 || QQSessionUtils.getSessionID() == 0) {
-                    String Path = (String) param.args[3];
-                    AddToPreSendList(Path);
-                    param.setResult(true);
-                }
+            if (IsAvailable()) {
+                String Path = (String) param.args[3];
+                AddToPreSendList(Path);
+                param.setResult(true);
             }
         });
         XPBridge.HookBefore(m[2], param -> {
-            if (IsEnable && IsNowReplying()) {
-                if (QQSessionUtils.getSessionID() == 1 || QQSessionUtils.getSessionID() == 0) {
-                    List<String> l = (List) param.args[1];
-                    for (String str : l) {
-                        if (str.toLowerCase(Locale.ROOT).endsWith(".mp4")) continue;
-                        AddToPreSendList(str);
-                    }
-                    param.setResult(true);
+            if (IsAvailable()) {
+                List<String> l = (List) param.args[1];
+                for (String str : l) {
+                    if (str.toLowerCase(Locale.ROOT).endsWith(".mp4")) continue;
+                    AddToPreSendList(str);
                 }
+                param.setResult(true);
             }
         });
 

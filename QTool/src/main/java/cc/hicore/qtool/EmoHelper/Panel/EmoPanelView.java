@@ -26,6 +26,7 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.CloudSync.SyncCore;
+import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
@@ -246,11 +247,19 @@ public class EmoPanelView extends BottomPopupView {
                     view.setOnClickListener(v->{
                         if (info.type == 2){
                             EmoOnlineLoader.submit(info,()->{
-                                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                                if (RepeatWithPic.IsAvailable()){
+                                    RepeatWithPic.AddToPreSendList(info.Path);
+                                }else {
+                                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                                }
                                 dismiss();
                             });
                         }else {
-                            QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                            if (RepeatWithPic.IsAvailable()){
+                                RepeatWithPic.AddToPreSendList(info.Path);
+                            }else {
+                                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,info.Path));
+                            }
                             dismiss();
                         }
 
