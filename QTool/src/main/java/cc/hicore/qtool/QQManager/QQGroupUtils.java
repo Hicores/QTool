@@ -4,6 +4,7 @@ import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.qtool.HookEnv;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -137,7 +138,36 @@ public class QQGroupUtils {
         }
     }
     public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin){
-        return null;
+        try {
+            Object Manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"),new Class[]{HookEnv.AppInterface.getClass()},HookEnv.AppInterface);
+            ArrayList TheList;
+            try{
+                TheList = MMethod.CallMethod(Manager,"a",ArrayList.class,new Class[]{String.class,boolean.class},GroupUin,true);
+            }catch (Exception e){
+                TheList = MMethod.CallMethod(Manager,"b",ArrayList.class,new Class[]{String.class,boolean.class},GroupUin,true);
+            }
+
+            if (TheList != null){
+                ArrayList<MuteList> newList = new ArrayList<>();
+                for (Object item : TheList){
+                    MuteList newItem = new MuteList();
+                    String UserUin = MField.GetField(item,"a",String.class);
+                    long TimeStamp;
+                    try{
+                        TimeStamp= MField.GetField(item,"a",long.class);
+                    }catch (Exception e){
+                        TimeStamp = MField.GetField(item,"b",long.class);
+                    }
+                    newItem.Uin = UserUin;
+                    newItem.delayTime = TimeStamp * 1000 - System.currentTimeMillis();
+                    newList.add(newItem);
+                }
+                return newList;
+            }
+            return null;
+        } catch (Exception e) {
+            return new ArrayList();
+        }
     }
 
 
