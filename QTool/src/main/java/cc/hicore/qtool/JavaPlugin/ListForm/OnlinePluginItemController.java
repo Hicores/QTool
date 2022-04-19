@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
@@ -92,12 +93,16 @@ public class OnlinePluginItemController {
 
         //初始化动画
         LinearLayout ll = layout.findViewById(R.id.HideBar_Online);
-        int width = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED);
-        int height = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED);
-        ll.measure(width,height);
-        MeasureHeight = ll.getMeasuredHeight();
+        ll.setVisibility(View.VISIBLE);
+        ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                MeasureHeight = (int) (ll.getMeasuredHeight());
+                ll.setVisibility(View.GONE);
+            }
+        });
+
         initAnim();
 
 

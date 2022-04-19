@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.CheckBox;
@@ -362,12 +363,15 @@ public final class LocalPluginItemController {
     }
     private void InitMeasure(){
         LinearLayout ll = mRoot.findViewById(R.id.HideBar);
-        int width = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED);
-        int height = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED);
-        ll.measure(width,height);
-        MeasureHeight = ll.getMeasuredHeight();
+        ll.setVisibility(View.VISIBLE);
+        ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                MeasureHeight = (int) (ll.getMeasuredHeight());
+                ll.setVisibility(View.GONE);
+            }
+        });
     }
     public void setTitleColor(int color){
         TextView titleView = mRoot.findViewById(R.id.plugin_title);
