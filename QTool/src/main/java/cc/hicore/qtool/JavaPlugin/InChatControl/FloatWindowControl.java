@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -307,7 +308,7 @@ public class FloatWindowControl {
 
                 for (String VerifyKey : cachePlugin.keySet()){
                     PluginInfo info = cachePlugin.get(VerifyKey);
-                    if (info.ItemFunctions.size() == 0)continue;
+
 
                     RelativeLayout item = (RelativeLayout) inflater.inflate(R.layout.plugin_inchat_menu_item,null);
                     TextView title = item.findViewById(R.id.plugin_title);
@@ -315,9 +316,9 @@ public class FloatWindowControl {
                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     param.setMargins(Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10),Utils.dip2px(getContext(),20),Utils.dip2px(getContext(),10));
 
+                    if (!TextUtils.isEmpty(info.ItemClickFunctionName))PluginController.InvokeToPreCheckItem(Session,info.ItemClickFunctionName,info);
 
-                    PluginController.InvokeToPreCheckItem(Session,info.ItemClickFunctionName,info);
-
+                    if (info.ItemFunctions.size() == 0)continue;
                     LinearLayout menu_items = item.findViewById(R.id.menu_items);
                     for (String itemKey : info.ItemFunctions.keySet()){
                         PluginController.ItemInfo itemInfo = info.ItemFunctions.get(itemKey);
