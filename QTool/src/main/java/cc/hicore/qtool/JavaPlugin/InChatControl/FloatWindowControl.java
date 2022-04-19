@@ -241,7 +241,7 @@ public class FloatWindowControl {
     public static WindowManager.LayoutParams getParam(Context context){
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
 
-        layoutParams.type = WindowManager.LayoutParams.FIRST_SUB_WINDOW+5;
+        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.format = PixelFormat.RGBA_8888;
         layoutParams.width = Utils.dip2px(context,32);
