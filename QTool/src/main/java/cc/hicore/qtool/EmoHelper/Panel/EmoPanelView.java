@@ -32,6 +32,8 @@ import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 
 import cc.hicore.qtool.R;
+
+import com.bumptech.glide.util.Util;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.ViewHolder;
 import com.lxj.xpopup.XPopup;
@@ -49,6 +51,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,6 +70,8 @@ public class EmoPanelView extends BottomPopupView {
     ExecutorService savePool = Executors.newFixedThreadPool(16);
 
     static int CacheScrollTop = 0;
+
+    private HashSet<View> cacheImageView = new HashSet<>();
 
 
     public EmoPanelView(@NonNull Context context) {
@@ -210,6 +215,7 @@ public class EmoPanelView extends BottomPopupView {
                                 .load(new File(info.Path))
                                 .fitCenter()
                                 .into(view);
+                        cacheImageView.add(view);
 
                         view.setOnLongClickListener(v->{
                             LinearLayout root = new LinearLayout(getContext());
@@ -222,6 +228,7 @@ public class EmoPanelView extends BottomPopupView {
                                     .load(new File(info.Path))
                                     .fitCenter()
                                     .into(newView);
+                            cacheImageView.add(newView);
                             new AlertDialog.Builder(getContext(),Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                     .setTitle("是否删除此图片")
                                     .setView(root)
@@ -237,6 +244,7 @@ public class EmoPanelView extends BottomPopupView {
                                     .load(new URL(info.URL))
                                     .fitCenter()
                                     .into(view);
+                            cacheImageView.add(view);
                             view.setOnClickListener(null);
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
@@ -333,6 +341,7 @@ public class EmoPanelView extends BottomPopupView {
                                             .load(new URL(coverPath))
                                             .fitCenter()
                                             .into(cover);
+                                    cacheImageView.add(cover);
 
                                     LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext())/4,XPopupUtils.getScreenWidth(getContext())/4);
                                     param.setMargins(0,10,0,10);
@@ -506,5 +515,14 @@ public class EmoPanelView extends BottomPopupView {
     @Override
     protected int getPopupHeight() {
         return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
+    }
+
+    @Override
+    protected void onDismiss() {
+        super.onDismiss();
+        for (View v : cacheImageView){
+            Glide.with(HookEnv.AppContext).clear(v);
+        }
+
     }
 }

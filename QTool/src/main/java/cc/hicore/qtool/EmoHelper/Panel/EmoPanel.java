@@ -31,7 +31,7 @@ public class EmoPanel {
         Context fixContext = ContUtil.getFixContext(context);
         EmoPanelView NewView = new EmoPanelView(fixContext);
 
-        XPopup.Builder NewPop = new XPopup.Builder(fixContext);
+        XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);
         BasePopupView base = NewPop.asCustom(NewView);
         base.show();
     }
@@ -55,6 +55,7 @@ public class EmoPanel {
         NewInfo.URL = URL;
         NewInfo.type = 2;
         NewInfo.MD5 = MD5.toUpperCase(Locale.ROOT);
+
         if (URL.startsWith("http")){
             EmoOnlineLoader.submit(NewInfo,()->{
                 Glide.with(HookEnv.AppContext)
@@ -119,7 +120,8 @@ public class EmoPanel {
                             });
                             group.addView(button);
                         }
-                    }).show();
+                    })
+                    .show();
 
         });
 
@@ -135,7 +137,9 @@ public class EmoPanel {
                         FileUtils.copy(NewInfo.Path,HookEnv.ExtraDataPath+"Pic/"+choiceName+"/"+MD5);
                         Utils.ShowToastL("已保存到:"+HookEnv.ExtraDataPath+"Pic/"+choiceName+"/"+MD5);
                     }
-                }).show();
+                }).setOnDismissListener(dialog -> {
+                    Glide.with(HookEnv.AppContext).clear(preView);
+        }).show();
 
     }
     //如果要保存的是多张图片则弹出MD5选择,选择后才弹出确认图片保存框
@@ -144,6 +148,8 @@ public class EmoPanel {
                 .setTitle("选择需要保存的图片")
                 .setItems(MD5.toArray(new String[0]), (dialog, which) -> {
                     PreSavePicToList(url.get(which),MD5.get(which),context);
+                }).setOnDismissListener(dialog -> {
+
                 }).show();
     }
 
