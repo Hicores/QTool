@@ -334,10 +334,11 @@ public class QQMsgSendUtils {
                     }
             );
             if (mixText.contains("[PicUrl=")){
-                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,"");
-                QQMsgSendUtils.decodeAndSendMsg(GroupUin,"",mixText,Builded);
+                String strTo = mixText.substring(0,mixText.indexOf("["));
+                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,strTo.isEmpty() ? " ":strTo);
+                QQMsgSendUtils.decodeAndSendMsg(GroupUin,"",mixText.substring(mixText.indexOf("[")),Builded);
             }else {
-                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,mixText);
+                Object Builded = BuildMsg.invoke(null,Appinterface,GroupUin,1,SourceInfoObj,mixText.isEmpty() ? " ":mixText);
                 QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin,""),Builded);
             }
         }catch (Throwable th)

@@ -105,25 +105,6 @@ public class QQMessageUtils {
         }catch (Exception e){
             return "";
         }
-
-    }
-    public static Object CopyReplyMessage(Object source) {
-        try{
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a",MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                    String.class,
-                    int.class,
-                    MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
-                    String.class
-            });
-            String sFriend = MField.GetField(source,"frienduin",String.class);
-            Object sourceMsg = MField.GetField(source,"mSourceMsgInfo",MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"));
-            return InvokeMethod.invoke(null,HookEnv.AppInterface,sFriend,2,sourceMsg,"");
-        }catch (Throwable th)
-        {
-            return null;
-        }
-
     }
 
 }

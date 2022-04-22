@@ -15,10 +15,10 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
 import cc.hicore.Utils.StringUtils;
-import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -89,13 +89,17 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
                     String Text = MField.GetField(AddMsg,"msg",String.class);
                     if(TextUtils.isEmpty(Text))
                     {
-                        Text = MField.GetField(AddMsg,"sb",CharSequence.class)+"";
+                        Text = MField.GetFirstField(AddMsg,CharSequence.class)+"";
                     }
-                    if (Text.contains("PicCookie")){
+                    if (Text.contains("[PicCookie")){
+                        String strTo = Text.substring(0,Text.indexOf("["));
+                        Text = Text.substring(Text.indexOf("["));
                         String GroupUin = QQSessionUtils.getGroupUin();
                         String UserUin = QQSessionUtils.getFriendUin();
-                        MField.SetField(AddMsg,"msg"," ");
-                        MField.SetField(AddMsg,"sb"," ");
+                        MField.SetField(AddMsg,"msg",strTo.isEmpty() ? " ":strTo);
+                        if (HostInfo.getVerCode() > 7685) MField.SetField(AddMsg,"charStr",strTo.isEmpty() ? " ":strTo);
+                        else MField.SetField(AddMsg,"sb",strTo.isEmpty() ? " ":strTo);
+
                         MMethod.CallMethod(AddMsg,"prewrite",void.class,new Class[0]);
 
                         String[] Cookies = StringUtils.GetStringMiddleMix(Text,"[PicCookie=","]");
@@ -105,15 +109,9 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
                             }
                         }
                         picCookies.clear();
-                        QQMsgSendUtils.decodeAndSendMsg(GroupUin,UserUin,Text,QQMessageUtils.CopyReplyMessage(AddMsg));
+                        QQMsgSendUtils.decodeAndSendMsg(GroupUin,UserUin,Text,AddMsg);
                         param.setResult(null);
                     }
-
-
-
-
-
-
                 }
             }
         });
