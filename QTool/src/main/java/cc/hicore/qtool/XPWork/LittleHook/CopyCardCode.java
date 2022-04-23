@@ -2,6 +2,7 @@ package cc.hicore.qtool.XPWork.LittleHook;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import cc.hicore.HookItem;
 import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -26,6 +28,9 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(itemName = "复制卡片代码",itemType = 1,itemDesc = "可长按消息复制卡片代码",ID = "CopyCardMsg",mainItemID = 1)
@@ -49,7 +54,9 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
             List MessageRecoreList = MField.GetField(param.thisObject,param.thisObject.getClass() ,"a", List.class);
             if(MessageRecoreList==null)return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
-            if(ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") || MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMsg.getClass())) {
+            if(ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") ||
+                    MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMsg.getClass()) ||
+                    ChatMsg.getClass().getSimpleName().equals("MessageForStarLeague")) {
                 //复制卡片消息的标题
                 TextView tv=mLayout.findViewById(445588);
                 if(tv==null) {
@@ -74,6 +81,15 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
                             String json= MMethod.CallMethod(ArkAppMsg,MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"),"toAppXml",String.class,new Class[0],new Object[0]);
                             Utils.SetTextClipboard(json);
                             Utils.ShowToast("已复制");
+                        }else if(ChatMessage.getClass().getSimpleName().equals("MessageForStarLeague")) {
+                            String xml = MMethod.CallMethodSingle(ChatMessage,"getExtInfoFromExtStr",String.class,"SavedXml");
+                            if (TextUtils.isEmpty(xml)){
+                                Utils.ShowToast("未找到卡片描述信息,此类型消息必须开着模块接收才能复制代码");
+                            }else {
+                                Utils.SetTextClipboard(xml);
+                                Utils.ShowToast("已复制");
+                            }
+
                         }
                         else if(MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMessage.getClass())) {
                             Object Structing = MField.GetField(ChatMessage,ChatMessage.getClass(),"structingMsg",MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
@@ -81,6 +97,7 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
                             Utils.SetTextClipboard(xml);
                             Utils.ShowToast("已复制");
                         }
+
                     }
                     catch (Throwable e)
                     {
@@ -90,6 +107,8 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
                 });
             }
         });
+
+
         return true;
     }
 
