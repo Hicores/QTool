@@ -1,6 +1,8 @@
 package cc.hicore.Utils;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
@@ -80,6 +82,12 @@ public class Utils {
         }else {
             return bytes + "字节";
         }
+    }
+    public static void SetTextClipboard(String str) {
+        ClipboardManager manager = (ClipboardManager)HookEnv.AppContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText("text",str);
+        manager.setPrimaryClip(data);
+        Thread.currentThread();
     }
 
 }
