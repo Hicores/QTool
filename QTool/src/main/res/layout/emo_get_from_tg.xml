@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="点击输入ID获取"
+        android:gravity="center_horizontal"
+        android:id="@+id/getFromID" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/getFromID"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/Bundle_Content_List"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</RelativeLayout>
