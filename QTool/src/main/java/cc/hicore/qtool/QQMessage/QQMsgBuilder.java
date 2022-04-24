@@ -1,5 +1,7 @@
 package cc.hicore.qtool.QQMessage;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import cc.hicore.LogUtils.LogUtils;
@@ -8,13 +10,18 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.DataUtils;
+import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.XposedInit.EnvHook;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -51,13 +58,64 @@ public class QQMsgBuilder {
         if (PicPath.toLowerCase(Locale.ROOT).startsWith("http")){
             String CachePath = HookEnv.ExtraDataPath+"/Cache/"+ NameUtils.GetRandomName();
             HttpUtils.DownloadToFile(PicPath,CachePath);
+            checkAndCastPic(CachePath);
             return buildPic0(_Session,CachePath);
         }else {
-            return buildPic0(_Session,PicPath);
+            return buildPic0(_Session,checkAndGetCastPic(PicPath));
+        }
+    }
+    private static String checkAndGetCastPic(String Path){
+        File f = new File(Path);
+        if (f.exists() && f.length() > 128){
+            try{
+                byte[] buffer = new byte[4];
+                FileInputStream ins = new FileInputStream(f);
+                ins.read(buffer);
+                ins.close();
+                if (buffer[0] == 'R' && buffer[1] == 'I'&&buffer[2] == 'F'&&buffer[3] == 'F'){
+                    Bitmap bitmap = BitmapFactory.decodeFile(Path);
+                    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,bOut);
+                    if (bOut.size() > 128){
+                        EnvHook.requireCachePath();
+                        String CachePath = HookEnv.ExtraDataPath + "/Cache/Img_"+NameUtils.getRandomString(16);
+                        FileUtils.WriteToFile(CachePath,bOut.toByteArray());
+                        return CachePath;
+                    }
+                }
+            }catch (Exception e){
+
+            }
+
+        }
+        return Path;
+    }
+    private static void checkAndCastPic(String Path){
+        File f = new File(Path);
+        if (f.exists() && f.length() > 128){
+            try{
+                byte[] buffer = new byte[4];
+                FileInputStream ins = new FileInputStream(f);
+                ins.read(buffer);
+                ins.close();
+                if (buffer[0] == 'R' && buffer[1] == 'I'&&buffer[2] == 'F'&&buffer[3] == 'F'){
+                    Bitmap bitmap = BitmapFactory.decodeFile(Path);
+                    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,bOut);
+                    if (bOut.size() > 128){
+                        FileUtils.WriteToFile(Path,bOut.toByteArray());
+                    }
+                }
+            }catch (Exception e){
+
+            }
         }
     }
     public static Object buildPic0(Object _Session,String PicPath){
         try{
+
             Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade","a",MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
