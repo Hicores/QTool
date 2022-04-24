@@ -253,6 +253,7 @@ public class EmoPanelView extends BottomPopupView {
                         try {
                             Glide.with(HookEnv.AppContext)
                                     .load(new URL(info.URL))
+                                    .placeholder(R.drawable.loading)
                                     .fitCenter()
                                     .into(view);
                             cacheImageView.add(view);
@@ -350,6 +351,7 @@ public class EmoPanelView extends BottomPopupView {
                                     ImageView cover = new ImageView(getContext());
                                     Glide.with(HookEnv.AppContext)
                                             .load(new URL(coverPath))
+                                            .placeholder(R.drawable.loading)
                                             .fitCenter()
                                             .into(cover);
                                     cacheImageView.add(cover);
@@ -371,6 +373,7 @@ public class EmoPanelView extends BottomPopupView {
                                     TextView size = new TextView(getContext());
                                     size.setText("总大小:"+Utils.bytes2kb(bundleInfo.optLong("size")));
                                     mItem.addView(size);
+
 
                                 }
                             } catch (Exception e) {
@@ -448,6 +451,7 @@ public class EmoPanelView extends BottomPopupView {
                                     ImageView cover = new ImageView(getContext());
                                     Glide.with(HookEnv.AppContext)
                                             .load(new URL(coverPath))
+                                            .placeholder(R.drawable.loading)
                                             .fitCenter()
                                             .into(cover);
                                     cacheImageView.add(cover);
