@@ -1,10 +1,16 @@
 package cc.hicore.qtool.QQMessage;
 
+import android.text.TextUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
@@ -104,6 +110,27 @@ public class QQMessageUtils {
             return "";
         }catch (Exception e){
             return "";
+        }
+    }
+
+    public static int  DecodeAntEmoCode(int EmoCode)
+    {
+        try{
+            String s = FileUtils.ReadFileString(HookEnv.AppContext.getFilesDir() + "/qq_emoticon_res/face_config.json");
+            JSONObject j = new JSONObject(s);
+            JSONArray arr = j.getJSONArray("sysface");
+            for(int i=0;i<arr.length();i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                if(obj.has("AniStickerType")) {
+                    if(obj.optString("QSid").equals(EmoCode+"")) {
+                        String sId = obj.getString("AQLid");
+                        return (Integer.parseInt(sId));
+                    }
+                }
+            }
+            return 0;
+        }catch (Exception e) {
+            return 0;
         }
     }
 

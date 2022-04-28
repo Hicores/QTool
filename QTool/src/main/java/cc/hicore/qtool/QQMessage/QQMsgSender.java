@@ -219,4 +219,29 @@ public class QQMsgSender {
             LogUtils.error("sendAntEmo",es);
         }
     }
+    public static void sendAnimation(Object Session,int sevrID){
+        try{
+
+            if(HostInfo.getVerCode() < 5865) {
+                MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack"),"sendAniSticker",
+                        boolean.class,new Class[]{int.class,MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo")},sevrID,Session);
+            }else {
+                MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack"),"sendAniSticker",
+                        boolean.class,new Class[]{int.class,MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),int.class},sevrID,Session,0);
+            }
+        }catch (Exception es) {
+            LogUtils.error("sendAnimation",es);
+        }
+    }
+    public static void QQ_Forward_ShortVideo(Object _SessionInfo,Object ChatMessage){
+        try{
+            MMethod.CallMethod(null,MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"),"a",void.class,new Class[]{
+                    MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
+                    MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
+                    MClass.loadClass("com.tencent.mobileqq.data.MessageForShortVideo")
+            },HookEnv.AppInterface,_SessionInfo,ChatMessage);
+        }catch (Exception e){
+            LogUtils.error("QQ_Forward_ShortVideo",e);
+        }
+    }
 }
