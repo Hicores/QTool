@@ -1,5 +1,6 @@
 package cc.hicore.qtool.XposedInit;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.IBinder;
@@ -43,15 +44,25 @@ public class BeforeCheck {
             checkResult.append("当前模块资源注入不可用,这可能是由于系统更新或者框架提供的模块路径不可用导致的,这会导致模块所有界面显示异常\n1.如果你之前可用在更换或者升级框架后不再可用,请尝试恢复原状\n2.如果是升级系统后不可用,请等待更新\n------------------\n");
         }
     }
+    @SuppressLint("BlockedPrivateApi")
     private static void CheckHiddenApi(){
         try{
             Class<?> clz = MClass.loadClass("android.app.ActivityThread");
-            Method m = clz.getMethod("getLaunchingActivity", IBinder.class);
+            Method m = clz.getDeclaredMethod("getLaunchingActivity", IBinder.class);
             if (m == null){
                 throw new RuntimeException("getLaunchingActivity");
             }
         }catch (Throwable th){
-            checkResult.append("当前无法访问被限制的AndroidAPI,这可能导致模块部分功能异常,比如界面显示出现异常\n1.如果你是升级框架后出现该问题,请降级后再试\n2.如果你是刚使用则出现该问题,请更换框架后再试\n------------------\n");
+            try{
+                Class runtimeClass = MClass.loadClass("dalvik.system.VMRuntime");
+                 Method m2 = runtimeClass.getDeclaredMethod("setTargetSdkVersionNative",
+                        int.class);
+                if (m2 == null){
+                    throw new RuntimeException("setTargetSdkVersionNative");
+                }
+            }catch (Throwable th2){
+                checkResult.append("当前无法访问被限制的AndroidAPI,这可能导致模块部分功能异常,比如界面显示出现异常\n1.如果你是升级框架后出现该问题,请降级后再试\n2.如果你是刚使用则出现该问题,请更换框架后再试\n------------------\n");
+            }
         }
 
     }
