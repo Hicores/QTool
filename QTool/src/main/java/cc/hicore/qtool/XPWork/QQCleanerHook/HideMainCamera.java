@@ -5,10 +5,11 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@HookItem(isRunInAllProc = false,isDelayInit = false)
+@HookItem(isRunInAllProc = false, isDelayInit = false)
 //@UIItem(itemName = "屏蔽主界面相机",mainItemID = 2,itemType = 1,ID = "HideMainActCamera")
 public class HideMainCamera extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
+
     @Override
     public boolean startHook() throws Throwable {
         return false;
@@ -27,7 +28,7 @@ public class HideMainCamera extends BaseHookItem implements BaseUiItem {
     @Override
     public void SwitchChange(boolean IsCheck) {
         IsEnable = IsCheck;
-        if (IsCheck){
+        if (IsCheck) {
             HookLoader.CallHookStart(HideMainCamera.class.getName());
         }
     }

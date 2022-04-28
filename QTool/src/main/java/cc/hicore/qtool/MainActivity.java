@@ -1,7 +1,5 @@
 package cc.hicore.qtool;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -11,7 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import cc.hicore.qtool.R;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,21 +24,21 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
         window.getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE|
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         );
 
         findViewById(R.id.ClickToGithub)
-                .setOnClickListener(v->{
+                .setOnClickListener(v -> {
                     Uri u = Uri.parse("https://github.com/Hicores/QTool");
-                    Intent in = new Intent(Intent.ACTION_VIEW,u);
+                    Intent in = new Intent(Intent.ACTION_VIEW, u);
                     startActivity(in);
                 });
         findViewById(R.id.OpenOpenSource)
-                .setOnClickListener(v-> startActivity(new Intent(this,OpenSource.class)));
+                .setOnClickListener(v -> startActivity(new Intent(this, OpenSource.class)));
 
-        ((TextView)findViewById(R.id.Show_Version)).setText("模块版本:"+BuildConfig.VERSION_NAME);
+        ((TextView) findViewById(R.id.Show_Version)).setText("模块版本:" + BuildConfig.VERSION_NAME);
 
 
     }

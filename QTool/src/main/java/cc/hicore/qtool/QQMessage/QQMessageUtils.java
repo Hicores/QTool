@@ -1,9 +1,9 @@
 package cc.hicore.qtool.QQMessage;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
@@ -15,87 +15,90 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
-import java.lang.reflect.Method;
-
 public class QQMessageUtils {
-    public static Object GetMessageByTimeSeq(String uin,int istroop,long msgseq) {
-        try{
-            if(HookEnv.AppInterface==null)return null;
+    public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {
+        try {
+            if (HookEnv.AppInterface == null) return null;
             Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            return MMethod.CallMethod(MessageFacade,"c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
-                    String.class,int.class,long.class
-            },uin,istroop,msgseq);
+            return MMethod.CallMethod(MessageFacade, "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
+                    String.class, int.class, long.class
+            }, uin, istroop, msgseq);
         } catch (Exception e) {
-            LogUtils.error("QQMessageUtils","GetMessageByTimeSeq error:\n"+e);
+            LogUtils.error("QQMessageUtils", "GetMessageByTimeSeq error:\n" + e);
             return null;
         }
     }
-    public static void revokeMsg(Object msg){
-        try{
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMessageFacade",
+
+    public static void revokeMsg(Object msg) {
+        try {
+            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            if(msg.getClass().toString().contains("MessageForTroopFile"))
-            {
+            if (msg.getClass().toString().contains("MessageForTroopFile")) {
                 RevokeTroopFile(msg);
             }
 
-            Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMsgCache",
+            Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
                     MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
 
-            MMethod.CallMethod(MsgCache,"b",void.class,new Class[]{boolean.class},true);
-            MessageFacade_RevokeMessage().invoke(MessageFacade,msg);
-        }catch (Exception e){
-            LogUtils.error("revokeMsg",e);
+            MMethod.CallMethod(MsgCache, "b", void.class, new Class[]{boolean.class}, true);
+            MessageFacade_RevokeMessage().invoke(MessageFacade, msg);
+        } catch (Exception e) {
+            LogUtils.error("revokeMsg", e);
         }
 
     }
+
     public static void AddMsg(Object MessageRecord) {
-        try{
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade","a",void.class,new Class[]{
+        try {
+            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                     String.class
             });
-            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(),"getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            InvokeMethod.invoke(MessageFacade,MessageRecord,QQEnvUtils.getCurrentUin());
+            InvokeMethod.invoke(MessageFacade, MessageRecord, QQEnvUtils.getCurrentUin());
         } catch (Throwable th) {
-            LogUtils.error("AddMsg",th);
+            LogUtils.error("AddMsg", th);
         }
     }
+
     public static void AddAndSendMsg(Object MessageRecord) {
         try {
-            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(),"getMessageFacade",
+            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade","a",void.class,new Class[]{
+            Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                     MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver")
             });
-            mMethod.invoke(MessageFacade,MessageRecord,null);
+            mMethod.invoke(MessageFacade, MessageRecord, null);
         } catch (Exception e) {
             LogUtils.error("AddAndSendMsg", e);
         }
 
     }
+
     private static void RevokeTroopFile(Object MessageRecord) {
-        try{
+        try {
             Object RevokeHelper = QQEnvUtils.GetRevokeHelper();
-            MMethod.CallMethod(RevokeHelper,"a",void.class,new Class[]{
+            MMethod.CallMethod(RevokeHelper, "a", void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForTroopFile")
-            },MessageRecord);
-        }catch (Exception ex) {
-           LogUtils.error("RevokeTroopFile",ex);
+            }, MessageRecord);
+        } catch (Exception ex) {
+            LogUtils.error("RevokeTroopFile", ex);
         }
     }
-    private static Method MessageFacade_RevokeMessage(){
+
+    private static Method MessageFacade_RevokeMessage() {
         Method m =
                 HostInfo.getVerCode() < 5670 ?
-                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade","d",void.class,new Class[]{Classes.MessageRecord()}):
-                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade","f",void.class,new Class[]{Classes.MessageRecord()});
+                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}) :
+                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()});
         return m;
     }
-    public static String getCardMsg(Object msg){
-        try{
+
+    public static String getCardMsg(Object msg) {
+        try {
             String clzName = msg.getClass().getSimpleName();
             if (clzName.equalsIgnoreCase("MessageForStructing")) {
                 Object Structing = MField.GetField(msg, "structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
@@ -108,28 +111,27 @@ public class QQMessageUtils {
                 return json;
             }
             return "";
-        }catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
     }
 
-    public static int  DecodeAntEmoCode(int EmoCode)
-    {
-        try{
+    public static int DecodeAntEmoCode(int EmoCode) {
+        try {
             String s = FileUtils.ReadFileString(HookEnv.AppContext.getFilesDir() + "/qq_emoticon_res/face_config.json");
             JSONObject j = new JSONObject(s);
             JSONArray arr = j.getJSONArray("sysface");
-            for(int i=0;i<arr.length();i++) {
+            for (int i = 0; i < arr.length(); i++) {
                 JSONObject obj = arr.getJSONObject(i);
-                if(obj.has("AniStickerType")) {
-                    if(obj.optString("QSid").equals(EmoCode+"")) {
+                if (obj.has("AniStickerType")) {
+                    if (obj.optString("QSid").equals(EmoCode + "")) {
                         String sId = obj.getString("AQLid");
                         return (Integer.parseInt(sId));
                     }
                 }
             }
             return 0;
-        }catch (Exception e) {
+        } catch (Exception e) {
             return 0;
         }
     }

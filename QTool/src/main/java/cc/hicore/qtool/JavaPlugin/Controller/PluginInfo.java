@@ -28,20 +28,22 @@ public class PluginInfo {
     public String AccessToken = "";
 
 
-    public boolean IsAvailable(String GroupUin){
-        if (TextUtils.isEmpty(GroupUin)){
+    public boolean IsAvailable(String GroupUin) {
+        if (TextUtils.isEmpty(GroupUin)) {
             return !PluginSetController.IsRefusePrivate(PluginID);
         }
         return IsBlackMode != ListStr.contains(GroupUin);
     }
-    public static class EarlyInfo{
+
+    public static class EarlyInfo {
         public int istroop;
         public String GroupUin;
         public String UserUin;
         public String GuildID;
         public String ChannelID;
     }
-    public static class MessageData{
+
+    public static class MessageData {
         public String MessageContent;
         public String GroupUin;
         public String UserUin;
@@ -71,14 +73,14 @@ public class PluginInfo {
         public String ChannelID;
         public String GuildID;
     }
-    public static class GroupBanInfo
-    {
+
+    public static class GroupBanInfo {
         public String UserUin;
         public String UserName;
         public long Endtime;
     }
-    public static class GroupMemberInfo
-    {
+
+    public static class GroupMemberInfo {
         public String UserUin;
         public String UserName;
         public String NickName;
@@ -89,15 +91,16 @@ public class PluginInfo {
 
         public boolean IsAdmin;
     }
-    public static class GroupInfo
-    {
+
+    public static class GroupInfo {
         public String GroupUin;
         public String GroupName;
         public String GroupOwner;
         public String[] AdminList;
         public Object sourceInfo;
     }
-    public static class RequestInfo{
+
+    public static class RequestInfo {
         public String GroupUin;
         public String UserUin;
         public String Answer;

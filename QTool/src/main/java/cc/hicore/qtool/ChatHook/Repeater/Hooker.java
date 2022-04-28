@@ -15,27 +15,28 @@ import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(mainItemID = 1,itemType = 1,ID = "RepeaterHooker",itemName = "复读消息+1")
+@HookItem(isDelayInit = false, isRunInAllProc = false)
+@UIItem(mainItemID = 1, itemType = 1, ID = "RepeaterHooker", itemName = "复读消息+1")
 public class Hooker extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
+
     @Override
     public boolean startHook() throws Throwable {
         Method[] m = getMethod();
-        XPBridge.HookAfter(m[0],param -> {
-            if (!IsEnable)return;
+        XPBridge.HookAfter(m[0], param -> {
+            if (!IsEnable) return;
             Object mGetView = param.getResult();
             RelativeLayout baseChatItem = null;
-            if (mGetView instanceof RelativeLayout)baseChatItem = (RelativeLayout) mGetView;else return;
-            List MessageRecoreList = MField.GetField(param.thisObject,"a", List.class);
-            if(MessageRecoreList==null)return;
+            if (mGetView instanceof RelativeLayout) baseChatItem = (RelativeLayout) mGetView;
+            else return;
+            List MessageRecoreList = MField.GetField(param.thisObject, "a", List.class);
+            if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
-            if (ChatMsg == null)return;
+            if (ChatMsg == null) return;
             String ActivityName = baseChatItem.getContext().getClass().getName();
-            if (ActivityName.contains("MultiForwardActivity"))return;
-            RepeaterHelper.createRepeatIcon(baseChatItem,ChatMsg);
+            if (ActivityName.contains("MultiForwardActivity")) return;
+            RepeaterHelper.createRepeatIcon(baseChatItem, ChatMsg);
         });
         return true;
     }
@@ -60,9 +61,10 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
     public void ListItemClick() {
 
     }
-    private Method[] getMethod(){
+
+    private Method[] getMethod() {
         Method[] m = new Method[1];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1","getView", View.class,new Class[]{
+        m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class

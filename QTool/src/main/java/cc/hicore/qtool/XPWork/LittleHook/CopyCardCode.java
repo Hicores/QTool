@@ -9,16 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.util.Util;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
 import cc.hicore.LogUtils.LogUtils;
-import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -28,43 +24,38 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(itemName = "复制卡片代码",itemType = 1,itemDesc = "可长按消息复制卡片代码",ID = "CopyCardMsg",mainItemID = 1)
+@HookItem(isDelayInit = false, isRunInAllProc = false)
+@UIItem(itemName = "复制卡片代码", itemType = 1, itemDesc = "可长按消息复制卡片代码", ID = "CopyCardMsg", mainItemID = 1)
 public class CopyCardCode extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
+
     @SuppressLint("ResourceType")
     @Override
     public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(),param -> {
-            if (!isEnable())return;
+        XPBridge.HookAfter(getMethod(), param -> {
+            if (!isEnable()) return;
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
-            if(mGetView instanceof RelativeLayout)
-            {
+            if (mGetView instanceof RelativeLayout) {
                 mLayout = (RelativeLayout) mGetView;
-            }
-            else
-            {
+            } else {
                 return;
             }
-            List MessageRecoreList = MField.GetField(param.thisObject,param.thisObject.getClass() ,"a", List.class);
-            if(MessageRecoreList==null)return;
+            List MessageRecoreList = MField.GetField(param.thisObject, param.thisObject.getClass(), "a", List.class);
+            if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
-            if(ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") ||
+            if (ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") ||
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMsg.getClass()) ||
                     ChatMsg.getClass().getSimpleName().equals("MessageForStarLeague")) {
                 //复制卡片消息的标题
-                TextView tv=mLayout.findViewById(445588);
-                if(tv==null) {
+                TextView tv = mLayout.findViewById(445588);
+                if (tv == null) {
                     //长按标签,位于Parent顶部中央,最大化
                     RelativeLayout.LayoutParams RLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    RLP.width= ViewGroup.LayoutParams.MATCH_PARENT;
+                    RLP.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     tv = new TextView(mLayout.getContext());
-                    mLayout.addView(tv,RLP);
+                    mLayout.addView(tv, RLP);
                     tv.setText("长按复制卡片代码");
                     tv.setGravity(Gravity.CENTER);//居中显示
                     tv.setTextColor(Color.RED);
@@ -75,32 +66,29 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
                 tv.setTag(ChatMsg);//保存消息对象
                 tv.setOnLongClickListener(view -> {
                     Object ChatMessage = view.getTag();
-                    try{
-                        if(ChatMessage.getClass().getSimpleName().equals("MessageForArkApp")) {
-                            Object  ArkAppMsg= MField.GetField(ChatMessage,ChatMessage.getClass(),"ark_app_message", MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"));
-                            String json= MMethod.CallMethod(ArkAppMsg,MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"),"toAppXml",String.class,new Class[0],new Object[0]);
+                    try {
+                        if (ChatMessage.getClass().getSimpleName().equals("MessageForArkApp")) {
+                            Object ArkAppMsg = MField.GetField(ChatMessage, ChatMessage.getClass(), "ark_app_message", MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"));
+                            String json = MMethod.CallMethod(ArkAppMsg, MClass.loadClass("com.tencent.mobileqq.data.ArkAppMessage"), "toAppXml", String.class, new Class[0], new Object[0]);
                             Utils.SetTextClipboard(json);
                             Utils.ShowToast("已复制");
-                        }else if(ChatMessage.getClass().getSimpleName().equals("MessageForStarLeague")) {
-                            String xml = MMethod.CallMethodSingle(ChatMessage,"getExtInfoFromExtStr",String.class,"SavedXml");
-                            if (TextUtils.isEmpty(xml)){
+                        } else if (ChatMessage.getClass().getSimpleName().equals("MessageForStarLeague")) {
+                            String xml = MMethod.CallMethodSingle(ChatMessage, "getExtInfoFromExtStr", String.class, "SavedXml");
+                            if (TextUtils.isEmpty(xml)) {
                                 Utils.ShowToast("未找到卡片描述信息,此类型消息必须开着模块接收才能复制代码");
-                            }else {
+                            } else {
                                 Utils.SetTextClipboard(xml);
                                 Utils.ShowToast("已复制");
                             }
 
-                        }
-                        else if(MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMessage.getClass())) {
-                            Object Structing = MField.GetField(ChatMessage,ChatMessage.getClass(),"structingMsg",MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
-                            String xml=MMethod.CallMethod(Structing, MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"),"getXml",String.class,new Class[0],new Object[0]);
+                        } else if (MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing").isAssignableFrom(ChatMessage.getClass())) {
+                            Object Structing = MField.GetField(ChatMessage, ChatMessage.getClass(), "structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
+                            String xml = MMethod.CallMethod(Structing, MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"), "getXml", String.class, new Class[0], new Object[0]);
                             Utils.SetTextClipboard(xml);
                             Utils.ShowToast("已复制");
                         }
 
-                    }
-                    catch (Throwable e)
-                    {
+                    } catch (Throwable e) {
                         LogUtils.error("CopyXml", Log.getStackTraceString(e));
                     }
                     return false;
@@ -132,8 +120,9 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
     public void ListItemClick() {
 
     }
-    public Method getMethod(){
-        Method HookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1","getView", View.class,new Class[]{
+
+    public Method getMethod() {
+        Method HookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class

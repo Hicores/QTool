@@ -2,6 +2,10 @@ package cc.hicore.qtool.XPWork.QQUtilsHook;
 
 import android.graphics.Bitmap;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+
 import cc.hicore.HookItem;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
@@ -13,20 +17,17 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(itemName = "半透明头像上传",mainItemID = 1,itemType = 1,ID = "Upload_Avatar")
+@HookItem(isDelayInit = false, isRunInAllProc = false)
+@UIItem(itemName = "半透明头像上传", mainItemID = 1, itemType = 1, ID = "Upload_Avatar")
 public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     boolean IsEnable = false;
+
     @Override
     public boolean startHook() throws Throwable {
         Method qqMethod = getMethod();
         XPBridge.HookBefore(qqMethod, param -> {
             try {
-                if (!IsEnable)return;
+                if (!IsEnable) return;
                 //自己进行图像转换,不给QQ把透明背景扣掉的机会
                 FileOutputStream fos = new FileOutputStream((String) param.args[0]);
                 Bitmap bitmap = (Bitmap) param.args[1];
@@ -39,8 +40,8 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
         });
 
         Method systemMethod = Bitmap.class.getMethod("compress", Bitmap.CompressFormat.class, int.class, OutputStream.class);
-        XPBridge.HookBefore(systemMethod,param -> {
-            if (!IsEnable)return;
+        XPBridge.HookBefore(systemMethod, param -> {
+            if (!IsEnable) return;
             String CurrentCallStacks = DebugUtils.getCurrentCallStacks();
             if (CurrentCallStacks.contains("NearbyPeoplePhotoUploadProcessor") || CurrentCallStacks.contains("doInBackground") ||
                     CurrentCallStacks.contains("TroopUploadingThread")) {
@@ -63,12 +64,13 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     @Override
     public void SwitchChange(boolean IsCheck) {
         IsEnable = IsCheck;
-        if (IsCheck){
+        if (IsCheck) {
             HookLoader.CallHookStart(HookForUploadAvatar.class.getName());
         }
     }
-    private Method getMethod(){
-        Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.pic.compress.Utils","a",boolean.class,new Class[]{
+
+    private Method getMethod() {
+        Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.pic.compress.Utils", "a", boolean.class, new Class[]{
                 String.class,
                 Bitmap.class,
                 int.class,
@@ -77,6 +79,7 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
         });
         return hookMethod;
     }
+
     @Override
     public void ListItemClick() {
 

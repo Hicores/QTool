@@ -7,6 +7,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import cc.hicore.HookItem;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
@@ -23,11 +28,6 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 @UIItem(itemName = "带图回复", itemType = 1, ID = "RepeatWithPic", mainItemID = 1)
 public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
@@ -39,9 +39,11 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
         picCookies.put(cookie, LocalPath);
         AddToEditText(cookie);
     }
-    public static boolean IsAvailable(){
-        return IsEnable && IsNowReplying() &&(QQSessionUtils.getSessionID() == 1 || QQSessionUtils.getSessionID() == 0);
+
+    public static boolean IsAvailable() {
+        return IsEnable && IsNowReplying() && (QQSessionUtils.getSessionID() == 1 || QQSessionUtils.getSessionID() == 0);
     }
+
     private static void AddToEditText(String Cookie) {
         if (ed != null) {
             String Text = "[PicCookie=" + Cookie + "]";
@@ -84,32 +86,32 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
         XPBridge.HookBefore(m[0], param -> {
             if (IsEnable) {
                 Object AddMsg = param.args[0];
-                int istroop = MField.GetField(AddMsg,"istroop",int.class);
-                if (!picCookies.isEmpty() && AddMsg.getClass().getName().contains("MessageForReplyText") && (istroop==1 || istroop==0)){
-                    String Text = MField.GetField(AddMsg,"msg",String.class);
-                    if(TextUtils.isEmpty(Text))
-                    {
-                        Text = MField.GetFirstField(AddMsg,CharSequence.class)+"";
+                int istroop = MField.GetField(AddMsg, "istroop", int.class);
+                if (!picCookies.isEmpty() && AddMsg.getClass().getName().contains("MessageForReplyText") && (istroop == 1 || istroop == 0)) {
+                    String Text = MField.GetField(AddMsg, "msg", String.class);
+                    if (TextUtils.isEmpty(Text)) {
+                        Text = MField.GetFirstField(AddMsg, CharSequence.class) + "";
                     }
-                    if (Text.contains("[PicCookie")){
-                        String strTo = Text.substring(0,Text.indexOf("["));
+                    if (Text.contains("[PicCookie")) {
+                        String strTo = Text.substring(0, Text.indexOf("["));
                         Text = Text.substring(Text.indexOf("["));
                         String GroupUin = QQSessionUtils.getGroupUin();
                         String UserUin = QQSessionUtils.getFriendUin();
-                        MField.SetField(AddMsg,"msg",strTo.isEmpty() ? " ":strTo);
-                        if (HostInfo.getVerCode() > 7685) MField.SetField(AddMsg,"charStr",strTo.isEmpty() ? " ":strTo);
-                        else MField.SetField(AddMsg,"sb",strTo.isEmpty() ? " ":strTo);
+                        MField.SetField(AddMsg, "msg", strTo.isEmpty() ? " " : strTo);
+                        if (HostInfo.getVerCode() > 7685)
+                            MField.SetField(AddMsg, "charStr", strTo.isEmpty() ? " " : strTo);
+                        else MField.SetField(AddMsg, "sb", strTo.isEmpty() ? " " : strTo);
 
-                        MMethod.CallMethod(AddMsg,"prewrite",void.class,new Class[0]);
+                        MMethod.CallMethod(AddMsg, "prewrite", void.class, new Class[0]);
 
-                        String[] Cookies = StringUtils.GetStringMiddleMix(Text,"[PicCookie=","]");
-                        for (String ss : Cookies){
-                            if (picCookies.containsKey(ss)){
-                                Text = Text.replace("[PicCookie="+ss+"]","[PicUrl="+picCookies.get(ss)+"]");
+                        String[] Cookies = StringUtils.GetStringMiddleMix(Text, "[PicCookie=", "]");
+                        for (String ss : Cookies) {
+                            if (picCookies.containsKey(ss)) {
+                                Text = Text.replace("[PicCookie=" + ss + "]", "[PicUrl=" + picCookies.get(ss) + "]");
                             }
                         }
                         picCookies.clear();
-                        QQMsgSendUtils.decodeAndSendMsg(GroupUin,UserUin,Text,AddMsg);
+                        QQMsgSendUtils.decodeAndSendMsg(GroupUin, UserUin, Text, AddMsg);
                         param.setResult(null);
                     }
                 }
@@ -122,6 +124,7 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
     public boolean isEnable() {
         return IsEnable;
     }
+
     StringBuilder builder;
 
     @Override
@@ -133,8 +136,8 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
     public boolean check() {
         builder = new StringBuilder();
         Method[] m = getMethod();
-        for (int i=0;i<m.length;i++){
-            if (m[i] == null){
+        for (int i = 0; i < m.length; i++) {
+            if (m[i] == null) {
                 builder.append("index:").append(i).append(";");
             }
         }

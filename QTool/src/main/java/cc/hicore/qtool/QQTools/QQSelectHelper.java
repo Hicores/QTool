@@ -24,12 +24,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import cc.hicore.LogUtils.LogUtils;
-import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQManager.QQGroupUtils;
-import cc.hicore.qtool.QQManager.QQGuildManager;
-import cc.hicore.qtool.R;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.core.BottomPopupView;
@@ -43,15 +37,25 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQManager.QQGuildManager;
+import cc.hicore.qtool.R;
+
 /*
 显示QQ好友,群聊,频道选择界面,并回调数据
  */
 public class QQSelectHelper {
 
-    public interface onSelected{
+    public interface onSelected {
         void onGroupSelect(ArrayList<String> uin);
+
         void onFriendSelect(ArrayList<String> uin);
-        void onGuildSelect(HashMap<String,HashSet<String>> guilds);
+
+        void onGuildSelect(HashMap<String, HashSet<String>> guilds);
+
         void onAllSelected();
     }
 
@@ -66,38 +70,44 @@ public class QQSelectHelper {
 
     private ArrayList<String> selectGroup = new ArrayList<>();
     private ArrayList<String> selectFriend = new ArrayList<>();
-    private HashMap<String,HashSet<String>> selectGuild = new HashMap<>();
-    public QQSelectHelper(Context context,boolean isTroop,boolean isFriend,boolean isGuild){
+    private HashMap<String, HashSet<String>> selectGuild = new HashMap<>();
+
+    public QQSelectHelper(Context context, boolean isTroop, boolean isFriend, boolean isGuild) {
         mContext = context;
         isShowTroop = isTroop;
         isShowFriend = isFriend;
         isShowGuild = isGuild;
     }
-    public void setSelectedGroup(ArrayList<String> selectGroup){
+
+    public void setSelectedGroup(ArrayList<String> selectGroup) {
         this.selectGroup = selectGroup;
     }
-    public void setSelectedFriend(ArrayList<String> selectFriend){
+
+    public void setSelectedFriend(ArrayList<String> selectFriend) {
         this.selectFriend = selectFriend;
     }
-    public void setSelectedGuildChannel(HashMap<String, HashSet<String>> selectGuild){
+
+    public void setSelectedGuildChannel(HashMap<String, HashSet<String>> selectGuild) {
         this.selectGuild = selectGuild;
     }
+
     private List<CheckBox> checkBoxs;
-    private void SwitchToGroup(){
+
+    private void SwitchToGroup() {
         mContainer.removeAllViews();
         ArrayList<QQGroupUtils.GroupInfo> groupList = QQGroupUtils.Group_Get_List();
         checkBoxs = new ArrayList<>();
-        for (QQGroupUtils.GroupInfo info : groupList){
-            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+        for (QQGroupUtils.GroupInfo info : groupList) {
+            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item, null);
 
             RoundImageView image = item.findViewById(R.id.HeadView);
-            image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140",info.Uin,info.Uin));
+            image.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140", info.Uin, info.Uin));
             TextView Name = item.findViewById(R.id.SetName);
-            Name.setText(info.Name+"("+info.Uin+")");
+            Name.setText(info.Name + "(" + info.Uin + ")");
 
             CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
             itemSwitch.setChecked(selectGroup.contains(info.Uin));
-            itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
+            itemSwitch.setOnCheckedChangeListener((v, ischeck) -> {
                 if (ischeck) selectGroup.add(info.Uin);
                 else selectGroup.remove(info.Uin);
             });
@@ -108,21 +118,22 @@ public class QQSelectHelper {
 
         CurrentType = 1;
     }
-    private void SwitchToFriend(){
+
+    private void SwitchToFriend() {
         mContainer.removeAllViews();
         ArrayList<QQEnvUtils.FriendInfo> friendList = QQEnvUtils.getFriendList();
         checkBoxs = new ArrayList<>();
-        for (QQEnvUtils.FriendInfo info : friendList){
-            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+        for (QQEnvUtils.FriendInfo info : friendList) {
+            LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item, null);
 
             RoundImageView image = item.findViewById(R.id.HeadView);
-            image.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140",info.Uin));
+            image.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140", info.Uin));
             TextView Name = item.findViewById(R.id.SetName);
-            Name.setText(info.Name+"("+info.Uin+")");
+            Name.setText(info.Name + "(" + info.Uin + ")");
 
             CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
             itemSwitch.setChecked(selectFriend.contains(info.Uin));
-            itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
+            itemSwitch.setOnCheckedChangeListener((v, ischeck) -> {
                 if (ischeck) selectFriend.add(info.Uin);
                 else selectFriend.remove(info.Uin);
             });
@@ -132,24 +143,25 @@ public class QQSelectHelper {
         }
         CurrentType = 2;
     }
-    private void SwitchToGuild(){
+
+    private void SwitchToGuild() {
         mContainer.removeAllViews();
         ArrayList<QQGuildManager.Guild_Info> guildList = QQGuildManager.Guild_Get_List();
-        for (QQGuildManager.Guild_Info info : guildList){
+        for (QQGuildManager.Guild_Info info : guildList) {
 
             ArrayList<QQGuildManager.Channel_Info> channelList = QQGuildManager.Channel_Get_List(info.GuildID);
-            for (QQGuildManager.Channel_Info channel : channelList){
-                LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item,null);
+            for (QQGuildManager.Channel_Info channel : channelList) {
+                LinearLayout item = (LinearLayout) inflater.inflate(R.layout.select_item, null);
 
                 RoundImageView image = item.findViewById(R.id.HeadView);
                 image.setImagePath(info.AvatarUrl);
                 TextView Name = item.findViewById(R.id.SetName);
-                Name.setText(info.GuildName+"&"+channel.ChannelName+"("+info.GuildID+"->"+channel.ChannelID+")");
+                Name.setText(info.GuildName + "&" + channel.ChannelName + "(" + info.GuildID + "->" + channel.ChannelID + ")");
 
                 CheckBox itemSwitch = item.findViewById(R.id.SelectSwitch);
-                itemSwitch.setChecked(IsChannelSelect(info.GuildID,channel.ChannelID));
-                itemSwitch.setOnCheckedChangeListener((v,ischeck)->{
-                    SetChannelSelect(info.GuildID,channel.ChannelID,ischeck);
+                itemSwitch.setChecked(IsChannelSelect(info.GuildID, channel.ChannelID));
+                itemSwitch.setOnCheckedChangeListener((v, ischeck) -> {
+                    SetChannelSelect(info.GuildID, channel.ChannelID, ischeck);
                 });
                 checkBoxs.add(itemSwitch);
 
@@ -158,31 +170,34 @@ public class QQSelectHelper {
         }
         CurrentType = 3;
     }
-    private boolean IsChannelSelect(String GuildID,String ChannelID){
+
+    private boolean IsChannelSelect(String GuildID, String ChannelID) {
         HashSet<String> channelInfo = selectGuild.get(GuildID);
-        if (channelInfo == null)return false;
+        if (channelInfo == null) return false;
         return channelInfo.contains(ChannelID);
     }
-    private void SetChannelSelect(String GuildID,String ChannelID,boolean isSet){
-        if (isSet){
+
+    private void SetChannelSelect(String GuildID, String ChannelID, boolean isSet) {
+        if (isSet) {
             HashSet<String> channelInfo = selectGuild.computeIfAbsent(GuildID, k -> new HashSet<>());
             channelInfo.add(ChannelID);
-        }else {
+        } else {
             HashSet<String> channelInfo = selectGuild.get(GuildID);
-            if (channelInfo == null)return;
+            if (channelInfo == null) return;
             channelInfo.remove(ChannelID);
-            if (channelInfo.size() == 0){
+            if (channelInfo.size() == 0) {
                 selectGuild.remove(GuildID);
             }
         }
     }
-    public void startShow(onSelected callback,int defTab){
-        try{
-            if (defTab < 1 || defTab > 3)throw new RuntimeException("defTab must be 1-3");
+
+    public void startShow(onSelected callback, int defTab) {
+        try {
+            if (defTab < 1 || defTab > 3) throw new RuntimeException("defTab must be 1-3");
 
             Context fixContext = new ContUtil.FixContext(mContext);
             inflater = ContUtil.getContextInflater(mContext);
-            BottomPopupView view =new BottomPopupView(fixContext){
+            BottomPopupView view = new BottomPopupView(fixContext) {
                 @Override
                 protected int getImplLayoutId() {
                     return R.layout.select_dialog;
@@ -192,45 +207,51 @@ public class QQSelectHelper {
                 protected void onCreate() {
                     super.onCreate();
                     mContainer = findViewById(R.id.selectContent);
-                    if (defTab == 1) ((RadioButton)findViewById(R.id.select_group)).setChecked(true);
-                    if (defTab == 2) ((RadioButton)findViewById(R.id.select_friend)).setChecked(true);
-                    if (defTab == 3) ((RadioButton)findViewById(R.id.select_guild)).setChecked(true);
+                    if (defTab == 1)
+                        ((RadioButton) findViewById(R.id.select_group)).setChecked(true);
+                    if (defTab == 2)
+                        ((RadioButton) findViewById(R.id.select_friend)).setChecked(true);
+                    if (defTab == 3)
+                        ((RadioButton) findViewById(R.id.select_guild)).setChecked(true);
 
-                    if (!isShowTroop)((RadioButton)findViewById(R.id.select_group)).setVisibility(GONE);
-                    if (!isShowFriend)((RadioButton)findViewById(R.id.select_friend)).setVisibility(GONE);
-                    if (!isShowGuild)((RadioButton)findViewById(R.id.select_guild)).setVisibility(GONE);
+                    if (!isShowTroop)
+                        ((RadioButton) findViewById(R.id.select_group)).setVisibility(GONE);
+                    if (!isShowFriend)
+                        ((RadioButton) findViewById(R.id.select_friend)).setVisibility(GONE);
+                    if (!isShowGuild)
+                        ((RadioButton) findViewById(R.id.select_guild)).setVisibility(GONE);
 
-                    if (defTab == 1){
+                    if (defTab == 1) {
                         SwitchToGroup();
-                    }else if (defTab == 2){
+                    } else if (defTab == 2) {
                         SwitchToFriend();
-                    }else if (defTab == 3){
+                    } else if (defTab == 3) {
                         SwitchToGuild();
                     }
-                    ((RadioButton)findViewById(R.id.select_group)).setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (buttonView.isPressed() && isChecked){
+                    ((RadioButton) findViewById(R.id.select_group)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked) {
                             SwitchToGroup();
                         }
                     });
-                    ((RadioButton)findViewById(R.id.select_friend)).setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (buttonView.isPressed() && isChecked){
+                    ((RadioButton) findViewById(R.id.select_friend)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked) {
                             SwitchToFriend();
                         }
                     });
-                    ((RadioButton)findViewById(R.id.select_guild)).setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (buttonView.isPressed() && isChecked){
+                    ((RadioButton) findViewById(R.id.select_guild)).setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (buttonView.isPressed() && isChecked) {
                             SwitchToGuild();
                         }
                     });
 
 
-                    findViewById(R.id.selectAll).setOnClickListener(v->{
-                        for (CheckBox ch : checkBoxs){
+                    findViewById(R.id.selectAll).setOnClickListener(v -> {
+                        for (CheckBox ch : checkBoxs) {
                             ch.setChecked(true);
                         }
                     });
-                    findViewById(R.id.selectBack).setOnClickListener(v->{
-                        for (CheckBox ch : checkBoxs){
+                    findViewById(R.id.selectBack).setOnClickListener(v -> {
+                        for (CheckBox ch : checkBoxs) {
                             ch.setChecked(!ch.isChecked());
                         }
                     });
@@ -240,12 +261,12 @@ public class QQSelectHelper {
                 protected void onDismiss() {
                     super.onDismiss();
                     try {
-                        if (isShowFriend)callback.onFriendSelect(selectFriend);
-                        if (isShowTroop)callback.onGroupSelect(selectGroup);
-                        if (isShowGuild)callback.onGuildSelect(selectGuild);
+                        if (isShowFriend) callback.onFriendSelect(selectFriend);
+                        if (isShowTroop) callback.onGroupSelect(selectGroup);
+                        if (isShowGuild) callback.onGuildSelect(selectGuild);
                         callback.onAllSelected();
-                    }catch (Exception e){
-                        LogUtils.warning("QQSelectHelper","dismiss callback exception:\n"+e);
+                    } catch (Exception e) {
+                        LogUtils.warning("QQSelectHelper", "dismiss callback exception:\n" + e);
                     }
 
                 }
@@ -253,18 +274,19 @@ public class QQSelectHelper {
             XPopup.Builder NewPop = new XPopup.Builder(fixContext);
             BasePopupView base = NewPop.asCustom(view);
             base.show();
-        }catch (Exception e){
-            Utils.ShowToast("选择器加载失败：\n"+e);
+        } catch (Exception e) {
+            Utils.ShowToast("选择器加载失败：\n" + e);
         }
 
 
-
     }
+
     @SuppressLint("AppCompatCustomView")
-    public static class RoundImageView extends ImageView{
+    public static class RoundImageView extends ImageView {
         private static ExecutorService dlPool = Executors.newFixedThreadPool(16);
         private Paint mPaint;
         private Matrix mMatrix;
+
         public RoundImageView(Context context) {
             super(context);
             init();
@@ -305,20 +327,22 @@ public class QQSelectHelper {
                 super.onDraw(canvas);
             }
         }
-        public void setImagePath(String ImagePath){
-            dlPool.submit(()->{
-                try{
+
+        public void setImagePath(String ImagePath) {
+            dlPool.submit(() -> {
+                try {
                     InputStream ins = new URL(ImagePath).openStream();
-                    Drawable drawable = DrawableWrapper.createFromStream(ins,ImagePath);
+                    Drawable drawable = DrawableWrapper.createFromStream(ins, ImagePath);
                     ins.close();
                     new Handler(Looper.getMainLooper())
-                            .post(()->this.setBackground(drawable));
-                }catch (Exception e){
-                    LogUtils.warning("HeadLoader","load failed("+ImagePath+"):\n"+e);
+                            .post(() -> this.setBackground(drawable));
+                } catch (Exception e) {
+                    LogUtils.warning("HeadLoader", "load failed(" + ImagePath + "):\n" + e);
                 }
 
             });
         }
+
         //把头像画成圆的(似乎不起作用)
         private void drawRoundByShaderMode(Canvas canvas, Bitmap bitmap) {
             //获取到Bitmap的宽高

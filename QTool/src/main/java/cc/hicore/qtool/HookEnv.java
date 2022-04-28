@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import cc.hicore.ConfigUtils.ConfigCore;
 import cc.hicore.ConfigUtils.ConfigCore_Json;
 

@@ -3,7 +3,7 @@ package cc.hicore.qtool.XPWork.QQProxy;
 import cc.hicore.HookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
+@HookItem(isDelayInit = false, isRunInAllProc = false)
 public class JoinEventProxy extends BaseHookItem {
 
     @Override
@@ -20,7 +20,8 @@ public class JoinEventProxy extends BaseHookItem {
     public boolean check() {
         return false;
     }
-    public static void sendResponse(Object requestInfo,boolean isAccept,String reason,boolean isBlack){
+
+    public static void sendResponse(Object requestInfo, boolean isAccept, String reason, boolean isBlack) {
 
     }
 }

@@ -1,162 +1,167 @@
 package cc.hicore.qtool.QQManager;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class QQGroupUtils {
-    public static String Group_Get_Name(String GroupUin){
+    public static String Group_Get_Name(String GroupUin) {
         GroupInfo info = Group_Get_Info(GroupUin);
-        return info == null?GroupUin : info.Name;
+        return info == null ? GroupUin : info.Name;
     }
-    public static String Group_Get_Member_Name(String GroupUin,String UserUin){
-        try{
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.utils.ContactUtils","b",String.class,new Class[]{
+
+    public static String Group_Get_Member_Name(String GroupUin, String UserUin) {
+        try {
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.utils.ContactUtils", "b", String.class, new Class[]{
                     MClass.loadClass("com.tencent.common.app.AppInterface"),
                     String.class,
                     String.class
             });
-            return (String) CallMethod.invoke(null, QQEnvUtils.getAppRuntime(),GroupUin,UserUin);
-        }catch (Exception e){
+            return (String) CallMethod.invoke(null, QQEnvUtils.getAppRuntime(), GroupUin, UserUin);
+        } catch (Exception e) {
             return UserUin;
         }
 
     }
-    public static String Group_Get_Member_Title(String GroupUin,String UserUin){
-        GroupMemberInfo info = Group_Get_Member_Info(GroupUin,UserUin);
+
+    public static String Group_Get_Member_Title(String GroupUin, String UserUin) {
+        GroupMemberInfo info = Group_Get_Member_Info(GroupUin, UserUin);
         return info == null ? "" : info.Title;
     }
-    public static GroupMemberInfo Group_Get_Member_Info(String GroupUin,String UserUin){
-        try{
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
+
+    public static GroupMemberInfo Group_Get_Member_Info(String GroupUin, String UserUin) {
+        try {
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
-            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager,"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"),GroupUin,UserUin);
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
+            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager, "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"), GroupUin, UserUin);
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();
-            NewItem.Uin = MField.GetField(GroupMemberInfoR,"memberuin");
-            NewItem.Nick = MField.GetField(GroupMemberInfoR,"troopnick");
-            NewItem.Name = MField.GetField(GroupMemberInfoR,"friendnick");
-            NewItem.join_time = MField.GetField(GroupMemberInfoR,"join_time");
-            NewItem.last_active = MField.GetField(GroupMemberInfoR,"last_active_time");
+            NewItem.Uin = MField.GetField(GroupMemberInfoR, "memberuin");
+            NewItem.Nick = MField.GetField(GroupMemberInfoR, "troopnick");
+            NewItem.Name = MField.GetField(GroupMemberInfoR, "friendnick");
+            NewItem.join_time = MField.GetField(GroupMemberInfoR, "join_time");
+            NewItem.last_active = MField.GetField(GroupMemberInfoR, "last_active_time");
             NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
             NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
-            NewItem.Title = MField.GetField(GroupMemberInfoR,"mUniqueTitle");
+            NewItem.Title = MField.GetField(GroupMemberInfoR, "mUniqueTitle");
             return NewItem;
-        }catch (Exception e){
-            LogUtils.error("Group_Get_Member_Info",e);
+        } catch (Exception e) {
+            LogUtils.error("Group_Get_Member_Info", e);
             return null;
         }
     }
-    public static ArrayList<GroupInfo> Group_Get_List(){
-        try{
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
+
+    public static ArrayList<GroupInfo> Group_Get_List() {
+        try {
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
             ArrayList<?> rawList;
-            try{
-                rawList =  MMethod.CallMethodNoParam(TroopManager,"g", ArrayList.class);
-            }catch (Exception e){
-                rawList =  MMethod.CallMethodNoParam(TroopManager,"a", ArrayList.class);
+            try {
+                rawList = MMethod.CallMethodNoParam(TroopManager, "g", ArrayList.class);
+            } catch (Exception e) {
+                rawList = MMethod.CallMethodNoParam(TroopManager, "a", ArrayList.class);
             }
 
             ArrayList<GroupInfo> NewList = new ArrayList<>();
-            for (Object item : rawList){
+            for (Object item : rawList) {
                 GroupInfo NewItem = new GroupInfo();
-                NewItem.Uin = MField.GetField(item,"troopuin");
-                NewItem.Name = MField.GetField(item,"troopname");
-                NewItem.Creator = MField.GetField(item,"troopowneruin");
-                String admins = MField.GetField(item,"Administrator");
+                NewItem.Uin = MField.GetField(item, "troopuin");
+                NewItem.Name = MField.GetField(item, "troopname");
+                NewItem.Creator = MField.GetField(item, "troopowneruin");
+                String admins = MField.GetField(item, "Administrator");
                 NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
                 NewList.add(NewItem);
             }
             return NewList;
-        }catch (Exception e){
-            LogUtils.error("Group_Get_List",e);
+        } catch (Exception e) {
+            LogUtils.error("Group_Get_List", e);
             return null;
         }
     }
-    public static GroupInfo Group_Get_Info(String GroupUin){
-        try{
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
+
+    public static GroupInfo Group_Get_Info(String GroupUin) {
+        try {
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
-            Object GroupInfoR = MMethod.CallMethod(TroopManager,TroopManager.getClass(),"g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),new Class[]{String.class},GroupUin);
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
+            Object GroupInfoR = MMethod.CallMethod(TroopManager, TroopManager.getClass(), "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"), new Class[]{String.class}, GroupUin);
             GroupInfo NewItem = new GroupInfo();
-            NewItem.Uin = MField.GetField(GroupInfoR,"troopuin");
-            NewItem.Name = MField.GetField(GroupInfoR,"troopname");
-            NewItem.Creator = MField.GetField(GroupInfoR,"troopowneruin");
-            String admins = MField.GetField(GroupInfoR,"Administrator");
+            NewItem.Uin = MField.GetField(GroupInfoR, "troopuin");
+            NewItem.Name = MField.GetField(GroupInfoR, "troopname");
+            NewItem.Creator = MField.GetField(GroupInfoR, "troopowneruin");
+            String admins = MField.GetField(GroupInfoR, "Administrator");
             NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
             return NewItem;
-        }catch (Exception e){
-            LogUtils.error("Group_Get_Info",e);
+        } catch (Exception e) {
+            LogUtils.error("Group_Get_Info", e);
             return null;
         }
 
     }
-    public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin){
-        try{
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(),"getManager",
+
+    public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin) {
+        try {
+            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                     MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"),"TROOP_MANAGER"));
+                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
             ArrayList<?> MyList;
-            try{
-                MyList = MMethod.CallMethodSingle(TroopManager,"w", List.class,GroupUin);
-            }catch (Exception e){
-                MyList = MMethod.CallMethodSingle(TroopManager,"b", List.class,GroupUin);
+            try {
+                MyList = MMethod.CallMethodSingle(TroopManager, "w", List.class, GroupUin);
+            } catch (Exception e) {
+                MyList = MMethod.CallMethodSingle(TroopManager, "b", List.class, GroupUin);
             }
 
             ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
             GroupInfo gInfo = Group_Get_Info(GroupUin);
-            for (Object item : MyList){
+            for (Object item : MyList) {
                 GroupMemberInfo NewItem = new GroupMemberInfo();
-                NewItem.Uin = MField.GetField(item,"memberuin");
-                NewItem.Nick = MField.GetField(item,"troopnick");
-                NewItem.Name = MField.GetField(item,"friendnick");
-                NewItem.join_time = MField.GetField(item,"join_time");
-                NewItem.last_active = MField.GetField(item,"last_active_time");
+                NewItem.Uin = MField.GetField(item, "memberuin");
+                NewItem.Nick = MField.GetField(item, "troopnick");
+                NewItem.Name = MField.GetField(item, "friendnick");
+                NewItem.join_time = MField.GetField(item, "join_time");
+                NewItem.last_active = MField.GetField(item, "last_active_time");
                 NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
                 NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
-                NewItem.Title = MField.GetField(item,"mUniqueTitle");
+                NewItem.Title = MField.GetField(item, "mUniqueTitle");
                 Infos.add(NewItem);
             }
             return Infos;
-        }
-        catch (Throwable e)
-        {
-            LogUtils.error("GetGroupMemberList",e);
+        } catch (Throwable e) {
+            LogUtils.error("GetGroupMemberList", e);
             return null;
         }
     }
-    public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin){
+
+    public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin) {
         try {
-            Object Manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"),new Class[]{HookEnv.AppInterface.getClass()},HookEnv.AppInterface);
+            Object Manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), new Class[]{HookEnv.AppInterface.getClass()}, HookEnv.AppInterface);
             ArrayList TheList;
-            try{
-                TheList = MMethod.CallMethod(Manager,"a",ArrayList.class,new Class[]{String.class,boolean.class},GroupUin,true);
-            }catch (Exception e){
-                TheList = MMethod.CallMethod(Manager,"b",ArrayList.class,new Class[]{String.class,boolean.class},GroupUin,true);
+            try {
+                TheList = MMethod.CallMethod(Manager, "a", ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
+            } catch (Exception e) {
+                TheList = MMethod.CallMethod(Manager, "b", ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
             }
 
-            if (TheList != null){
+            if (TheList != null) {
                 ArrayList<MuteList> newList = new ArrayList<>();
-                for (Object item : TheList){
+                for (Object item : TheList) {
                     MuteList newItem = new MuteList();
-                    String UserUin = MField.GetField(item,"a",String.class);
+                    String UserUin = MField.GetField(item, "a", String.class);
                     long TimeStamp;
-                    try{
-                        TimeStamp= MField.GetField(item,"a",long.class);
-                    }catch (Exception e){
-                        TimeStamp = MField.GetField(item,"b",long.class);
+                    try {
+                        TimeStamp = MField.GetField(item, "a", long.class);
+                    } catch (Exception e) {
+                        TimeStamp = MField.GetField(item, "b", long.class);
                     }
                     newItem.Uin = UserUin;
                     newItem.delayTime = TimeStamp * 1000 - System.currentTimeMillis();
@@ -171,19 +176,20 @@ public class QQGroupUtils {
     }
 
 
-    public static class MuteList{
+    public static class MuteList {
         public String Uin;
         public long delayTime;
     }
 
-    public static class GroupInfo{
+    public static class GroupInfo {
         public String Creator;
         public ArrayList<String> adminList;
         public String Name;
         public String Uin;
         public Object source;
     }
-    public static class GroupMemberInfo{
+
+    public static class GroupMemberInfo {
         public String Uin;
         public String Name;
         public String Nick;

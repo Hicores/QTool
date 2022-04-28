@@ -3,24 +3,31 @@ package cc.hicore.ConfigUtils;
 import java.util.List;
 
 public interface ConfigCore {
-    void removeKey(String PathName,String Key);
-    boolean getBoolean(String PathName,String Key,boolean Def);
-    void setBoolean(String PathName,String Key,boolean Value);
+    void removeKey(String PathName, String Key);
 
-    String getString(String PathName,String Key,String Def);
-    void setString(String PathName,String Key,String Value);
+    boolean getBoolean(String PathName, String Key, boolean Def);
 
-    int getInt(String PathName,String Key,int Def);
-    void setInt(String PathName,String Key,int Value);
+    void setBoolean(String PathName, String Key, boolean Value);
 
-    long getLong(String PathName,String Key,long Def);
-    void setLong(String PathName,String Key,long Value);
+    String getString(String PathName, String Key, String Def);
 
-    List<String> getList(String PathName,String Key,boolean isCreate);
-    void setList(String PathName,String Key,List<String> Value);
+    void setString(String PathName, String Key, String Value);
 
-    byte[] getBytes(String PathName,String Key);
-    void setBytes(String PathName,String Key,byte[] Value);
+    int getInt(String PathName, String Key, int Def);
+
+    void setInt(String PathName, String Key, int Value);
+
+    long getLong(String PathName, String Key, long Def);
+
+    void setLong(String PathName, String Key, long Value);
+
+    List<String> getList(String PathName, String Key, boolean isCreate);
+
+    void setList(String PathName, String Key, List<String> Value);
+
+    byte[] getBytes(String PathName, String Key);
+
+    void setBytes(String PathName, String Key, byte[] Value);
 
     String[] getKeys(String PathName);
 }

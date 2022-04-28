@@ -4,31 +4,32 @@ import android.app.AlertDialog;
 import android.os.Handler;
 import android.os.Looper;
 
-import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.HookEnv;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.HookEnv;
+
 //插件权限请求窗口,主要是skey等身份
 public class SecurityAccess {
-    public static boolean checkAccess(String Token,String RequestText){
-        long AccessExpiredTime = HookEnv.Config.getLong("Security_Access",Token,0);
-        if (AccessExpiredTime > System.currentTimeMillis()){
+    public static boolean checkAccess(String Token, String RequestText) {
+        long AccessExpiredTime = HookEnv.Config.getLong("Security_Access", Token, 0);
+        if (AccessExpiredTime > System.currentTimeMillis()) {
             return true;
         }
-        return requestAccess(Token,RequestText);
+        return requestAccess(Token, RequestText);
     }
-    private static boolean requestAccess(String Token,String RequestText){
-        if (Thread.currentThread().getName().equals("main")){
+
+    private static boolean requestAccess(String Token, String RequestText) {
+        if (Thread.currentThread().getName().equals("main")) {
             Utils.ShowToast("在主线程中无法调用授权操作");
             return false;
         }
         AtomicBoolean clickEnd = new AtomicBoolean();
         AtomicInteger clickResult = new AtomicInteger();
         new Handler(Looper.getMainLooper())
-                .post(()->{
-                    AlertDialog dialog = new AlertDialog.Builder(Utils.getTopActivity(),3)
+                .post(() -> {
+                    AlertDialog dialog = new AlertDialog.Builder(Utils.getTopActivity(), 3)
                             .setTitle("授权提示")
                             .setMessage(RequestText)
                             .setNegativeButton("拒绝", (dialog1, which) -> {
@@ -46,27 +47,28 @@ public class SecurityAccess {
                 });
 
 
-        for (int i=0;i<100;i++){
+        for (int i = 0; i < 100; i++) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (clickEnd.get())break;
+            if (clickEnd.get()) break;
         }
-        if (clickResult.get() == 2){
-            HookEnv.Config.setLong("Security_Access",Token,System.currentTimeMillis() + 7 * 24 * 3600 * 1000);//授权7天有效
+        if (clickResult.get() == 2) {
+            HookEnv.Config.setLong("Security_Access", Token, System.currentTimeMillis() + 7 * 24 * 3600 * 1000);//授权7天有效
             cleanAccessExpire();
         }
 
         return clickResult.get() == 2;
     }
-    private static void cleanAccessExpire(){
+
+    private static void cleanAccessExpire() {
         String[] keys = HookEnv.Config.getKeys("Security_Access");
-        for (String key : keys){
-            long ExpireTime = HookEnv.Config.getLong("Security_Access",key,0);
-            if (ExpireTime < System.currentTimeMillis()){
-                HookEnv.Config.removeKey("Security_Access",key);
+        for (String key : keys) {
+            long ExpireTime = HookEnv.Config.getLong("Security_Access", key, 0);
+            if (ExpireTime < System.currentTimeMillis()) {
+                HookEnv.Config.removeKey("Security_Access", key);
             }
         }
     }

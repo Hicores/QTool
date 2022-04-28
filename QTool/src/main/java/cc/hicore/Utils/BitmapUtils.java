@@ -262,22 +262,21 @@ public class BitmapUtils {
 
         return (bitmap);
     }
-    public static Bitmap onCut(Activity activity){
+
+    public static Bitmap onCut(Activity activity) {
         //获取window最底层的view
-        View view=activity.getWindow().getDecorView();
+        View view = activity.getWindow().getDecorView();
 
         //状态栏高度
-        Rect rect=new Rect();
+        Rect rect = new Rect();
         view.getWindowVisibleDisplayFrame(rect);
-
-
 
 
         //设置允许当前窗口保存缓存信息
         view.buildDrawingCache();
         Bitmap tmp = view.getDrawingCache();
 
-        Bitmap bit = tmp.copy(tmp.getConfig(),true);
+        Bitmap bit = tmp.copy(tmp.getConfig(), true);
         view.destroyDrawingCache();
         //去掉状态栏高度
         return bit;
