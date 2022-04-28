@@ -1,6 +1,7 @@
 package cc.hicore.ReflectUtils;
 
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedHelpers;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -11,10 +12,10 @@ public class MClass {
         Class<?> clz = clzMap.get(ClassName);
         if (clz != null)return clz;
         try {
-            clz = HookEnv.mLoader.loadClass(ClassName);
+            clz = XposedHelpers.findClass(ClassName,HookEnv.mLoader);
             clzMap.put(ClassName,clz);
             return clz;
-        } catch (ClassNotFoundException e) {
+        } catch (Throwable e) {
             return null;
         }
     }
