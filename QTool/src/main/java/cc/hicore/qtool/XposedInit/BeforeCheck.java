@@ -51,7 +51,7 @@ public class BeforeCheck {
                 throw new RuntimeException("getLaunchingActivity");
             }
         }catch (Throwable th){
-            checkResult.append("当前无法访问被限制的AndroidAPI,这可能导致模块部分功能,如果界面显示出现异常\n1.如果你是升级框架后出现该问题,请降级后再试\n2.如果你是刚使用则出现该问题,请更换框架后再试\n------------------\n");
+            checkResult.append("当前无法访问被限制的AndroidAPI,这可能导致模块部分功能异常,比如界面显示出现异常\n1.如果你是升级框架后出现该问题,请降级后再试\n2.如果你是刚使用则出现该问题,请更换框架后再试\n------------------\n");
         }
 
     }
