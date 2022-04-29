@@ -36,7 +36,7 @@ public class BeforeCheck {
         if (HookEnv.ExtraDataPath != null) {
             if (!ExtraPathInit.CheckPermission(HookEnv.ExtraDataPath)) {
                 checkResult.append("你当前设置的存储路径:").append(HookEnv.ExtraDataPath).append("无效或者没有权限访问,这可能导致脚本,语音无法使用,导致模块的设置无法保存到文件\n");
-                checkResult.append("如果你最近做了以下操作,请恢复原状重试:\n1.关闭了QQ的存储权限\n2.修改了模块的配置存储目录权限\n3.使用管理软件拒绝了QQ访问模块目录\n\n你也可以打开:设置--辅助功能--QTool基础设置重新进行目录设置\n------------------\n");
+                checkResult.append("如果你最近做了以下操作,请恢复原状重试:\n1.关闭了QQ的存储权限\n2.修改了模块的配置存储目录权限\n3.使用管理软件拒绝了QQ访问模块目录\n\n你也可以长按设置界面QTool菜单重新进行目录设置\n------------------\n");
             }
         }
     }

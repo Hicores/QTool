@@ -19,7 +19,6 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XPWork.DebugSetInject.DebugSetHook;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -57,12 +56,13 @@ public class EnvHook {
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                     HookForDelay();
+
+                    SettingInject.startInject();
                     if (HookEnv.ExtraDataPath != null) {
 
                         HostInfo.Init();
                         InitActivityProxy();
                         //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
-                        new DebugSetHook().startHook();
 
                         HookLoader.SearchAndLoadAllHook();
                     }
