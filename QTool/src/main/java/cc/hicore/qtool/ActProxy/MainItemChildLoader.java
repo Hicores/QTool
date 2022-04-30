@@ -84,6 +84,7 @@ public class MainItemChildLoader {
                     });
                 }else {
                     layout.findViewById(R.id.Item_Click).setVisibility(View.VISIBLE);
+                    layout.setOnClickListener(v-> info.UIInstance.ListItemClick());
                 }
                 ItemContainer.addView(layout);
             }
