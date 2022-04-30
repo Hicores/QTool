@@ -38,10 +38,8 @@ public class QQGroupUtils {
 
     public static GroupMemberInfo Group_Get_Member_Info(String GroupUin, String UserUin) {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager, "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"), GroupUin, UserUin);
+            Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
+            Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager, "getTroopMember", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"), GroupUin, UserUin);
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();
@@ -111,15 +109,8 @@ public class QQGroupUtils {
 
     public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin) {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            ArrayList<?> MyList;
-            try {
-                MyList = MMethod.CallMethodSingle(TroopManager, "w", List.class, GroupUin);
-            } catch (Exception e) {
-                MyList = MMethod.CallMethodSingle(TroopManager, "b", List.class, GroupUin);
-            }
+            Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
+            ArrayList MyList = MMethod.CallMethodParams(TroopManager, "getAllTroopMembers",List.class, GroupUin);
 
             ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
             GroupInfo gInfo = Group_Get_Info(GroupUin);

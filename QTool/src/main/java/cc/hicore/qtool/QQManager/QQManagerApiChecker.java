@@ -68,12 +68,9 @@ public class QQManagerApiChecker extends BaseHookItem {
 
     private static boolean Group_Get_Member_List() {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            Method m = MMethod.FindMethod(TroopManager.getClass(), "w", List.class, new Class[]{String.class});
-            if (m == null)
-                m = MMethod.FindMethod(TroopManager.getClass(), "b", List.class, new Class[]{String.class});
+            Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
+
+            Method m = MMethod.FindMethod(TroopManager.getClass(), "getAllTroopMembers", List.class, new Class[]{String.class});
             return m != null;
         } catch (Exception e) {
             return false;
@@ -111,11 +108,9 @@ public class QQManagerApiChecker extends BaseHookItem {
 
     private static boolean Group_Get_Member_Info() {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
+            Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
 
-            Method m = MMethod.FindMethod(TroopManager.getClass(), "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"),
+            Method m = MMethod.FindMethod(TroopManager.getClass(), "getTroopMember", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"),
                     new Class[]{String.class, String.class});
             return TroopManager != null && m != null;
         } catch (Exception e) {
