@@ -61,7 +61,6 @@ public class OnlineBundleHelper {
             Utils.ShowToastL("上传错误:" + retJson.optString("msg"));
             return;
         }
-        Utils.ShowToastL("上传结果:" + retJson.optString("msg"));
     }
 
     public static ArrayList<VoiceProvider.FileInfo> getAllBundle() {

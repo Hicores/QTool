@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import cc.hicore.Utils.FileUtils;
@@ -104,7 +105,9 @@ public final class VoicePanelController extends BottomPopupView {
                                         FileUtils.deleteFile(new File(fileInfo.Path));
                                         UpdateProviderDate();
                                     } else if (which == 1) {
-                                        AddVoiceToPacket(fileInfo.Name, fileInfo.Path);
+                                        ArrayList<String> paths = new ArrayList<>();
+                                        paths.add(fileInfo.Path);
+                                        AddVoiceToPacket(paths);
                                     }
                                 }).show();
                         return true;
@@ -115,7 +118,16 @@ public final class VoicePanelController extends BottomPopupView {
                         provider = provider.getChild(fileInfo.Name);
                         UpdateProviderDate();
                     });
-                    mItem.setOnLongClickListener(null);
+                    mItem.setOnLongClickListener(v->{
+                        new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
+                                .setTitle("选择操作")
+                                .setItems(new String[]{"添加到语音包"}, (dialog, which) -> {
+                                    if (which == 0) {
+                                        AddVoiceToPacket(searchVoices(fileInfo.Path));
+                                    }
+                                }).show();
+                        return true;
+                    });
                 } else if (fileInfo.type == -1) {
                     mItem.setOnClickListener(v -> {
                         provider = provider.getParent();
@@ -137,6 +149,19 @@ public final class VoicePanelController extends BottomPopupView {
         recyclerView.setAdapter(commonAdapter);
 
         UpdateControlData();
+    }
+    private ArrayList<String> searchVoices(String path){
+        File[] fs = new File(path).listFiles();
+        if (fs == null)return new ArrayList<>();
+        ArrayList<String> ret = new ArrayList<>();
+        for (File f : fs){
+            if (f.isFile()){
+                ret.add(f.getAbsolutePath());
+            }else if (f.isDirectory()){
+                ret.addAll(searchVoices(f.getAbsolutePath()));
+            }
+        }
+        return ret;
     }
 
     private VoiceProvider cacheProvider;
@@ -261,7 +286,7 @@ public final class VoicePanelController extends BottomPopupView {
         }
     }
 
-    private void AddVoiceToPacket(String Name, String Path) {
+    private void AddVoiceToPacket(ArrayList<String> Paths) {
         ProgressDialog dialog = new ProgressDialog(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
         dialog.setTitle("加载中..");
         dialog.setMessage("正在获取可用列表...");
@@ -294,7 +319,15 @@ public final class VoicePanelController extends BottomPopupView {
                                         uploadProgress.show();
                                         new Thread(() -> {
                                             try {
-                                                OnlineBundleHelper.RequestUpload(Name, Path, Bundle);
+                                                int sumAll = Paths.size();
+                                                int curr = 0;
+                                                for (String Path : Paths){
+                                                    OnlineBundleHelper.RequestUpload(new File(Path).getName(), Path, Bundle);
+                                                    curr++;
+                                                    int finalCurr = curr;
+                                                    new Handler(Looper.getMainLooper()).post(()->uploadProgress.setMessage("正在上传("+ finalCurr +"/"+sumAll+")..."));
+                                                }
+                                                Utils.ShowToast("上传结束");
                                             } catch (Exception e) {
                                                 Utils.ShowToastL("发生错误:\n" + e);
 
@@ -302,7 +335,7 @@ public final class VoicePanelController extends BottomPopupView {
                                                 new Handler(Looper.getMainLooper()).post(uploadProgress::dismiss);
                                             }
                                         }).start();
-                                    }).setTitle("选择需要添加到的包").show();
+                                    }).setTitle("选择添加"+ Paths.size()+"个语音").show();
                         } catch (Exception e) {
                             Utils.ShowToastL("发生错误:\n" + e);
                         } finally {
