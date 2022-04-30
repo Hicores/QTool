@@ -17,7 +17,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@UIItem(itemName = "上传重命名base.apk", mainItemID = 1, ID = "UploadFileRename", itemType = 1)
+@UIItem(name = "上传重命名base.apk", type = 1, id = "UploadFileRename", targetID = 1,groupName = "功能辅助")
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 public class FileUploadRename extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;

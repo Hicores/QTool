@@ -18,7 +18,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemName = "半透明头像上传", mainItemID = 1, itemType = 1, ID = "Upload_Avatar")
+@UIItem(name = "半透明头像上传", type = 1, id = "Upload_Avatar", targetID = 1,groupName = "功能辅助")
 public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     boolean IsEnable = false;
 

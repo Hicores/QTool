@@ -12,7 +12,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(ID = "HideSignTip", mainItemID = 2, itemName = "隐藏打卡提示", itemType = 1)
+@UIItem(name = "隐藏打卡提示", type = 1, id = "HideSignTip", targetID = 2,groupName = "聊天界面净化")
 public class HideSignTip extends BaseHookItem implements BaseUiItem {
     private boolean IsEnable;
 

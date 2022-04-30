@@ -38,23 +38,24 @@ public class UiFixItem extends AbstractProcessor {
                     "import java.util.LinkedHashSet;\n" +
                     "\n" +
                     "public class UiItemInfo{\n" +
-                    "\tpublic static LinkedHashSet<HookLoader.UiInfo> UiInfos = new LinkedHashSet<>();\n" +
-                    "\tprivate static void addUiInfo(int type,String UiName,String UiDesc,int Pos,String ClassName,String ID,boolean IsCheckDef){\n" +
-                    "\t\tHookLoader.UiInfo NewInfo = new HookLoader.UiInfo();\n" +
-                    "\t\tNewInfo.type = type;\n" +
-                    "\t\tNewInfo.title = UiName;\n" +
-                    "\t\tNewInfo.desc = UiDesc;\n" +
-                    "\t\tNewInfo.Position = Pos;\n" +
-                    "\t\tNewInfo.ClzName = ClassName;\n" +
-                    "\t\tNewInfo.ID = ID;\n" +
-                    "\t\tNewInfo.IsCheckDef = IsCheckDef;\n" +
-                    "\t\tUiInfos.add(NewInfo);\n" +
-                    "\t}\n" +
-                    "\tpublic static LinkedHashSet<HookLoader.UiInfo> getUiInfos(){\n" +
-                    "\t\tUiInfos.clear();\n" +
-                    "\t\t!!!这里存放初始化代码!!!\n" +
-                    "\t\treturn UiInfos;\n" +
-                    "\t}\n" +
+                    "    public static LinkedHashSet<HookLoader.UiInfo> UiInfos = new LinkedHashSet<>();\n" +
+                    "    private static void addUiInfo(int targetID,String groupName,int type,String name,String desc,String id,boolean defCheck,String clzName){\n" +
+                    "        HookLoader.UiInfo NewInfo = new HookLoader.UiInfo();\n" +
+                    "        NewInfo.targetID = targetID;\n" +
+                    "        NewInfo.groupName = groupName;\n" +
+                    "        NewInfo.type = type;\n" +
+                    "        NewInfo.name = name;\n" +
+                    "        NewInfo.desc = desc;\n" +
+                    "        NewInfo.id = id;\n" +
+                    "        NewInfo.defCheck = defCheck;\n" +
+                    "\t\tNewInfo.clzName = clzName;\n" +
+                    "        UiInfos.add(NewInfo);\n" +
+                    "    }\n" +
+                    "    public static LinkedHashSet<HookLoader.UiInfo> getUiInfos(){\n" +
+                    "        UiInfos.clear();\n" +
+                    "        !!!这里存放初始化代码!!!\n" +
+                    "        return UiInfos;\n" +
+                    "    }\n" +
                     "}";
             StringBuilder clzName = new StringBuilder();
             for (Element anno :roundEnvironment.getElementsAnnotatedWith(element)){
@@ -62,12 +63,15 @@ public class UiFixItem extends AbstractProcessor {
                 System.out.println("New UI Item Controller:"+symbol.flatName());
 
                 UIItem item = anno.getAnnotation(UIItem.class);
-                clzName.append("addUiInfo(").append(item.itemType())
-                        .append(",\"").append(item.itemName()).append("\",\"").append(item.itemDesc())
-                        .append("\",").append(item.mainItemID()).append(",\"")
-                        .append(symbol.flatName()).append("\",\"").append(item.ID()).append("\",")
-                .append(item.IsDefChecked()).append(");\n");
-
+                clzName.append("addUiInfo(")
+                        .append(item.targetID()).append(",")
+                        .append("\"").append(item.groupName()).append("\",")
+                        .append(item.type()).append(",")
+                        .append("\"").append(item.name()).append("\",")
+                        .append("\"").append(item.desc()).append("\",")
+                        .append("\"").append(item.id()).append("\",")
+                        .append(item.defCheck()).append(",")
+                        .append("\"").append(symbol.flatName()).append("\");\n");
             }
 
             JavaFileObject sourceFile = null;

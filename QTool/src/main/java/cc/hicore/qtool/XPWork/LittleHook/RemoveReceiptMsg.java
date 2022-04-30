@@ -17,7 +17,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XposedHelpers;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemName = "屏蔽回执消息提示", itemType = 1, mainItemID = 2, ID = "RemoveReceiptMsg")
+@UIItem(name = "屏蔽回执消息提示", type = 1, id = "RemoveReceiptMsg", targetID = 2,groupName = "消息屏蔽")
 public class RemoveReceiptMsg extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

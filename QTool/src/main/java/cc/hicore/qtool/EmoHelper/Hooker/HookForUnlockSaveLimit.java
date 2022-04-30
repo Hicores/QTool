@@ -20,7 +20,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 
 @HookItem(isDelayInit = true, isRunInAllProc = false)
-@UIItem(itemName = "表情收藏上限后存在本地", itemType = 1, mainItemID = 1, ID = "HookForUnlockSaveLimit")
+@UIItem(name = "表情收藏上限后存在本地", type = 1, targetID = 1, id = "HookForUnlockSaveLimit",groupName = "功能辅助")
 public class HookForUnlockSaveLimit extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

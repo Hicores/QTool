@@ -15,14 +15,17 @@ import de.robv.android.xposed.XposedBridge;
 
 public class HookLoader {
     public static class UiInfo {
-        public int type;
-        public int Position;
-        public String title;
-        public String desc;
-        public String ClzName;
-        public String ID;
-        public boolean IsCheckDef;
+        public int targetID;
+        public String groupName;
 
+        public int type;
+        public String name;
+        public String desc;
+        public String id;
+
+        public boolean defCheck;
+
+        public String clzName;
         public BaseUiItem UIInstance;
     }
 
@@ -132,9 +135,9 @@ public class HookLoader {
     public static void InitUIHookInstance() {
         LinkedHashSet<UiInfo> uiInfos = HookLoader.getUiInfos();
         for (UiInfo NewInfo : uiInfos) {
-            NewInfo.UIInstance = searchForUiInstance(NewInfo.ClzName);
+            NewInfo.UIInstance = searchForUiInstance(NewInfo.clzName);
             if (NewInfo.UIInstance != null) {
-                NewInfo.UIInstance.SwitchChange(HookEnv.Config.getBoolean("Main_Switch", NewInfo.ID, false));
+                NewInfo.UIInstance.SwitchChange(HookEnv.Config.getBoolean("Main_Switch", NewInfo.id, false));
             }
         }
     }

@@ -12,8 +12,8 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.qtool.ActProxy.MainMenu;
 import cc.hicore.qtool.BuildConfig;
-import cc.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 import cc.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 import de.robv.android.xposed.XposedBridge;
 
@@ -27,7 +27,7 @@ public class SettingInject {
 
                 View item = MField.GetFirstField(act, MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"));
                 ViewGroup mRoot = (ViewGroup) item.getParent();
-                View newItem = FormItemUtils.createMultiItem(act, "QTool", BuildConfig.VERSION_NAME, v -> { MainMenu.createActivity(act); });
+                View newItem = FormItemUtils.createMultiItem(act, "QTool", BuildConfig.VERSION_NAME, v -> { MainMenu.onCreate(act); });
                 newItem.setOnLongClickListener(v -> {
                     DebugDialog.startShow(v.getContext());
                     return true;

@@ -18,7 +18,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 
-@UIItem(itemName = "隐藏聊天界面相机图标", mainItemID = 2, itemType = 1, ID = "HideChatCameraButton")
+@UIItem(name = "隐藏聊天界面相机图标", type = 1, id = "HideChatCameraButton", targetID = 2,groupName = "聊天界面净化")
 @HookItem(isRunInAllProc = false, isDelayInit = true)
 public class HideChatCamera extends BaseHookItem implements BaseUiItem {
     static boolean IsEnable;

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_item_base2"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/Main_Title"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/q">
+            </ImageView>
+            <ImageView
+                android:layout_marginTop="5dp"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="@drawable/tool" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/Version_Now"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/Main_Title"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="当前版本:4.0.0"/>
+        <TextView
+            android:id="@+id/Version_New"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/Version_Now"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="最新CI版本:0.0.1-CI-244"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleBar">
+
+        <LinearLayout
+            android:id="@+id/ContainItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</RelativeLayout>

@@ -2,17 +2,21 @@ package cc.hicore.qtool.JavaPlugin.ListForm;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,18 +27,37 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.ActProxy.BaseProxyAct;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 
 /*
 显示脚本项目的Activity
  */
-public class JavaPluginAct extends Activity {
+public class JavaPluginAct{
     private LinearLayout itemLayout;
+    private Context context;
 
     public static void startActivity(Activity host) {
-        Intent intent = new Intent(host, JavaPluginAct.class);
-        host.startActivity(intent);
+        BaseProxyAct.createNewView("JavaPluginManager", host, context -> new JavaPluginAct().createView(context));
+    }
+    private View createView(Context context){
+        this.context = context;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View root = inflater.inflate(R.layout.menu_javaplugin,null);
+        itemLayout = root.findViewById(R.id.ContainLayout);
+        searchForLocal();
+        root.findViewById(R.id.selectLocal).setOnClickListener(v -> searchForLocal());
+        root.findViewById(R.id.selectOnline).setOnClickListener(v -> searchForOnline());
+
+        root.findViewById(R.id.openApiDesc)
+                .setOnClickListener(v -> {
+                    Uri u = Uri.parse("https://shimo.im/docs/913JVOpxNdiavN3E/");
+                    Intent in = new Intent(Intent.ACTION_VIEW, u);
+                    context.startActivity(in);
+                });
+
+        return root;
     }
 
     static AtomicReference<onNotify> notifyInstance = new AtomicReference<>();
@@ -50,31 +73,6 @@ public class JavaPluginAct extends Activity {
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        notifyInstance.getAndSet(null);
-
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.Theme_QTool);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu_javaplugin);
-        itemLayout = findViewById(R.id.ContainLayout);
-        searchForLocal();
-        findViewById(R.id.selectLocal).setOnClickListener(v -> searchForLocal());
-        findViewById(R.id.selectOnline).setOnClickListener(v -> searchForOnline());
-
-        findViewById(R.id.openApiDesc)
-                .setOnClickListener(v -> {
-                    Uri u = Uri.parse("https://shimo.im/docs/913JVOpxNdiavN3E/");
-                    Intent in = new Intent(Intent.ACTION_VIEW, u);
-                    startActivity(in);
-                });
-
-    }
 
     //扫描本地脚本并显示
     private void searchForLocal() {
@@ -87,7 +85,7 @@ public class JavaPluginAct extends Activity {
         if (searchResult != null) {
             for (File f : searchResult) {
                 if (f.exists() && f.isDirectory()) {
-                    LocalPluginItemController controller = LocalPluginItemController.create(this);
+                    LocalPluginItemController controller = LocalPluginItemController.create(context);
                     boolean loadResult = controller.checkAndLoadPluginInfo(f.getAbsolutePath());
                     if (loadResult) {
                         itemLayout.addView(controller.getRoot(), controller.getParams());
@@ -106,7 +104,7 @@ public class JavaPluginAct extends Activity {
             }
         }
         if (saveAlarm.length() != 0) {
-            new AlertDialog.Builder(this, R.style.Theme_QTool)
+            new AlertDialog.Builder(context, R.style.Theme_QTool)
                     .setTitle("警告")
                     .setMessage("以下脚本ID冲突,请删除一个或者修改其中一个脚本ID为非冲突ID\n" + saveAlarm)
                     .setNeutralButton("关闭", (dialog, which) -> {
@@ -124,7 +122,7 @@ public class JavaPluginAct extends Activity {
 
     //扫描在线脚本并显示
     private void searchForOnline() {
-        ProgressBar bar = new ProgressBar(this);
+        ProgressBar bar = new ProgressBar(context);
         itemLayout.removeAllViews();
         itemLayout.addView(bar);
 
@@ -139,7 +137,7 @@ public class JavaPluginAct extends Activity {
                             .post(() -> {
                                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                 param.setMargins(20, 10, 20, 10);
-                                View v = OnlinePluginItemController.getViewInstance(this, decInfo);
+                                View v = OnlinePluginItemController.getViewInstance(context, decInfo);
                                 itemLayout.addView(v, param);
                             });
                 }

@@ -26,4 +26,6 @@ public class HookEnv {
 
     public static Object AppInterface;
     public static Object SessionInfo;
+
+    public static String New_Version;
 }

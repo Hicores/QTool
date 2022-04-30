@@ -29,7 +29,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 
 @HookItem(isRunInAllProc = false, isDelayInit = false)
-@UIItem(itemType = 1, itemName = "语音面板", itemDesc = "可以在QQ的发送语音界面注入打开语音面板按钮", mainItemID = 1, ID = "VoicePanelInject")
+@UIItem(name = "语音面板",desc = "在QQ的发送语音界面点击打开", type = 1, id = "VoicePanelInject", targetID = 1,groupName = "聊天辅助")
 public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
     boolean IsEnable = false;
 

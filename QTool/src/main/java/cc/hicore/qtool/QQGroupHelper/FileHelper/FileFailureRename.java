@@ -25,7 +25,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemType = 1, itemName = "apk上传失败自动压缩为ZIP重试", mainItemID = 1, ID = "RenameApkToRename")
+@UIItem(name = "apk上传失败自动压缩为ZIP重试",type = 1,id = "RenameApkToRename",targetID = 1,groupName = "功能辅助")
 public class FileFailureRename extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

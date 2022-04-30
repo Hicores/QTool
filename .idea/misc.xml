@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable-night/bg_round.xml" value="0.102" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/drawable-night/menu_item_base2.xml" value="0.2295" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/bg_round.xml" value="0.14" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/btnclick.xml" value="0.1" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
@@ -19,6 +20,10 @@
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/activity_update.xml" value="0.11296296296296296" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/adapter_zhihu_comment.xml" value="0.22735507246376813" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/base_activity_container.xml" value="0.1" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/base_main_menu.xml" value="0.25" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/base_menu_item.xml" value="0.12083333333333333" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/child_item.xml" value="0.2796875" />
+        <entry key="..\:/Project/QTool/QTool/src/main/res/layout/child_item_container.xml" value="0.5" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/custom_bottom_popup.xml" value="0.22735507246376813" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/emo_bundle_list.xml" value="0.28854166666666664" />
         <entry key="..\:/Project/QTool/QTool/src/main/res/layout/emo_get_from_tg.xml" value="0.5228215767634855" />

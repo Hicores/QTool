@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
+import cc.hicore.Utils.ServerUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 
@@ -16,6 +17,7 @@ public class BeforeCheck {
     private static StringBuilder checkResult = new StringBuilder();
 
     public static void StartCheckAndShow() {
+        new Thread(BeforeCheck::checkNewVersion).start();
         CheckPermission();
         CheckResInject();
         CheckHiddenApi();
@@ -31,7 +33,9 @@ public class BeforeCheck {
             }
         }
     }
-
+    private static void checkNewVersion(){
+        HookEnv.New_Version = ServerUtils.getNewestCIBuildVer();
+    }
     private static void CheckPermission() {
         if (HookEnv.ExtraDataPath != null) {
             if (!ExtraPathInit.CheckPermission(HookEnv.ExtraDataPath)) {

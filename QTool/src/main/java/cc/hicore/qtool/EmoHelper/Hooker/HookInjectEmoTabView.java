@@ -37,7 +37,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
  */
-@UIItem(itemName = "表情面板", itemType = 1, mainItemID = 1, ID = "EmoHelper")
+@UIItem(name = "表情面板",type = 1,targetID = 1,id = "EmoHelper",groupName = "聊天辅助")
 @HookItem(isDelayInit = true, isRunInAllProc = false)
 public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
     public static boolean IsEnable = true;

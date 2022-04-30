@@ -23,7 +23,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@UIItem(itemName = "在消息右下角显示时间", itemType = 1, ID = "ShowMessageTime", mainItemID = 1)
+@UIItem(name = "在消息右下角显示时间", type = 1, id = "ShowMessageTime", targetID = 1,groupName = "聊天界面增强")
 @HookItem(isDelayInit = true, isRunInAllProc = false)
 public class ShowMessageTime extends BaseHookItem implements BaseUiItem {
     private static final HashMap<String, String> supportShow = new HashMap<>();

@@ -8,10 +8,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.CLASS)
 public @interface UIItem {
-    int mainItemID();
-    String itemName();
-    String itemDesc() default "";
-    int itemType();
-    String ID();
-    boolean IsDefChecked() default false;
+    int targetID();
+    String groupName();
+
+    String name();
+    String desc() default "";
+    int type();
+    String id();
+
+    boolean defCheck() default false;
 }

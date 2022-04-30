@@ -26,7 +26,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemName = "复制卡片代码", itemType = 1, itemDesc = "可长按消息复制卡片代码", ID = "CopyCardMsg", mainItemID = 1)
+@UIItem(name = "可复制卡片代码", type = 1, id = "CopyCardMsg", targetID = 1,groupName = "聊天界面增强")
 public class CopyCardCode extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

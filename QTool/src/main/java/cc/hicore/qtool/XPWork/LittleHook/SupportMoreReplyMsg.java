@@ -12,7 +12,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemName = "解锁更多类型消息左滑回复", itemType = 1, ID = "SupportModeMsgReply", mainItemID = 1)
+@UIItem(name = "解锁更多类型消息左滑回复", type = 1, id = "SupportModeMsgReply", targetID = 1,groupName = "聊天界面增强")
 public class SupportMoreReplyMsg extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

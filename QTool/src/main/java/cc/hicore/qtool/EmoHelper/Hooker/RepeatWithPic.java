@@ -29,7 +29,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(itemName = "带图回复", itemType = 1, ID = "RepeatWithPic", mainItemID = 1)
+@UIItem(name = "带图回复",type = 1,id = "RepeatWithPic",targetID = 1,groupName = "聊天辅助")
 public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
     private static final HashMap<String, String> picCookies = new HashMap<>();
     public static volatile boolean IsEnable;

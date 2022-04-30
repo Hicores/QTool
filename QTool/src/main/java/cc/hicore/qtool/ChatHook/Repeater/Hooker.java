@@ -17,7 +17,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(mainItemID = 1, itemType = 1, ID = "RepeaterHooker", itemName = "复读消息+1")
+@UIItem(targetID = 1,groupName = "聊天辅助",name = "消息复读+1",id = "RepeaterHooker",type = 1)
 public class Hooker extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
 

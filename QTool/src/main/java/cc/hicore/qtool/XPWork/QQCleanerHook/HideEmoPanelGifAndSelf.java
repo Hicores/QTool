@@ -19,8 +19,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 
-
-@UIItem(itemType = 2, itemName = "隐藏表情面板图标", mainItemID = 2, ID = "HideGIFAndSelfPicPanel")
+@UIItem(name = "隐藏表情面板图标", type = 2, id = "HideGIFAndSelfPicPanel", targetID = 2,groupName = "聊天界面净化")
 @HookItem(isRunInAllProc = false, isDelayInit = true)
 public class HideEmoPanelGifAndSelf extends BaseHookItem implements BaseUiItem {
     static HashMap<String, String> HideMap = new HashMap<>();

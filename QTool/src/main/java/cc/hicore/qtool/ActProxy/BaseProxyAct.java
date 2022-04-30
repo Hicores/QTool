@@ -1,17 +1,22 @@
 package cc.hicore.qtool.ActProxy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,27 +24,30 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.BitmapUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XPWork.BaseMenu.MainMenu.MainMenu;
 
 public class BaseProxyAct extends Activity{
+    public interface onCreateView{
+        View getView(Context context);
+    }
     private static class TmpCacheParams{
-        View createView;
         Bitmap cacheShop;
+        onCreateView callback;
     }
     private static HashMap<String,TmpCacheParams> cacheParam = new HashMap<>();
     private View createView;
     private Bitmap cacheBitmap;
-    public static void createNewView(String Tag,Activity baseAct,View childView){
+    private RelativeLayout ani_layout;
+    public static void createNewView(String Tag,Activity baseAct,onCreateView callback){
         try{
             TmpCacheParams param = new TmpCacheParams();
             param.cacheShop = BitmapUtils.onCut(baseAct);
-            param.createView = childView;
+            param.callback = callback;
             cacheParam.put(Tag,param);
 
             Intent intent = new Intent(baseAct, BaseProxyAct.class);
@@ -55,9 +63,10 @@ public class BaseProxyAct extends Activity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ResUtils.StartInject(this);
         setTheme(R.style.AnimActivity);
-        setTitleFea();
         setContentView(R.layout.base_activity_container);
+        setTitleFea();
 
         String tag = getIntent().getStringExtra("Tag");
         TmpCacheParams mParam= cacheParam.get(tag);
@@ -68,10 +77,14 @@ public class BaseProxyAct extends Activity{
         cacheParam.remove(tag);
 
 
-        createView = mParam.createView;
+        createView = mParam.callback.getView(this);
+        if (createView == null){
+            finish();
+            return;
+        }
         cacheBitmap = mParam.cacheShop;
         LinearLayout base_root = findViewById(R.id.Base_Container_First);
-        RelativeLayout ani_layout = findViewById(R.id.Base_Container_Ani);
+        ani_layout = findViewById(R.id.Base_Container_Ani);
         if (cacheBitmap.isRecycled()){
             cacheBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
         }
@@ -92,5 +105,24 @@ public class BaseProxyAct extends Activity{
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         );
+    }
+    private boolean IsBacking = false;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (IsBacking) return true;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Animation anim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in);
+            anim.setFillAfter(true);
+            ani_layout.startAnimation(anim);
+            IsBacking = true;
+
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(() -> {
+                        IsBacking = false;
+                        finish();
+                    }, 600);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

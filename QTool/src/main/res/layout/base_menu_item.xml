@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Base_Menu_Item"
+    android:layout_width="match_parent"
+    android:background="@drawable/menu_item_base"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:layout_height="60dp">
+
+    <ImageView
+        android:id="@+id/Base_Menu_Item_Icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp" />
+    <TextView
+        android:id="@+id/Base_Menu_Item_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:textColor="#FF00FF"/>
+</LinearLayout>
