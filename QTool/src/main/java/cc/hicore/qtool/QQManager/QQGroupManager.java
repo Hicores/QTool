@@ -62,6 +62,7 @@ public class QQGroupManager {
         try {
 
             if (TextUtils.isEmpty(UserUin)) {
+                if (time != 0 && time < 60)time = 268435455;
                 Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getBusinessHandler",
                         MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                         MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"), "TROOP_GAG_HANDLER"));
