@@ -65,7 +65,7 @@ public class QQGroupManager {
                 Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getBusinessHandler",
                         MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                         MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"), "TROOP_GAG_HANDLER"));
-                MMethod.CallMethodParams(TroopGagManager, "a", void.class, GroupUin, time != 0 ? Integer.MAX_VALUE : 0);
+                MMethod.CallMethodParams(TroopGagManager, "a", void.class, GroupUin, time);
             } else {
                 Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                         MClass.loadClass("mqq.manager.Manager"),
