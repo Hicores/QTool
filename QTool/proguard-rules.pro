@@ -31,6 +31,7 @@
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$MessageData{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
+-keep class cc.hicore.qtool.JavaPlugin.Controller.PluginMethod{*;}
 
 -keepclassmembers enum * {
     public static **[] values();
