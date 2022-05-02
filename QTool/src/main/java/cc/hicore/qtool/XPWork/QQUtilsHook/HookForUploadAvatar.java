@@ -48,6 +48,13 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
                 param.args[0] = Bitmap.CompressFormat.PNG;
             }
         });
+
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.avatar.UploadItem"),"a",new Class[]{
+                int.class
+        });
+        XPBridge.HookAfter(m,param -> {
+            param.setResult(String.valueOf(param.getResult()).replace("imagetype=5","imagetype=2").replace("filetype=3","filetype=2"));
+        });
         return true;
     }
 
