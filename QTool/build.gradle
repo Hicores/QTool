@@ -54,6 +54,22 @@ android {
     aaptOptions {
         additionalParameters '--allow-reserved-package-id','--package-id','0x48'
     }
+    applicationVariants.all{ variant ->
+        variant.javaCompileProvider.get().doLast{
+            println  ("start classes obfuscation "+"${variant.javaCompile.destinationDir}")
+
+            javaexec {
+                main = "-jar";
+                args = [
+                        "../obfuseStringGradle.jar",
+                        project.name,
+                        variant.javaCompile.destinationDir
+                ]
+            }
+            println  ("obfuse finish")
+        }
+    }
+
 
 }
 
@@ -80,6 +96,14 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.13.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
+    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
+}
 
+apply plugin: 'stringfog'
 
+stringfog {
+    key 'Hello World'
+    enable true
+    implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+    fogPackages = ['cc.hicore']
 }
