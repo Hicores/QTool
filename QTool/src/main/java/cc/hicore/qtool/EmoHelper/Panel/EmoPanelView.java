@@ -723,6 +723,7 @@ public class EmoPanelView extends BottomPopupView {
         for (View v : cacheImageView) {
             Glide.with(HookEnv.AppContext).clear(v);
         }
+        Glide.get(HookEnv.AppContext).clearMemory();
 
     }
 }
