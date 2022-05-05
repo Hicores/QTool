@@ -1,8 +1,10 @@
 package cc.hicore.qtool.XposedInit;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
+import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @SuppressLint("ResourceType")
@@ -48,6 +51,17 @@ public class DebugDialog {
         btnChangeDir.setText("更改存储目录");
         btnChangeDir.setOnClickListener(vx -> ExtraPathInit.ShowPathSetDialog(true));
         ll.addView(btnChangeDir);
+
+        Button startLogcatDumper = new Button(context);
+        startLogcatDumper.setText("开启Logcat存储");
+        startLogcatDumper.setOnClickListener(vx->{
+            new AlertDialog.Builder(context)
+                    .setTitle("提示")
+                    .setMessage("在下两次QQ启动的时候,Logcat将会被导出到 "+ HookEnv.ExtraDataPath+"Log目录")
+                    .setNegativeButton("确定导出", (dialog, which) -> GlobalConfig.Put_Boolean("Confirm_Output_Logcat",true))
+                    .show();
+        });
+        //ll.addView(startLogcatDumper);
 
         CheckBox check = new CheckBox(context);
         check.setChecked(GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main",false));

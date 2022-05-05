@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 
 import cc.hicore.Utils.ActionUtils;
+import cc.hicore.Utils.DebugUtils;
 import cc.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.XposedInit.DebugDialog;
 
 public class MainMenuActionRegister {
     static {
@@ -17,6 +19,10 @@ public class MainMenuActionRegister {
 
         ActionUtils.registerAction("QQCleaner", v ->MainItemChildLoader.startLoad(2,v));
         MainMenu.addItemData(2,"QQ净化功能",0,"QQCleaner", R.drawable.main_cleaner);
+
+        ActionUtils.registerAction("DebugUtils", DebugDialog::startShow);
+        MainMenu.addItemData(3,"调试功能",0,"DebugUtils",R.drawable.debug);
+
 
         ActionUtils.registerAction("DownloadNewVer", v->{
             Uri u = Uri.parse("https://github.com/Hicores/QTool");
