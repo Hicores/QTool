@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HttpUtils {
     public static String getContent(String Path) {
@@ -40,6 +41,13 @@ public class HttpUtils {
 
     public static boolean DownloadToFile(String url, String local) {
         try {
+            if (Thread.currentThread().getName().equals("main")) {
+                AtomicBoolean builder = new AtomicBoolean();
+                Thread thread = new Thread(() ->builder.getAndSet(DownloadToFile(url, local)));
+                thread.start();
+                thread.join();
+                return builder.get();
+            }
             File parent = new File(local).getParentFile();
             if (!parent.exists()) parent.mkdirs();
             FileOutputStream fOut = new FileOutputStream(local);

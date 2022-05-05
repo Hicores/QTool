@@ -22,6 +22,7 @@ import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
+import cc.hicore.Utils.SyncUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.EnvHook;
@@ -245,6 +246,10 @@ public class QQMsgBuilder {
         MField.SetField(mMessageRecord, "fileUploadStatus", MField.GetField(SourceObj, SourceObj.getClass(), "fileUploadStatus", int.class));
         MField.SetField(mMessageRecord, "fileDownloadStatus", MField.GetField(SourceObj, SourceObj.getClass(), "fileDownloadStatus", int.class));
         String mPath = MField.GetField(SourceObj, "localFildPath");
+        if (!new File(mPath).exists()){
+            mPath = HookEnv.AppContext.getExternalCacheDir()+ "/"+String.valueOf(Math.random()).substring(2);
+            HttpUtils.DownloadToFile(MField.GetField(SourceObj,"combineFileUrl"),mPath);
+        }
         MField.SetField(mMessageRecord, "localFildPath", mPath);
         MField.SetField(mMessageRecord, "extStr", MField.GetField(SourceObj, SourceObj.getClass(), "extStr", String.class));
         MField.SetField(mMessageRecord, "msg", "[涂鸦]");
