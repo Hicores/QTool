@@ -1,6 +1,7 @@
 package cc.hicore.qtool.EmoHelper.Hooker;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,16 +43,19 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
     public static boolean IsEnable = true;
 
+    @SuppressLint("ResourceType")
     @Override
     public boolean startHook() throws Throwable {
         Method[] m = getMethod();
         XPBridge.HookAfter(m[0], param -> {
             LinearLayout l = (LinearLayout) param.thisObject;
+            if (l.findViewById(11223366)!=null)return;
             View v = l.getChildAt(2);
             if (IsEnable) {
                 ResUtils.StartInject(v.getContext());
                 ImageView image = new ImageView(v.getContext());
                 image.setImageResource(R.drawable.huaji);
+                image.setId(11223366);
                 image.setTag(123456);
                 l.addView(image, 4, v.getLayoutParams());
                 new Handler(Looper.getMainLooper()).post(image::invalidate);
