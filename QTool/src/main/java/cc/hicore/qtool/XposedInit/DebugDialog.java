@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -47,6 +48,13 @@ public class DebugDialog {
         btnChangeDir.setText("更改存储目录");
         btnChangeDir.setOnClickListener(vx -> ExtraPathInit.ShowPathSetDialog(true));
         ll.addView(btnChangeDir);
+
+        CheckBox check = new CheckBox(context);
+        check.setChecked(GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main",false));
+        check.setTextColor(Color.BLACK);
+        check.setText("在主界面加号添加入口");
+        check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main",isCheck));
+        mRoot.addView(check);
 
         TextView titleClzInfo = new TextView(context);
         titleClzInfo.setTextColor(Color.parseColor("#6666ff"));
