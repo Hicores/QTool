@@ -1,6 +1,7 @@
 package cc.hicore.qtool.QQManager;
 
 import java.lang.reflect.Method;
+import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,14 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class QQEnvUtils {
     private static final String TAG = "QQInfoUtils";
+
+    public static int getTargetID(String IDName){
+        try {
+            return MField.GetField(null,MClass.loadClass("com.tencent.mobileqq.R$id"), IDName,int.class);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
     public static String getCurrentUin() {
         try {
