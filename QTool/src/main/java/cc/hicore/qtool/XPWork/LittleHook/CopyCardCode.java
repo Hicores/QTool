@@ -1,6 +1,7 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
@@ -117,7 +118,7 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 

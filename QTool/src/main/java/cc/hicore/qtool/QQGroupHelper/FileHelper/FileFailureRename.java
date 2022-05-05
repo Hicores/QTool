@@ -1,5 +1,6 @@
 package cc.hicore.qtool.QQGroupHelper.FileHelper;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -89,7 +90,7 @@ public class FileFailureRename extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 

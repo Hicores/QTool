@@ -1,5 +1,6 @@
 package cc.hicore.qtool.XPWork.QQUtilsHook;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.io.FileOutputStream;
@@ -88,7 +89,7 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }

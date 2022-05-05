@@ -1,5 +1,7 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
+import android.content.Context;
+
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
@@ -47,7 +49,7 @@ public class SupportMoreReplyMsg extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }

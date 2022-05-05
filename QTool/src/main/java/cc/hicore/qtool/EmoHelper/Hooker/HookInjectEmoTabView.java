@@ -209,7 +209,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 

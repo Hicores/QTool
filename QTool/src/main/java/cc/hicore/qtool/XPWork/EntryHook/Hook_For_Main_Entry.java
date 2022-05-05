@@ -19,7 +19,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.MainMenu;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.DebugDialog;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)

@@ -1,7 +1,9 @@
 package cc.hicore.qtool.XposedInit.ItemLoader;
 
+import android.content.Context;
+
 public interface BaseUiItem {
     void SwitchChange(boolean IsCheck);
 
-    void ListItemClick();
+    void ListItemClick(Context context);
 }

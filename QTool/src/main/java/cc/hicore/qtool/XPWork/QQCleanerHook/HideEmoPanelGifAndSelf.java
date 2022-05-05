@@ -2,6 +2,7 @@ package cc.hicore.qtool.XPWork.QQCleanerHook;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class HideEmoPanelGifAndSelf extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
         Activity act = Utils.getTopActivity();
         List<String> mSetConf = HookEnv.Config.getList("QQCleaner", "HideEmoPanel", true);
         ArrayList<String> showStrs = new ArrayList<>();

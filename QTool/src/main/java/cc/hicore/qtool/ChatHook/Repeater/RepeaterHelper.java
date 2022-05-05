@@ -39,24 +39,32 @@ public class RepeaterHelper {
         supportMessageTypes.put("MessageForPokeEmo", "RelativeLayout");
     }
 
+    private static long double_click_time = 0;
+
     public static void createRepeatIcon(RelativeLayout baseChatItem, Object ChatMsg) throws Exception {
         boolean isSendFromLocal = MMethod.CallMethodNoParam(ChatMsg, "isSendFromLocal", boolean.class);
         Context context = baseChatItem.getContext();
         ResUtils.StartInject(context);
         String clzName = ChatMsg.getClass().getSimpleName();
         if (supportMessageTypes.containsKey(clzName)) {
-            ImageButton imageButton = baseChatItem.findViewById(23333);
+            ImageButton imageButton = baseChatItem.findViewById(256666);
             if (imageButton == null) {
                 imageButton = new ImageButton(context);
-                imageButton.setImageResource(R.drawable.repeat);
-                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(Utils.dip2px(context, 35), Utils.dip2px(context, 35));
+                imageButton.setImageDrawable(Hooker.cacheDrawable);
+                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)), Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
                 imageButton.setAdjustViewBounds(true);
                 imageButton.getBackground().setAlpha(0);
-                imageButton.setMaxHeight(Utils.dip2px(context, 35));
-                imageButton.setMaxWidth(Utils.dip2px(context, 35));
-                imageButton.setId(23333);
+                imageButton.setMaxHeight(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
+                imageButton.setMaxWidth(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
+                imageButton.setId(256666);
                 imageButton.setTag(ChatMsg);
                 imageButton.setOnClickListener(v -> {
+                    if (HookEnv.Config.getBoolean("Repeater","DoubleClickMode",false)){
+                        if (System.currentTimeMillis() - double_click_time > 300){
+                            double_click_time = System.currentTimeMillis();
+                            return;
+                        }
+                    }
                     try {
                         Repeater.Repeat(HookEnv.SessionInfo, v.getTag());
                     } catch (Exception e) {
@@ -93,7 +101,7 @@ public class RepeaterHelper {
                 imageButton.setLayoutParams(param);
             }
         } else {
-            ImageButton imageButton = baseChatItem.findViewById(23333);
+            ImageButton imageButton = baseChatItem.findViewById(256666);
             if (imageButton != null) baseChatItem.removeView(imageButton);
         }
     }

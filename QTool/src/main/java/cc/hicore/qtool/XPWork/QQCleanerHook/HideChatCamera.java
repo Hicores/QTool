@@ -1,6 +1,7 @@
 package cc.hicore.qtool.XPWork.QQCleanerHook;
 
 
+import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -73,7 +74,7 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }

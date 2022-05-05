@@ -1,5 +1,7 @@
 package cc.hicore.qtool.EmoHelper.SendMsgWithPic;
 
+import android.content.Context;
+
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -32,7 +34,7 @@ public class RepeatHelper extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }

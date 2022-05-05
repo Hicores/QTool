@@ -1,6 +1,7 @@
 package cc.hicore.qtool.EmoHelper.Hooker;
 
 
+import android.content.Context;
 import android.os.Message;
 
 import java.lang.reflect.Method;
@@ -87,7 +88,7 @@ public class HookForUnlockSaveLimit extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 

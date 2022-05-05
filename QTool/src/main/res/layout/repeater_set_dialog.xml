@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/bg_plugin"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <CheckBox
+        android:id="@+id/All_Switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="复读总开关"
+        android:textColor="@color/font_plugin"
+        android:textSize="24sp"/>
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="复读图标大小(dp)"
+        android:textColor="@color/font_plugin"
+        android:layout_gravity="center_horizontal"
+        android:textSize="24sp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Repeater_Size_Input"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/Tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图标文件请存放在"
+        android:textSize="11sp"
+        android:textColor="@color/font_plugin"
+        android:layout_gravity="center_horizontal"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="使用双击复读模式"
+        android:textColor="@color/font_plugin"
+        android:id="@+id/Double_Click_Mode"/>
+
+
+
+</LinearLayout>

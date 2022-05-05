@@ -1,5 +1,7 @@
 package cc.hicore.qtool.XPWork.QQCleanerHook;
 
+import android.content.Context;
+
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
@@ -55,7 +57,7 @@ public class HideSignTip extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }

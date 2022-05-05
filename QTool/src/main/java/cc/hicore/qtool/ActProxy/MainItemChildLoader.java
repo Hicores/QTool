@@ -5,14 +5,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,11 +19,10 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 public class MainItemChildLoader {
     public static void startLoad(int i, Activity act){
-        BaseProxyAct.createNewView("ChildItem" + i, act, context -> createView(i,act));
+        BaseProxyAct.createNewView("ChildItem" + i, act, context -> createView(i,context));
     }
     private static View createView(int i,Context context){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -84,7 +80,7 @@ public class MainItemChildLoader {
                     });
                 }else {
                     layout.findViewById(R.id.Item_Click).setVisibility(View.VISIBLE);
-                    layout.setOnClickListener(v-> info.UIInstance.ListItemClick());
+                    layout.setOnClickListener(v-> info.UIInstance.ListItemClick(context));
                 }
                 ItemContainer.addView(layout);
             }

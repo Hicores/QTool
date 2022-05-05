@@ -1,5 +1,7 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
+import android.content.Context;
+
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 
@@ -27,7 +29,7 @@ public class RevokeMsgPrevent extends BaseHookItem implements BaseUiItem {
     }
 
     @Override
-    public void ListItemClick() {
+    public void ListItemClick(Context context) {
 
     }
 }
