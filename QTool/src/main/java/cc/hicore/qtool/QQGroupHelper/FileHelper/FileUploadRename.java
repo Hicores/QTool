@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
@@ -29,7 +30,8 @@ public class FileUploadRename extends BaseHookItem implements BaseUiItem {
         XPBridge.HookBefore(hookMethod, param -> {
             if (!IsEnable) return;
             String path = (String) param.args[0];
-            if (path.toLowerCase(Locale.ROOT).endsWith("/base.apk")) {
+            File f = new File(path);
+            if (f.getName().toLowerCase(Locale.ROOT).startsWith("base") && f.getName().toLowerCase(Locale.ROOT).endsWith(".apk")) {
                 String Name = GetPackageInfo(path);
                 param.setResult(Name);
             }
