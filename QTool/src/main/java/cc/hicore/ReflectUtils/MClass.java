@@ -20,6 +20,21 @@ public class MClass {
             return null;
         }
     }
+    public static Constructor<?> findCons(Class<?> clz, Class<?>[] paramTypes){
+        Loop:
+        for (Constructor<?> con : clz.getDeclaredConstructors()) {
+            Class<?>[] CheckParam = con.getParameterTypes();
+            if (CheckParam.length != paramTypes.length) continue;
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (!CheckClass(CheckParam[i], paramTypes[i])) {
+                    continue Loop;
+                }
+            }
+            con.setAccessible(true);
+            return con;
+        }
+        return null;
+    }
 
     public static <T> T NewInstance(Class<?> clz, Class<?>[] paramTypes, Object... params) throws Exception {
         Loop:
