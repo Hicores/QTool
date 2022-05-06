@@ -14,8 +14,8 @@ QTool 是一个开源 Xposed 模块
 
 ## 说明
 
-- 支持Android >= 8.0
-- 支持QQ >= 8.7.0
+- 支持Android >= 8.1
+- 支持QQ 版本随缘,由于精力有限无法适配旧版QQ,请尽量配合最新版QQ使用
 - 本模块功能不会很全面,建议同时配合QAuxiliary模块使用:https://github.com/cinit/QAuxiliary
 
 ## 功能列表
