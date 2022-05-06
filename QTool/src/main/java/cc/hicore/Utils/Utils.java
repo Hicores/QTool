@@ -28,7 +28,16 @@ public class Utils {
         }
 
     }
-
+    public static String secondToTime(long second) {
+        if(second == 0) return "0秒";
+        long days = second / 86400;
+        second = second % 86400;
+        long hours = second / 3600;
+        second = second % 3600;
+        long minutes = second / 60;
+        second = second % 60;
+        return(days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (second == 0 ? "" : second + "秒");
+    }
     public static boolean getDarkModeStatus(Context context) {
         int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         return mode == Configuration.UI_MODE_NIGHT_YES;

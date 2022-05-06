@@ -7,6 +7,14 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
 public class XPBridge {
+    public static void HookBefore(Member m, BeforeHook before,int pro) {
+        XposedBridge.hookMethod(m, new XC_MethodHook(pro) {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                before.onBefore(param);
+            }
+        });
+    }
     public static void HookBefore(Member m, BeforeHook before) {
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override
@@ -15,7 +23,6 @@ public class XPBridge {
             }
         });
     }
-
     public static void HookAfter(Member m, AfterHook after) {
         XposedBridge.hookMethod(m, new XC_MethodHook() {
             @Override

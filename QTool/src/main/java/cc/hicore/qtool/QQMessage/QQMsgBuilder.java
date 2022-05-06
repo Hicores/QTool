@@ -304,4 +304,16 @@ public class QQMsgBuilder {
         }
 
     }
+    public static Object Build_RawMessageRecord_Troop(String GroupUin,int Type) throws Exception {
+        Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
+                int.class
+        });
+        Object mMessageRecord = CallMethod.invoke(null,Type);
+        MMethod.CallMethod(mMessageRecord,mMessageRecord.getClass().getSuperclass().getSuperclass(),"init",void.class,
+                new Class[]{String.class,String.class,String.class,String.class,long.class,int.class,int.class,long.class},
+                QQEnvUtils.getCurrentUin(),GroupUin,QQEnvUtils.getCurrentUin(),"",System.currentTimeMillis()/1000,Type,
+                1,System.currentTimeMillis()/1000
+        );
+        return mMessageRecord;
+    }
 }
