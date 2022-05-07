@@ -20,8 +20,12 @@ public class MainMenuActionRegister {
         ActionUtils.registerAction("QQCleaner", v ->MainItemChildLoader.startLoad(2,v));
         MainMenu.addItemData(2,"QQ净化功能",0,"QQCleaner", R.drawable.main_cleaner);
 
+        ActionUtils.registerAction("Enjoy", v ->MainItemChildLoader.startLoad(3,v));
+        MainMenu.addItemData(3,"娱乐功能",0,"Enjoy", R.drawable.enjoy);
+
+
         ActionUtils.registerAction("DebugUtils", DebugDialog::startShow);
-        MainMenu.addItemData(3,"调试功能",0,"DebugUtils",R.drawable.debug);
+        MainMenu.addItemData(10,"调试功能",0,"DebugUtils",R.drawable.debug);
 
 
         ActionUtils.registerAction("DownloadNewVer", v->{

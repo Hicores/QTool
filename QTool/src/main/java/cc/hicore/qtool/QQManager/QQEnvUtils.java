@@ -171,4 +171,18 @@ public class QQEnvUtils {
             return null;
         }
     }
+    public static void ExitQQAnyWays() {
+        try{
+            Object Appinterface = getAppRuntime();
+            MField.SetField(Appinterface,"bReceiveMsgOnExit",false);
+            MMethod.CallMethod(Appinterface,"exit",void.class,new Class[]{
+                    boolean.class
+            },false);
+        }catch (Exception e)
+        {
+        }
+
+
+    }
+
 }
