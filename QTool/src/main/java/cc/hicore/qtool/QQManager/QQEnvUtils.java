@@ -1,5 +1,9 @@
 package cc.hicore.qtool.QQManager;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+
 import java.lang.reflect.Method;
 import java.net.IDN;
 import java.util.ArrayList;
@@ -181,8 +185,24 @@ public class QQEnvUtils {
         }catch (Exception e)
         {
         }
-
-
+    }
+    public static void OpenTroopCard(String GroupUin) {
+        try{
+            Uri u = Uri.parse("mqq://card/show_pslcard?src_type=internal&version=1&uin="+GroupUin+"&card_type=group&source=qrcode");
+            Intent in = new Intent(Intent.ACTION_VIEW,u);
+            in.setPackage("com.tencent.mobileqq");
+            HookEnv.AppContext.startActivity(in);
+        }
+        catch (Exception ex) { }
+    }
+    public static void OpenUserCard(String UserUin) {
+        try{
+            Uri u = Uri.parse("mqqapi://card/show_pslcard?src_type=internal&source=sharecard&version=1&uin="+UserUin);
+            Intent in = new Intent(Intent.ACTION_VIEW,u);
+            in.setPackage("com.tencent.mobileqq");
+            HookEnv.AppContext.startActivity(in);
+        }
+        catch (Exception ex) { }
     }
 
 }

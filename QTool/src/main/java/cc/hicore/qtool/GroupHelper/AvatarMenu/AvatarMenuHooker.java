@@ -30,6 +30,9 @@ public class AvatarMenuHooker extends BaseHookItem implements BaseUiItem, View.O
         XPBridge.HookBefore(m[0],param -> {
             if (IsEnable){
                 View v = (View) param.thisObject;
+                Context context = v.getContext();
+                if (context.getClass().getName().contains("MultiForwardActivity"))return;
+
                 Object chatMsg = v.getTag();
                 if (chatMsg != null){
                     int istroop = MField.GetField(chatMsg,"istroop",int.class);
@@ -46,6 +49,9 @@ public class AvatarMenuHooker extends BaseHookItem implements BaseUiItem, View.O
                 Object mGetView = param.getResult();
                 RelativeLayout mLayout;
                 if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
+                Context context= mLayout.getContext();
+                if (context.getClass().getName().contains("MultiForwardActivity"))return;
+
                 View avatar = findView("VasAvatar",mLayout);
                 if (avatar != null){
                     Object chatMsg = avatar.getTag();
