@@ -62,7 +62,6 @@ public class ExtraPathInit {
 
         TextView aboveInput = new TextView(act);
         aboveInput.setText("在下面输入框输入需要使用的路径:");
-        aboveInput.setTextColor(Color.BLUE);
         mRoot.addView(aboveInput);
 
         EditText inputPath = new EditText(act);
@@ -107,6 +106,12 @@ public class ExtraPathInit {
         saveBtn.setText("保存设置");
         saveBtn.setOnClickListener(v -> CheckAndSave(act, fullScreenDialog, inputPath.getText().toString()));
         mRoot.addView(saveBtn, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView tip = new TextView(act);
+        tip.setText("提示:此模块仅为自用分享,不保证有你需要的功能,如果不喜欢,请卸载并更换其他模块使用即可");
+        tip.setTextSize(24);
+        tip.setTextColor(Color.RED);
+        mRoot.addView(tip);
 
         fullScreenDialog.setContentView(mRoot);
         fullScreenDialog.setCancelable(canRemove);

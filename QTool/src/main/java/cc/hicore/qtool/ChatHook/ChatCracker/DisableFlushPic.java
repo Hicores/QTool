@@ -1,6 +1,7 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -63,7 +64,7 @@ public class DisableFlushPic extends BaseHookItem implements BaseUiItem {
                 if(MessageRecoreList==null)return;
                 Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
                 String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
-                if (Extstr.contains("flash_pic_flag")){
+                if (!TextUtils.isEmpty(Extstr) && Extstr.contains("flash_pic_flag")){
                     MMethod.CallMethod(mLayout,"setTailMessage",void.class,new Class[]{boolean.class,CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")},true,"闪照",null);
                 }else {
                     TextView tailView = mLayout.findViewById(QQEnvUtils.getTargetID("chat_item_tail_message"));

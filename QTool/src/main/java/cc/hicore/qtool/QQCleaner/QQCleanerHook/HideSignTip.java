@@ -1,4 +1,4 @@
-package cc.hicore.qtool.XPWork.QQCleanerHook;
+package cc.hicore.qtool.QQCleaner.QQCleanerHook;
 
 import android.content.Context;
 
