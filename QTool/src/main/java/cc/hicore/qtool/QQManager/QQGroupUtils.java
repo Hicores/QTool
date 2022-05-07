@@ -132,6 +132,20 @@ public class QQGroupUtils {
             return null;
         }
     }
+    public static boolean IsCreator(String GroupUin,String UserUin){
+        GroupMemberInfo info = Group_Get_Member_Info(GroupUin,UserUin);
+        if (info != null){
+            return info.isCreator;
+        }
+        return false;
+    }
+    public static boolean IsAdmin(String GroupUin,String UserUin){
+        GroupMemberInfo info = Group_Get_Member_Info(GroupUin,UserUin);
+        if (info != null){
+            return info.isAdmin;
+        }
+        return false;
+    }
 
     public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin) {
         try {
