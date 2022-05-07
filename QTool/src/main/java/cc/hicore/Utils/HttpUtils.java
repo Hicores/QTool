@@ -61,6 +61,7 @@ public class HttpUtils {
             while ((read = ins.read(buffer)) != -1) {
                 fOut.write(buffer, 0, read);
             }
+            fOut.flush();
             fOut.close();
             ins.close();
             return true;

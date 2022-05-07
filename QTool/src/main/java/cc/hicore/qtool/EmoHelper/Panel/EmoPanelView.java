@@ -54,6 +54,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
+import de.robv.android.xposed.XposedBridge;
 
 
 public class EmoPanelView extends BottomPopupView {
@@ -108,17 +109,12 @@ public class EmoPanelView extends BottomPopupView {
                             try {
                                 String RootPath = HookEnv.ExtraDataPath + "Pic/" + Name + "/";
                                 AtomicInteger mLock = new AtomicInteger();
-                                for (EmoPanel.EmoInfo info : data) {
+                                for (int i = data.size()-1;i>-1;i--){
+                                    EmoPanel.EmoInfo info = data.get(i);
+                                    HttpUtils.DownloadToFile(info.URL,RootPath + info.MD5);
+                                    new File(RootPath + info.MD5).setLastModified(System.currentTimeMillis());
                                     mLock.getAndIncrement();
-                                    EmoOnlineLoader.submit2(info, () -> {
-                                        mLock.getAndDecrement();
-                                        new Handler(Looper.getMainLooper()).post(() -> mDialog.setMessage("正在保存图片[" + (data.size() - mLock.get()) + "/" + data.size() + "]"));
-                                        FileUtils.copy(info.Path, RootPath + info.MD5);
-                                    });
-                                }
-                                for (int iaa = 0; iaa < 60; iaa++) {
-                                    if (mLock.get() == 0) break;
-                                    Thread.sleep(1000);
+                                    new Handler(Looper.getMainLooper()).post(() -> mDialog.setMessage("正在保存图片[" + mLock.get()+ "/" + data.size() + "]"));
                                 }
                                 Utils.ShowToastL("保存完成");
                             } catch (Exception e) {
@@ -144,8 +140,7 @@ public class EmoPanelView extends BottomPopupView {
             view.requestLayout();
             titleBarList.add(view);
 
-            view.setOnClickListener(v -> {
-                CacheScrollTop = 0;
+            view.setOnClickListener(v -> {                CacheScrollTop = 0;
                 updateShowPath(name);
                 for (View otherItem : titleBarList) {
                     otherItem.setBackgroundColor(getResources().getColor(R.color.bg_plugin, null));
