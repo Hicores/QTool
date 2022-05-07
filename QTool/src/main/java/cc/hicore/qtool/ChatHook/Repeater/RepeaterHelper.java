@@ -73,6 +73,7 @@ public class RepeaterHelper {
                 });
                 baseChatItem.addView(imageButton, param);
             } else {
+                if (imageButton.getVisibility() != View.VISIBLE)
                 imageButton.setVisibility(View.VISIBLE);
                 imageButton.setTag(ChatMsg);
             }

@@ -107,10 +107,12 @@ public class PreventRevoke extends BaseHookItem implements BaseUiItem {
                         tv.setMaxWidth(Utils.dip2px(mLayout.getContext(),80));
                         tv.setBackgroundColor(Color.TRANSPARENT);
                     }
+                    if (tv.getVisibility() != View.VISIBLE)
                     tv.setVisibility(View.VISIBLE);
                     tv.setClickable(false);
                 }else {
                     if (tv != null){
+                        if (tv.getVisibility() != View.GONE)
                         tv.setVisibility(View.GONE);
                     }
                 }

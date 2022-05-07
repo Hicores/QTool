@@ -30,11 +30,11 @@ public class AlwaysShowAvatar extends BaseHookItem implements BaseUiItem {
                 if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
                 View avatar = findView("VasAvatar",mLayout);
                 if (avatar != null){
-                    avatar.setVisibility(View.VISIBLE);
+                    if (avatar.getVisibility() != View.VISIBLE){
+                        avatar.setVisibility(View.VISIBLE);
+                    }
                 }
             }
-
-
         });
         return true;
     }
