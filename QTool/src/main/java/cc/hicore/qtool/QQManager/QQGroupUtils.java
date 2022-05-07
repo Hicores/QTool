@@ -57,6 +57,10 @@ public class QQGroupUtils {
             return null;
         }
     }
+    public static boolean Is_In_Group(String GroupUin,String UserUin){
+        GroupMemberInfo memberInfo = Group_Get_Member_Info(GroupUin,UserUin);
+        return memberInfo != null;
+    }
 
     public static ArrayList<GroupInfo> Group_Get_List() {
         try {

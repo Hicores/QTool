@@ -116,6 +116,7 @@ public class EnvHook {
                 if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog(false);
                 else HookLoader.CallAllDelayHook();
                 InitAppCenter();
+                new Thread(CloudBlack::startCheckCloudBlack).start();
 
                 XposedBridge.log("[QTool]Delay Hook End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
             });

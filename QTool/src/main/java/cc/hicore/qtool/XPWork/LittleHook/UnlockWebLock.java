@@ -11,7 +11,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQCleaner.QQCleanerHook.HideQzoneAd;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
