@@ -10,13 +10,16 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HttpUtils {
     public static String getContent(String Path) {
@@ -75,7 +78,6 @@ public class HttpUtils {
             out.write(buffer, 0, size);
             out.flush();
             out.close();
-
             InputStream ins = connection.getInputStream();
             byte[] result = DataUtils.readAllBytes(ins);
             ins.close();
@@ -84,7 +86,6 @@ public class HttpUtils {
             return "";
         }
     }
-
     public static void ProgressDownload(String url, String filepath, Runnable callback, Context context) {
         AlertDialog al = new AlertDialog.Builder(context, 3).create();
         al.setTitle("下载中...");
@@ -92,27 +93,22 @@ public class HttpUtils {
         layout.setOrientation(LinearLayout.VERTICAL);
         File mSaveFile = new File(filepath);
         if (!mSaveFile.getParentFile().exists()) mSaveFile.getParentFile().mkdirs();
-
         TextView mFileName = new TextView(context);
         mFileName.setTextColor(Color.BLACK);
         mFileName.setTextSize(18);
         mFileName.setText("文件名:" + mSaveFile.getName());
         layout.addView(mFileName);
-
         TextView mAllSize = new TextView(context);
         mAllSize.setTextSize(18);
         mAllSize.setTextColor(Color.BLACK);
         layout.addView(mAllSize);
-
         TextView mDownedSize = new TextView(context);
         mDownedSize.setTextSize(18);
         mDownedSize.setTextColor(Color.BLACK);
         layout.addView(mDownedSize);
-
         al.setCancelable(false);
         al.setView(layout);
         al.show();
-
         new Thread(() -> {
             try {
                 URL u = new URL(url);
@@ -122,15 +118,11 @@ public class HttpUtils {
                 new Handler(Looper.getMainLooper()).post(() -> mAllSize.setText("文件大小:" + ((int) msize / 1024) + "KB"));
                 long finalReaded = readed;
                 new Handler(Looper.getMainLooper()).post(() -> mDownedSize.setText("当前已下载:" + ((int) finalReaded / 1024) + "KB"));
-
                 conn.setConnectTimeout(10000);
                 conn.setReadTimeout(10000);
-
                 InputStream inp = conn.getInputStream();
                 byte[] buffer = new byte[1024];
-
                 FileOutputStream fos = new FileOutputStream(filepath);
-
                 int readthis;
                 while ((readthis = inp.read(buffer)) != -1) {
                     readed += readthis;
@@ -147,10 +139,35 @@ public class HttpUtils {
                 new File(filepath).delete();
                 new Handler(Looper.getMainLooper()).post(() -> al.dismiss());
             }
-
-
         }).start();
+    }
+    public static long GetFileLength(String Url) {
+        AtomicLong mLong = new AtomicLong();
+        Thread mThread = new Thread(()->{
+            InputStreamReader isr = null;
+            try {
+                URL urlObj = new URL(Url);
+                URLConnection uc = urlObj.openConnection();
 
-
+                mLong.set(uc.getContentLengthLong());
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (null != isr) {
+                        isr.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mThread.start();
+        try {
+            mThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return mLong.get();
     }
 }
