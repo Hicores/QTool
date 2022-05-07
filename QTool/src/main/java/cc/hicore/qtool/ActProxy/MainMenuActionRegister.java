@@ -28,6 +28,13 @@ public class MainMenuActionRegister {
         MainMenu.addItemData(10,"调试功能",0,"DebugUtils",R.drawable.debug);
 
 
+        ActionUtils.registerAction("AddGroup", context->{
+            Uri u = Uri.parse("https://t.me/QToolC");
+            Intent in = new Intent(Intent.ACTION_VIEW,u);
+            context.startActivity(in);
+        });
+        MainMenu.addItemData(20,"加入TG群组",0,"AddGroup",R.drawable.add_group);
+
         ActionUtils.registerAction("DownloadNewVer", v->{
             Uri u = Uri.parse("https://github.com/Hicores/QTool");
             Intent in = new Intent(Intent.ACTION_VIEW, u);
