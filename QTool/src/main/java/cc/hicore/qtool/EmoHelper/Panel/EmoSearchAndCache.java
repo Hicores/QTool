@@ -3,6 +3,7 @@ package cc.hicore.qtool.EmoHelper.Panel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import cc.hicore.qtool.HookEnv;
 
@@ -42,12 +43,15 @@ public class EmoSearchAndCache {
         File[] fs = new File(rawPath).listFiles();
         if (fs == null) return new ArrayList<>();
 
+
+
         ArrayList<String> arrName = new ArrayList<>();
         for (File f : fs) {
             if (f.isDirectory()) {
                 arrName.add(f.getName());
             }
         }
+        Collections.sort(arrName);
         return arrName;
     }
 

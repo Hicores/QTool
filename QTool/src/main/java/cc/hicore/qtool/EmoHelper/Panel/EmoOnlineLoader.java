@@ -15,6 +15,7 @@ import cc.hicore.qtool.XposedInit.EnvHook;
 
 public class EmoOnlineLoader {
     static ExecutorService savePool = Executors.newFixedThreadPool(16);
+    static ExecutorService savePoolSingle = Executors.newSingleThreadExecutor();
 
     public static void submit(EmoPanel.EmoInfo info, Runnable run) {
         SyncCore.syncThread.submit(() -> {
@@ -39,7 +40,7 @@ public class EmoOnlineLoader {
     }
 
     public static void submit2(EmoPanel.EmoInfo info, Runnable run) {
-        savePool.submit(() -> {
+        savePoolSingle.submit(() -> {
             try {
                 EnvHook.requireCachePath();
                 String CacheDir = HookEnv.ExtraDataPath + "/Cache/img_" + info.MD5;
