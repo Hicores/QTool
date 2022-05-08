@@ -43,6 +43,8 @@ public class ChatLongClickCleaner extends BaseHookItem implements BaseUiItem {
         defCheckItem.add("免提播放");
         defCheckItem.add("2X");
         defCheckItem.add("复制链接");
+        defCheckItem.add("存微云");
+        defCheckItem.add("发给电脑");
     }
     @Override
     public boolean startHook() throws Throwable {
