@@ -14,7 +14,7 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "禁用一起听歌",groupName = "聊天界面净化",targetID = 2,type = 1,id = "HideListenerTogether")
+@UIItem(name = "屏蔽一起听歌顶栏",groupName = "聊天界面净化",targetID = 2,type = 1,id = "HideListenerTogether")
 public class HideListenerTogether extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
     @Override
@@ -49,8 +49,8 @@ public class HideListenerTogether extends BaseHookItem implements BaseUiItem {
 
     }
     public Method getMethod(){
-        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ListenTogetherObserver"),"onUpdate",void.class,new Class[]{
-                int.class,boolean.class,Object.class
+        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ui.BaseListenTogetherPanel"),"a",void.class,new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.listentogether.ListenTogetherSession")
         });
     }
 }
