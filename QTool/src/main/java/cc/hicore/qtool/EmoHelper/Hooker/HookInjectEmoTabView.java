@@ -68,7 +68,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                 Object arr = param.getResult();
                 Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
                 System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "保存到QT");
+                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
                 MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
                 Array.set(ret, 0, MenuItem);
 
@@ -90,7 +90,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                 Object arr = param.getResult();
                 Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
                 System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "保存到QT");
+                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
                 MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
                 Array.set(ret, 0, MenuItem);
 
