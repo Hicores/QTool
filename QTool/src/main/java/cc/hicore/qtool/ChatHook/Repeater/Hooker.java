@@ -56,6 +56,12 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
             if (ActivityName.contains("MultiForwardActivity")) return;
             RepeaterHelper.createRepeatIcon(baseChatItem, ChatMsg);
         });
+
+        XPBridge.HookBefore(m[1],param -> {
+            if (HookEnv.Config.getBoolean("Repeater","Open",false)){
+                param.setResult(false);
+            }
+        });
         return true;
     }
 
@@ -87,7 +93,8 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
 
     @Override
     public boolean check() {
-        return getMethod()[0] != null;
+        Method[] m = getMethod();
+        return m[0] != null && m[1] != null;
     }
 
     @Override
@@ -101,12 +108,13 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
     }
 
     private Method[] getMethod() {
-        Method[] m = new Method[1];
+        Method[] m = new Method[2];
         m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
         });
+        m[1] = MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]);
         return m;
     }
 }

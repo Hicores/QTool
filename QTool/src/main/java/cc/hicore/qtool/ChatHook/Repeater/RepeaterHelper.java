@@ -9,10 +9,12 @@ import android.widget.RelativeLayout;
 
 import java.util.HashMap;
 
+import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.R;
 
 @SuppressLint("ResourceType")
@@ -42,7 +44,15 @@ public class RepeaterHelper {
     private static long double_click_time = 0;
 
     public static void createRepeatIcon(RelativeLayout baseChatItem, Object ChatMsg) throws Exception {
-        boolean isSendFromLocal = MMethod.CallMethodNoParam(ChatMsg, "isSendFromLocal", boolean.class);
+        boolean isSendFromLocal;
+        int istroop = MField.GetField(ChatMsg,"istroop",int.class);
+        if (istroop == 1 || istroop == 0){
+            String UserUin = MField.GetField(ChatMsg,"senderuin",String.class);
+            isSendFromLocal = UserUin.equals(QQEnvUtils.getCurrentUin());
+        }else {
+            isSendFromLocal = MMethod.CallMethodNoParam(ChatMsg, "isSendFromLocal", boolean.class);
+        }
+
         Context context = baseChatItem.getContext();
         ResUtils.StartInject(context);
         String clzName = ChatMsg.getClass().getSimpleName();
