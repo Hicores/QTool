@@ -38,7 +38,7 @@ public class Hook_For_Main_Entry extends BaseHookItem {
             Object newItem = MClass.NewInstance(mMenu.get(0).getClass(), new Class[]{
                     int.class, String.class, String.class, int.class
             }, 1699, "QTool", "点击打开QTool主菜单", 3);
-            Drawable drawable = HookEnv.AppContext.getDrawable(R.drawable.icon);
+            Drawable drawable = HookEnv.AppContext.getDrawable(R.drawable.micon);
             MField.SetField(newItem,"drawable", drawable);
             mMenu.add(0,newItem);
         });

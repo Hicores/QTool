@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Project/QT/QTool/QTool/src/main/res/drawable/ic_icon.xml" value="0.118" />
+        <entry key="..\:/Project/QT/QTool/QTool/src/main/res/drawable/icon.xml" value="0.146" />
         <entry key="..\:/Project/QT/QTool/QTool/src/main/res/layout/child_item.xml" value="0.23385416666666667" />
         <entry key="..\:/Project/QT/QTool/QTool/src/main/res/layout/emo_list_panel.xml" value="0.2390625" />
         <entry key="..\:/Project/QT/QTool/QTool/src/main/res/layout/repeater_set_dialog.xml" value="0.6971279373368147" />
