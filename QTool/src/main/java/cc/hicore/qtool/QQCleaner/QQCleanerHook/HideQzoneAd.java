@@ -29,7 +29,6 @@ public class HideQzoneAd extends BaseHookItem implements BaseUiItem {
         Method[] m = getMethod();
         XPBridge.HookAfter(m[0],param -> {
             String sName = (String) param.args[1];
-            XposedBridge.log(sName);
             if(sName.equals("qzone_plugin.apk") && !IsLoad.getAndSet(true)){
                 ClassLoader pluginLoader = (ClassLoader) param.getResult();
                 XposedHelpers.findAndHookMethod("com.qzone.module.feedcomponent.ui.FeedViewBuilder", pluginLoader,

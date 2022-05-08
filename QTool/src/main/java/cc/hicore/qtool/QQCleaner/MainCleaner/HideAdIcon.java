@@ -13,7 +13,6 @@ import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "隐藏主界面右上角入口",desc = "(不支持旧版QQ)可能包含小世界入口等",groupName = "主界面净化",targetID = 2,type = 1,id = "HideMainAdEntry")
@@ -25,8 +24,6 @@ public class HideAdIcon extends BaseHookItem implements BaseUiItem {
         XPBridge.HookBefore(m[0],param -> {
             if (IsEnable){
                 param.setResult(null);
-
-                XposedBridge.log(new Throwable());
             }
         });
         return true;
