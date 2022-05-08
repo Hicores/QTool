@@ -40,7 +40,7 @@ public class EmoOnlineLoader {
     }
 
     public static void submit2(EmoPanel.EmoInfo info, Runnable run) {
-        savePoolSingle.submit(() -> {
+        savePool.submit(() -> {
             try {
                 EnvHook.requireCachePath();
                 String CacheDir = HookEnv.ExtraDataPath + "/Cache/img_" + info.MD5;

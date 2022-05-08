@@ -109,12 +109,17 @@ public class EmoPanelView extends BottomPopupView {
                             try {
                                 String RootPath = HookEnv.ExtraDataPath + "Pic/" + Name + "/";
                                 AtomicInteger mLock = new AtomicInteger();
-                                for (int i = data.size()-1;i>-1;i--){
-                                    EmoPanel.EmoInfo info = data.get(i);
-                                    HttpUtils.DownloadToFile(info.URL,RootPath + info.MD5);
-                                    new File(RootPath + info.MD5).setLastModified(System.currentTimeMillis());
+                                for (EmoPanel.EmoInfo info : data) {
                                     mLock.getAndIncrement();
-                                    new Handler(Looper.getMainLooper()).post(() -> mDialog.setMessage("正在保存图片[" + mLock.get()+ "/" + data.size() + "]"));
+                                    EmoOnlineLoader.submit2(info, () -> {
+                                        mLock.getAndDecrement();
+                                        new Handler(Looper.getMainLooper()).post(() -> mDialog.setMessage("正在保存图片[" + (data.size() - mLock.get()) + "/" + data.size() + "]"));
+                                        FileUtils.copy(info.Path, RootPath + info.MD5);
+                                    });
+                                }
+                                for (int iaa = 0; iaa < 60; iaa++) {
+                                    if (mLock.get() == 0) break;
+                                    Thread.sleep(1000);
                                 }
                                 Utils.ShowToastL("保存完成");
                             } catch (Exception e) {
