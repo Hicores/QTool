@@ -19,7 +19,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.BuildConfig;
-import cc.hicore.qtool.DebugHelper.LogcatCatcher;
+import cc.hicore.qtool.CrashHandler.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;

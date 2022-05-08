@@ -1,4 +1,4 @@
-package cc.hicore.qtool.XPWork.LittleHook;
+package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -29,8 +29,12 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 @UIItem(name = "可复制卡片代码", type = 1, id = "CopyCardMsg", targetID = 1,groupName = "聊天界面增强")
 public class CopyCardCode extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
+    @Override
+    public String getTag() {
+        return "可复制卡片代码";
+    }
 
+    boolean IsEnable;
     @SuppressLint("ResourceType")
     @Override
     public boolean startHook() throws Throwable {

@@ -1,4 +1,4 @@
-package cc.hicore.qtool.DebugHelper;
+package cc.hicore.qtool.CrashHandler;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -104,7 +104,7 @@ public class CatchInstance {
         packer.CloseAll();
 
 
-        Utils.ShowToast("已阻止QQ闪退:\n"+th.toString()+"\n" +
+        Utils.ShowToast("已阻止QQ闪退:\n"+th+"\n" +
                 "日志已保存到路径:"+packer.getPath());
 
 

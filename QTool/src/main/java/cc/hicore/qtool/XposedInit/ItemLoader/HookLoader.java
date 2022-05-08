@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -232,7 +233,11 @@ public class HookLoader {
             subResult.ClassName = clzName;
             BaseHookItem item = cacheHookInst.get(clzName);
             if (item != null) {
-                subResult.Name = item.getTag();
+                if (item instanceof BaseUiItem){
+                    subResult.Name = getUITagName(item.getClass().getName());
+                }
+                if (subResult.Name == null) subResult.Name = item.getTag();
+
                 try {
                     subResult.IsAvailable = item.check();
                     subResult.IsEnable = item.isEnable();
@@ -246,6 +251,13 @@ public class HookLoader {
             }
         }
         return result;
+    }
+    private static String getUITagName(String clzName){
+        HashSet<UiInfo> infos = getUiInfos();
+        for (UiInfo info : infos){
+            if (info.clzName.equals(clzName))return info.name;
+        }
+        return null;
     }
 
     //插到指定的HookItem类并尝试进行加载,一般用于主菜单界面从未打开到打开进行动态挂钩

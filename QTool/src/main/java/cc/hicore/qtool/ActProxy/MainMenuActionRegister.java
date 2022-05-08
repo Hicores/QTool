@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 
 import cc.hicore.Utils.ActionUtils;
-import cc.hicore.Utils.DebugUtils;
 import cc.hicore.qtool.JavaPlugin.ListForm.JavaPluginAct;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.DebugDialog;

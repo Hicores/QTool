@@ -13,7 +13,6 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 public class QQGroupUtils {
     public static String Group_Get_Name(String GroupUin) {

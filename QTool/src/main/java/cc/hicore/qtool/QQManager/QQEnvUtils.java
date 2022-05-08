@@ -2,10 +2,8 @@ package cc.hicore.qtool.QQManager;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import java.lang.reflect.Method;
-import java.net.IDN;
 import java.util.ArrayList;
 import java.util.List;
 

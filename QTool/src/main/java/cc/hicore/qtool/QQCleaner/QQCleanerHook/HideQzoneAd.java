@@ -1,7 +1,6 @@
 package cc.hicore.qtool.QQCleaner.QQCleanerHook;
 
 import android.content.Context;
-import android.view.ViewGroup;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -18,7 +17,6 @@ import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 @UIItem(name = "屏蔽空间热播广告",groupName = "其他净化",targetID = 2,type = 1,id = "HideQzoneAd")

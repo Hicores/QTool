@@ -15,7 +15,6 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.R;
 
 @SuppressLint("ResourceType")
 public class RepeaterHelper {

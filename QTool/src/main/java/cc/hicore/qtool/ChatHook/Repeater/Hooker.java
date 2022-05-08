@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -18,13 +16,10 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = true, isRunInAllProc = false)
 @UIItem(targetID = 1,groupName = "聊天辅助",name = "消息复读+1",id = "RepeaterHooker",type = 2)

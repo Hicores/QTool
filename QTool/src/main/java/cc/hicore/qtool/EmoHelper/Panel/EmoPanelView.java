@@ -54,7 +54,6 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
-import de.robv.android.xposed.XposedBridge;
 
 
 public class EmoPanelView extends BottomPopupView {

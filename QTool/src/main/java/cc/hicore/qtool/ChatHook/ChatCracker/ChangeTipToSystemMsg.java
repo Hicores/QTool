@@ -17,6 +17,11 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "状态消息隐藏",groupName = "聊天净化",desc = "阻止状态消息显示在自己的消息记录中",type = 1,id = "ChangeTipToSystemMsg",targetID = 2)
 public class ChangeTipToSystemMsg extends BaseHookItem implements BaseUiItem {
+    @Override
+    public String getTag() {
+        return "状态消息隐藏";
+    }
+
     boolean IsEnable;
     @Override
     public boolean startHook() throws Throwable {

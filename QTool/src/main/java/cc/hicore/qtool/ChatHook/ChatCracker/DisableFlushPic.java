@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 import cc.hicore.HookItem;
@@ -21,7 +20,6 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "闪照破解",id = "DisableFlashPic",groupName = "聊天界面增强",targetID = 1,desc = "闪照直接显示为普通的图片",type = 1)

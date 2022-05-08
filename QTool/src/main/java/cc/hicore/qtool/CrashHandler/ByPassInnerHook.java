@@ -1,4 +1,4 @@
-package cc.hicore.qtool.DebugHelper;
+package cc.hicore.qtool.CrashHandler;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;

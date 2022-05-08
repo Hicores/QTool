@@ -1,8 +1,6 @@
 package cc.hicore.Utils;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SyncUtils {

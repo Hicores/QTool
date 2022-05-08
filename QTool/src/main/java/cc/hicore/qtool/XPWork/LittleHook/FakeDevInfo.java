@@ -2,7 +2,6 @@ package cc.hicore.qtool.XPWork.LittleHook;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,15 +19,12 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
 
 @HookItem(isDelayInit = false,isRunInAllProc = true)
 @UIItem(name = "修改设备型号",groupName = "修改",id = "FakeDevInfo",targetID = 3,type = 2)

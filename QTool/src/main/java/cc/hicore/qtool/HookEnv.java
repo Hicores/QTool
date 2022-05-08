@@ -2,7 +2,6 @@ package cc.hicore.qtool;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.HandlerThread;
 
 import cc.hicore.ConfigUtils.ConfigCore;

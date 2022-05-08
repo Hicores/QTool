@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.UIViews.MyTimePicker;

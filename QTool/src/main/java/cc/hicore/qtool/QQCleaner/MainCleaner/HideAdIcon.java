@@ -1,7 +1,6 @@
 package cc.hicore.qtool.QQCleaner.MainCleaner;
 
 import android.content.Context;
-import android.view.View;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +35,7 @@ public class HideAdIcon extends BaseHookItem implements BaseUiItem {
 
     @Override
     public boolean check() {
-        return false;
+        return getMethod()[0]!=null;
     }
 
     @Override

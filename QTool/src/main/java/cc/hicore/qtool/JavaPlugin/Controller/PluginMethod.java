@@ -16,7 +16,6 @@ import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.QQTools.QQServletHelper;
-import cc.hicore.qtool.XPWork.QQProxy.JoinEventProxy;
 
 //插件Api直接导出方法
 public class PluginMethod {
@@ -293,7 +292,7 @@ public class PluginMethod {
     }
 
     public void HandlerRequest(Object request, boolean isAccept, String reason, boolean isBlack) {
-        JoinEventProxy.sendResponse(request, isAccept, reason, isBlack);
+        //TODO JoinEventProxy
     }
 
     public String getFileDirectUrl(Object msgData) {

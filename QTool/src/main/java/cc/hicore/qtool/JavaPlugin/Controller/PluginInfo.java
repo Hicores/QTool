@@ -106,8 +106,13 @@ public class PluginInfo {
         public String Answer;
         public String RequestText;
         public String RequestSource;
-
         public Object source;
     }
+
+    public static class FriendInfo {
+        public String Uin;
+        public String Name;
+    }
+
 
 }

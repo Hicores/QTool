@@ -1,4 +1,4 @@
-package cc.hicore.qtool.DebugHelper;
+package cc.hicore.qtool.CrashHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;

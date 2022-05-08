@@ -1,35 +1,35 @@
-package cc.hicore.qtool.DebugHelper;
+package cc.hicore.qtool.CrashHandler;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class StringPool_XpLog {
+public class StringPool_Logcat {
     private static long Size = 0;
-    private static StringPool_XpLog FirstPos;
-    private static StringPool_XpLog CurrentPos;
+    private static StringPool_Logcat FirstPos;
+    private static StringPool_Logcat CurrentPos;
 
 
 
-    public StringPool_XpLog(String Text, StringPool_XpLog Before){
+    public StringPool_Logcat(String Text, StringPool_Logcat Before){
         Line = Text;
         BeforePool = Before;
         Size += Text.length();
 
-        while (Size >= 128 * 1024){
-            StringPool_XpLog poolFirst = FirstPos;
+        while (Size >= 256 * 1024){
+            StringPool_Logcat poolFirst = FirstPos;
             poolFirst = poolFirst.AfterPool;
             Size -= FirstPos.Line.length();
             FirstPos = poolFirst;
             FirstPos.BeforePool = null;
         }
     }
-    private StringPool_XpLog BeforePool;
-    private StringPool_XpLog AfterPool;
+    private StringPool_Logcat BeforePool;
+    private StringPool_Logcat AfterPool;
     private String Line;
     static AtomicBoolean Lock = new AtomicBoolean();
 
 
     private static void Init(){
-        FirstPos = new StringPool_XpLog("StringPoolStart",null);
+        FirstPos = new StringPool_Logcat("StringPoolStart",null);
         CurrentPos = FirstPos;
     }
 
@@ -37,7 +37,7 @@ public class StringPool_XpLog {
         if (Line == null)return;
         if (Lock.get())return;
         if (FirstPos == null)Init();
-        StringPool_XpLog NewPool = new StringPool_XpLog(Line,CurrentPos);
+        StringPool_Logcat NewPool = new StringPool_Logcat(Line,CurrentPos);
         CurrentPos.AfterPool = NewPool;
 
         CurrentPos = NewPool;
@@ -45,11 +45,12 @@ public class StringPool_XpLog {
     public static String getAll(){
         try{
             Lock.getAndSet(true);
-            StringPool_XpLog CheckPoolaa = FirstPos;
+            StringPool_Logcat CheckPoolaa = FirstPos;
             StringBuilder builder = new StringBuilder();
 
             while (CheckPoolaa!= null){
                 builder.append(CheckPoolaa.Line).append("\n");
+
                 CheckPoolaa = CheckPoolaa.AfterPool;
             }
             return builder.toString();

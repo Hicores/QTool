@@ -5,18 +5,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.lxj.xpopup.XPopup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +22,6 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.QQTools.QQSelectHelper;
 import cc.hicore.qtool.R;
-import de.robv.android.xposed.XposedBridge;
 
 public class JoinSame {
     public static void start(Context context){

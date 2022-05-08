@@ -2,9 +2,7 @@ package cc.hicore.qtool.QQCleaner.ChatCleaner;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;

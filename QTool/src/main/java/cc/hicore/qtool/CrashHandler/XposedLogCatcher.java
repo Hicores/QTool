@@ -1,4 +1,4 @@
-package cc.hicore.qtool.DebugHelper;
+package cc.hicore.qtool.CrashHandler;
 
 import android.util.Log;
 

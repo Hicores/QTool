@@ -1,7 +1,6 @@
 package cc.hicore.qtool.ChatHook.LongClickSendCard;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -13,11 +12,8 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
-import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
-import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;

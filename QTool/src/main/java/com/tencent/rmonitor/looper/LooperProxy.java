@@ -3,7 +3,7 @@ package com.tencent.rmonitor.looper;
 import android.os.Handler;
 import android.os.Looper;
 
-import cc.hicore.qtool.DebugHelper.CatchInstance;
+import cc.hicore.qtool.CrashHandler.CatchInstance;
 
 public class LooperProxy implements Runnable{
     public static void Proxy(){

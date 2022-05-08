@@ -1,6 +1,6 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
-import static cc.hicore.qtool.QQGroupHelper.AvatarMenu.AvatarMenuHooker.findView;
+import static cc.hicore.qtool.ChatHook.Repeater.RepeaterHelper.findView;
 
 import android.content.Context;
 import android.view.View;
@@ -20,6 +20,11 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @HookItem(isRunInAllProc = false,isDelayInit = false)
 @UIItem(name = "总是显示头像",desc = "针对某些全屏卡片",groupName = "聊天净化",id = "AlwaysShowAvatar",type = 1,targetID = 2)
 public class AlwaysShowAvatar extends BaseHookItem implements BaseUiItem {
+    @Override
+    public String getTag() {
+        return "总是显示头像";
+    }
+
     boolean IsEnable;
     @Override
     public boolean startHook() throws Throwable {

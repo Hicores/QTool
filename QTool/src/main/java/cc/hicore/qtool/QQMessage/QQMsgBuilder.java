@@ -22,7 +22,6 @@ import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
-import cc.hicore.Utils.SyncUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.EnvHook;

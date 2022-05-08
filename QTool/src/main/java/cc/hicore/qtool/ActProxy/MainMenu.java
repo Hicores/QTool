@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.ActionUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
