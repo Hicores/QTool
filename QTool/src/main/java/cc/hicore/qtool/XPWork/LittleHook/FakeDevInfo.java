@@ -23,6 +23,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -58,9 +59,16 @@ public class FakeDevInfo extends BaseHookItem implements BaseUiItem {
                 }
             });
         }catch (Throwable th){
-            m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g",String.class,new Class[]{
-                    Context.class
-            });
+            if (HostInfo.getVerCode() < 7830){
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "h",String.class,new Class[]{
+                        Context.class
+                });
+            }else {
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g",String.class,new Class[]{
+                        Context.class
+                });
+            }
+
             XPBridge.HookAfter(m,param -> {
                 if (HookEnv.Config.getBoolean("Set","FakeDevInfoOpen",false)){
                     param.setResult(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
