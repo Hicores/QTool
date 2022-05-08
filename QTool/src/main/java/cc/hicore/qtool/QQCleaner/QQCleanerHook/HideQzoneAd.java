@@ -1,6 +1,7 @@
 package cc.hicore.qtool.QQCleaner.QQCleanerHook;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -61,9 +62,31 @@ public class HideQzoneAd extends BaseHookItem implements BaseUiItem {
 
                     Map<Integer,String> map = MField.GetField(Child,"busiParam");
                     if(map.containsKey(194))param.setResult(null);
+
+                    /*
+                    for (int ss : map.keySet()){
+                        XposedBridge.log(ss  + "->" + map.get(ss));
+                    }
+
+                     */
                 }
             });
         }
+        /*
+
+        XposedHelpers.findAndHookMethod(MClass.loadClass("com.qzone.module.feedcomponent.FeedcomponentModule$1"), "handleDetailCommentOnIdle", ViewGroup.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                ViewGroup group = (ViewGroup) param.args[0];
+                XposedBridge.log(group+"->"+group.getChildCount());
+                for (int i=0;i<group.getChildCount();i++){
+                    XposedBridge.log(group.getChildAt(i)+"->"+group.getChildAt(i).getTag());
+                }
+            }
+        });
+
+         */
         return true;
     }
 
