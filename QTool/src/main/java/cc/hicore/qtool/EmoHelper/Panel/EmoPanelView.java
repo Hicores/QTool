@@ -329,11 +329,13 @@ public class EmoPanelView extends BottomPopupView {
                             try {
                                 JSONArray itemArr = json.getJSONArray("data");
                                 LinearLayout mChild = null;
+                                int index = 0;
                                 for (int i = itemArr.length()-1; i >-1; i--) {
-                                    if (i % 3 == 0) {
+                                    if (index % 3 == 0) {
                                         mChild = new LinearLayout(getContext());
                                         mRoot.addView(mChild);
                                     }
+                                    index ++;
                                     JSONObject bundleInfo = itemArr.getJSONObject(i);
                                     String coverPath = "https://cdn.haonb.cc/" + bundleInfo.optString("cover");
                                     String ID = bundleInfo.getString("id");
