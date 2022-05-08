@@ -330,7 +330,7 @@ public class EmoPanelView extends BottomPopupView {
                             try {
                                 JSONArray itemArr = json.getJSONArray("data");
                                 LinearLayout mChild = null;
-                                for (int i = 0; i < itemArr.length(); i++) {
+                                for (int i = itemArr.length()-1; i >-1; i--) {
                                     if (i % 3 == 0) {
                                         mChild = new LinearLayout(getContext());
                                         mRoot.addView(mChild);
