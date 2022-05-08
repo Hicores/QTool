@@ -54,6 +54,7 @@ public class QQGroupUtils {
             NewItem.last_active = MField.GetField(GroupMemberInfoR, "last_active_time");
             NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
             NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
+            NewItem.level = MField.GetField(GroupMemberInfoR,"newRealLevel",int.class);
             NewItem.Title = MField.GetField(GroupMemberInfoR, "mUniqueTitle");
             return NewItem;
         } catch (Exception e) {
@@ -129,6 +130,7 @@ public class QQGroupUtils {
                 NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
                 NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
                 NewItem.Title = MField.GetField(item, "mUniqueTitle");
+                NewItem.level = MField.GetField(item,"newRealLevel",int.class);
                 Infos.add(NewItem);
             }
             return Infos;
@@ -177,6 +179,7 @@ public class QQGroupUtils {
                 NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
                 NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
                 NewItem.Title = MField.GetField(item, "mUniqueTitle");
+                NewItem.level = MField.GetField(item,"newRealLevel",int.class);
                 Infos.add(NewItem);
             }
             return Infos;

@@ -16,6 +16,8 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.GroupChecker.CheckAlive.CheckCommon;
+import cc.hicore.qtool.GroupChecker.CheckAlive.CheckExtra;
 import cc.hicore.qtool.GroupChecker.CheckJoinIn.JoinSame;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
@@ -43,8 +45,10 @@ public class CheckerHooker extends BaseHookItem implements BaseUiItem {
                                     .setItems(items, (dialog, which) -> {
                                         if (which == 0){
                                             JoinSame.start(mRootView.getContext());
-                                        }else {
-                                            Utils.ShowToast("未完成............................");
+                                        }else if (which == 1){
+                                            CheckCommon.CollectAndCheck(QQSessionUtils.getGroupUin());
+                                        }else if (which == 2){
+                                            CheckExtra.CollectAndCheck(QQSessionUtils.getGroupUin());
                                         }
 
                                     }).show();
