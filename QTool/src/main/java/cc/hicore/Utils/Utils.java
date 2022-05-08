@@ -101,5 +101,8 @@ public class Utils {
         manager.setPrimaryClip(data);
         Thread.currentThread();
     }
+    public static void PostToMain(Runnable run){
+        new Handler(Looper.getMainLooper()).post(run);
+    }
 
 }

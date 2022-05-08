@@ -4,12 +4,16 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQGroupUtils {
     public static String Group_Get_Name(String GroupUin) {
@@ -90,6 +94,50 @@ public class QQGroupUtils {
             return null;
         }
     }
+    public static ArrayList<GroupMemberInfo> waitForGetGroupInfo(String GroupUin){
+        try{
+            GroupInfo mInfo = Group_Get_Info(GroupUin);
+            Object TroopObserve = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.api.observer.TroopObserver"));
+            MMethod.CallMethodParams(HookEnv.AppInterface,"addObserver",void.class,TroopObserve,true);
+            AtomicBoolean locker = new AtomicBoolean();
+            AtomicReference<List> mGetList = new AtomicReference<>();
+            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.observer.TroopObserver"),"onUpdateTroopGetMemberList",void.class,new Class[]{
+                    String.class,boolean.class,List.class,int.class,long.class,int.class
+            }),param -> {
+                mGetList.set((List) param.args[2]);
+                locker.getAndSet(true);
+                MMethod.CallMethodSingle(HookEnv.AppInterface,"removeObserver",void.class,TroopObserve);
+            });
+            MMethod.CallMethodParams(QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.troop.handler.TroopMemberListHandler"),"a",void.class,
+                    true,GroupUin,mInfo.Code,true,1,System.currentTimeMillis(),0);
+            for (int i=0;i<100;i++){
+                if (locker.get())break;
+                Thread.sleep(100);
+            }
+            List troopMemberList = mGetList.get();
+            if (troopMemberList ==null)return Group_Get_Member_List(GroupUin);
+
+            ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
+            GroupInfo gInfo = Group_Get_Info(GroupUin);
+            for (Object item : troopMemberList) {
+                GroupMemberInfo NewItem = new GroupMemberInfo();
+                NewItem.Uin = MField.GetField(item, "memberuin");
+                NewItem.Nick = MField.GetField(item, "troopnick");
+                NewItem.Name = MField.GetField(item, "friendnick");
+                NewItem.join_time = MField.GetField(item, "join_time");
+                NewItem.last_active = MField.GetField(item, "last_active_time");
+                NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
+                NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
+                NewItem.Title = MField.GetField(item, "mUniqueTitle");
+                Infos.add(NewItem);
+            }
+            return Infos;
+
+        }catch (Exception e){
+            return Group_Get_Member_List(GroupUin);
+        }
+
+    }
 
     public static GroupInfo Group_Get_Info(String GroupUin) {
         try {
@@ -99,6 +147,7 @@ public class QQGroupUtils {
             Object GroupInfoR = MMethod.CallMethod(TroopManager, TroopManager.getClass(), "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"), new Class[]{String.class}, GroupUin);
             GroupInfo NewItem = new GroupInfo();
             NewItem.Uin = MField.GetField(GroupInfoR, "troopuin");
+            NewItem.Code = MField.GetField(GroupInfoR, "troopcode");
             NewItem.Name = MField.GetField(GroupInfoR, "troopname");
             NewItem.Creator = MField.GetField(GroupInfoR, "troopowneruin");
             String admins = MField.GetField(GroupInfoR, "Administrator");
@@ -196,6 +245,7 @@ public class QQGroupUtils {
         public String Name;
         public String Uin;
         public Object source;
+        public String Code;
     }
 
     public static class GroupMemberInfo {

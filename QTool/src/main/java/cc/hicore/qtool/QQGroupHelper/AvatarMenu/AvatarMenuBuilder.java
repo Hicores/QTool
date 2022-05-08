@@ -1,4 +1,4 @@
-package cc.hicore.qtool.GroupHelper.AvatarMenu;
+package cc.hicore.qtool.QQGroupHelper.AvatarMenu;
 
 import android.app.AlertDialog;
 import android.content.Context;

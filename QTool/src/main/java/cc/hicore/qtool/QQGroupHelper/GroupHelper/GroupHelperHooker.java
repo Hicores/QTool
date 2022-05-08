@@ -1,4 +1,4 @@
-package cc.hicore.qtool.GroupHelper.GroupHelper;
+package cc.hicore.qtool.QQGroupHelper.GroupHelper;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,6 +15,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
+import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
@@ -58,6 +59,8 @@ public class GroupHelperHooker extends BaseHookItem implements BaseUiItem {
                                             intent.putExtra("leftViewText", "返回");
                                             intent.setClassName(context, "com.tencent.mobileqq.activity.QQBrowserActivity");
                                             context.startActivity(intent);
+                                        }else if (which == 3){
+                                            QQGroupUtils.waitForGetGroupInfo(GroupUin);
                                         }
 
                                     }).show();

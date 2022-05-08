@@ -1,6 +1,6 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
-import static cc.hicore.qtool.GroupHelper.AvatarMenu.AvatarMenuHooker.findView;
+import static cc.hicore.qtool.QQGroupHelper.AvatarMenu.AvatarMenuHooker.findView;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <view class="cc.hicore.qtool.QQTools.QQSelectHelper$RoundImageView"
+            android:id="@+id/Header"
+            android:layout_width="32dp"
+            android:layout_height="32dp"/>
+        <TextView
+            android:textColor="@color/black"
+            android:id="@+id/UserUin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uin"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:id="@+id/GroupContainer"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
