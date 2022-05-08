@@ -37,8 +37,8 @@ public class AvatarMenuBuilder {
                 menuItems.add("复制头衔");
             }
             if (QQGroupUtils.IsCreator(GroupUin,QQEnvUtils.getCurrentUin())){
+                menuItems.add("撤回此消息");
                 if (!UserUin.equals(QQEnvUtils.getCurrentUin())){
-                    menuItems.add("撤回此消息");
                     menuItems.add("踢出此人");
                     menuItems.add("禁言此人");
                 }
@@ -49,8 +49,12 @@ public class AvatarMenuBuilder {
                     menuItems.add("撤回此消息");
                     menuItems.add("踢出此人");
                     menuItems.add("禁言此人");
+                }else if (UserUin.equals(QQEnvUtils.getCurrentUin())){
+                    menuItems.add("撤回此消息");
                 }
                 menuItems.add("设置名片");
+            }else if (UserUin.equals(QQEnvUtils.getCurrentUin())){
+                menuItems.add("撤回此消息");
             }
 
 
