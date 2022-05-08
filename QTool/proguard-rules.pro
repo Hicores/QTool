@@ -32,6 +32,7 @@
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginMethod{*;}
+-keep class com.tencent.** {*;}
 
 -keepclassmembers enum * {
     public static **[] values();

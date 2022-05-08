@@ -1,25 +1,28 @@
 package cc.hicore.qtool.DebugHelper;
 
-import cc.hicore.ConfigUtils.GlobalConfig;
-import cc.hicore.qtool.HookEnv;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 
 public class LogcatCatcher {
     public static void startCatcherOnce(){
-        if (HookEnv.IsMainProcess){
-            if (GlobalConfig.Get_Boolean("Confirm_Output_Logcat",false)){
-                if (GlobalConfig.Get_Boolean("Cancel_Output_Logcat",true)){
-                    GlobalConfig.Put_Boolean("Confirm_Output_Logcat",false);
+        CatchInstance.StartCatch();
+    }
+    public static void StartCatch() {
+        new Thread(()->{
+            try {
+                Process proc = Runtime.getRuntime().exec("logcat");
+                InputStreamReader reader = new InputStreamReader(proc.getInputStream());
+                BufferedReader mReader = new BufferedReader(reader);
+                String Line;
+                while ((Line = mReader.readLine())!=null){
+                    StringPool_Logcat.Add(Line);
                 }
-                GlobalConfig.Put_Boolean("Cancel_Output_Logcat",true);
-                start_logcat();
-                start_xposed();
+
+            } catch (IOException e) {
+                StringPool_Logcat.Add("Can't execute logcat.");
             }
-        }
-    }
-    private static void start_logcat(){
-
-    }
-    private static void start_xposed(){
-
+        }).start();
     }
 }

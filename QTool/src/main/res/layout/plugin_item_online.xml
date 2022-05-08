@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/plugin_uploader"
-            android:text="上传者:小菜豆(1071791)"
+            android:text="上传者:"
             android:textSize="9dp" />
 
         <TextView

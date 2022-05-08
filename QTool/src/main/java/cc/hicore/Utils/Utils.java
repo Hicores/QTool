@@ -10,6 +10,8 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import cc.hicore.ReflectUtils.MField;
@@ -37,6 +39,16 @@ public class Utils {
         long minutes = second / 60;
         second = second % 60;
         return(days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (second == 0 ? "" : second + "秒");
+    }
+    public static String GetNowTime22() {
+        Date day=new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        return (df.format(day));
+    }
+    public static String GetNowTime() {
+        Date day=new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return (df.format(day));
     }
     public static String secondToTime2(long second) {
         if(second == 0) return "0秒";

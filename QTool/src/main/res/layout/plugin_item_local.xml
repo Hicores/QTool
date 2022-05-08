@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/font_plugin"
             android:textSize="9dp"
-            android:text="脚本作者:小菜豆" />
+            android:text="脚本作者:神秘人士" />
 
         <TextView
             android:id="@+id/plugin_desc"

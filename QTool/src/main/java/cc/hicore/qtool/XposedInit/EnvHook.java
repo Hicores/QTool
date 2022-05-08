@@ -13,11 +13,13 @@ import com.microsoft.appcenter.crashes.Crashes;
 
 import java.io.File;
 
+import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.BuildConfig;
+import cc.hicore.qtool.DebugHelper.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
@@ -56,6 +58,10 @@ public class EnvHook {
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                     HookForDelay();
+
+                    if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                        LogcatCatcher.startCatcherOnce();
+                    }
 
                     SettingInject.startInject();
                     if (HookEnv.ExtraDataPath != null) {

@@ -70,6 +70,31 @@ public class DebugDialog {
         check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main",isCheck));
         mRoot.addView(check);
 
+        check = new CheckBox(context);
+        check.setChecked(GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false));
+        check.setTextColor(Color.BLACK);
+        check.setText("阻止Java层的闪退(不一定总是有效)");
+        check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Prevent_Crash_In_Java",isCheck));
+        mRoot.addView(check);
+
+        LinearLayout crashBar = new LinearLayout(context);
+        Button btnCrashMain = new Button(context);
+        btnCrashMain.setText("主线程闪退测试");
+        btnCrashMain.setOnClickListener(v->{throw new RuntimeException("Java闪退测试");});
+        crashBar.addView(btnCrashMain);
+
+        Button btnCrashThread = new Button(context);
+        btnCrashThread.setText("子线程闪退测试");
+        btnCrashThread.setOnClickListener(v->{
+            Thread thread = new Thread(()->{
+                throw new RuntimeException("Java子线程闪退测试");
+            });
+            thread.setName("QTool_闪退测试");
+            thread.start();
+        });
+        crashBar.addView(btnCrashThread);
+        mRoot.addView(crashBar);
+
         TextView titleClzInfo = new TextView(context);
         titleClzInfo.setTextColor(Color.parseColor("#6666ff"));
         titleClzInfo.setText("模块加载状态");

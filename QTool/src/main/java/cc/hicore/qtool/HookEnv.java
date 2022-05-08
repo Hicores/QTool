@@ -3,6 +3,7 @@ package cc.hicore.qtool;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.HandlerThread;
 
 import cc.hicore.ConfigUtils.ConfigCore;
 import cc.hicore.ConfigUtils.ConfigCore_Json;
@@ -27,4 +28,5 @@ public class HookEnv {
     public static Object SessionInfo;
 
     public static String New_Version;
+    public static HandlerThread tasker = new HandlerThread("QTool_Handler");
 }
