@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:clickable="true"
+    android:background="@drawable/menu_item_base"
+    android:orientation="vertical"
+    android:layout_height="110dp">
+    <TextView
+        android:id="@+id/msg_panel_sender"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="发送者:XXXX"/>
+    <TextView
+        android:id="@+id/msg_panel_type"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="消息类型:MessageForText(19963字)"/>
+    <TextView
+        android:id="@+id/msg_panel_ban_type"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="屏蔽类型:消息过度聚合"/>
+
+    <TextView
+        android:id="@+id/msg_panel_click_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击查看消息内容"
+        android:textColor="#223344"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

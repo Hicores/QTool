@@ -20,6 +20,7 @@ public class DebugUtils {
     public static void PrintAllField(Object o){
         for (Field f : o.getClass().getDeclaredFields()){
             try{
+
                 f.setAccessible(true);
                 XposedBridge.log(f.getName()+"->"+f.get(o));
             }catch (Exception ew){
@@ -27,4 +28,15 @@ public class DebugUtils {
             }
         }
     }
+    public static void PrintAllField(Object o,Class clz){
+        for (Field f : clz.getDeclaredFields()){
+            try{
+                f.setAccessible(true);
+                XposedBridge.log(f.getName()+"->"+f.get(o));
+            }catch (Exception ew){
+
+            }
+        }
+    }
+
 }
