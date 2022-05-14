@@ -2,6 +2,7 @@ package cc.hicore.qtool.ChatHook.FuckBadMsg;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +35,9 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "异常消息屏蔽",groupName = "消息屏蔽",type = 2,targetID = 2,id = "ChatBoomMessageHooker")
@@ -116,6 +120,16 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
 
             }
         });
+
+        XposedHelpers.findAndHookMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemLayout30"), "b", Context.class, View.class, Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                ArrayList list = MField.GetFirstField(param.thisObject,ArrayList.class);
+                if (list.size() == 0)list.add(MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemContent")));
+            }
+        });
+
         return true;
     }
     private static void addMsgToBanList(Object chatMsg,String banTip){
