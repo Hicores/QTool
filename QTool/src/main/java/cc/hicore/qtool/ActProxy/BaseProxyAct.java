@@ -93,6 +93,7 @@ public class BaseProxyAct extends Activity{
         ani_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_fade_out));
 
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        param.topMargin = Utils.getStatusBarHeight(this);
         ani_layout.addView(createView,param);
     }
     private void setTitleFea() {

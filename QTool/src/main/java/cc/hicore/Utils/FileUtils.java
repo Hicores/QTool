@@ -22,6 +22,25 @@ public class FileUtils {
         } catch (Exception e) {
         }
     }
+    public static long getDirSize(File file) {
+        //判断文件是否存在
+        if (file.exists()) {
+            //如果是目录则递归计算其内容的总大小
+            if (file.isDirectory()) {
+                File[] children = file.listFiles();
+                long size = 0;
+                if(children==null)return 0;
+                for (File f : children)
+                    size += getDirSize(f);
+                return size;
+            } else {//如果是文件则直接返回其大小,以“兆”为单位
+                long size = file.length();
+                return size;
+            }
+        } else {
+            return 0;
+        }
+    }
 
     public static void WriteToFile(String File, byte[] FileContent) {
         try {
