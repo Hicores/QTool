@@ -6,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class DataUtils {
     public static byte[] readAllBytes(InputStream inp) throws IOException {
@@ -72,6 +74,17 @@ public class DataUtils {
             e.printStackTrace();
             return null;
         }
+        BigInteger bigInt = new BigInteger(1, digest.digest());
+        return bigInt.toString(16).toUpperCase();
+    }
+    public static String getStrMD5(String data){
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            return "";
+        }
+        digest.update(data.getBytes(StandardCharsets.UTF_8));
         BigInteger bigInt = new BigInteger(1, digest.digest());
         return bigInt.toString(16).toUpperCase();
     }

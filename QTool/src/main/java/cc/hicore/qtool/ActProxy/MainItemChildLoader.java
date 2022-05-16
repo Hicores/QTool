@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -23,6 +25,22 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 public class MainItemChildLoader {
     public static void startLoad(int i, Activity act){
         BaseProxyAct.createNewView("ChildItem" + i, act, context -> createView(i,context));
+    }
+    public static void createAlarmView(int i, Activity act){
+        BaseProxyAct.createNewView("ChildItem" + i, act, context -> {
+            FrameLayout container = new FrameLayout(act);
+            LayoutInflater inflater = LayoutInflater.from(context);
+            LinearLayout alarmView = (LinearLayout) inflater.inflate(R.layout.alarm_view,null);
+            Button btn = alarmView.findViewById(R.id.Confirm);
+            btn.setOnClickListener(v->{
+                container.removeAllViews();
+                container.addView(createView(i,context));
+            });
+
+            container.addView(alarmView);
+            return container;
+        });
+
     }
     private static View createView(int i,Context context){
         LayoutInflater inflater = LayoutInflater.from(context);

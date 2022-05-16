@@ -22,6 +22,9 @@ public class MainMenuActionRegister {
         ActionUtils.registerAction("Enjoy", v ->MainItemChildLoader.startLoad(3,v));
         MainMenu.addItemData(3,"娱乐功能",0,"Enjoy", R.drawable.enjoy);
 
+        ActionUtils.registerAction("Tester", v ->MainItemChildLoader.createAlarmView(4,v));
+        MainMenu.addItemData(4,"实验性功能",0,"Tester", R.drawable.tester);
+
 
         ActionUtils.registerAction("DebugUtils", DebugDialog::startShow);
         MainMenu.addItemData(10,"调试功能",0,"DebugUtils",R.drawable.debug);

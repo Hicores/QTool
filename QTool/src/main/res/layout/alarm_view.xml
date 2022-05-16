@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="实验性功能为不稳定功能,不保证使用后不出现任何问题,如果出现任何问题也请自行解决,如果你没有解决问题的能力,请返回,如果确定你有解决问题的能力,那么可以点击下面按钮继续操作"
+        android:textColor="#FF0000"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我有能力独立解决可能出现的问题"
+        android:id="@+id/Confirm"/>
+
+</LinearLayout>

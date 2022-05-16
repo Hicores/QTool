@@ -30,7 +30,7 @@ import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 
-@UIItem(name = "存储空间清理",groupName = "其他净化",targetID = 2,type = 2,id = "StorageCleanView")
+@UIItem(name = "存储空间清理",groupName = "空间清理",targetID = 4,type = 2,id = "StorageCleanView")
 @SuppressLint("ResourceType")
 public class StorageView implements BaseUiItem {
     private static final HashMap<String,String> cleanPaths = new LinkedHashMap<>();

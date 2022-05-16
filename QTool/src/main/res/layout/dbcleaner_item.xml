@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <view
+        android:id="@+id/Header"
+        class="cc.hicore.qtool.QQTools.QQSelectHelper$RoundImageView"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Show_Name"
+        android:text="神奇的群聊(114514)"
+        android:layout_toRightOf="@id/Header"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:textColor="@color/font_plugin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/DBSize_Common"
+        android:text="普通db计算数量:114514"
+        android:layout_below="@+id/Show_Name"
+        android:textSize="10sp"
+        android:textColor="@color/font_plugin"
+        android:layout_toRightOf="@id/Header"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/DBSize_SlowTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DBSize_Common"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/Header"
+        android:text="slowtable计算数量:1919810"
+        android:textColor="@color/font_plugin"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/Clean_Now"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="清除数据"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>
