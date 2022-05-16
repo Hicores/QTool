@@ -64,6 +64,7 @@ public class DBCleaner implements BaseUiItem {
 
             new Thread(()->{
                 try{
+                    LocalTableInit.initTable();
                     LayoutInflater inflater = ContUtil.getContextInflater(context1);
                     DBHelper helper = new DBHelper(HookEnv.AppContext.getDatabasePath(QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
                     DBHelper slowTable = new DBHelper(HookEnv.AppContext.getDatabasePath("slowtable_"+QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
@@ -96,16 +97,17 @@ public class DBCleaner implements BaseUiItem {
 
 
                     for (String tablesName : tableName){
-                        String uin = DBHelper.decodeData(helper.getOneData(tablesName,"frienduin"));
-                        if (uin.isEmpty())uin = DBHelper.decodeData(slowTable.getOneData(tablesName,"frienduin"));
-                        if (TextUtils.isEmpty(uin)){
-                            LocalTableInit.initTable();
-                            if (select == 0){
-                                uin = LocalTableInit.query(tablesName.substring(9,9+32));
-                            }else if (select == 1){
-                                uin = LocalTableInit.query(tablesName.substring(10,10+32));
-                            }
 
+                        String uin;
+                        if (select == 1){
+                            uin = LocalTableInit.query(tablesName.substring(10,10+32));
+                        }else{
+                            uin = LocalTableInit.query(tablesName.substring(9,9+32));
+                        }
+
+                        if (uin.isEmpty())uin = DBHelper.decodeData(helper.getOneData(tablesName,"frienduin"));
+                        if (TextUtils.isEmpty(uin)){
+                            uin = DBHelper.decodeData(slowTable.getOneData(tablesName,"frienduin"));
                         }
                         int count = helper.getCount(tablesName);
                         int slowTableCount = slowTable.getCount(tablesName);
