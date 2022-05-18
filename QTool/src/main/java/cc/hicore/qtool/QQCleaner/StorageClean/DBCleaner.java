@@ -32,7 +32,7 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import de.robv.android.xposed.XposedBridge;
 
-@UIItem(name = "聊天数据库清理",groupName = "空间清理",targetID = 4,type = 2,id = "StorageCleanView")
+@UIItem(name = "聊天数据库清理",groupName = "空间清理",targetID = 4,type = 2,id = "DBCleanerCleanView")
 public class DBCleaner implements BaseUiItem {
 
     @Override
