@@ -104,6 +104,7 @@ public class StorageView implements BaseUiItem {
 
     public void createDialog(Context context){
         BaseProxyAct.createNewView("StorageCleanView", (Activity) context, context1 -> getContentView(context1));
+
     }
     ExecutorService calcSize = Executors.newFixedThreadPool(16);
     private View getContentView(Context context){

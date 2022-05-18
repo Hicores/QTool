@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import cc.hicore.HookItem;
@@ -42,7 +44,7 @@ public class ShowAtHook extends BaseHookItem implements BaseUiItem {
 
                 StringBuilder builder = new StringBuilder();
                 String ClzName = ChatMsg.getClass().getSimpleName();
-                if (ClzName.equals("MessageForText") || ClzName.equals("MessageForLongTextMsg") || ClzName.equals("MessageForReplyText")){
+                if (ClzName.equals("MessageForText") || ClzName.equals("MessageForLongTextMsg")){
                     String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
                     JSONObject atJson = new JSONObject(Extstr);
                     String mStr = atJson.optString("troop_at_info_list");
@@ -57,6 +59,32 @@ public class ShowAtHook extends BaseHookItem implements BaseUiItem {
                             }
                             builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData))).append("(").append(mLongData).append(")\n");
                         }
+                    }
+                }
+                if (ClzName.equals("MessageForReplyText")){
+                    HashSet<String> showText = new LinkedHashSet<>();
+                    Object replyTo = MField.GetField(ChatMsg,"mSourceMsgInfo");
+                    long replyToUin = MField.GetField(replyTo,"mSourceMsgSenderUin");
+                    long replyToU = MField.GetField(replyTo,"mSourceMsgToUin");
+                    showText.add("ReplyQQ:"+QQGroupUtils.Group_Get_Member_Name(""+replyToU,""+replyToUin)+"("+replyToUin+")");
+
+                    String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
+                    JSONObject atJson = new JSONObject(Extstr);
+                    String mStr = atJson.optString("troop_at_info_list");
+                    ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"),"getTroopMemberInfoFromExtrJson",ArrayList.class,new Class[]{String.class},mStr);
+                    String GroupUin = MField.GetField(ChatMsg,ChatMsg.getClass(),"frienduin",String.class);
+                    if (AtList3 != null){
+                        for (Object obj : AtList3){
+                            long mLongData = MField.GetField(obj,"uin",long.class);
+                            if (mLongData == 0){
+                                builder.append("AtQQ:全体成员\n");
+                                continue;
+                            }
+                            showText.add("AtQQ:"+QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData))+"("+mLongData+")");
+                        }
+                    }
+                    for (String text : showText){
+                        builder.append(text).append("\n");
                     }
                 }
 
@@ -91,7 +119,7 @@ public class ShowAtHook extends BaseHookItem implements BaseUiItem {
                     TextView tailView = mLayout.findViewById(QQEnvUtils.getTargetID("chat_item_tail_message"));
                     if (tailView != null){
                         String text = tailView.getText().toString();
-                        if (text.startsWith("AtQQ")){
+                        if (text.startsWith("AtQQ") || text.startsWith("ReplyQQ:")){
                             MMethod.CallMethod(mLayout,"setTailMessage",void.class,new Class[]{boolean.class,CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")},false,"",null);
                         }
                     }
