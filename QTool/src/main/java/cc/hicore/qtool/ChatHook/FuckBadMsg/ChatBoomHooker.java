@@ -129,7 +129,6 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
                     ArrayList list = MField.GetFirstField(param.thisObject,ArrayList.class);
                     if (list.size() == 0)list.add(MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemContent")));
                 }
-
             }
         });
 

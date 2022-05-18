@@ -16,6 +16,7 @@ public class HookEnv {
     public static String ExtraDataPath;
     public static String AppApkPath;
     public static String ToolApkPath;
+    public static String AppPath;
 
     public static Context AppContext;
     public static Application Application;

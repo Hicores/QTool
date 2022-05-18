@@ -5,6 +5,7 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 
 import java.lang.reflect.Field;
 
+import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
@@ -22,7 +23,13 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 XposedBridge.log("[QTool]initZygote may not be invoke, please check your Xposed Framework!");
                 return;
             }
-            InjectClassLoader();
+            HookEnv.AppPath = lpparam.appInfo.dataDir;
+            if (!BeforeConfig.getBoolean("Enable_SafeMode")){
+                InjectClassLoader();
+            }else {
+                XposedBridge.log("[QTool]Load for safe Mode");
+            }
+
             XposedBridge.log("[QTool]Load from " + lpparam.processName);
             FixSubLoadClass.loadZygote(cacheParam);
             FixSubLoadClass.loadPackage(lpparam);
@@ -44,7 +51,10 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 HookEnv.mLoader = lpparam.classLoader;
                 HookEnv.AppApkPath = lpparam.appInfo.processName;
 
-                EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
+                if (!BeforeConfig.getBoolean("Enable_SafeMode")){
+                    EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
+                }
+
 
                 EnvHook.HookForContext();
             }

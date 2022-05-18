@@ -13,6 +13,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 
 import java.io.File;
 
+import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
@@ -54,17 +55,22 @@ public class EnvHook {
 
 
                     //然后注入资源
-                    EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
-                    ResUtils.StartInject(HookEnv.AppContext);
-                    //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                    HookForDelay();
+                    if (!BeforeConfig.getBoolean("Enable_SafeMode")){
+                        EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
+                        ResUtils.StartInject(HookEnv.AppContext);
+                        //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
+                        HookForDelay();
 
-                    if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
-                        LogcatCatcher.startCatcherOnce();
+                        if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                            LogcatCatcher.startCatcherOnce();
+                        }
                     }
 
+
+
+
                     SettingInject.startInject();
-                    if (HookEnv.ExtraDataPath != null) {
+                    if (HookEnv.ExtraDataPath != null && !BeforeConfig.getBoolean("Enable_SafeMode")) {
 
                         HostInfo.Init();
                         InitActivityProxy();

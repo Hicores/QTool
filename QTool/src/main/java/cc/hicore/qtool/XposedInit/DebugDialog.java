@@ -13,10 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 
 @SuppressLint("ResourceType")
 public class DebugDialog {
@@ -75,6 +78,15 @@ public class DebugDialog {
         check.setText("阻止Java层的闪退(不一定总是有效)");
         check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Prevent_Crash_In_Java",isCheck));
         mRoot.addView(check);
+
+
+        check = new CheckBox(context);
+        check.setChecked(BeforeConfig.getBoolean("Enable_SafeMode"));
+        check.setTextColor(Color.BLACK);
+        check.setText("启用安全模式");
+        check.setOnCheckedChangeListener((v,isCheck)->BeforeConfig.putBoolean("Enable_SafeMode",isCheck));
+        mRoot.addView(check);
+
 
         LinearLayout crashBar = new LinearLayout(context);
         Button btnCrashMain = new Button(context);
