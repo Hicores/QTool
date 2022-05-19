@@ -145,7 +145,7 @@ public class QQMessageUtils {
     }
     private static final String fakeMsgXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
     private static final String replaceXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" m_resid=\"REPLACE\" m_fileName=\"587781278678697\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
-    public static void sendFakeMultiMsg(String fakeGroup,String fakeUin,Object messageRecord,Object session,String ShowTag){
+    public static void sendFakeMultiMsg(String fakeGroup,String fakeUin,List messageRecords,Object session,String ShowTag,String fakeName){
         try{
             Object multiRequest = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgRequest"));
             Object struct = QQMsgBuilder.build_struct(fakeMsgXML);
@@ -154,11 +154,16 @@ public class QQMessageUtils {
             MField.SetField(multiRequest,"e",structContainer);
 
             HashMap<String,String> uinContainer = new HashMap<>();
-            uinContainer.put(fakeUin, QQGroupUtils.Group_Get_Member_Name(fakeGroup,fakeUin));
+            if (!TextUtils.isEmpty(fakeName)){
+                uinContainer.put(fakeUin, fakeName);
+            }else {
+                uinContainer.put(fakeUin, QQGroupUtils.Group_Get_Member_Name(fakeGroup,fakeUin));
+            }
+
             MField.SetField(multiRequest,"c",uinContainer);
 
             List chatMessageContainer = new ArrayList();
-            chatMessageContainer.add(messageRecord);
+            chatMessageContainer.addAll(messageRecords);
             MField.SetField(multiRequest,"b",chatMessageContainer);
             MField.SetField(multiRequest,"a",session);
 

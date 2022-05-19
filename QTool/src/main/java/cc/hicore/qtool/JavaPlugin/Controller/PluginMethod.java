@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import cc.hicore.LogUtils.LogUtils;
@@ -312,11 +313,26 @@ public class PluginMethod {
         try{
             Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
             Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
-            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,packMsg,session,ShowTag);
+            List l = new ArrayList();
+            l.add(packMsg);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,l,session,ShowTag,"");
         }catch (Exception e){
             LogUtils.warning("sendPackMsg",""+e);
         }
-
-
+    }
+    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg,String ShowTag,String fakeName){
+        try{
+            Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
+            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
+            List l = new ArrayList();
+            l.add(packMsg);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,l,session,ShowTag,fakeName);
+        }catch (Exception e){
+            LogUtils.warning("sendPackMsg",""+e);
+        }
+    }
+    public void sendPackMsg(String GroupUin, String UserUin, String fakeGroup, String fakeUser, List messageList,String ShowTag,String fakeName){
+        Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
+        QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,messageList,session,ShowTag,fakeName);
     }
 }

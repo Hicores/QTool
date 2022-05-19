@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -268,7 +269,8 @@ public class PluginController {
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
         space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class),env));
-
+        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class, String.class),env));
+        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, List.class, String.class, String.class),env));
     }
 
     //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息
