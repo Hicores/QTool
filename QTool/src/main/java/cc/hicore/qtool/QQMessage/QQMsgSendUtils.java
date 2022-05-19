@@ -23,7 +23,7 @@ public class QQMsgSendUtils {
     private static final int TYPE_UNMUTE = 4;
     private static ExecutorService preSendExecutor = Executors.newSingleThreadExecutor();
 
-    private static class DecodeResult {
+    public static class DecodeResult {
         public int msgType;
         public String content;
         public String extra;
@@ -111,7 +111,7 @@ public class QQMsgSendUtils {
         QQMsgSender.sendMix(Session, mixed);
     }
 
-    private static ArrayList<DecodeResult> decodeForResult(String msg) {
+    public static ArrayList<DecodeResult> decodeForResult(String msg) {
         //TODO 解析Mute和UnMute为个人QQ和全体禁言解禁
         int searchPos = 0;
         int searchNext = 0;

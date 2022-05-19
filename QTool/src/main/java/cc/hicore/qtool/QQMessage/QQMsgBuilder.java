@@ -24,12 +24,27 @@ import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.EnvHook;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQMsgBuilder {
     private static final String TAG = "QQMsgBuilder";
+    private static final int TYPE_TEXT = 1;
+    private static final int TYPE_PIC = 2;
+    private static final int TYPE_AT = 3;
+    private static final int TYPE_MUTE = 4;
+    private static final int TYPE_UNMUTE = 4;
 
+    public static Object build_MessageForStruct(Object struct,Object session){
+        try{
+            return MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ShareMsgHelper"),"a",Classes.MessageRecord(),
+                    HookEnv.AppInterface,"",1,struct);
+        }catch (Exception e){
+            LogUtils.error("build_messgeforStruct",e);
+            return null;
+        }
+    }
     public static Object build_struct(String xml) {
         try {
             Method BuildStructMsg = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.TestStructMsg"), "a",
@@ -41,7 +56,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object build_arkapp(String json) {
         try {
             Method med = MMethod.FindMethod("com.tencent.mobileqq.data.ArkAppMessage", "fromAppXml",
@@ -55,7 +69,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object buildPic(Object _Session, String PicPath) {
         if (PicPath.toLowerCase(Locale.ROOT).startsWith("http")) {
             String CachePath = HookEnv.ExtraDataPath + "/Cache/" + NameUtils.GetRandomName();
@@ -66,7 +79,6 @@ public class QQMsgBuilder {
             return buildPic0(_Session, checkAndGetCastPic(PicPath));
         }
     }
-
     private static String checkAndGetCastPic(String Path) {
         File f = new File(Path);
         if (f.exists() && f.length() > 128) {
@@ -94,7 +106,6 @@ public class QQMsgBuilder {
         }
         return Path;
     }
-
     private static void checkAndCastPic(String Path) {
         File f = new File(Path);
         if (f.exists() && f.length() > 128) {
@@ -117,7 +128,6 @@ public class QQMsgBuilder {
             }
         }
     }
-
     public static Object buildPic0(Object _Session, String PicPath) {
         try {
 
@@ -139,7 +149,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object buildText(String GroupUin, String text) {
         try {
             Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
@@ -160,7 +169,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object buildAtInfo(String Useruin, String AtText, short StartPos) {
         try {
             Object AtInfoObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.AtTroopMemberInfo"));
@@ -180,7 +188,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object buildMix(Object session, ArrayList msgElems) {
         try {
             Method m =
@@ -203,7 +210,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object Copy_NewFlashChat(Object SourceChat) {
         try {
             Method ArkChatObj = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a",
@@ -224,7 +230,6 @@ public class QQMsgBuilder {
             return null;
         }
     }
-
     public static Object CopyToTYMessage(Object SourceObj) throws Exception {
         Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
                 int.class
@@ -259,7 +264,6 @@ public class QQMsgBuilder {
         );
         return finalRecord;
     }
-
     public static Object CopyToMacketFaceMessage(Object SourceObj) throws Exception {
         Object mMessageRecord = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"), "a",
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{int.class}, -2007);
@@ -279,7 +283,6 @@ public class QQMsgBuilder {
         );
         return finalRecord;
     }
-
     public static Object Copy_PokeMsg(Object raw) {
         try {
             Object PokeEmo = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.MessageForPokeEmo"));
@@ -314,5 +317,62 @@ public class QQMsgBuilder {
                 1,System.currentTimeMillis()/1000
         );
         return mMessageRecord;
+    }
+    public static Object Build_Fake_Mix(String fakeGroup,String fakeUin,String text) throws Exception {
+        ArrayList<QQMsgSendUtils.DecodeResult> msgList = QQMsgSendUtils.decodeForResult(text);
+        if (msgList.size() == 0)return null;
+
+        if (msgList.size() == 1) {
+            QQMsgSendUtils.DecodeResult result = msgList.get(0);
+            if (result.msgType == TYPE_PIC) {
+                Object record = QQMsgBuilder.buildPic(HookEnv.SessionInfo, result.content);
+                MField.SetField(record,"frienduin",fakeGroup);
+                MField.SetField(record,"senderuin",fakeUin);
+                return record;
+            } else if (result.msgType == TYPE_TEXT) {
+                Object record =QQMsgBuilder.buildText(fakeUin, result.content);
+                MField.SetField(record,"frienduin",fakeGroup);
+                MField.SetField(record,"senderuin",fakeUin);
+                return record;
+            }
+        }
+        boolean HasPic = false;
+        ArrayList records = new ArrayList();
+        ArrayList atInfo = new ArrayList();
+        int length = 0;
+        StringBuilder summary = new StringBuilder();
+        for (QQMsgSendUtils.DecodeResult result : msgList) {
+            if (result.msgType == TYPE_TEXT) {
+                length += result.content.length();
+                records.add(QQMsgBuilder.buildText(fakeGroup, result.content));
+                summary.append(result.content);
+            } else if (result.msgType == TYPE_PIC) {
+                records.add(QQMsgBuilder.buildPic(HookEnv.SessionInfo, result.content));
+                HasPic = true;
+            } else if (result.msgType == TYPE_AT) {
+                String atText;
+                if (result.content.equals("0")) {
+                    atText = "@全体成员 ";
+                } else {
+                    atText = "@" + QQGroupUtils.Group_Get_Member_Name(fakeGroup, result.content) + " ";
+                }
+                summary.append(atText);
+                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length));
+                length += atText.length();
+                records.add(QQMsgBuilder.buildText(fakeGroup, atText));
+            }
+        }
+
+        if (HasPic) {
+            Object mixRecord = QQMsgBuilder.buildMix(HookEnv.SessionInfo,records);
+            MField.SetField(mixRecord,"frienduin",fakeGroup);
+            MField.SetField(mixRecord,"senderuin",fakeUin);
+            return mixRecord;
+        } else {
+            Object record =QQMsgBuilder.buildText(fakeGroup, summary.toString());
+            MField.SetField(record,"frienduin",fakeGroup);
+            MField.SetField(record,"senderuin",fakeUin);
+            return record;
+        }
     }
 }

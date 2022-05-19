@@ -4,16 +4,22 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {
@@ -134,6 +140,44 @@ public class QQMessageUtils {
         } catch (Exception e) {
             return 0;
         }
+    }
+    private static final String fakeMsgXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
+    private static final String replaceXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" m_resid=\"REPLACE\" m_fileName=\"587781278678697\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
+    public static void sendFakeMultiMsg(String fakeGroup,String fakeUin,Object messageRecord,Object session){
+        try{
+            Object multiRequest = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgRequest"));
+            Object struct = QQMsgBuilder.build_struct(fakeMsgXML);
+            Object structContainer = QQMsgBuilder.build_MessageForStruct(struct,QQSessionUtils.Build_SessionInfo(fakeGroup,fakeUin));
+            MField.SetField(multiRequest,"d",struct);
+            MField.SetField(multiRequest,"e",structContainer);
+
+            HashMap<String,String> uinContainer = new HashMap<>();
+            uinContainer.put(fakeUin, QQGroupUtils.Group_Get_Member_Name(fakeGroup,fakeUin));
+            MField.SetField(multiRequest,"c",uinContainer);
+
+            List chatMessageContainer = new ArrayList();
+            chatMessageContainer.add(messageRecord);
+            MField.SetField(multiRequest,"b",chatMessageContainer);
+            MField.SetField(multiRequest,"a",session);
+
+            Object controller = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMultiMsgController",MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgController"));
+            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgController"),"b",void.class,new Class[]{MClass.loadClass("com.tencent.mobileqq.pic.UpCallBack$SendResult")}),param -> {
+                Object result = param.args[0];
+                param.setResult(null);
+                int code = MField.GetField(result,"a",int.class);
+                if (code == 0){
+                    String resid = MField.GetField(result,"f",String.class);
+                    String willSendResult = replaceXML.replace("REPLACE",resid);
+                    QQMsgSender.sendStruct(session,QQMsgBuilder.build_struct(willSendResult));
+                }
+            });
+            MMethod.CallMethodSingle(controller,"e",void.class,multiRequest);
+        }catch (Exception e){
+            LogUtils.error("sendFakeMultiMgs",e);
+        }
+
+
+
     }
 
 }

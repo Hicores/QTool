@@ -119,7 +119,6 @@ public class QQMsgSender {
         } catch (Exception e) {
             LogUtils.error("sendMix", e);
         }
-
     }
 
     public static void sendReply(Object _Session, Object replyRecord) {

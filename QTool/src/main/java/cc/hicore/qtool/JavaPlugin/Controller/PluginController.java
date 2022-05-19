@@ -267,6 +267,8 @@ public class PluginController {
         space.setMethod("HandleRequest", new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class), env));
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
+        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class),env));
+
     }
 
     //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息

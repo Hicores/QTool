@@ -61,6 +61,8 @@ public class LogOutputFile {
         if (!instance.containsKey(Level)) return;
         LogOutputFile out = instance.get(Level);
         out.print(Text);
+
+        XposedBridge.log(Text);
     }
 
     private boolean CheckIsAvailable() {

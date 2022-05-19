@@ -12,10 +12,12 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQTicketManager;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
+import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.QQTools.QQServletHelper;
+import de.robv.android.xposed.XposedBridge;
 
 //插件Api直接导出方法
 public class PluginMethod {
@@ -304,5 +306,17 @@ public class PluginMethod {
             chatMsg = msgData;
         } else return null;
         return QQServletHelper.waitForGetDownUrl(chatMsg);
+    }
+
+    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg){
+        try{
+            Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
+            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,packMsg,session);
+        }catch (Exception e){
+            LogUtils.warning("sendPackMsg",""+e);
+        }
+
+
     }
 }

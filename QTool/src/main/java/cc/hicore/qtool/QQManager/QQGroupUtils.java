@@ -152,7 +152,12 @@ public class QQGroupUtils {
             NewItem.Name = MField.GetField(GroupInfoR, "troopname");
             NewItem.Creator = MField.GetField(GroupInfoR, "troopowneruin");
             String admins = MField.GetField(GroupInfoR, "Administrator");
-            NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
+            if (admins != null){
+                NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
+            }else {
+                NewItem.adminList = new ArrayList<>();
+            }
+
             return NewItem;
         } catch (Exception e) {
             LogUtils.error("Group_Get_Info", e);
