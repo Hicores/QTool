@@ -267,7 +267,7 @@ public class PluginController {
         space.setMethod("HandleRequest", new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class), env));
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
-        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class),env));
+        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class),env));
 
     }
 
@@ -278,7 +278,7 @@ public class PluginController {
         Interpreter instance = info.Instance;
         instance.set("context", HookEnv.AppContext);
         instance.set("PluginID", BandVerifyID);
-        instance.set("SDKVer", 11);
+        instance.set("SDKVer", 12);
         instance.set("loader", HookEnv.mLoader);
         instance.set("AppPath", info.LocalPath);
         instance.set("MyUin", QQEnvUtils.getCurrentUin());

@@ -308,11 +308,11 @@ public class PluginMethod {
         return QQServletHelper.waitForGetDownUrl(chatMsg);
     }
 
-    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg){
+    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg,String ShowTag){
         try{
             Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
             Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
-            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,packMsg,session);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,packMsg,session,ShowTag);
         }catch (Exception e){
             LogUtils.warning("sendPackMsg",""+e);
         }
