@@ -47,7 +47,7 @@ public class TransShowUin extends BaseHookItem implements BaseUiItem {
                     View mtitleView = mRootView.findViewById(titleid);
                     if(mtitleView instanceof TextView) {
                         TextView mView = (TextView) mtitleView;
-                        mView.setText(""+ QQGroupUtils.Group_Get_Name(Troop).replace("\n","")+"("+Troop+")");
+                        mView.setText(""+ QQGroupUtils.GetTroopNameByContact(Troop).replace("\n","")+"("+Troop+")");
                         //mView.setWidth(8000);
                         mView.setOnClickListener(v1 -> QQEnvUtils.OpenTroopCard(Troop));
                     }

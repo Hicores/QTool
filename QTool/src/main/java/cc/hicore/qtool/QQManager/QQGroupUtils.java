@@ -165,6 +165,17 @@ public class QQGroupUtils {
         }
 
     }
+    public static String GetTroopNameByContact(String GroupUin) {
+        try{
+            String mStr = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ContactUtils"),
+                    "a",String.class,HookEnv.AppInterface,GroupUin,true);
+            return mStr;
+        }catch (Exception ex) {
+            LogUtils.error("GetTroopNameByContact",ex);
+            return GroupUin;
+        }
+
+    }
 
     public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin) {
         try {
