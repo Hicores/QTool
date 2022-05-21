@@ -1,5 +1,6 @@
 package cc.hicore.qtool.ChatHook.Repeater;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -7,10 +8,12 @@ import java.util.ArrayList;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
+import de.robv.android.xposed.XposedBridge;
 
 public class Repeater {
     public static void Repeat(Object Session, Object chatMsg) throws Exception {
@@ -28,7 +31,18 @@ public class Repeater {
                 if (AtList1 == null) AtList1 = AtList2;
                 if (AtList1 == null) AtList1 = AtList3;
                 String nowMsg = MField.GetField(chatMsg, "msg", String.class);
-                QQMsgSender.sendText(Session, nowMsg, AtList1);
+                ArrayList newAtList = new ArrayList();
+                try{
+                    JSONArray newArray = new JSONArray(mStr);
+                    for (int i=0;i<newArray.length();i++){
+                        JSONObject item = newArray.getJSONObject(i);
+                        newAtList.add(QQMsgBuilder.buildAtInfo(""+item.getLong("uin"),new String(new char[item.getInt("textLen")]), (short) item.getInt("startPos")));
+                    }
+                }catch (Exception e){
+
+                }
+
+                QQMsgSender.sendText(Session, nowMsg, newAtList);
                 break;
             }
             case "MessageForPic": {

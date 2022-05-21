@@ -49,7 +49,6 @@ public class QQSessionUtils {
             return null;
         }
     }
-
     public static String getGroupUin(Object Session) {
         try {
             int SessionType = (int) Table_Session_Field.isTroop().get(Session);
