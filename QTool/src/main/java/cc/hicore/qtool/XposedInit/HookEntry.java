@@ -54,18 +54,14 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 if (!BeforeConfig.getBoolean("Enable_SafeMode")){
                     EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
                 }
-
-
                 EnvHook.HookForContext();
             }
         }
-
         public static void loadZygote(StartupParam startupParam) {
             HookEnv.ToolApkPath = startupParam.modulePath;
             EzXHelperInit.INSTANCE.initZygote(startupParam);
         }
     }
-
     private static void InjectClassLoader() {
         try {
             ClassLoader currentLoader = HookEntry.class.getClassLoader();
