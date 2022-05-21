@@ -12,7 +12,7 @@ android {
         def defAppVer = "0.0.7"
         if (System.getenv("KEYSTORE_PATH") != null){
             versionName "${defAppVer}-CI-${System.getenv("CommitNumber")}"
-            versionCode System.getenv("CommitNumber")
+            versionCode ${System.getenv("CommitNumber")}
         }else {
             versionName "${defAppVer}"
             versionCode 999
