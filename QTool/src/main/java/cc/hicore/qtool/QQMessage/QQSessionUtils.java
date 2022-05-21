@@ -10,6 +10,8 @@ import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.QQGroupManager;
+import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
@@ -38,7 +40,8 @@ public class QQSessionUtils {
                 Table_Session_Field.isTroop().set(mObj, 1000);
                 Table_Session_Field.friendUin().set(mObj, UserUin);
                 Table_Session_Field.InTroopUin().set(mObj, GroupUin);
-                Table_Session_Field.TroopCode().set(mObj, GroupUin);
+                QQGroupUtils.GroupInfo groupInfo = QQGroupUtils.Group_Get_Info(GroupUin);
+                Table_Session_Field.TroopCode().set(mObj, groupInfo.Code);
             }
             return mObj;
         } catch (Exception e) {
