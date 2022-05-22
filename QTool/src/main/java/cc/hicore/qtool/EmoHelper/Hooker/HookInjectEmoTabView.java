@@ -131,6 +131,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                             try {
                                 View XEdit = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.widget.XEditTextEx"));
                                 ViewGroup parentLayout = (ViewGroup) XEdit.getParent();
+
                                 for (int i = 0; i < parentLayout.getChildCount(); i++) {
                                     View v = parentLayout.getChildAt(i);
                                     CharSequence content = v.getContentDescription();
@@ -231,7 +232,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 
 
-        m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "o", void.class, new Class[0]);
+        m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]);
         m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]);
 
         m[7] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder"), "a");

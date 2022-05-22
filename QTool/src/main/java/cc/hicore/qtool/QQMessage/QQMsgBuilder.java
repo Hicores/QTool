@@ -190,12 +190,15 @@ public class QQMsgBuilder {
     }
     public static Object buildMix(Object session, ArrayList msgElems) {
         try {
-            Method m =
-                    HostInfo.getVerCode() < 5670 ?
-                            MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class}) :
-                            MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "g", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class});
-            if (m == null)
-                m = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "h", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class});
+            Method m = null;
+            Class<?> clz = MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory");
+            for (Method ma : clz.getDeclaredMethods()){
+                if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))){
+                    m = ma;
+                    break;
+                }
+            }
+
             Object MixMessageRecord;
             if (QQSessionUtils.getSessionID(session) == 10014) {
                 MixMessageRecord = m.invoke(null, HookEnv.AppInterface, QQSessionUtils.getChannelID(session), QQEnvUtils.getCurrentUin(), 10014);

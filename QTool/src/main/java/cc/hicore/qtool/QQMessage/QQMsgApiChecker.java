@@ -282,13 +282,11 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean buildMix() {
         try {
-            Method m =
-                    HostInfo.getVerCode() < 5670 ?
-                            MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class}) :
-                            MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "g", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class});
-            if (m == null)
-                m = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "h", MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"), new Class[]{Classes.QQAppinterFace(), String.class, String.class, int.class});
-            return m != null;
+            Class<?> clz = MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory");
+            for (Method m : clz.getDeclaredMethods()){
+                if (m.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg")))return true;
+            }
+            return false;
         } catch (Exception e) {
             return false;
         }
