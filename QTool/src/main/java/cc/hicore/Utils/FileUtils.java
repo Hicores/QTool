@@ -44,6 +44,8 @@ public class FileUtils {
 
     public static void WriteToFile(String File, byte[] FileContent) {
         try {
+            File parent = new File(File).getParentFile();
+            if (!parent.exists()) parent.mkdirs();
             FileOutputStream fOut = new FileOutputStream(File);
             fOut.write(FileContent);
             fOut.close();

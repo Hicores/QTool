@@ -263,6 +263,7 @@ public class PluginController {
         space.setMethod("Toast", new BshMethod(PluginMethod.class.getMethod("Toast", Object.class), env));
         space.setMethod("GetActivity", new BshMethod(PluginMethod.class.getMethod("GetActivity"), env));
         space.setMethod("load", new BshMethod(PluginMethod.class.getMethod("load", String.class), env));
+        space.setMethod("loadJar",new BshMethod(PluginMethod.class.getMethod("loadJar", String.class),env));
         space.setMethod("setFlag", new BshMethod(PluginMethod.class.getMethod("setFlag", String.class), env));
         space.setMethod("IncludeFile", new BshMethod(PluginMethod.class.getMethod("IncludeFile", String.class), env));
         space.setMethod("HandleRequest", new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class), env));
@@ -280,7 +281,7 @@ public class PluginController {
         Interpreter instance = info.Instance;
         instance.set("context", HookEnv.AppContext);
         instance.set("PluginID", BandVerifyID);
-        instance.set("SDKVer", 12);
+        instance.set("SDKVer", 13);
         instance.set("loader", HookEnv.mLoader);
         instance.set("AppPath", info.LocalPath);
         instance.set("MyUin", QQEnvUtils.getCurrentUin());

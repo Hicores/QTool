@@ -335,4 +335,10 @@ public class PluginMethod {
         Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
         QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,messageList,session,ShowTag,fakeName);
     }
+    public ClassLoader loadJar(String JarPath) throws Exception {
+        if (!JarPath.startsWith("/")) {
+            JarPath = info_.LocalPath + "/" + JarPath;
+        }
+        return LoadJarHelper.loadJar(JarPath);
+    }
 }

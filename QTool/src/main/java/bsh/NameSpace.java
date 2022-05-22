@@ -38,6 +38,9 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
+import cc.hicore.qtool.JavaPlugin.Controller.LoadJarHelper;
+import de.robv.android.xposed.XposedBridge;
+
 /**
     A namespace	in which methods, variables, and imports (class names) live.  
 	This is package public because it is used in the implementation of some 
@@ -1278,6 +1281,10 @@ public class NameSpace
 			if ( c == null )
 				c = getImportedClassImpl( name );
 
+			if (c == null){
+
+			}
+
 			// if found as imported also cache it
 			if ( c != null ) {
 				cacheClass( name, c );
@@ -1386,7 +1393,19 @@ public class NameSpace
 
 	private Class classForName( String name ) 
 	{
-		return getClassManager().classForName( name );
+		try{
+			Class clz = getClassManager().classForName( name );
+			if (clz != null)return clz;
+		}catch (Exception e){
+
+		}
+		try{
+			Class clz = LoadJarHelper.searchForClass(name);
+			if (clz != null)return clz;
+		}catch (Exception e){
+
+		}
+		return null;
 	}
 
 	/**
