@@ -41,7 +41,11 @@ public class QQSessionUtils {
                 Table_Session_Field.friendUin().set(mObj, UserUin);
                 Table_Session_Field.InTroopUin().set(mObj, GroupUin);
                 QQGroupUtils.GroupInfo groupInfo = QQGroupUtils.Group_Get_Info(GroupUin);
-                Table_Session_Field.TroopCode().set(mObj, groupInfo.Code);
+                if (groupInfo == null || TextUtils.isEmpty(groupInfo.Code)){
+                    Table_Session_Field.TroopCode().set(mObj, GroupUin);
+                }else {
+                    Table_Session_Field.TroopCode().set(mObj, groupInfo.Code);
+                }
             }
             return mObj;
         } catch (Exception e) {

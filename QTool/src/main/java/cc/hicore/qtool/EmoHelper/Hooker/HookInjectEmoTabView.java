@@ -52,6 +52,7 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
             if (l.findViewById(11223366)!=null)return;
             View v = l.getChildAt(2);
             if (IsEnable) {
+                if (v == null)return;
                 ResUtils.StartInject(v.getContext());
                 ImageView image = new ImageView(v.getContext());
                 image.setImageResource(R.drawable.huaji);
