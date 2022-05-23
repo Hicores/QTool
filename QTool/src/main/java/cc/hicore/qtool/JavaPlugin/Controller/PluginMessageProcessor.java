@@ -12,9 +12,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.Utils.DebugUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
@@ -172,9 +174,11 @@ public class PluginMessageProcessor {
                 boolean IsOnline = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
                 if (IsOnline) {
                     info.GroupUin = MField.GetField(msg, "senderuin", String.class);
+                    info.GroupUin = QQGroupUtils.convertGroupCodeToUin(info.GroupUin);
                     info.UserUin = QQEnvUtils.getCurrentUin();
                 } else {
                     info.GroupUin = MField.GetField(msg, "senderuin", String.class);
+                    info.GroupUin = QQGroupUtils.convertGroupCodeToUin(info.GroupUin);
                     info.UserUin = MField.GetField(msg, "frienduin", String.class);
                 }
                 return info;

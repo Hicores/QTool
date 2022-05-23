@@ -139,6 +139,16 @@ public class QQGroupUtils {
         }
 
     }
+    public static String convertGroupCodeToUin(String Code){
+        try{
+            Object infoImpl = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
+            String result = MMethod.CallMethodSingle(infoImpl,"getTroopUinByTroopCode",String.class,Code);
+            if (result != null)return  result;
+        }catch (Exception e){
+
+        }
+        return Code;
+    }
 
     public static GroupInfo Group_Get_Info(String GroupUin) {
         try {
