@@ -23,20 +23,9 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.VoiceHelper.Panel.VoiceProvider;
 
 public class OnlineBundleHelper {
-    public static void createBundle(String Name) {
-        String key = requestForRndKey();
-        String URL = "https://qtool.haonb.cc/VoiceBundle/Create?name=" + URLEncoder.encode(Name) + "&key=" + key
-                + "&uin=" + QQEnvUtils.getCurrentUin();
-        String ret = HttpUtils.getContent(URL);
-        if ("success".equals(ret)) {
-            Utils.ShowToast("已创建,可以通过长按本地语音来添加语音");
-        } else {
-            Utils.ShowToastL("网络异常");
-        }
-    }
 
-    public static void RequestUpload(String Name, String LocalPath, String ToBundleID) throws Exception {
-        String req = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/RequestUpload?ID=" + ToBundleID + "&Key=" + requestForRndKey() + "&Name=" + Name);
+    public static void RequestUpload(String Name, String LocalPath) throws Exception {
+        String req = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/RequestUpload?Name=" + Name);
         JSONObject newJson = new JSONObject(req);
         if (newJson.optInt("code") == 1) {
             Utils.ShowToastL("未能成功上传:" + newJson.optString("msg"));
@@ -47,7 +36,6 @@ public class OnlineBundleHelper {
         HttpURLConnection conn = (HttpURLConnection) new URL("https://qtool.haonb.cc/VoiceBundle/upload").openConnection();
         conn.setDoOutput(true);
         conn.setRequestProperty("key", key);
-        conn.setRequestProperty("accessKey", requestForRndKey());
         OutputStream out = conn.getOutputStream();
 
         out.write(FileUtils.ReadFile(new File(LocalPath)));
@@ -62,47 +50,6 @@ public class OnlineBundleHelper {
             return;
         }
     }
-
-    public static ArrayList<VoiceProvider.FileInfo> getAllBundle() {
-        try {
-            ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
-            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/getList");
-            JSONObject mJson = new JSONObject(Content);
-            JSONArray mArray = mJson.getJSONArray("data");
-            for (int i = 0; i < mArray.length(); i++) {
-                JSONObject item = mArray.getJSONObject(i);
-                VoiceProvider.FileInfo info = new VoiceProvider.FileInfo();
-                info.type = 5;
-                info.Name = item.getString("name");
-                info.Path = item.getString("id");
-                retInfo.add(info);
-            }
-            return retInfo;
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
-
-    public static ArrayList<VoiceProvider.FileInfo> getBundleContent(String BundleID) {
-        try {
-            ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
-            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo?id=" + BundleID);
-            JSONObject mJson = new JSONObject(Content);
-            JSONArray mArray = mJson.getJSONArray("data");
-            for (int i = 0; i < mArray.length(); i++) {
-                JSONObject item = mArray.getJSONObject(i);
-                VoiceProvider.FileInfo info = new VoiceProvider.FileInfo();
-                info.type = 6;
-                info.Name = item.getString("Name");
-                info.Path = "https://cdn.haonb.cc/" + item.getString("URI");
-                retInfo.add(info);
-            }
-            return retInfo;
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
-
     public static ArrayList<VoiceProvider.FileInfo> searchForName(String Name) {
         try {
             ArrayList<VoiceProvider.FileInfo> retInfo = new ArrayList<>();
@@ -121,15 +68,6 @@ public class OnlineBundleHelper {
         } catch (Exception e) {
             return new ArrayList<>();
         }
-    }
-
-    public static String requestForRndKey() {
-        String rndKey = FileUtils.ReadFileString(HookEnv.ExtraDataPath + "配置文件目录/VoiceToken");
-        if (TextUtils.isEmpty(rndKey)) {
-            rndKey = NameUtils.getRandomString(64);
-            FileUtils.WriteToFile(HookEnv.ExtraDataPath + "配置文件目录/VoiceToken", rndKey);
-        }
-        return rndKey;
     }
 }
 

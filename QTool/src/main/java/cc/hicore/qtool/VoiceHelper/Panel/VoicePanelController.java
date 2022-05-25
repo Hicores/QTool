@@ -99,7 +99,7 @@ public final class VoicePanelController extends BottomPopupView {
                     mItem.setOnLongClickListener(v -> {
                         new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle("选择操作")
-                                .setItems(new String[]{"删除", "添加到语音包"}, (dialog, which) -> {
+                                .setItems(new String[]{"删除", "上传"}, (dialog, which) -> {
                                     if (which == 0) {
                                         FileUtils.deleteFile(new File(fileInfo.Path));
                                         UpdateProviderDate();
@@ -120,7 +120,7 @@ public final class VoicePanelController extends BottomPopupView {
                     mItem.setOnLongClickListener(v->{
                         new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle("选择操作")
-                                .setItems(new String[]{"添加到语音包"}, (dialog, which) -> {
+                                .setItems(new String[]{"上传"}, (dialog, which) -> {
                                     if (which == 0) {
                                         AddVoiceToPacket(searchVoices(fileInfo.Path));
                                     }
@@ -234,17 +234,6 @@ public final class VoicePanelController extends BottomPopupView {
             ControllerMode = 1;
             UpdateControlData();
         });
-
-        imageLocalFile = new ImageView(getContext());
-        imageLocalFile.setImageResource(R.drawable.voice_upload);
-        param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 25), Utils.dip2px(getContext(), 25));
-        param.setMargins(Utils.dip2px(getContext(), 12), 10, Utils.dip2sp(getContext(), 5), 10);
-        topBar.addView(imageLocalFile, param);
-
-        imageLocalFile.setOnClickListener(v -> {
-            ControllerMode = 2;
-            UpdateControlData();
-        });
     }
 
     public void UpdateProviderDate() {
@@ -280,281 +269,36 @@ public final class VoicePanelController extends BottomPopupView {
         } else if (ControllerMode == 1) {
             provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE);
             UpdateProviderDate();
-        } else if (ControllerMode == 2) {
-            UpdateUploadView();
         }
     }
 
     private void AddVoiceToPacket(ArrayList<String> Paths) {
-        ProgressDialog dialog = new ProgressDialog(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
-        dialog.setTitle("加载中..");
-        dialog.setMessage("正在获取可用列表...");
-        dialog.setCancelable(false);
-        dialog.show();
-        new Thread(() -> {
-            String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundle?key=" + OnlineBundleHelper.requestForRndKey());
-            new Handler(Looper.getMainLooper())
-                    .post(() -> {
+        new Handler(Looper.getMainLooper())
+                .post(() -> {
+                    ProgressDialog uploadProgress = new ProgressDialog(getContext(), 3);
+                    uploadProgress.setTitle("正在处理...");
+                    uploadProgress.setMessage("正在上传....");
+                    uploadProgress.setCancelable(false);
+                    uploadProgress.show();
+                    new Thread(() -> {
                         try {
-
-                            JSONObject json = new JSONObject(Content);
-                            JSONArray mArray = json.getJSONArray("data");
-                            ArrayList<String> bundleList = new ArrayList<>();
-                            ArrayList<String> idList = new ArrayList<>();
-
-                            for (int i = 0; i < mArray.length(); i++) {
-                                JSONObject item = mArray.getJSONObject(i);
-                                bundleList.add(item.getString("name"));
-                                idList.add(item.getString("id"));
+                            int sumAll = Paths.size();
+                            int curr = 0;
+                            for (String Path : Paths){
+                                OnlineBundleHelper.RequestUpload(new File(Path).getName(), Path);
+                                curr++;
+                                int finalCurr = curr;
+                                new Handler(Looper.getMainLooper()).post(()->uploadProgress.setMessage("正在上传("+ finalCurr +"/"+sumAll+")..."));
                             }
-
-                            new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                                    .setItems(bundleList.toArray(new String[0]), (dialog1, which) -> {
-                                        String Bundle = idList.get(which);
-                                        ProgressDialog uploadProgress = new ProgressDialog(getContext(), 3);
-                                        uploadProgress.setTitle("正在处理...");
-                                        uploadProgress.setMessage("正在上传....");
-                                        uploadProgress.setCancelable(false);
-                                        uploadProgress.show();
-                                        new Thread(() -> {
-                                            try {
-                                                int sumAll = Paths.size();
-                                                int curr = 0;
-                                                for (String Path : Paths){
-                                                    OnlineBundleHelper.RequestUpload(new File(Path).getName(), Path, Bundle);
-                                                    curr++;
-                                                    int finalCurr = curr;
-                                                    new Handler(Looper.getMainLooper()).post(()->uploadProgress.setMessage("正在上传("+ finalCurr +"/"+sumAll+")..."));
-                                                }
-                                                Utils.ShowToast("上传结束");
-                                            } catch (Exception e) {
-                                                Utils.ShowToastL("发生错误:\n" + e);
-
-                                            } finally {
-                                                new Handler(Looper.getMainLooper()).post(uploadProgress::dismiss);
-                                            }
-                                        }).start();
-                                    }).setTitle("选择添加"+ Paths.size()+"个语音").show();
+                            Utils.ShowToast("上传结束");
                         } catch (Exception e) {
                             Utils.ShowToastL("发生错误:\n" + e);
                         } finally {
-                            dialog.dismiss();
+                            new Handler(Looper.getMainLooper()).post(uploadProgress::dismiss);
                         }
-                    });
-
-        }).start();
+                    }).start();
+                });
     }
-
-    private void PreLoadBundleList() {
-        ProgressDialog mDialog = new ProgressDialog(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
-        mDialog.setTitle("正在加载..");
-        mDialog.setMessage("正在加载列表...");
-        mDialog.setCancelable(false);
-        mDialog.show();
-        new Thread(() -> {
-            try {
-                UpdateList();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                new Handler(Looper.getMainLooper()).post(mDialog::dismiss);
-            }
-        }).start();
-    }
-
-    LinearLayout EDBar;
-
-    private void UpdateUploadView() {
-        recyclerView.setVisibility(GONE);
-        mFrame.setVisibility(VISIBLE);
-        mFrame.removeAllViews();
-        View mRoot = LayoutInflater.from(getContext()).inflate(R.layout.voice_edit_bundle, null);
-        mFrame.addView(mRoot);
-
-        EDBar = mRoot.findViewById(R.id.EdBar);
-
-        mRoot.findViewById(R.id.FlushList).setOnClickListener(v -> {
-            PreLoadBundleList();
-        });
-        mRoot.findViewById(R.id.CreateNewBundle).setOnClickListener(v -> {
-            EditText inputName = new EditText(getContext());
-            inputName.setHint("输入名字");
-
-            new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle("请输入名字")
-                    .setView(inputName)
-                    .setNeutralButton("确定创建", (dialog, which) -> {
-                        String name = inputName.getText().toString();
-                        if (name.length() < 4) {
-                            Utils.ShowToastL("名字不能少于4个字");
-                            return;
-                        }
-                        if (name.length() > 20) {
-                            Utils.ShowToastL("名字不能多于20个字");
-                            return;
-                        }
-                        OnlineBundleHelper.createBundle(name);
-                        new Thread(this::UpdateList).start();
-                    }).show();
-        });
-
-        PreLoadBundleList();
-    }
-
-    private void UpdateList() {
-        String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundle?key=" + OnlineBundleHelper.requestForRndKey());
-        new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                EDBar.removeAllViews();
-                LayoutInflater inflater = LayoutInflater.from(EDBar.getContext());
-                JSONObject NewObj = new JSONObject(Content);
-                JSONArray mArray = NewObj.getJSONArray("data");
-                for (int i = 0; i < mArray.length(); i++) {
-                    JSONObject item = mArray.getJSONObject(i);
-                    RelativeLayout mLayout = (RelativeLayout) inflater.inflate(R.layout.voice_panel_ed_bundle, null);
-                    ImageView image = mLayout.findViewById(R.id.mIcon);
-                    image.setImageResource(R.drawable.folder);
-
-                    TextView name = mLayout.findViewById(R.id.voice_name);
-                    if (item.getBoolean("IsRequestShow")) {
-                        if (item.getBoolean("IsVerify")) {
-                            name.setText("(通过)" + item.getString("name"));
-                        } else {
-                            name.setText("(审核中)" + item.getString("name"));
-                        }
-                    } else {
-                        name.setText(item.getString("name"));
-                    }
-
-
-                    name.setOnClickListener(v -> {
-                        ProgressDialog mDialog = new ProgressDialog(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT);
-                        mDialog.setTitle("正在加载..");
-                        mDialog.setMessage("正在加载列表...");
-                        mDialog.setCancelable(false);
-                        mDialog.show();
-                        new Thread(() -> {
-                            try {
-                                UpdateChcek(item.getString("id"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } finally {
-                                new Handler(Looper.getMainLooper()).post(() -> mDialog.dismiss());
-                            }
-                        }).start();
-                    });
-
-                    ImageView shareButton = mLayout.findViewById(R.id.ShareButton);
-                    shareButton.setOnClickListener(v -> {
-                        new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                                .setTitle("确认分享?")
-                                .setMessage("分享后将进行审核,审核通过后其他人即可在在线语音列表显示,通过后也可以继续上传语音到该包中")
-                                .setNeutralButton("确定分享", (dialog, which) -> {
-                                    try {
-                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/RequestShare?id=" + item.getString("id")
-                                                + "&key=" + OnlineBundleHelper.requestForRndKey());
-                                        JSONObject mJson = new JSONObject(ret);
-                                        Utils.ShowToastL("分享结果:" + mJson.optString("msg"));
-                                        new Thread(this::UpdateList).start();
-                                    } catch (Exception e) {
-                                        Utils.ShowToastL("发生错误:" + e);
-                                    }
-
-                                }).setNegativeButton("关闭", (dialog, which) -> {
-
-                        }).show();
-                    });
-
-                    ImageView delete = mLayout.findViewById(R.id.deleteButton);
-                    delete.setOnClickListener(v -> {
-                        new AlertDialog.Builder(getContext(), 3)
-                                .setTitle("确认操作")
-                                .setMessage("是否删除?")
-                                .setNeutralButton("确定删除", (dialog, which) -> {
-                                    try {
-                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/removeBundle?BundleID=" + item.getString("id")
-                                                + "&key=" + OnlineBundleHelper.requestForRndKey());
-                                        JSONObject mJson = new JSONObject(ret);
-                                        Utils.ShowToast(mJson.optString("msg"));
-
-                                        PreLoadBundleList();
-                                    } catch (Exception e) {
-                                        Utils.ShowToastL("发生错误:" + e);
-                                    }
-                                }).setNegativeButton("关闭", (dialog, which) -> {
-
-                        }).show();
-                    });
-
-                    EDBar.addView(mLayout);
-                }
-            } catch (Exception e) {
-                Utils.ShowToastL("发生错误:\n" + e);
-            }
-        });
-    }
-
-    private void UpdateChcek(String BundleID) {
-        String Content = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/GetBundleInfo?id=" + BundleID);
-        new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                EDBar.removeAllViews();
-                LayoutInflater inflater = LayoutInflater.from(EDBar.getContext());
-                JSONObject NewObj = new JSONObject(Content);
-                JSONArray mArray = NewObj.getJSONArray("data");
-                for (int i = 0; i < mArray.length(); i++) {
-                    JSONObject item = mArray.getJSONObject(i);
-                    RelativeLayout mLayout = (RelativeLayout) inflater.inflate(R.layout.voice_panel_ed_bundle, null);
-                    ImageView image = mLayout.findViewById(R.id.mIcon);
-                    image.setImageResource(R.drawable.voice_item);
-
-                    TextView name = mLayout.findViewById(R.id.voice_name);
-                    name.setText(item.getString("Name"));
-                    ImageView shareButton = mLayout.findViewById(R.id.ShareButton);
-                    shareButton.setVisibility(GONE);
-
-                    ImageView delete = mLayout.findViewById(R.id.deleteButton);
-                    delete.setOnClickListener(v -> {
-                        new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                                .setTitle("确认操作")
-                                .setMessage("是否删除?")
-                                .setNeutralButton("确定删除", (dialog, which) -> {
-                                    try {
-                                        String ret = HttpUtils.getContent("https://qtool.haonb.cc/VoiceBundle/removeVoice?VoiceID=" + item.getString("Id")
-                                                + "&key=" + OnlineBundleHelper.requestForRndKey());
-                                        JSONObject mJson = new JSONObject(ret);
-                                        Utils.ShowToast(mJson.optString("msg"));
-
-                                        ProgressDialog mDialog = new ProgressDialog(getContext(), 3);
-                                        mDialog.setTitle("正在加载..");
-                                        mDialog.setMessage("正在加载列表...");
-                                        mDialog.setCancelable(false);
-                                        mDialog.show();
-                                        new Thread(() -> {
-                                            try {
-                                                UpdateChcek(BundleID);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            } finally {
-                                                new Handler(Looper.getMainLooper()).post(() -> mDialog.dismiss());
-                                            }
-                                        }).start();
-                                    } catch (Exception e) {
-                                        Utils.ShowToastL("发生错误:" + e);
-                                    }
-                                }).setNegativeButton("关闭", (dialog, which) -> {
-
-                        }).show();
-                    });
-
-                    EDBar.addView(mLayout);
-                }
-            } catch (Exception e) {
-                Utils.ShowToastL("发生错误:\n" + e);
-            }
-        });
-    }
-
     public VoicePanelController(@NonNull Context context) {
         super(context);
     }

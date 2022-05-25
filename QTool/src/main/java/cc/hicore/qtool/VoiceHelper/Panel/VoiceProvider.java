@@ -51,10 +51,6 @@ public class VoiceProvider {
         } else if (Path.startsWith(PROVIDER_LOCAL_SEARCH)) {
             String searchName = Path.substring(PROVIDER_LOCAL_SEARCH.length());
             return LocalVoiceSearchHelper.searchForName(HookEnv.ExtraDataPath + "Voice/", searchName);
-        } else if (Path.startsWith(PROVIDER_ONLINE)) {
-            String ControlCode = Path.substring(PROVIDER_ONLINE.length());
-            if (TextUtils.isEmpty(ControlCode)) return OnlineBundleHelper.getAllBundle();
-            else return OnlineBundleHelper.getBundleContent(ControlCode);
         } else if (Path.startsWith(PROVIDER_ONLINE_SEARCH)) {
             String ControlCode = Path.substring(PROVIDER_ONLINE_SEARCH.length());
             return OnlineBundleHelper.searchForName(ControlCode);
