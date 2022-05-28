@@ -41,6 +41,15 @@ jobs:
           cat << ENDOFCOMMIT > ./QTool/build/outputs/apk/release/Commit信息.txt
           ${{ github.event.head_commit.message }}
           ENDOFCOMMIT
+      - name: mkd
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            mkdir ${{ secrets.DEPLOY_DEST }}QTool-CI-${{ github.run_number }}/
+          host: ${{ secrets.SERVER_IP }}
+          user: ${{ secrets.SERVER_USERNAME }}
+          port: 22
+          pass: ${{ secrets.SERVER_PASSWORD }}
       - name: Remote SSH Pusblish
         uses: nerd4ever/ssh-action@master
         with:
