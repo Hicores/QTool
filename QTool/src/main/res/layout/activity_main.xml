@@ -25,26 +25,6 @@
             android:background="@drawable/tool" />
     </LinearLayout>
     <LinearLayout
-        android:layout_marginTop="40dp"
-        android:layout_width="300dp"
-        android:background="@drawable/itemback"
-        android:gravity="center_vertical"
-        android:layout_height="80dp">
-        <ImageView
-            android:layout_marginLeft="30dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/alarm" />
-        <TextView
-            android:layout_marginLeft="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="测试版本,请等待完善"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="#cc3333"/>
-    </LinearLayout>
-    <LinearLayout
         android:layout_marginTop="20dp"
         android:layout_width="300dp"
         android:background="@drawable/itemback"
