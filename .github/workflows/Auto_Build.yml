@@ -42,7 +42,7 @@ jobs:
           ${{ github.event.head_commit.message }}
           ENDOFCOMMIT
       - name: Remote SSH Pusblish
-        uses: nerd4ever/ssh-action@0.1.0
+        uses: fifsky/ssh-action@master
         with:
           from: ./QTool/build/outputs/apk/release/
           to:  ${{ secrets.DEPLOY_DEST }}QTool-CI-${{ github.run_number }}/
