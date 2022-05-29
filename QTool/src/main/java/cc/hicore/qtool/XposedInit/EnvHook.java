@@ -29,13 +29,15 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class EnvHook {
     private static final String TAG = "EnvHook";
+    private static volatile boolean IsInit = false;
 
     public static void HookForContext() {
         //由于很多环境的初始化都需要Context来进行,所有这里选择直接Hook获取Context再进行初始化
-        XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "onCreate", new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (IsInit)return;
+                IsInit = true;
                 if (HookEnv.IsMainProcess) {
                     XposedBridge.log("[QTool]BaseHook Start");
                 }
@@ -43,7 +45,7 @@ public class EnvHook {
                 long timeStart = System.currentTimeMillis();
                 try {
                     HookEnv.Application = (Application) param.thisObject;
-                    HookEnv.AppContext = (Context) param.args[0];
+                    HookEnv.AppContext = HookEnv.Application.getApplicationContext();
 
                     //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                     HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
