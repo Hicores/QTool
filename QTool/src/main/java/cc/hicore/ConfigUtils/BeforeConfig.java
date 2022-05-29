@@ -27,7 +27,7 @@ public class BeforeConfig {
         try{
             jsonObject.put(Name,value);
             FileUtils.WriteToFile(path,jsonObject.toString());
-        }catch (Exception e){
+        }catch (Exception ignored){
 
         }
 

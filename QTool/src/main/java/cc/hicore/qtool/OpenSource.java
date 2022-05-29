@@ -36,10 +36,10 @@ public class OpenSource extends AppCompatActivity {
         mLists = findViewById(R.id.OpenSourceList);
 
         createItem("beanshell@2.0b6", "https://github.com/beanshell/beanshell");
-        createItem("EzXHelper@0.8.0", "https://github.com/KyuubiRan/EzXHelper");
+        createItem("EzXHelper@0.8.8", "https://github.com/KyuubiRan/EzXHelper");
         createItem("XPopup@2.7.6", "https://github.com/li-xiaojun/XPopup");
         createItem("EasyAdapter@1.2.7", "https://github.com/li-xiaojun/EasyAdapter");
-        createItem("glide@4.13.0", "https://github.com/bumptech/glide");
+        createItem("glide@4.13.2", "https://github.com/bumptech/glide");
         createItem("appcenter@4.4.3", "https://github.com/microsoft/appcenter-sdk-android");
     }
 

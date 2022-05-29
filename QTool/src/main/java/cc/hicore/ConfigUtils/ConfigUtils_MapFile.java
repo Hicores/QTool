@@ -1,5 +1,7 @@
 package cc.hicore.ConfigUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -13,6 +15,7 @@ import cc.hicore.qtool.HookEnv;
 public class ConfigUtils_MapFile {
     private static final HashMap<String, MappedByteBuffer> bufferCache = new HashMap<>();
 
+    @NotNull
     public static synchronized String ReadFile(String ItemName) {
         try {
             MappedByteBuffer buffer = bufferCache.get(ItemName);
@@ -34,7 +37,7 @@ public class ConfigUtils_MapFile {
             }
             return write.toString();
         } catch (Exception e) {
-            return null;
+            return "";
         }
 
     }
