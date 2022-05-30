@@ -148,7 +148,7 @@ public class QQMsgSendUtils {
                             if (Command.equals("PicUrl")) {
                                 NewResult = new DecodeResult();
                                 NewResult.msgType = TYPE_PIC;
-                                NewResult.content = cut[1];
+                                NewResult.content = content.substring(7);
                                 elems.add(NewResult);
                             } else if (Command.equals("AtQQ")) {
                                 NewResult = new DecodeResult();
