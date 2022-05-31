@@ -13,7 +13,12 @@ public class MClass {
         Class<?> clz = clzMap.get(ClassName);
         if (clz != null) return clz;
         try {
-            clz = XposedHelpers.findClass(ClassName, HookEnv.mLoader);
+            if (HookEnv.isInSubMode){
+                clz = HookEnv.SubClassLoader.loadClass(ClassName);
+            }else {
+                clz = XposedHelpers.findClass(ClassName, HookEnv.mLoader);
+            }
+
             clzMap.put(ClassName, clz);
             return clz;
         } catch (Throwable e) {

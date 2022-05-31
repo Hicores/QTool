@@ -6,7 +6,9 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import java.lang.reflect.Field;
 
 import cc.hicore.ConfigUtils.BeforeConfig;
+import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.SubLoader.SubIniter;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XposedBridge;
@@ -23,16 +25,23 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 XposedBridge.log("[QTool]initZygote may not be invoke, please check your Xposed Framework!");
                 return;
             }
+            HookEnv.isInSubMode = false;
             HookEnv.AppPath = lpparam.appInfo.dataDir;
-            if (!BeforeConfig.getBoolean("Enable_SafeMode")){
-                InjectClassLoader();
-            }else {
-                XposedBridge.log("[QTool]Load for safe Mode");
+            HookEnv.mLoader = lpparam.classLoader;
+            if (BeforeConfig.getBoolean("Enable_SubMode")){
+                if (BeforeConfig.getInt("Enable_VerCode") != BuildConfig.VERSION_CODE){
+                    BeforeConfig.putBoolean("Enable_SubMode",false);
+                    BeforeConfig.putInt("Enable_VerCode", 0);
+                }else {
+                    if (SubIniter.initSubModule(cacheParam,lpparam))return;
+                }
+
             }
 
-            XposedBridge.log("[QTool]Load from " + lpparam.processName);
+            XposedBridge.log("[QTool]Load from normal mode.");
+
             FixSubLoadClass.loadZygote(cacheParam);
-            FixSubLoadClass.loadPackage(lpparam);
+            FixSubLoadClass.loadPackage(lpparam,null);
         }
 
 
@@ -43,9 +52,11 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         cacheParam = startupParam;
     }
 
-    private static class FixSubLoadClass {
-        public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
+    public static class FixSubLoadClass {
+        public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam,ClassLoader subClassLoader) {
             if (lpparam.packageName.equals("com.tencent.mobileqq")) {
+                HookEnv.AppPath = lpparam.appInfo.dataDir;
+                HookEnv.SubClassLoader = subClassLoader;
                 HookEnv.IsMainProcess = lpparam.processName.equals("com.tencent.mobileqq");
                 HookEnv.ProcessName = lpparam.processName;
                 HookEnv.mLoader = lpparam.classLoader;

@@ -7,6 +7,7 @@ import android.os.IBinder;
 
 import java.lang.reflect.Method;
 
+import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.ServerUtils;
@@ -27,6 +28,18 @@ public class BeforeCheck {
                 new AlertDialog.Builder(act, 3)
                         .setTitle("QTool提示")
                         .setMessage("在模块初始化过程中检测到一个或多个严重错误,模块可能无法正常工作:\n" + checkResult.toString())
+                        .setNegativeButton("确定", (dialog, which) -> {
+
+                        }).show();
+            }
+        }
+
+        if (BeforeConfig.getBoolean("Enable_SubMode")){
+            if (HookEnv.loadFailed.length() > 0){
+                Activity act = Utils.getTopActivity();
+                new AlertDialog.Builder(act, 3)
+                        .setTitle("QTool提示")
+                        .setMessage("当前开启了内更新模式,但是无法加载更新后的数据,请尝试重新更新,如果仍然无法更新请关闭内更新,然后更新apk来更新模块版本:\n" + HookEnv.loadFailed.toString())
                         .setNegativeButton("确定", (dialog, which) -> {
 
                         }).show();

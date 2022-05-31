@@ -29,4 +29,8 @@ public class HookEnv {
 
     public static String New_Version;
     public static HandlerThread tasker = new HandlerThread("QTool_Handler");
+    public static boolean isInSubMode = true;
+    public static ClassLoader SubClassLoader;
+
+    public static StringBuilder loadFailed = new StringBuilder();
 }

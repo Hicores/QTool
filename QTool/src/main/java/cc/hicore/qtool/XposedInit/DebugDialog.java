@@ -16,6 +16,7 @@ import android.widget.TextView;
 import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
+import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
@@ -85,6 +86,21 @@ public class DebugDialog {
         check.setTextColor(Color.BLACK);
         check.setText("启用安全模式");
         check.setOnCheckedChangeListener((v,isCheck)->BeforeConfig.putBoolean("Enable_SafeMode",isCheck));
+        mRoot.addView(check);
+
+        check = new CheckBox(context);
+        check.setChecked(BeforeConfig.getBoolean("Enable_SubMode"));
+        check.setTextColor(Color.BLACK);
+        check.setText("启用内更新模式");
+        check.setOnCheckedChangeListener((v,isCheck)->{
+            BeforeConfig.putBoolean("Enable_SubMode",isCheck);
+            if (v.isPressed() && isCheck){
+                BeforeConfig.putInt("Enable_VerCode", BuildConfig.VERSION_CODE);
+            }else {
+                BeforeConfig.putInt("Enable_VerCode", 0);
+            }
+
+        });
         mRoot.addView(check);
 
 

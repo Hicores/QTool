@@ -16,7 +16,7 @@ android {
             versionCode Integer.parseInt("${System.getenv("CommitNumber")}")
         }else {
             versionName "${defAppVer}"
-            versionCode 999
+            versionCode 1
         }
         multiDexEnabled false
         signingConfigs {
