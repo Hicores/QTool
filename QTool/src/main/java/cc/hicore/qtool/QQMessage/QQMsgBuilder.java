@@ -259,13 +259,7 @@ public class QQMsgBuilder {
         MField.SetField(mMessageRecord, "msg", "[涂鸦]");
         MMethod.CallMethodNoParam(mMessageRecord, "prewrite", void.class);
         MMethod.CallMethodNoParam(mMessageRecord, "parse", void.class);
-        /*
-        Object finalRecord = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"), "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                new Class[]{MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")}, mMessageRecord
-        );
-
-         */
-        return mMessageRecord;
+        return rebuild_message(mMessageRecord);
     }
     public static Object CopyToMacketFaceMessage(Object SourceObj) throws Exception {
         Object mMessageRecord = build_common_message_record(-2007);
@@ -280,10 +274,7 @@ public class QQMsgBuilder {
             MField.SetField(mMessageRecord, "sendFaceName", strName);
         }
         MMethod.CallMethodNoParam(mMessageRecord, "doParse", void.class);
-        Object finalRecord = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"), "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                new Class[]{MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")}, mMessageRecord
-        );
-        return finalRecord;
+        return rebuild_message(mMessageRecord);
     }
     public static Object Copy_PokeMsg(Object raw) {
         try {
@@ -392,6 +383,13 @@ public class QQMsgBuilder {
             LogUtils.error("build_common_message_record",e);
             return null;
         }
-
+    }
+    public static Object rebuild_message(Object record){
+        try{
+            return MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"),null,MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),record);
+        }catch (Exception e){
+            LogUtils.error("build_common_message_record",e);
+            return null;
+        }
     }
 }
