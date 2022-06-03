@@ -365,12 +365,21 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean GetMessageByTimeSeq() {
         try {
-            Method m = MethodFinder.findMethodFromCache("GetMessageByTimeSeq");
-            if (m == null){
-                MethodFinder.NeedReportToFindMethod("GetMessageByTimeSeq_","MsgAPI","counter",ma -> ma.getDeclaringClass().getName().contains("com.tencent.mobileqq.guild.chatpie.msgviewbuild.builder.GuildReplyTextItemBuilder"));
-                MethodFinder.NeedReportToFindMethodBeInvokedTag("GetMessageByTimeSeq","MsgApi","GetMessageByTimeSeq_",ma -> ma.getDeclaringClass().getName().equals("com.tencent.imcore.message.BaseQQMessageFacade"));
+            if (HostInfo.getVerCode() > 8000){
+                Method m = MethodFinder.findMethodFromCache("GetMessageByTimeSeq");
+                if (m == null){
+                    MethodFinder.NeedReportToFindMethod("GetMessageByTimeSeq_","MsgAPI","counter",ma -> ma.getDeclaringClass().getName().contains("com.tencent.mobileqq.guild.chatpie.msgviewbuild.builder.GuildReplyTextItemBuilder"));
+                    MethodFinder.NeedReportToFindMethodBeInvokedTag("GetMessageByTimeSeq","MsgApi","GetMessageByTimeSeq_",ma -> ma.getDeclaringClass().getName().equals("com.tencent.imcore.message.BaseQQMessageFacade"));
+                }
+                return m != null;
+            }else {
+                Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
+                        MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
+                return MMethod.FindMethod(MessageFacade.getClass(), "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
+                        String.class, int.class, long.class
+                }) != null;
             }
-            return m != null;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
