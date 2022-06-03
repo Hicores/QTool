@@ -10,6 +10,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.MethodFinder;
 
@@ -69,15 +70,21 @@ public class ChatFragmentLifeHook extends BaseHookItem {
 
     public Method[] getHookMethod() {
         Method[] m = new Method[2];
-        m[0] = MethodFinder.findMethodFromCache("ChatOnShow");
-        if (m[0] == null){
-            MethodFinder.NeedReportToFindMethod("ChatOnShow","SH","loadBackgroundAsync: skip for mosaic is on",a->a.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie"));
+        if (HostInfo.getVerCode() > 8000){
+            m[0] = MethodFinder.findMethodFromCache("ChatOnShow");
+            if (m[0] == null){
+                MethodFinder.NeedReportToFindMethod("ChatOnShow","SH","loadBackgroundAsync: skip for mosaic is on",a->a.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie"));
+            }
+
+            m[1] = MethodFinder.findMethodFromCache("ChatOnHide");
+            if (m[1] == null){
+                MethodFinder.NeedReportToFindMethod("ChatOnHide","SH","doOnStop",a->a.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie"));
+            }
+        }else {
+            m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"), "U", new Class[0]);
+            m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"), "R", new Class[0]);
         }
 
-        m[1] = MethodFinder.findMethodFromCache("ChatOnHide");
-        if (m[1] == null){
-            MethodFinder.NeedReportToFindMethod("ChatOnHide","SH","doOnStop",a->a.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie"));
-        }
         return m;
     }
 }
