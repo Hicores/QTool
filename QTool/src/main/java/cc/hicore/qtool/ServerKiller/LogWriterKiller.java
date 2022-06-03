@@ -24,6 +24,7 @@ public class LogWriterKiller extends BaseHookItem implements BaseUiItem {
         XPBridge.HookBefore(m[0],param -> param.setResult(null));
         XPBridge.HookBefore(m[1],param -> param.setResult(true));
         XPBridge.HookBefore(m[2],param -> param.setResult(null));
+        XPBridge.HookBefore(m[3],param -> param.setResult(null));
         return true;
     }
 
@@ -49,7 +50,7 @@ public class LogWriterKiller extends BaseHookItem implements BaseUiItem {
 
     }
     public Method[] getMethod(){
-        Method[] m = new Method[3];
+        Method[] m = new Method[4];
         m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.qphone.base.util.QLogItemManager"),"addLogItem",void.class,new Class[]{
                 MClass.loadClass("com.tencent.qphone.base.util.QLogItem")
         });
@@ -59,6 +60,8 @@ public class LogWriterKiller extends BaseHookItem implements BaseUiItem {
         m[2] = MMethod.FindMethod(MClass.loadClass("com.tencent.qphone.base.util.QLogItemManager"),"init",void.class,new Class[]{
                 long.class
         });
+        m[3] = MMethod.FindMethod(MClass.loadClass("com.tencent.qphone.base.util.QLogItemManager$WriteHandler"),"tryInit",void.class,new Class[0]);
+
         return m;
     }
 }
