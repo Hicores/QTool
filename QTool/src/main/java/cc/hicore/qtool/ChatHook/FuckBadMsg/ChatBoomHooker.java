@@ -68,6 +68,9 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
                         if (StringUtils.Count(xml,"button") > 50){
                             param.setResult(buildMsgPanel(chatMsg,"默认卡屏屏蔽->异常卡片代码"));
                         }
+                        if (checkLongElement(xml)){
+                            param.setResult(buildMsgPanel(chatMsg,"默认卡屏屏蔽->异常卡片代码2"));
+                        }
                     }else if (clzName.equals("MessageForLongTextMsg")){
                         JSONObject json = MField.GetField(chatMsg,"mExJsonObject",JSONObject.class);
                         if (json != null){
@@ -77,6 +80,7 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
                         }
                     }
                 }
+
                 if (HookEnv.Config.getBoolean("Set","Chat_Boom_Length",false)){
                     if (clzName.equals("MessageForText") || clzName.equals("MessageForLongTextMsg")){
                         String msg = MField.GetField(chatMsg,"msg",String.class);
@@ -137,6 +141,16 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
             }
         });
         return true;
+    }
+    private static boolean checkLongElement(String code){
+        int index1 = code.indexOf(">");
+        while (index1 != 0){
+            int index2 = code.indexOf("<",index1);
+            if (index2 == -1)return false;
+            if (index2 - index1 > 312)return true;
+            index1 = code.indexOf(">",index2);
+        }
+        return false;
     }
     private static void addMsgToBanList(Object chatMsg,String banTip){
         try{
