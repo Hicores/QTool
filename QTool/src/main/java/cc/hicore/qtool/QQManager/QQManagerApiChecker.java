@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 import de.robv.android.xposed.XposedHelpers;
 
 @HookItem(isRunInAllProc = false, isDelayInit = false)
@@ -52,6 +54,7 @@ public class QQManagerApiChecker extends BaseHookItem {
         if (!Group_Get_Info()) builder.append("Group_Get_Info\n");
         if (!Group_Get_Member_List()) builder.append("Group_Get_Member_List\n");
         if (!Guild_Revoke()) builder.append("Guild_Revoke\n");
+        if (!Get_Group_Name_By_Contact())builder.append("Get_Group_Name_By_Contact\n");
 
         return builder.length() == 0;
     }
@@ -59,7 +62,7 @@ public class QQManagerApiChecker extends BaseHookItem {
     private static boolean Guild_Revoke() {
         try {
             Object RevokeHelper = QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.guild.message.api.impl.GuildRevokeMessageHandler");
-            Method m = MMethod.FindMethod(RevokeHelper.getClass(), "a", void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")});
+            Method m = MMethod.FindMethod(RevokeHelper.getClass(), null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")});
             return RevokeHelper != null && m != null;
         } catch (Exception e) {
             return false;
@@ -77,12 +80,18 @@ public class QQManagerApiChecker extends BaseHookItem {
         }
     }
 
+    private static boolean Get_Group_Name_By_Contact(){
+        Method m = MethodFinder.findMethodFromCache("get_group_name_by_contact");
+        if (m == null){
+            MethodFinder.NeedReportToFindMethod("get_group_name_by_contact","msgApi","getTroopDisplayName()",ma -> ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.utils.ContactUtils"));
+        }
+        return m != null;
+    }
+
     private static boolean Group_Get_Info() {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            Method m = MMethod.FindMethod(TroopManager.getClass(), "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"), new Class[]{String.class});
+            Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
+            Method m = MMethod.FindMethod(TroopInfoServer.getClass(),"getTroopInfo",MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),new Class[]{String.class});
             return m != null;
         } catch (Exception e) {
             return false;
@@ -91,15 +100,8 @@ public class QQManagerApiChecker extends BaseHookItem {
 
     private static boolean Group_Get_List() {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            ArrayList<?> rawList;
-            try {
-                rawList = MMethod.CallMethodNoParam(TroopManager, "g", ArrayList.class);
-            } catch (Exception e) {
-                rawList = MMethod.CallMethodNoParam(TroopManager, "a", ArrayList.class);
-            }
+            Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
+            ArrayList<?> rawList = MMethod.CallMethodNoParam(TroopInfoServer,"getUiTroopListWithoutBlockedTroop",ArrayList.class);
             return rawList != null;
         } catch (Exception e) {
             return false;
@@ -122,7 +124,7 @@ public class QQManagerApiChecker extends BaseHookItem {
         try {
             Object mCallObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler"), new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface")}, QQEnvUtils.getAppRuntime());
             Object TroopCardObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberCardInfo"), new Class[0], new Object[0]);
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler", null, void.class, new Class[]{
                     String.class,
                     ArrayList.class,
                     ArrayList.class
@@ -136,8 +138,8 @@ public class QQManagerApiChecker extends BaseHookItem {
 
     private static boolean Group_Change_Title() {
         try {
-            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"), "a", void.class, new Class[]{
-                    HookEnv.AppInterface.getClass(), String.class, String.class, String.class, MClass.loadClass("mqq.observer.BusinessObserver")
+            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"), null, void.class, new Class[]{
+                    Classes.QQAppinterFace(), String.class, String.class, String.class, MClass.loadClass("mqq.observer.BusinessObserver")
             });
             return m != null;
         } catch (Exception e) {
@@ -148,9 +150,9 @@ public class QQManagerApiChecker extends BaseHookItem {
     private static boolean Group_Mute() {
         try {
             Method m1 = MMethod.FindMethod("com.tencent.mobileqq.troop.troopgag.api.impl.TroopGagHandler",
-                    "a", void.class, new Class[]{String.class, long.class});
+                    null, void.class, new Class[]{String.class, long.class});
             Method m2 = MMethod.FindMethod("com.tencent.mobileqq.troop.utils.TroopGagMgr",
-                    "a", boolean.class, new Class[]{String.class, String.class, long.class});
+                    null, boolean.class, new Class[]{String.class, String.class, long.class});
             return m1 != null && m2 != null;
         } catch (Exception e) {
             return false;
@@ -160,7 +162,7 @@ public class QQManagerApiChecker extends BaseHookItem {
     private static boolean Group_Kick() {
         try {
             Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", null, void.class, new Class[]{
                     long.class,
                     List.class,
                     boolean.class,
@@ -185,7 +187,7 @@ public class QQManagerApiChecker extends BaseHookItem {
 
     private static boolean sendLike() {
         try {
-            Method m = MMethod.FindMethod("com.tencent.mobileqq.app.CardHandler", "a", void.class, new Class[]{
+            Method m = MMethod.FindMethod("com.tencent.mobileqq.app.CardHandler", null, void.class, new Class[]{
                     long.class, long.class, byte[].class, int.class, int.class, int.class
             });
             Object CardHandler = MMethod.CallMethodSingle(HookEnv.AppInterface, "getBusinessHandler",

@@ -74,7 +74,7 @@ public class ShowFullMessageCount extends BaseHookItem implements BaseUiItem {
 
     }
     public Method getMethod(){
-        return MMethod.FindMethod(MClass.loadClass("com.tencent.widget.CustomWidgetUtil"),"a",void.class,new Class[]{
+        return MMethod.FindMethod(MClass.loadClass("com.tencent.widget.CustomWidgetUtil"),null,void.class,new Class[]{
                 TextView.class, int.class, int.class, int.class, int.class, String.class
         });
     }

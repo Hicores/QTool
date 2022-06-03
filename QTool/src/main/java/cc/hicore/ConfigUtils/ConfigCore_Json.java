@@ -27,6 +27,11 @@ public class ConfigCore_Json implements ConfigCore {
     }
 
     @Override
+    public void removeAll(String PathName) {
+        ConfigUtils_MapFile.WriteFile(PathName, "");
+    }
+
+    @Override
     public boolean getBoolean(String PathName, String Key, boolean Def) {
         try {
             String PathData = ConfigUtils_MapFile.ReadFile(PathName);

@@ -88,7 +88,7 @@ public class DictHook extends BaseHookItem implements BaseUiItem {
                 MClass.loadClass("com.tencent.mobileqq.data.Emoticon"),
                 MClass.loadClass("com.tencent.mobileqq.emoticon.StickerInfo")
         });
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.magicface.drawable.PngFrameUtil","a",int.class,new Class[]{int.class});
+        m[1] = MMethod.FindMethod("com.tencent.mobileqq.magicface.drawable.PngFrameUtil",null,int.class,new Class[]{int.class});
         m[2] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticon.api.impl.EmojiManagerServiceImpl"),"getMagicFaceSendAccessControl",boolean.class,new Class[0]);
         return m;
     }

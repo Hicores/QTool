@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,12 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.XPWork.QQProxy.BaseRevokeProxy;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 
 @SuppressLint("ResourceType")
 @HookItem(isRunInAllProc = false,isDelayInit = false)
@@ -43,11 +47,11 @@ public class PreventRevoke extends BaseHookItem implements BaseUiItem {
             if(msgList==null || msgList.isEmpty())return;
 
 
-            String GroupUin = MField.GetField(msgList.get(0),"c",String.class);
-            String OpUin = MField.GetField(msgList.get(0),"d",String.class);
-            String sender = MField.GetField(msgList.get(0),"h",String.class);
-            int istroop = MField.GetField(msgList.get(0),"a",int.class);
-            long shmsgseq = MField.GetField(msgList.get(0),"b",long.class);
+            String GroupUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.GroupUin().get(msgList.get(0));
+            String OpUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.OpUin().get(msgList.get(0));
+            String sender = (String) BaseRevokeProxy.Table_RevokeInfo_Field.Sender().get(msgList.get(0));
+            int istroop = (int) BaseRevokeProxy.Table_RevokeInfo_Field.IsTroop().get(msgList.get(0));
+            long shmsgseq = (long) BaseRevokeProxy.Table_RevokeInfo_Field.shmsgseq().get(msgList.get(0));
             String FriendUin;
             if(istroop == 1){
                 FriendUin = GroupUin;
@@ -80,7 +84,7 @@ public class PreventRevoke extends BaseHookItem implements BaseUiItem {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
             if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-            List MessageRecoreList = MField.GetField(param.thisObject,param.thisObject.getClass() ,"a", List.class);
+            List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
             if(MessageRecoreList==null)return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
             String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
@@ -119,11 +123,11 @@ public class PreventRevoke extends BaseHookItem implements BaseUiItem {
             if (!IsEnable)return;
             ArrayList msgList = (ArrayList) param.args[0];
             if(msgList==null || msgList.isEmpty())return;
-            String GroupUin = MField.GetField(msgList.get(0),"c",String.class);
-            String OpUin = MField.GetField(msgList.get(0),"d",String.class);
-            String sender =  MField.GetField(msgList.get(0),"h",String.class);
-            int istroop = MField.GetField(msgList.get(0),"a",int.class);
-            long shmsgseq = MField.GetField(msgList.get(0),"b",long.class);
+            String GroupUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.GroupUin().get(msgList.get(0));
+            String OpUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.OpUin().get(msgList.get(0));
+            String sender = (String) BaseRevokeProxy.Table_RevokeInfo_Field.Sender().get(msgList.get(0));
+            int istroop = (int) BaseRevokeProxy.Table_RevokeInfo_Field.IsTroop().get(msgList.get(0));
+            long shmsgseq = (long) BaseRevokeProxy.Table_RevokeInfo_Field.shmsgseq().get(msgList.get(0));
 
 
             String FriendUin;
@@ -178,22 +182,29 @@ public class PreventRevoke extends BaseHookItem implements BaseUiItem {
     }
     public Method[] getMethod(){
         Method[] m = new Method[4];
-        m[0] = MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade","a",void.class,new Class[]{
+        m[0] = MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade",null,void.class,new Class[]{
                 ArrayList.class,boolean.class
         });
+
         m[1] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
         });
-        m[2] = MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager","a",void.class,new Class[]{
+        m[2] = MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager",null,void.class,new Class[]{
                 ArrayList.class
         });
-        m[3] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper","c",void.class,new Class[]{
-                MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")
-        });
-
-
+        if (HostInfo.getVerCode() > 8000){
+            m[3] = MethodFinder.findMethodFromCache("AioRevokeH");
+            if (m[3] == null){
+                MethodFinder.NeedReportToFindMethod("AioRevokeH_","防撤回","text_animator_8820",ma->true);
+                MethodFinder.NeedReportToFindMethodConnectTag("AioRevokeH","防撤回","AioRevokeH_",ma->ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"));
+            }
+        }else {
+            m[3] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper","c",void.class,new Class[]{
+                    MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")
+            });
+        }
         return m;
     }
 }

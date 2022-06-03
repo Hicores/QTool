@@ -78,7 +78,7 @@ public class HookForUploadAvatar extends BaseHookItem implements BaseUiItem {
     }
 
     private Method getMethod() {
-        Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.pic.compress.Utils", "a", boolean.class, new Class[]{
+        Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.pic.compress.Utils", null, boolean.class, new Class[]{
                 String.class,
                 Bitmap.class,
                 int.class,

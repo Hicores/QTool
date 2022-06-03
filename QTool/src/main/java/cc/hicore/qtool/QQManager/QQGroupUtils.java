@@ -22,12 +22,8 @@ public class QQGroupUtils {
 
     public static String Group_Get_Member_Name(String GroupUin, String UserUin) {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.utils.ContactUtils", "b", String.class, new Class[]{
-                    MClass.loadClass("com.tencent.common.app.AppInterface"),
-                    String.class,
-                    String.class
-            });
-            return (String) CallMethod.invoke(null, QQEnvUtils.getAppRuntime(), GroupUin, UserUin);
+            Object runTimeService = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberNameService"));
+            return MMethod.CallMethodParams(runTimeService,"getTroopMemberName",String.class,GroupUin,UserUin);
         } catch (Exception e) {
             return UserUin;
         }
@@ -68,15 +64,8 @@ public class QQGroupUtils {
 
     public static ArrayList<GroupInfo> Group_Get_List() {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            ArrayList<?> rawList;
-            try {
-                rawList = MMethod.CallMethodNoParam(TroopManager, "g", ArrayList.class);
-            } catch (Exception e) {
-                rawList = MMethod.CallMethodNoParam(TroopManager, "a", ArrayList.class);
-            }
+            Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
+            ArrayList<?> rawList = MMethod.CallMethodNoParam(TroopInfoServer,"getUiTroopListWithoutBlockedTroop",ArrayList.class);
 
             ArrayList<GroupInfo> NewList = new ArrayList<>();
             for (Object item : rawList) {
@@ -108,7 +97,7 @@ public class QQGroupUtils {
                 locker.getAndSet(true);
                 MMethod.CallMethodSingle(HookEnv.AppInterface,"removeObserver",void.class,TroopObserve);
             });
-            MMethod.CallMethodParams(QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.troop.handler.TroopMemberListHandler"),"a",void.class,
+            MMethod.CallMethodParams(QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.troop.handler.TroopMemberListHandler"),null,void.class,
                     true,GroupUin,mInfo.Code,true,1,System.currentTimeMillis(),0);
             for (int i=0;i<100;i++){
                 if (locker.get())break;
@@ -152,10 +141,10 @@ public class QQGroupUtils {
 
     public static GroupInfo Group_Get_Info(String GroupUin) {
         try {
-            Object TroopManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
-                    MClass.loadClass("mqq.manager.Manager"),
-                    MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_MANAGER"));
-            Object GroupInfoR = MMethod.CallMethod(TroopManager, TroopManager.getClass(), "g", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"), new Class[]{String.class}, GroupUin);
+
+            Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
+            Object GroupInfoR = MMethod.CallMethodSingle(TroopInfoServer,"getTroopInfo",MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin);
+
             GroupInfo NewItem = new GroupInfo();
             NewItem.Uin = MField.GetField(GroupInfoR, "troopuin");
             NewItem.Code = MField.GetField(GroupInfoR, "troopcode");
@@ -235,7 +224,7 @@ public class QQGroupUtils {
             try {
                 TheList = MMethod.CallMethod(Manager, "a", ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
             } catch (Exception e) {
-                TheList = MMethod.CallMethod(Manager, "b", ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
+                TheList = MMethod.CallMethod(Manager, null, ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
             }
 
             if (TheList != null) {

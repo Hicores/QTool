@@ -62,7 +62,7 @@ public class ChangeTipToSystemMsg extends BaseHookItem implements BaseUiItem {
 
     }
     public Method getMethod(){
-        return MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy","a", void.class,new Class[]{
+        return MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
                 String.class,
                 int.class,
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),

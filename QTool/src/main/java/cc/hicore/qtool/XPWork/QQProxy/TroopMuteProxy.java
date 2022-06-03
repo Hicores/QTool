@@ -59,7 +59,7 @@ public class TroopMuteProxy extends BaseHookItem {
 
     public Method[] getMethod() {
         Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), "a", void.class, new Class[]{
+        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
                 String.class,
                 long.class,
                 long.class,
@@ -68,7 +68,7 @@ public class TroopMuteProxy extends BaseHookItem {
                 String.class,
                 boolean.class
         });
-        m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), "a", void.class, new Class[]{
+        m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
                 String.class,
                 String.class,
                 long.class,

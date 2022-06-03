@@ -13,6 +13,8 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
+import cc.hicore.qtool.XposedInit.MethodFinder;
+import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 public class QQMsgApiChecker extends BaseHookItem {
@@ -74,14 +76,14 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendReply_() {
         try {
-            Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
+            Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
                     new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
                             int.class, long.class, String.class
                     }
             );
-            Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
+            Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
                     new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             String.class, int.class,
@@ -97,7 +99,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean addTip0() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
                     int.class
             });
             return CallMethod != null;
@@ -126,7 +128,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendVideo() {
         try {
-            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), "a", void.class, new Class[]{
+            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForShortVideo")
@@ -139,10 +141,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendShakeWindow() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                    int.class
-            });
-            return CallMethod != null;
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -151,7 +150,7 @@ public class QQMsgApiChecker extends BaseHookItem {
     private static boolean RepeatFile() {
         try {
             Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"),
-                    "a", void.class, new Class[]{
+                    null, void.class, new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo")
@@ -164,7 +163,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendPaiyiPai() {
         try {
-            Method m = MMethod.FindMethod("com.tencent.mobileqq.paiyipai.PaiYiPaiHandler", "a", void.class, new Class[]{String.class, String.class, int.class});
+            Method m = MMethod.FindMethod("com.tencent.mobileqq.paiyipai.PaiYiPaiHandler", null, void.class, new Class[]{String.class, String.class, int.class});
             return m != null;
         } catch (Exception e) {
             return false;
@@ -173,7 +172,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendReply() {
         try {
-            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", "a", void.class, new Class[]{
+            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
@@ -206,7 +205,7 @@ public class QQMsgApiChecker extends BaseHookItem {
             Method CallMethod =
                     HostInfo.getVerCode() < 5670 ?
                             MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class}) :
-                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "d", long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
+                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
             return CallMethod != null;
         } catch (Exception e) {
             return false;
@@ -215,7 +214,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendArkApp() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a",
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null,
                     boolean.class, new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -229,7 +228,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendStruct() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a",
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null,
                     void.class, new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -243,7 +242,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendPic() {
         try {
-            Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", void.class, new Class[]{
+            Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForPic"),
@@ -257,7 +256,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean sendText() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     Context.class,
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -273,7 +272,7 @@ public class QQMsgApiChecker extends BaseHookItem {
     private static boolean sendFileByPath() {
         try {
             Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.app.FileManagerEngine"),
-                    "a", boolean.class, new Class[]{String.class, String.class, long.class, int.class});
+                    null, boolean.class, new Class[]{String.class, String.class, long.class, int.class});
             return m != null;
         } catch (Exception e) {
             return false;
@@ -294,7 +293,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean buildText() {
         try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
+            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
                     MClass.loadClass("com.tencent.common.app.AppInterface"),
                     String.class,
                     String.class,
@@ -323,7 +322,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean buildPic0() {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"), new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"), new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     String.class
@@ -346,11 +345,8 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean MessageFacade_RevokeMessage() {
         try {
-            Method m =
-                    HostInfo.getVerCode() < 5670 ?
-                            MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}) :
-                            MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()});
-            return m != null;
+
+            return revokeMsg();
         } catch (Exception e) {
             return false;
         }
@@ -358,7 +354,7 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean RevokeTroopFile() {
         try {
-            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"), "a", void.class, new Class[]{
+            Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"), null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForTroopFile")
             });
             return m != null;
@@ -369,11 +365,11 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean GetMessageByTimeSeq() {
         try {
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Method m = MMethod.FindMethod(MessageFacade.getClass(), "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                    String.class, int.class, long.class
-            });
+            Method m = MethodFinder.findMethodFromCache("GetMessageByTimeSeq");
+            if (m == null){
+                MethodFinder.NeedReportToFindMethod("GetMessageByTimeSeq_","MsgAPI","counter",ma -> ma.getDeclaringClass().getName().contains("com.tencent.mobileqq.guild.chatpie.msgviewbuild.builder.GuildReplyTextItemBuilder"));
+                MethodFinder.NeedReportToFindMethodBeInvokedTag("GetMessageByTimeSeq","MsgApi","GetMessageByTimeSeq_",ma -> ma.getDeclaringClass().getName().equals("com.tencent.imcore.message.BaseQQMessageFacade"));
+            }
             return m != null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -384,12 +380,38 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean revokeMsg() {
         try {
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
-                    MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
-            Method m = MMethod.FindMethod(MsgCache.getClass(), "b", void.class, new Class[]{boolean.class});
-            return m != null;
+            if (HostInfo.getVerCode() > 8000){
+                Method m = MethodFinder.findMethodFromCache("updateCache");
+                if (m == null){
+                    MethodFinder.NeedReportToFindMethod("updateCache_Before","msgApi","qq queryEmojiInfo: result:",ma -> true);
+                    MethodFinder.NeedReportToFindMethodBeInvokedTag("updateCache","msgApi","updateCache_Before",ma -> ma.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache")) && ma.getReturnType().equals(void.class) && ma.getParameterCount() == 1 && ma.getParameterTypes()[0].equals(boolean.class));
+                }
+                Method m2;
+                if (HostInfo.getVerCode() < 8000){
+                    m2 =
+                            HostInfo.getVerCode() < 5670 ?
+                                    MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}) :
+                                    MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()});
+                }else {
+                    m2 = MethodFinder.findMethodFromCache("RevokeMessage");
+                    if (m2 == null){
+                        MethodFinder.NeedReportToFindMethod("RevokeMessage","msgApi",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"),null,void.class,new Class[]{
+                                MClass.loadClass("com.tencent.mobileqq.data.MessageForFile")
+                        }),ma -> ma.getDeclaringClass().getName().equals("com.tencent.imcore.message.QQMessageFacade"));
+                    }
+                }
+                return m != null && m2 != null;
+            }else {
+                Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
+                        MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
+                Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
+                        MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
+                Method m = MMethod.FindMethod(MsgCache.getClass(), "b", void.class, new Class[]{boolean.class});
+                return m != null;
+            }
+
+
+
         } catch (Exception e) {
             return false;
         }
@@ -398,9 +420,9 @@ public class QQMsgApiChecker extends BaseHookItem {
 
     private static boolean AddMsg() {
         try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
+            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                    String.class
+                    String.class,boolean.class,boolean.class,boolean.class,boolean.class
             });
             Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));

@@ -37,14 +37,11 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
             }
         });
 
-        //Fuck Reporter
-        XposedHelpers.findAndHookMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIODtReportHelper"),
-                "a", MClass.loadClass("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout"), new XC_MethodReplacement() {
-                    @Override
-                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
-                        return null;
-                    }
-                });
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIODtReportHelper"),
+                null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout")});
+        XPBridge.HookBefore(m,param -> {
+            param.setResult(null);
+        });
 
         return true;
     }
@@ -60,9 +57,8 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
     }
 
     public Method getMethod() {
-        Method m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
-                "a", void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
-        return m;
+        return MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
+                null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
     }
 
     @Override

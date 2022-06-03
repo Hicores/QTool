@@ -95,7 +95,7 @@ public class ChatLongClickCleaner extends BaseHookItem implements BaseUiItem {
                 }).show();
     }
     public Method getMethod(){
-        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenu"),"a",void.class,new Class[]{
+        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenu"),null,void.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem")
         });
     }

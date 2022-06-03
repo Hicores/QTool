@@ -23,7 +23,7 @@ public class QQMsgSender {
     public static void sendFileByPath(String Path, String TroopUin) {
         try {
             Object Engine = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.filemanager.app.FileManagerEngine"), HookEnv.AppInterface);
-            MMethod.CallMethodParams(Engine, "a", boolean.class, Path, TroopUin, (long) 0, 0);
+            MMethod.CallMethodParams(Engine, null, boolean.class, Path, TroopUin, (long) 0, 0);
 
         } catch (Exception e) {
             LogUtils.error("sendFileByPath", e);
@@ -32,7 +32,7 @@ public class QQMsgSender {
 
     public static void sendText(Object _Session, String text, ArrayList atList) {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     Context.class,
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -47,7 +47,7 @@ public class QQMsgSender {
 
     public static void sendPic(Object _Session, Object picRecord) {
         try {
-            Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", void.class, new Class[]{
+            Method hookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForPic"),
@@ -63,7 +63,7 @@ public class QQMsgSender {
 
     public static void sendStruct(Object _Session, Object structMsg) {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a",
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null,
                     void.class, new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -77,7 +77,7 @@ public class QQMsgSender {
 
     public static void sendArkApp(Object _Session, Object arkAppMsg) {
         try {
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a",
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null,
                     boolean.class, new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
@@ -99,7 +99,7 @@ public class QQMsgSender {
             Method CallMethod =
                     HostInfo.getVerCode() < 5670 ?
                             MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class}) :
-                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "d", long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
+                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
             CallMethod.invoke(null, HookEnv.AppInterface, _Session, path);
         } catch (Exception e) {
             LogUtils.error("sendVoice", e);
@@ -108,13 +108,13 @@ public class QQMsgSender {
 
     public static void sendMix(Object _Session, Object mixRecord) {
         try {
-            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", "a", void.class, new Class[]{
+            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     int.class
             });
-            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), "a", MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
+            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), null, MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
             mMethod.invoke(Call, HookEnv.AppInterface, mixRecord, _Session, 0);
         } catch (Exception e) {
             LogUtils.error("sendMix", e);
@@ -123,8 +123,8 @@ public class QQMsgSender {
 
     public static void sendReply(Object _Session, Object replyRecord) {
         try {
-            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), "a", MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
-            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", "a", void.class, new Class[]{
+            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), null, MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
+            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
@@ -144,7 +144,7 @@ public class QQMsgSender {
 
     public static void sendPaiyipai(String GroupUin, String UserUin) {
         try {
-            Method m = MMethod.FindMethod("com.tencent.mobileqq.paiyipai.PaiYiPaiHandler", "a", void.class, new Class[]{String.class, String.class, int.class});
+            Method m = MMethod.FindMethod("com.tencent.mobileqq.paiyipai.PaiYiPaiHandler", null, void.class, new Class[]{String.class, String.class, int.class});
             Object Handler = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.paiyipai.PaiYiPaiHandler"), HookEnv.AppInterface);
             if (TextUtils.isEmpty(GroupUin)) {
                 m.invoke(Handler, UserUin, UserUin, 0);
@@ -158,7 +158,7 @@ public class QQMsgSender {
 
     public static void sendVideo(Object _Session, Object videoRecord) {
         try {
-            MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), "a", void.class, new Class[]{
+            MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForShortVideo")
@@ -170,8 +170,8 @@ public class QQMsgSender {
 
     public static void repeatFile(Object _Session, Object fileRecord) {
         try {
-            Object Instance = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"), "a", MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"));
-            MMethod.CallMethodParams(Instance, "a", void.class, fileRecord, HookEnv.AppInterface, 0, _Session);
+            Object Instance = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"), null, MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgManager"));
+            MMethod.CallMethodParams(Instance, null, void.class, fileRecord, HookEnv.AppInterface, 0, _Session);
         } catch (Exception e) {
             LogUtils.error("sendFile", e);
         }
@@ -237,7 +237,7 @@ public class QQMsgSender {
 
     public static void QQ_Forward_ShortVideo(Object _SessionInfo, Object ChatMessage) {
         try {
-            MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), "a", void.class, new Class[]{
+            MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForShortVideo")

@@ -38,7 +38,7 @@ public class ShowAtHook extends BaseHookItem implements BaseUiItem {
                 Object mGetView = param.getResult();
                 RelativeLayout mLayout;
                 if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-                List MessageRecoreList = MField.GetField(param.thisObject,param.thisObject.getClass() ,"a", List.class);
+                List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
                 if(MessageRecoreList==null)return;
                 Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
 

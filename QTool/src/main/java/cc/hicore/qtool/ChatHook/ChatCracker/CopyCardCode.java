@@ -47,7 +47,7 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
             } else {
                 return;
             }
-            List MessageRecoreList = MField.GetField(param.thisObject, param.thisObject.getClass(), "a", List.class);
+            List MessageRecoreList = MField.GetFirstField(param.thisObject,  List.class);
             if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
             if (ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") ||

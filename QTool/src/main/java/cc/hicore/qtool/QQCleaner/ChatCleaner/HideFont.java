@@ -14,6 +14,7 @@ import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "屏蔽聊天特效字体",groupName = "聊天净化",type = 1,id = "ChatFontHider",targetID = 2)
@@ -57,6 +58,12 @@ public class HideFont extends BaseHookItem implements BaseUiItem {
         m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.TextItemBuilder"), "b",void.class,new Class[]{
                 View.class, Classes.ChatMessage()
         });
+        if (m[0] == null){
+            m[0] = MethodFinder.findMethodFromCache("HideChatFont");
+            if (m[0] == null){
+                MethodFinder.NeedReportToFindMethod("HideChatFont","屏蔽聊天字体","C2CMessageFold textItemBuilder flag: ",ma->ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.item.TextItemBuilder"));
+            }
+        }
         m[1] = MMethod.FindMethod(MClass.loadClass("com.etrump.mixlayout.ETTextView"),"setFont",void.class,new Class[]{
                 MClass.loadClass("com.etrump.mixlayout.ETFont"), long.class,int.class,
         });

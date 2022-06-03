@@ -95,7 +95,7 @@ public class FileFailureRename extends BaseHookItem implements BaseUiItem {
     }
 
     public Method getMethod() {
-        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper"), "a", void.class,
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper"), null, void.class,
                 new Class[]{MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTTransferKey"), int.class,
                         MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTUploadCompleteInfo")});
         return m;

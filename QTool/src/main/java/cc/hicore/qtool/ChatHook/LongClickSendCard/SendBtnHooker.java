@@ -18,6 +18,8 @@ import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import cc.hicore.qtool.XposedInit.MethodFinder;
+import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false,isRunInAllProc = false)
 @UIItem(name = "长按发送卡片消息",groupName = "聊天辅助",targetID = 1,type = 1,id = "LongClickSendCard")
@@ -25,9 +27,10 @@ public class SendBtnHooker extends BaseHookItem implements BaseUiItem {
     boolean IsEnable;
     @Override
     public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(),param -> {
+        Method[] m = getMethod();
+        XPBridge.HookAfter(m[0], param -> {
             if (IsEnable){
-                ViewGroup vg = MField.GetFirstField(param.thisObject,ViewGroup.class);
+                ViewGroup vg = (ViewGroup) m[1].invoke(param.thisObject);
                 if (vg == null)return;
                 Context ctx = vg.getContext();
                 int fun_btn = ctx.getResources().getIdentifier("fun_btn", "id", ctx.getPackageName());
@@ -60,7 +63,8 @@ public class SendBtnHooker extends BaseHookItem implements BaseUiItem {
 
     @Override
     public boolean check() {
-        return getMethod() != null;
+        Method[] m = getMethod();
+        return m[0] != null && m[1] != null;
     }
 
     @Override
@@ -73,7 +77,14 @@ public class SendBtnHooker extends BaseHookItem implements BaseUiItem {
     public void ListItemClick(Context context) {
 
     }
-    public Method getMethod(){
-        return BaseChatPie.getMethod();
+    public Method[] getMethod(){
+        Method[] m = new Method[2];
+        m[0] = BaseChatPie.getMethod();
+        m[1] = MethodFinder.findMethodFromCache("getAIOViewGroup");
+        if (m[1] == null){
+            MethodFinder.NeedReportToFindMethod("getAIOViewGroup_","长按发送卡片消息","em_gb_ice_sticker",ma-> ma.getParameterCount()==3 && ma.getParameterTypes()[0].equals(View.class));
+            MethodFinder.NeedReportToFindMethodBeInvokedTag("getAIOViewGroup","长按发送卡片消息","getAIOViewGroup_",ma-> ma.getReturnType().equals(ViewGroup.class));
+        }
+        return m;
     }
 }

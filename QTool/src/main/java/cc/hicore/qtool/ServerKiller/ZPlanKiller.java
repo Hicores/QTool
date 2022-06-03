@@ -10,6 +10,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.UIItem;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
@@ -58,12 +59,21 @@ public class ZPlanKiller  extends BaseHookItem implements BaseUiItem {
     }
     public Method[] getMethod(){
         Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
-                List.class,List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
-        });
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","isInZplanWhiteList",boolean.class,new Class[]{
-                long.class,long.class
-        });
+        if (HostInfo.getVerCode() > 8100){
+            m[0] = MMethod.FindMethod("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
+                    List.class,List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
+            });
+            m[1] = MMethod.FindMethod("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl","isZPlanAccessible",boolean.class,new Class[]{
+                    long.class,long.class
+            });
+        }else {
+            m[0] = MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
+                    List.class,List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
+            });
+            m[1] = MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","isInZplanWhiteList",boolean.class,new Class[]{
+                    long.class,long.class
+            });
+        }
         return m;
     }
 }

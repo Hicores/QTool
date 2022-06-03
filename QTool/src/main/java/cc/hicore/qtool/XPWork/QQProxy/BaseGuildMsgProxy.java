@@ -47,7 +47,7 @@ public class BaseGuildMsgProxy extends BaseHookItem {
 
     public Method[] getMethod() {
         Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.guild.message.GuildOnlineMessageProcessor"), "c",
+        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.guild.message.GuildOnlineMessageProcessor"), null,
                 void.class, new Class[]{Classes.MessageRecord()});
         m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.guild.message.api.impl.GuildMessageUtilsApiImpl"), "handleSelfSendMsg",
                 void.class, new Class[]{Classes.AppInterface(), Classes.MessageRecord(), Classes.MessageRecord(), int.class});

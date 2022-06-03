@@ -157,29 +157,32 @@ public class QQSessionUtils {
         }
 
         private static Field isTroop() {
-            Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(SessionInfo(), "a", int.class) :
-                    MField.FindField(SessionInfo(), "a", int.class);
+            Field f = HostInfo.getVerCode() < 8000 ? MField.FindField(SessionInfo(), "a", int.class):
+                    MField.FindField(SessionInfo(), "e", int.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         private static Field friendUin() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(SessionInfo(), "a", String.class) :
-                    MField.FindField(SessionInfo(), "b", String.class);
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(SessionInfo(), "b", String.class):
+                    MField.FindField(SessionInfo(), "f", String.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         private static Field TroopCode() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(SessionInfo(), "b", String.class) :
-                    MField.FindField(SessionInfo(), "c", String.class);
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(SessionInfo(), "c", String.class):
+                            MField.FindField(SessionInfo(), "g", String.class) ;
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         private static Field InTroopUin() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(SessionInfo(), "c", String.class) :
-                    MField.FindField(SessionInfo(), "d", String.class);
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(SessionInfo(), "d", String.class):
+                            MField.FindField(SessionInfo(), "h", String.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
@@ -193,7 +196,8 @@ public class QQSessionUtils {
         }
 
         private static Field CodeName() {
-            Field f = MField.FindField(SessionInfo(), "e", String.class);
+            Field f = HostInfo.getVerCode() < 8000 ? MField.FindField(SessionInfo(), "e", String.class):
+                    MField.FindField(SessionInfo(), "i", String.class);
             if (f != null) f.setAccessible(true);
             return f;
         }

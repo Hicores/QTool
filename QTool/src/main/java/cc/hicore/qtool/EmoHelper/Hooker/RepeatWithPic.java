@@ -27,6 +27,7 @@ import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 @UIItem(name = "带图回复",type = 1,id = "RepeatWithPic",targetID = 1,groupName = "聊天辅助")
@@ -177,7 +178,7 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
                 Bundle.class
         });
 
-        m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.photo.PhotoListPanel", "a", boolean.class, new Class[]{
+        m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.photo.PhotoListPanel", null, boolean.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"),
                 List.class, boolean.class});
 
@@ -190,17 +191,10 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
     public static boolean IsNowReplying() {
         try {
             Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.HelperProvider"));
-            Method IsNowReplyingMethod = null;
-            for (Method sm : HelperProvider.getClass().getSuperclass().getSuperclass().getDeclaredMethods()) {
-                if (sm.getName().equals("a") && sm.getParameterCount() == 1 && sm.getParameterTypes()[0] == int.class) {
-                    if (sm.getReturnType() != Dialog.class && sm.getReturnType() != void.class && sm.getReturnType() != boolean.class) {
-                        IsNowReplyingMethod = sm;
-                        break;
-                    }
-                }
-            }
+            Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.IHelper"),new Class[]{int.class});
             Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
-            Object SourceInfo = MMethod.CallMethod(ReplyHelper, "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+
+            Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
             return SourceInfo != null;
         } catch (Exception e) {
             LogUtils.error("IsNowReplying", e);

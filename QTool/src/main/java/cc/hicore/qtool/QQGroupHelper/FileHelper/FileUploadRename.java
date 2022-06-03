@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -29,12 +30,16 @@ public class FileUploadRename extends BaseHookItem implements BaseUiItem {
         Method hookMethod = getMethod();
         XPBridge.HookBefore(hookMethod, param -> {
             if (!IsEnable) return;
-            String path = (String) param.args[0];
-            File f = new File(path);
-            if (f.getName().toLowerCase(Locale.ROOT).startsWith("base") && f.getName().toLowerCase(Locale.ROOT).endsWith(".apk")) {
-                String Name = GetPackageInfo(path);
-                param.setResult(Name);
+            String stack = Log.getStackTraceString(new Throwable());
+            if (stack.contains("com.tencent.mobileqq.uftransfer.depend.UFTDependFeatureApi")){
+                String path = (String) param.args[0];
+                File f = new File(path);
+                if (f.getName().toLowerCase(Locale.ROOT).startsWith("base") && f.getName().toLowerCase(Locale.ROOT).endsWith(".apk")) {
+                    String Name = GetPackageInfo(path);
+                    param.setResult(Name);
+                }
             }
+
         });
         return true;
     }
@@ -63,7 +68,7 @@ public class FileUploadRename extends BaseHookItem implements BaseUiItem {
     }
 
     public Method getMethod() {
-        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.uftransfer.depend.UFTDependFeatureApi"), "e", String.class,
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.FileUtils"), "getFileName", String.class,
                 new Class[]{String.class});
         return m;
     }

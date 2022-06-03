@@ -5,6 +5,8 @@ import java.util.List;
 public interface ConfigCore {
     void removeKey(String PathName, String Key);
 
+    void removeAll(String PathName);
+
     boolean getBoolean(String PathName, String Key, boolean Def);
 
     void setBoolean(String PathName, String Key, boolean Value);

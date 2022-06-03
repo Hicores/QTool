@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.EnvHook;
+import de.robv.android.xposed.XposedBridge;
 
 public class FileUtils {
     public static void WriteToFile(String File, String FileContent) {
@@ -49,8 +50,7 @@ public class FileUtils {
             FileOutputStream fOut = new FileOutputStream(File);
             fOut.write(FileContent);
             fOut.close();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) { }
     }
 
     public static String ReadFileString(File f) {

@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdk 31
-
+    ndkVersion '23.1.7779620'
     defaultConfig {
         applicationId "cc.hicore.qtool"
         minSdk 26
@@ -33,6 +33,10 @@ android {
             }
         }
         resConfigs "zh-rCN", "zh"
+        ndk {
+            abiFilters 'armeabi-v7a',"arm64-v8a"
+        }
+
     }
 
     buildTypes {
@@ -71,7 +75,12 @@ android {
             println  ("obfuse finish")
         }
     }
-
+    externalNativeBuild {
+        cmake {
+            path "./src/main/adfawhf/CMakeLists.txt"
+            version "3.23.1"
+        }
+    }
 
 }
 

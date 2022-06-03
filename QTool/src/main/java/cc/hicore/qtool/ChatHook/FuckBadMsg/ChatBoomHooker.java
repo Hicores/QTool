@@ -48,7 +48,7 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
     public boolean startHook() throws Throwable {
         XPBridge.HookBefore(getMethod(),param -> {
             if (IsEnable){
-                List list = MField.GetField(param.thisObject, "a", List.class);
+                List list = MField.GetFirstField(param.thisObject, List.class);
                 if(list==null)return;
                 Object chatMsg = list.get((int) param.args[0]);
 
@@ -93,7 +93,7 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
                 Object mGetView = param.getResult();
                 RelativeLayout mLayout;
                 if(mGetView instanceof RelativeLayout) mLayout = (RelativeLayout) mGetView;else return;
-                List MessageRecoreList = MField.GetField(param.thisObject,"a", List.class);
+                List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
                 if(MessageRecoreList==null)return;
                 Object chatMsg = MessageRecoreList.get((int) param.args[0]);
 
@@ -120,18 +120,15 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
 
             }
         });
-
-        XposedHelpers.findAndHookMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemLayout30"), "b", Context.class, View.class, Bundle.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
-                if (IsEnable){
-                    ArrayList list = MField.GetFirstField(param.thisObject,ArrayList.class);
-                    if (list.size() == 0)list.add(MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemContent")));
-                }
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemLayout30"),null,View.class,new Class[]{
+                Context.class, View.class, Bundle.class
+        });
+        XPBridge.HookBefore(m,param -> {
+            if (IsEnable){
+                ArrayList list = MField.GetFirstField(param.thisObject,ArrayList.class);
+                if (list.size() == 0)list.add(MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemContent")));
             }
         });
-
         return true;
     }
     private static void addMsgToBanList(Object chatMsg,String banTip){

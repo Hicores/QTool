@@ -287,11 +287,7 @@ public class QQMsgSendUtils {
     public static void addTip0(String TipText, long Time, long Seq, long msgUid, String Group, String UserUin) {
         try {
 
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                    int.class
-            });
-
-            Object MessageRecord = CallMethod.invoke(null, -2031);
+            Object MessageRecord = QQMsgBuilder.build_common_message_record(-2031);
             if (TextUtils.isEmpty(UserUin)) {
                 MMethod.CallMethod(MessageRecord, MessageRecord.getClass(), "init", void.class,
                         new Class[]{String.class, String.class, String.class, String.class, long.class, int.class, int.class, long.class},
@@ -325,7 +321,7 @@ public class QQMsgSendUtils {
         try {
             String Uins = MField.GetField(source, "senderuin", String.class);
             Object Appinterface = QQEnvUtils.getAppRuntime();
-            Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
+            Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
                     new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
@@ -333,7 +329,7 @@ public class QQMsgSendUtils {
                     }
             );
             Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(Uins), QQGroupUtils.Group_Get_Name(GroupUin));
-            Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
+            Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
                     new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                             String.class, int.class,

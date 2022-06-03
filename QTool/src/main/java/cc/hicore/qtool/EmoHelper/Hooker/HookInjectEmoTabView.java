@@ -31,9 +31,11 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
@@ -222,22 +224,35 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
     public Method[] getMethod() {
         Method[] m = new Method[9];
         m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
-                "a", void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
+                null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
 
-        m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder"), "a");
-        m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", "a", void.class, new Class[]{
+        m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder"));
+        m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 
-        m[3] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder"), "a");
-        m[4] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", "a", void.class, new Class[]{
+        m[3] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder"));
+        m[4] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 
 
-        m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]);
-        m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]);
+        if (HostInfo.getVerCode() > 8000){
+            m[5] = MethodFinder.findMethodFromCache("GuildViewIniter");
+            if (m[5] == null){
+                MethodFinder.NeedReportToFindMethod("GuildViewIniter","频道表情面板","em_aio_input_box",ma -> ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent"));
+            }
 
-        m[7] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder"), "a");
-        m[8] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", "a", void.class, new Class[]{
+            m[6] = MethodFinder.findMethodFromCache("SimpleModeViewIniter");
+            if (m[6] == null){
+                MethodFinder.NeedReportToFindMethod("SimpleModeViewIniter","简洁模式表情面板","initui() simple mode  bottomMargin 1 = ",ma -> ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper"));
+            }
+
+        }else {
+            m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]);
+            m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]);
+        }
+
+        m[7] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder"));
+        m[8] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 
         return m;

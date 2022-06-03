@@ -2,6 +2,7 @@ package cc.hicore.ReflectUtils;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Objects;
 
 import cc.hicore.Utils.Assert;
 
@@ -107,7 +108,27 @@ public class MMethod {
             for (Method method : Current_Find.getDeclaredMethods()) {
                 if ((method.getName().equals(MethodName) || MethodName == null) && method.getReturnType().equals(ReturnType)) {
                     Class<?>[] params = method.getParameterTypes();
+                    if (params.length == ParamTypes.length) {
+                        for (int i = 0; i < params.length; i++) {
+                            if (!Objects.equals(params[i], ParamTypes[i])) continue Loop;
+                        }
+                        MethodCache.put(SignText, method);
+                        method.setAccessible(true);
+                        return method;
+                    }
 
+                }
+            }
+            Current_Find = Current_Find.getSuperclass();
+        }
+
+
+        Current_Find = FindClass;
+        while (Current_Find != null) {
+            Loop:
+            for (Method method : Current_Find.getDeclaredMethods()) {
+                if ((method.getName().equals(MethodName) || MethodName == null) && method.getReturnType().equals(ReturnType)) {
+                    Class<?>[] params = method.getParameterTypes();
                     if (params.length == ParamTypes.length) {
                         for (int i = 0; i < params.length; i++) {
                             if (!MClass.CheckClass(params[i], ParamTypes[i])) continue Loop;
@@ -116,13 +137,14 @@ public class MMethod {
                         method.setAccessible(true);
                         return method;
                     }
+
                 }
             }
             Current_Find = Current_Find.getSuperclass();
         }
+
         return null;
     }
-
     public static Method FindMethod(Class<?> FindClass, String MethodName, Class<?>[] ParamTypes) {
         if (FindClass == null) return null;
         StringBuilder builder = new StringBuilder();
@@ -153,7 +175,6 @@ public class MMethod {
         }
         return null;
     }
-
     private static class NoMethodError extends RuntimeException {
         public NoMethodError(String message) {
             super(message);

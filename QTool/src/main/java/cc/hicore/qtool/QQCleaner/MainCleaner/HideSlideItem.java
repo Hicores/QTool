@@ -18,6 +18,7 @@ import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 
 @HookItem(isRunInAllProc = false,isDelayInit = false)
 @UIItem(name = "侧滑净化",groupName = "主界面净化",targetID = 2,type = 2,id = "HideSlideItem")
@@ -33,7 +34,7 @@ public class HideSlideItem extends BaseHookItem implements BaseUiItem {
             ArrayList saveArrays = new ArrayList();
             for (int i = 0;i< Array.getLength(mArr);i++){
                 Object item = Array.get(mArr,i);
-                String Signer = MField.GetField(item,"a",String.class);
+                String Signer = MField.GetFirstField(item,String.class);
                 String Title = MField.GetField(MField.GetFirstField(item,MClass.loadClass("com.tencent.mobileqq.activity.qqsettingme.config.QQSettingMeBizBean$Title")),"a",String.class);
                 HideSlideItem.cacheItemData.put(Signer,Title);
                 if (!HideSingle.contains(Signer))saveArrays.add(item);
@@ -105,8 +106,14 @@ public class HideSlideItem extends BaseHookItem implements BaseUiItem {
                 break;
             }
         }
-
         m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.QQSettingMe"),"j",void.class,new Class[0]);
+
+        if (m[1] == null){
+            m[1] = MethodFinder.findMethodFromCache("HideSlideItem");
+            if (m[1] == null){
+                MethodFinder.NeedReportToFindMethod("HideSlideItem","侧滑净化","VipInfoHandler payRuleUin changed",ma->ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe"));
+            }
+        }
         return m;
     }
 }

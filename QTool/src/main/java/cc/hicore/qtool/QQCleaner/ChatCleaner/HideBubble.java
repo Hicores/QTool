@@ -32,7 +32,7 @@ public class HideBubble extends BaseHookItem implements BaseUiItem {
         Method[] m = getMethod();
         XPBridge.HookAfter(m[0],param -> {
             if (IsEnable){
-                List list = MField.GetField(param.thisObject,"a", List.class);
+                List list = MField.GetFirstField(param.thisObject, List.class);
                 if(list==null)return;
                 Object ChatMsg = list.get((int) param.args[0]);
                 MField.SetField(ChatMsg,"vipBubbleID",(long)0);
@@ -79,7 +79,7 @@ public class HideBubble extends BaseHookItem implements BaseUiItem {
                 View.class,
                 ViewGroup.class
         });;
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy","a", void.class,new Class[]{
+        m[1] = MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
                 String.class,
                 int.class,
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),

@@ -11,7 +11,7 @@ public class GlobalConfig {
         SharedPreferences share = HookEnv.AppContext.getSharedPreferences(TAG, 0);
         SharedPreferences.Editor editor = share.edit();
         editor.putString(Name, Value);
-        editor.apply();
+        editor.commit();
     }
 
     public static String Get_String(String Name) {
@@ -23,7 +23,7 @@ public class GlobalConfig {
         SharedPreferences share = HookEnv.AppContext.getSharedPreferences(TAG, 0);
         SharedPreferences.Editor editor = share.edit();
         editor.putBoolean(Name, Value);
-        editor.apply();
+        editor.commit();
     }
 
     public static boolean Get_Boolean(String Name, boolean Defvalue) {

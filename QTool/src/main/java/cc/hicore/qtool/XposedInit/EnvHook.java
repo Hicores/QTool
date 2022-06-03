@@ -12,6 +12,7 @@ import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
@@ -19,6 +20,7 @@ import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.CrashHandler.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
@@ -29,15 +31,14 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class EnvHook {
     private static final String TAG = "EnvHook";
-    private static volatile boolean IsInit = false;
+    private static volatile AtomicBoolean IsInit = new AtomicBoolean();
 
     public static void HookForContext() {
         //由于很多环境的初始化都需要Context来进行,所有这里选择直接Hook获取Context再进行初始化
         XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (IsInit)return;
-                IsInit = true;
+                if (IsInit.getAndSet(true))return;
                 if (HookEnv.IsMainProcess) {
                     XposedBridge.log("[QTool]BaseHook Start");
                 }
@@ -46,7 +47,7 @@ public class EnvHook {
                 try {
                     HookEnv.Application = (Application) param.thisObject;
                     HookEnv.AppContext = HookEnv.Application.getApplicationContext();
-
+                    HostInfo.Init();
                     //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                     HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
 
@@ -54,7 +55,6 @@ public class EnvHook {
 
                     //优先初始化Path
                     ExtraPathInit.InitPath();
-
 
                     //然后注入资源
                     if (!BeforeConfig.getBoolean("Enable_SafeMode")){
@@ -68,18 +68,16 @@ public class EnvHook {
                         }
                     }
 
-
-
-
                     SettingInject.startInject();
-                    if (HookEnv.ExtraDataPath != null && !BeforeConfig.getBoolean("Enable_SafeMode")) {
 
-                        HostInfo.Init();
+                    if (HookEnv.ExtraDataPath != null && !BeforeConfig.getBoolean("Enable_SafeMode") && !MethodFinder.NeedLockAndFindDex()) {
+
                         InitActivityProxy();
                         //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
 
                         HookLoader.SearchAndLoadAllHook();
                     }
+
                 } finally {
                     if (HookEnv.IsMainProcess) {
                         XposedBridge.log("[QTool]BaseHook Init End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
@@ -116,8 +114,24 @@ public class EnvHook {
                 long timeStart = System.currentTimeMillis();
                 BeforeCheck.StartCheckAndShow();
 
-                if (HookEnv.ExtraDataPath == null) ExtraPathInit.ShowPathSetDialog(false);
-                else HookLoader.CallAllDelayHook();
+                if (HookEnv.ExtraDataPath == null){
+                    ExtraPathInit.ShowPathSetDialog(false);
+                    return;
+                }
+
+                if (MethodFinder.NeedLockAndFindDex()){
+                    HookLoader.SearchAndPreCheckInstance();
+                    MethodFinder.PreLoadDexFindDialogAndLock(Utils.getTopActivity());
+
+
+                    InitActivityProxy();
+                    HookLoader.SearchAndLoadAllHook();
+                    HookLoader.CallAllDelayHook();
+                    InitAppCenter();
+                    return;
+                }
+
+                HookLoader.CallAllDelayHook();
                 InitAppCenter();
                 new Thread(CloudBlack::startCheckCloudBlack).start();
 

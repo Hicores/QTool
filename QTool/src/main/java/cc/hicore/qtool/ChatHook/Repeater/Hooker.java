@@ -43,7 +43,7 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
             else return;
             Context context= baseChatItem.getContext();
             if (context.getClass().getName().contains("MultiForwardActivity"))return;
-            List MessageRecoreList = MField.GetField(param.thisObject, "a", List.class);
+            List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
             if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
             if (ChatMsg == null) return;

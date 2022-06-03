@@ -18,6 +18,7 @@ import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -121,6 +122,17 @@ public class DebugDialog {
         });
         crashBar.addView(btnCrashThread);
         mRoot.addView(crashBar);
+
+        Button btnCleanMethodCache = new Button(context);
+        btnCleanMethodCache.setText("清除适配数据并重启");
+        btnCleanMethodCache.setOnClickListener(v->{
+            HookEnv.Config.removeAll("cache_dex_finder_ver");
+            GlobalConfig.Put_String("cache_qq_ver","0");
+            GlobalConfig.Put_String("cache_qtool_ver", "0");
+            QQEnvUtils.ExitQQAnyWays();
+
+        });
+        mRoot.addView(btnCleanMethodCache);
 
         TextView titleClzInfo = new TextView(context);
         titleClzInfo.setTextColor(Color.parseColor("#6666ff"));

@@ -45,32 +45,11 @@ public class FakeDevInfo extends BaseHookItem implements BaseUiItem {
                 }
             }
         });
-        try{
-            m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.Pandora.deviceInfo.DeviceInfoManager"), "getModel",String.class,new Class[]{
-                    Context.class
-            });
-            XPBridge.HookAfter(m,param -> {
-                if (HookEnv.Config.getBoolean("Set","FakeDevInfoOpen",false)){
-                    param.setResult(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
-                }
-            });
-        }catch (Throwable th){
-            if (HostInfo.getVerCode() < 7830){
-                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "h",String.class,new Class[]{
-                        Context.class
-                });
-            }else {
-                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g",String.class,new Class[]{
-                        Context.class
-                });
+        XPBridge.HookAfter(getMethod(),param -> {
+            if (HookEnv.Config.getBoolean("Set","FakeDevInfoOpen",false)){
+                param.setResult(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
             }
-
-            XPBridge.HookAfter(m,param -> {
-                if (HookEnv.Config.getBoolean("Set","FakeDevInfoOpen",false)){
-                    param.setResult(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
-                }
-            });
-        }
+        });
 
         return true;
     }
@@ -82,7 +61,27 @@ public class FakeDevInfo extends BaseHookItem implements BaseUiItem {
 
     @Override
     public boolean check() {
-        return true;
+        return getMethod() != null;
+    }
+    public Method getMethod(){
+        Method m =  MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.Pandora.deviceInfo.DeviceInfoManager"), "getModel",String.class,new Class[]{
+                Context.class
+        });
+        if (m == null){
+            if (HostInfo.getVerCode() < 7830){
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "h",String.class,new Class[]{
+                        Context.class
+                });
+            }else {
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g",String.class,new Class[]{
+                        Context.class
+                });
+            }
+        }
+        if (m == null){
+            m = MMethod.FindMethod(MClass.loadClass("com.tencent.qmethod.pandoraex.monitor.DeviceInfoMonitor"), "getModel",String.class,new Class[0]);
+        }
+        return m;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class HideSignTip extends BaseHookItem implements BaseUiItem {
     }
 
     private Method getMethod() {
-        Method m = MMethod.FindMethod("com.tencent.mobileqq.graytip.UniteGrayTipUtil", "a", MClass.loadClass("com.tencent.mobileqq.graytip.UniteEntity"),
+        Method m = MMethod.FindMethod("com.tencent.mobileqq.graytip.UniteGrayTipUtil", null, MClass.loadClass("com.tencent.mobileqq.graytip.UniteEntity"),
                 new Class[]{String.class});
         return m;
     }

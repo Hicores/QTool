@@ -58,7 +58,7 @@ public class ShowMessageTime extends BaseHookItem implements BaseUiItem {
         XPBridge.HookAfter(m, param -> {
             Object mGetView = param.getResult();
             if (!IsEnable || !(mGetView instanceof RelativeLayout)) return;
-            List msgList = MField.GetField(param.thisObject, param.thisObject.getClass(), "a", List.class);
+            List msgList = MField.GetFirstField(param.thisObject,  List.class);
             if (msgList == null) return;
             Object ChatMsg = msgList.get((int) param.args[0]);
             //解析消息

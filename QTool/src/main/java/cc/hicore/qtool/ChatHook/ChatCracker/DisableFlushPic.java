@@ -58,7 +58,7 @@ public class DisableFlushPic extends BaseHookItem implements BaseUiItem {
                 Object mGetView = param.getResult();
                 RelativeLayout mLayout;
                 if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-                List MessageRecoreList = MField.GetField(param.thisObject,param.thisObject.getClass() ,"a", List.class);
+                List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
                 if(MessageRecoreList==null)return;
                 Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
                 String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
@@ -105,7 +105,7 @@ public class DisableFlushPic extends BaseHookItem implements BaseUiItem {
     }
     public Method[] getMethod(){
         Method[] m = new Method[3];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.app.FlashPicHelper","a",boolean.class,new Class[]{
+        m[0] = MMethod.FindMethod("com.tencent.mobileqq.app.FlashPicHelper",null,boolean.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")
         });
         m[1] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.typesupplier.PicTypeSupplier","a",int.class,new Class[]{

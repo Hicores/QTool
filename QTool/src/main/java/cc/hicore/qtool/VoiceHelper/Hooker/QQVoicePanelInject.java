@@ -131,7 +131,7 @@ public class QQVoicePanelInject extends BaseHookItem implements BaseUiItem {
             }
         }
 
-        m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder"), "a");
+        m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder"));
         m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.PttItemBuilder", "a", void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
 

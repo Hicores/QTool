@@ -39,6 +39,44 @@ public class HookLoader {
 
     private static HashMap<String, BaseHookItem> cacheHookInst = new HashMap<>();
     private static LinkedHashMap<String, BaseUiItem> cacheUiItem = new LinkedHashMap<>();
+    public static void SearchAndPreCheckInstance(){
+        try{
+            ClassLoader mLoader = HookLoader.class.getClassLoader();
+            Class findClz = mLoader.loadClass("cc.hicore.qtool.XposedInit.ItemLoader.MItemInfo");
+            BasicInit = MField.GetField(null, findClz, "BasicInit", ArrayList.class);
+            DelayInit = MField.GetField(null, findClz, "DelayInit", ArrayList.class);
+
+            for (String clzName : BasicInit) {
+                if (!cacheHookInst.containsKey(clzName)) {
+                    Class<?> clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)) {
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        try {
+                            mItem.check();
+                        }catch (Throwable th){
+                            XposedBridge.log(th);
+                        }
+
+                    }
+                }
+            }
+            for (String clzName : DelayInit) {
+                if (!cacheHookInst.containsKey(clzName)) {
+                    Class<?> clz = mLoader.loadClass(clzName);
+                    if (BaseHookItem.class.isAssignableFrom(clz)) {
+                        BaseHookItem mItem = (BaseHookItem) clz.newInstance();
+                        try {
+                            mItem.check();
+                        }catch (Throwable th){
+                            XposedBridge.log(th);
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+
+        }
+    }
 
     //获取被注解的类,并通过newInstance进行加载,所以需要动态加载的Hook对象一定要是public的,不能是其他属性
     public static void SearchAndLoadAllHook() {

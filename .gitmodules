@@ -1,0 +1,3 @@
+[submodule "QTool/src/main/adfawhf/DexBuilder"]
+	path = QTool/src/main/adfawhf/DexBuilder
+	url = https://github.com/LSPosed/DexBuilder

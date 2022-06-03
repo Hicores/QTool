@@ -124,7 +124,7 @@ public class QQEnvUtils {
         long TargetUin = Long.parseLong(QQUin);
 
         try {
-            Method m = MMethod.FindMethod("com.tencent.mobileqq.app.CardHandler", "a", void.class, new Class[]{
+            Method m = MMethod.FindMethod("com.tencent.mobileqq.app.CardHandler", null, void.class, new Class[]{
                     long.class, long.class, byte[].class, int.class, int.class, int.class
             });
             Object CardHandler = MMethod.CallMethodSingle(HookEnv.AppInterface, "getBusinessHandler",
@@ -176,7 +176,7 @@ public class QQEnvUtils {
     public static void ExitQQAnyWays() {
         try{
             Object Appinterface = getAppRuntime();
-            MField.SetField(Appinterface,"bReceiveMsgOnExit",false);
+            MField.SetField(Appinterface,"bReceiveMsgOnExit",true);
             MMethod.CallMethod(Appinterface,"exit",void.class,new Class[]{
                     boolean.class
             },false);

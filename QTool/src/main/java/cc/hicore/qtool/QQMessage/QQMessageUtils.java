@@ -21,6 +21,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import cc.hicore.qtool.XposedInit.MethodFinder;
 import de.robv.android.xposed.XposedBridge;
 
 public class QQMessageUtils {
@@ -29,9 +30,15 @@ public class QQMessageUtils {
             if (HookEnv.AppInterface == null) return null;
             Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            return MMethod.CallMethod(MessageFacade, "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                    String.class, int.class, long.class
-            }, uin, istroop, msgseq);
+            if (HostInfo.getVerCode() > 8000) {
+                Method m = MethodFinder.findMethodFromCache("GetMessageByTimeSeq");
+                return m.invoke(MessageFacade,uin,istroop,msgseq);
+            }else {
+                return MMethod.CallMethod(MessageFacade, "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
+                        String.class, int.class, long.class
+                }, uin, istroop, msgseq);
+            }
+
         } catch (Exception e) {
             LogUtils.error("QQMessageUtils", "GetMessageByTimeSeq error:\n" + e);
             return null;
@@ -48,8 +55,13 @@ public class QQMessageUtils {
 
             Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
                     MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
+            if (HostInfo.getVerCode() > 8000){
+                Method update = MethodFinder.findMethodFromCache("updateCache");
+                update.invoke(MsgCache,true);
+            }else {
+                MMethod.CallMethod(MsgCache, "b", void.class, new Class[]{boolean.class}, true);
+            }
 
-            MMethod.CallMethod(MsgCache, "b", void.class, new Class[]{boolean.class}, true);
             MessageFacade_RevokeMessage().invoke(MessageFacade, msg);
         } catch (Exception e) {
             LogUtils.error("revokeMsg", e);
@@ -59,13 +71,13 @@ public class QQMessageUtils {
 
     public static void AddMsg(Object MessageRecord) {
         try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
+            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                    String.class
+                    String.class,boolean.class,boolean.class,boolean.class,boolean.class
             });
             Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            InvokeMethod.invoke(MessageFacade, MessageRecord, QQEnvUtils.getCurrentUin());
+            InvokeMethod.invoke(MessageFacade, MessageRecord, QQEnvUtils.getCurrentUin(),false,false,false,true);
         } catch (Throwable th) {
             LogUtils.error("AddMsg", th);
         }
@@ -75,11 +87,11 @@ public class QQMessageUtils {
         try {
             Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
                     MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
+            Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                    MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver")
+                    MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver"),boolean.class
             });
-            mMethod.invoke(MessageFacade, MessageRecord, null);
+            mMethod.invoke(MessageFacade, MessageRecord, null,false);
         } catch (Exception e) {
             LogUtils.error("AddAndSendMsg", e);
         }
@@ -89,7 +101,7 @@ public class QQMessageUtils {
     private static void RevokeTroopFile(Object MessageRecord) {
         try {
             Object RevokeHelper = QQEnvUtils.GetRevokeHelper();
-            MMethod.CallMethod(RevokeHelper, "a", void.class, new Class[]{
+            MMethod.CallMethod(RevokeHelper, null, void.class, new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForTroopFile")
             }, MessageRecord);
         } catch (Exception ex) {
@@ -98,10 +110,15 @@ public class QQMessageUtils {
     }
 
     private static Method MessageFacade_RevokeMessage() {
-        Method m =
-                HostInfo.getVerCode() < 5670 ?
-                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}) :
-                        MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()});
+        Method m;
+        if (HostInfo.getVerCode() < 8000){
+             m =
+                    HostInfo.getVerCode() < 5670 ?
+                            MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}) :
+                            MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()});
+        }else {
+            m = MethodFinder.findMethodFromCache("RevokeMessage");
+        }
         return m;
     }
 

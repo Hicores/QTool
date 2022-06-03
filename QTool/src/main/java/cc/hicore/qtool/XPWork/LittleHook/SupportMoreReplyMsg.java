@@ -37,7 +37,9 @@ public class SupportMoreReplyMsg extends BaseHookItem implements BaseUiItem {
     }
 
     public Method getMethod() {
-        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.bubble.LeftSwipeReplyHelper"), "h", boolean.class, new Class[0]);
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.bubble.LeftSwipeReplyHelper"), "h", boolean.class, new Class[0]);
+        if (m == null) m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.bubble.LeftSwipeReplyHelper"), "H", boolean.class, new Class[0]);
+        return m;
     }
 
     @Override

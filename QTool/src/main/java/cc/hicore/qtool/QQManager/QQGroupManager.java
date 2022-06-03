@@ -20,7 +20,7 @@ public class QQGroupManager {
             Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
             ArrayList<Long> KickList = new ArrayList<>();
             KickList.add(Long.parseLong(UserUin));
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", null, void.class, new Class[]{
                     long.class,
                     List.class,
                     boolean.class,
@@ -42,7 +42,7 @@ public class QQGroupManager {
             Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
             ArrayList<Long> KickList = new ArrayList<>();
             for (String Uin : UserUin) KickList.add(Long.parseLong(Uin));
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", null, void.class, new Class[]{
                     long.class,
                     List.class,
                     boolean.class,
@@ -69,12 +69,12 @@ public class QQGroupManager {
                 Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getBusinessHandler",
                         MClass.loadClass("com.tencent.mobileqq.app.BusinessHandler"),
                         MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.BusinessHandlerFactory"), "TROOP_GAG_HANDLER"));
-                MMethod.CallMethodParams(TroopGagManager, "a", void.class, GroupUin, time);
+                MMethod.CallMethodParams(TroopGagManager, null, void.class, GroupUin, time);
             } else {
                 Object TroopGagManager = MMethod.CallMethodSingle(QQEnvUtils.getAppRuntime(), "getManager",
                         MClass.loadClass("mqq.manager.Manager"),
                         MField.GetStaticField(MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "TROOP_GAG_MANAGER"));
-                MMethod.CallMethodParams(TroopGagManager, "a", boolean.class, GroupUin, UserUin, time);
+                MMethod.CallMethodParams(TroopGagManager, null, boolean.class, GroupUin, UserUin, time);
             }
         } catch (Exception e) {
             LogUtils.error("Group_Mute", e);
@@ -84,7 +84,7 @@ public class QQGroupManager {
     public static void Group_Change_Title(String GroupUin, String UserUin, String title) {
         try {
             Object mProxy = Proxy.newProxyInstance(HookEnv.mLoader, new Class[]{MClass.loadClass("mqq.observer.BusinessObserver")}, (proxy, method, args) -> null);
-            MMethod.CallMethod(null, MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"), "a", void.class, new Class[]{
+            MMethod.CallMethod(null, MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"), null, void.class, new Class[]{
                             HookEnv.AppInterface.getClass(), String.class, String.class, String.class, MClass.loadClass("mqq.observer.BusinessObserver")
                     },
                     HookEnv.AppInterface, GroupUin, UserUin, title, mProxy);
@@ -109,7 +109,7 @@ public class QQGroupManager {
             ArrayList mList2 = new ArrayList();
             mList.add(TroopCardObj);
             mList2.add(1);
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler", "a", void.class, new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler", null, void.class, new Class[]{
                     String.class,
                     ArrayList.class,
                     ArrayList.class

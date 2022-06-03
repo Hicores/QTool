@@ -131,7 +131,7 @@ public class QQMsgBuilder {
     public static Object buildPic0(Object _Session, String PicPath) {
         try {
 
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"), new Class[]{
+            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"), new Class[]{
                     MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                     MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
                     String.class
@@ -151,7 +151,7 @@ public class QQMsgBuilder {
     }
     public static Object buildText(String GroupUin, String text) {
         try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
+            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
                     MClass.loadClass("com.tencent.common.app.AppInterface"),
                     String.class,
                     String.class,
@@ -215,7 +215,7 @@ public class QQMsgBuilder {
     }
     public static Object Copy_NewFlashChat(Object SourceChat) {
         try {
-            Method ArkChatObj = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a",
+            Method ArkChatObj = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null,
                     MClass.loadClass("com.tencent.mobileqq.data.MessageForArkFlashChat"),
                     new Class[]{
                             MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
@@ -234,10 +234,7 @@ public class QQMsgBuilder {
         }
     }
     public static Object CopyToTYMessage(Object SourceObj) throws Exception {
-        Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                int.class
-        });
-        Object mMessageRecord = CallMethod.invoke(null, -7001);
+        Object mMessageRecord = build_common_message_record(-7001);
         MMethod.CallMethod(mMessageRecord, mMessageRecord.getClass().getSuperclass().getSuperclass(), "initInner", void.class,
                 new Class[]{String.class, String.class, String.class, String.class, long.class, int.class, int.class, long.class},
                 QQEnvUtils.getCurrentUin(), MField.GetField(SourceObj, "frienduin"), QQEnvUtils.getCurrentUin(), "[涂鸦]", System.currentTimeMillis() / 1000, -7001,
@@ -262,14 +259,16 @@ public class QQMsgBuilder {
         MField.SetField(mMessageRecord, "msg", "[涂鸦]");
         MMethod.CallMethodNoParam(mMessageRecord, "prewrite", void.class);
         MMethod.CallMethodNoParam(mMessageRecord, "parse", void.class);
+        /*
         Object finalRecord = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"), "a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 new Class[]{MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")}, mMessageRecord
         );
-        return finalRecord;
+
+         */
+        return mMessageRecord;
     }
     public static Object CopyToMacketFaceMessage(Object SourceObj) throws Exception {
-        Object mMessageRecord = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"), "a",
-                MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{int.class}, -2007);
+        Object mMessageRecord = build_common_message_record(-2007);
         MMethod.CallMethod(mMessageRecord, mMessageRecord.getClass().getSuperclass().getSuperclass(), "initInner", void.class,
                 new Class[]{String.class, String.class, String.class, String.class, long.class, int.class, int.class, long.class},
                 QQEnvUtils.getCurrentUin(), MField.GetField(SourceObj, "frienduin"), QQEnvUtils.getCurrentUin(), "[原创表情]", System.currentTimeMillis() / 1000, -2007,
@@ -300,7 +299,7 @@ public class QQMsgBuilder {
             String friendInfo = MField.GetField(raw, "frienduin", String.class);
             int istroop = MField.GetField(raw, "istroop", int.class);
             MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"),
-                    "a", void.class, new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface"), Classes.MessageRecord(), String.class, String.class, int.class},
+                    null, void.class, new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface"), Classes.MessageRecord(), String.class, String.class, int.class},
                     HookEnv.AppInterface, PokeEmo, friendInfo, QQEnvUtils.getCurrentUin(), istroop);
             return PokeEmo;
         } catch (Exception e) {
@@ -310,10 +309,7 @@ public class QQMsgBuilder {
 
     }
     public static Object Build_RawMessageRecord_Troop(String GroupUin,int Type) throws Exception {
-        Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
-                int.class
-        });
-        Object mMessageRecord = CallMethod.invoke(null,Type);
+        Object mMessageRecord = build_common_message_record(Type);
         MMethod.CallMethod(mMessageRecord,mMessageRecord.getClass().getSuperclass().getSuperclass(),"init",void.class,
                 new Class[]{String.class,String.class,String.class,String.class,long.class,int.class,int.class,long.class},
                 QQEnvUtils.getCurrentUin(),GroupUin,QQEnvUtils.getCurrentUin(),"",System.currentTimeMillis()/1000,Type,
@@ -377,5 +373,25 @@ public class QQMsgBuilder {
             MField.SetField(record,"senderuin",fakeUin);
             return record;
         }
+    }
+
+    public static Object build_common_message_record(int type){
+        try{
+            if (HostInfo.getVerCode() > 8000){
+                Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","d", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
+                        int.class
+                });
+                return CallMethod.invoke(null,type);
+            }else {
+                Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
+                        int.class
+                });
+                return CallMethod.invoke(null,type);
+            }
+        }catch (Exception e){
+            LogUtils.error("build_common_message_record",e);
+            return null;
+        }
+
     }
 }
