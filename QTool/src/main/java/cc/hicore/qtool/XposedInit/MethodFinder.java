@@ -87,7 +87,11 @@ public class MethodFinder {
         return NeedFindAll || NeedFindExtra;
     }
     public static void PreLoadDexFindDialogAndLock(Context context){
-        if (needUpdateList.size() == 0)return;
+        if (needUpdateList.size() == 0){
+            GlobalConfig.Put_String("cache_qq_ver",""+HostInfo.getVerCode());
+            GlobalConfig.Put_String("cache_qtool_ver", BuildConfig.VERSION_CODE+"");
+            return;
+        }
         AtomicBoolean locker = new AtomicBoolean();
         new Handler(Looper.getMainLooper()).post(()->{
             LinearLayout mRoot = new LinearLayout(context);
