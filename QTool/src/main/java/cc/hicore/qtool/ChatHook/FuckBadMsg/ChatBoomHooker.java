@@ -84,6 +84,13 @@ public class ChatBoomHooker extends BaseHookItem implements BaseUiItem {
                         if (msg.length() > msgLength){
                             param.setResult(buildMsgPanel(chatMsg,"长度屏蔽,长度过长->"+msg.length()));
                         }
+                    }else if (clzName.equals("MessageForStructing")){
+                        Object Structing = MField.GetField(chatMsg,"structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
+                        String xml= MMethod.CallMethod(Structing,MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"),"getXml",String.class,new Class[0],new Object[0]);
+                        int msgLength = HookEnv.Config.getInt("Set","Chat_Boom_Length_Set",8192);
+                        if (xml.length() > msgLength){
+                            param.setResult(buildMsgPanel(chatMsg,"长度屏蔽,长度过长->"+xml.length()));
+                        }
                     }
                 }
             }
