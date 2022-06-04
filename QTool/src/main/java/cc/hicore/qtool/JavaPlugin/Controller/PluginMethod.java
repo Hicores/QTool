@@ -64,7 +64,12 @@ public class PluginMethod {
     }
 
     public void sendTip(Object source, String text) {
-        QQMsgSendUtils.addTip(source, text);
+        if (source instanceof PluginInfo.MessageData){
+            QQMsgSendUtils.addTip(((PluginInfo.MessageData) source).msg, text);
+        }else {
+            QQMsgSendUtils.addTip(source, text);
+        }
+
     }
 
     public void sendVoice(String GroupUin, String UserUin, String Path) {
