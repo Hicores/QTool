@@ -155,7 +155,12 @@ public class PluginMethod {
     }
 
     public void revokeMsg(Object msg) {
-        QQMessageUtils.revokeMsg(msg);
+        if (msg instanceof PluginInfo.MessageData){
+            QQMessageUtils.revokeMsg(((PluginInfo.MessageData) msg).msg);
+        }else {
+            QQMessageUtils.revokeMsg(msg);
+        }
+
     }
 
     public void Forbidden(String GroupUin, String UserUin, int time) {
