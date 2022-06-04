@@ -147,7 +147,7 @@ public class AvatarMenuBuilder {
         //只有在群聊的时候才会添加艾特信息,私聊时不进行添加
         if(AvatarMenuHooker.chatPie.getClass().getName().equals("com.tencent.mobileqq.activity.aio.core.TroopChatPie")){
             try {
-                MMethod.CallMethod(AvatarMenuHooker.chatPie,"a",void.class,new Class[]{String.class,String.class,boolean.class,int.class},
+                MMethod.CallMethod(AvatarMenuHooker.chatPie,null,void.class,new Class[]{String.class,String.class,boolean.class,int.class},
                         UserUin, QQGroupUtils.Group_Get_Member_Name(GroupUin,UserUin),false,1);
             } catch (Exception e) {
                 e.printStackTrace();
