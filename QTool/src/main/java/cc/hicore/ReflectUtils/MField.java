@@ -157,12 +157,25 @@ public class MField {
     public static <T> T GetFirstField(Object CheckObj, Class<?> FieldClass) throws Exception {
         return GetFirstField(CheckObj, CheckObj.getClass(), FieldClass);
     }
-
+    public static Field FindFirstField(Class<?> ObjClass,  Class<?> FieldType){
+        Class<?> FindClass = ObjClass;
+        while (FindClass != null) {
+            for (Field f : FindClass.getDeclaredFields()) {
+                if (f.getType().equals(FieldType)) {
+                    f.setAccessible(true);
+                    return f;
+                }
+            }
+            FindClass = FindClass.getSuperclass();
+        }
+        return null;
+    }
     public static Field FindField(Class<?> ObjClass, String FieldName, Class<?> FieldType) {
         Class<?> FindClass = ObjClass;
         while (FindClass != null) {
             for (Field f : FindClass.getDeclaredFields()) {
                 if (f.getName().equals(FieldName) && f.getType().equals(FieldType)) {
+                    f.setAccessible(true);
                     return f;
                 }
             }

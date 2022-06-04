@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,8 +168,8 @@ public class QQMessageUtils {
             Object multiRequest = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgRequest"));
             Object struct = QQMsgBuilder.build_struct(fakeMsgXML);
             Object structContainer = QQMsgBuilder.build_MessageForStruct(struct,QQSessionUtils.Build_SessionInfo(fakeGroup,fakeUin));
-            MField.SetField(multiRequest,"d",struct);
-            MField.SetField(multiRequest,"e",structContainer);
+            Field f= MField.FindFirstField(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgRequest"),MClass.loadClass("com.tencent.mobileqq.data.MessageForStructing"));
+            f.set(multiRequest,structContainer);
 
             HashMap<String,String> uinContainer = new HashMap<>();
             if (!TextUtils.isEmpty(fakeName)){
@@ -178,14 +179,14 @@ public class QQMessageUtils {
             }
 
             MField.SetField(multiRequest,"c",uinContainer);
-
             List chatMessageContainer = new ArrayList();
             chatMessageContainer.addAll(messageRecords);
+
             MField.SetField(multiRequest,"b",chatMessageContainer);
             MField.SetField(multiRequest,"a",session);
 
             Object controller = MMethod.CallMethodNoParam(HookEnv.AppInterface,"getMultiMsgController",MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgController"));
-            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgController"),"b",void.class,new Class[]{MClass.loadClass("com.tencent.mobileqq.pic.UpCallBack$SendResult")}),param -> {
+            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.multimsg.MultiMsgController"),null,void.class,new Class[]{MClass.loadClass("com.tencent.mobileqq.pic.UpCallBack$SendResult")}),param -> {
                 Object result = param.args[0];
                 param.setResult(null);
                 int code = MField.GetField(result,"a",int.class);
@@ -198,7 +199,7 @@ public class QQMessageUtils {
                     QQMsgSender.sendStruct(session,QQMsgBuilder.build_struct(willSendResult));
                 }
             });
-            MMethod.CallMethodSingle(controller,"e",void.class,multiRequest);
+            MMethod.CallMethodSingle(controller,HostInfo.getVerCode() >8000 ? "r":"e",void.class,multiRequest);
         }catch (Exception e){
             LogUtils.error("sendFakeMultiMgs",e);
         }
