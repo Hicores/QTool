@@ -13,6 +13,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQGroupUtils {
     public static String Group_Get_Name(String GroupUin) {
@@ -167,7 +168,7 @@ public class QQGroupUtils {
     public static String GetTroopNameByContact(String GroupUin) {
         try{
             String mStr = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ContactUtils"),
-                    "a",String.class,HookEnv.AppInterface,GroupUin,true);
+                    HostInfo.getVerCode() > 8000 ? "W":"a",String.class,HookEnv.AppInterface,GroupUin,true);
             return mStr;
         }catch (Exception ex) {
             LogUtils.error("GetTroopNameByContact",ex);
