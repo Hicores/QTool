@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'top.niunaijun.blackobfuscator'
 }
 
 android {
@@ -116,4 +117,9 @@ stringfog {
     enable true
     implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
     fogPackages = ['cc.hicore']
+}
+BlackObfuscator {
+    enabled false
+    depth 2
+    obfClass = ["cc.hicore.qtool"]
 }
