@@ -55,7 +55,7 @@ public class MainMenu {
             now_version.setText("当前版本:"+ BuildConfig.VERSION_NAME);
 
             TextView new_version = v.findViewById(R.id.Version_New);
-            new_version.setText("最新CI版本:QTool-CI-"+ HookEnv.New_Version);
+            new_version.setText("最新CI版本:v"+ HookEnv.New_Version);
 
             try{
                 if (BeforeConfig.getBoolean("Enable_SubMode") && (Integer.parseInt(HookEnv.New_Version) > BuildConfig.VERSION_CODE)){
@@ -66,7 +66,7 @@ public class MainMenu {
                                 .setTitle("是否更新?")
                                 .setMessage("是否更新到CI-"+HookEnv.New_Version)
                                 .setNegativeButton("确定更新", (dialog, which) -> {
-                                    HttpUtils.ProgressDownload("https://down.haonb.cc/CIDL/QTool-CI-"+HookEnv.New_Version+"/QTool-release.apk",cachePath,()->{
+                                    HttpUtils.ProgressDownload("https://down.haonb.cc/CIDL/v"+HookEnv.New_Version+"/QTool-release.apk",cachePath,()->{
                                         if (new File(cachePath).length() > 1024){
                                             FileUtils.copy(cachePath,truePath);
                                         }

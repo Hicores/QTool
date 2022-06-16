@@ -36,7 +36,7 @@ jobs:
         if: ${{ !github.event.pull_request }}
         with:
           path: 'QTool/build/outputs/apk/release/QTool-release.apk'
-          name: QTool-CI-${{ github.run_number }}
+          name: QTool-v${{ github.run_number }}
       - name: Write Commit Message To File
         run: |
           cat << ENDOFCOMMIT > ./QTool/build/outputs/apk/release/Commit信息.txt
@@ -46,7 +46,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            mkdir ${{ secrets.DEPLOY_DEST }}QTool-CI-${{ github.run_number }}/
+            mkdir ${{ secrets.DEPLOY_DEST }}v${{ github.run_number }}/
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
           port: 22
