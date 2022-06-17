@@ -10,8 +10,14 @@ import java.lang.annotation.Target;
 public @interface XPItem {
     int ITEM_Hook = 1;
     int ITEM_Api = 2;
+    int itemType();
+
     int target() default -1;
     boolean isStrict() default false;
-    int itemType();
+
+    int PROC_MAIN = 1;
+    int PROC_ALL = -1;
+
     String name();
+    int proc() default PROC_MAIN;
 }

@@ -94,7 +94,6 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
 
     annotationProcessor project(':ItemProcesser')
-    implementation project(":ItemProcesser")
 
 
     implementation 'com.github.kyuubiran:EzXHelper:0.8.8'
@@ -112,7 +111,7 @@ apply plugin: 'stringfog'
 
 stringfog {
     key 'Hello World'
-    enable true
+    enable false
     implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
     fogPackages = ['cc.hicore']
 }
