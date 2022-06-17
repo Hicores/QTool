@@ -78,6 +78,7 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
 
     annotationProcessor project(':ItemProcesser')
+    implementation project(':ItemProcesser')
 
     implementation 'com.github.kyuubiran:EzXHelper:0.8.8'
 
