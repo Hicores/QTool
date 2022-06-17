@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'top.niunaijun.blackobfuscator'
 }
 
 android {
@@ -41,8 +40,8 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
         }
@@ -58,21 +57,6 @@ android {
     }
     aaptOptions {
         additionalParameters '--allow-reserved-package-id','--package-id','0x48'
-    }
-    applicationVariants.all{ variant ->
-        variant.javaCompileProvider.get().doLast{
-            println  ("start classes obfuscation "+"${variant.javaCompile.destinationDir}")
-
-            javaexec {
-                main = "-jar";
-                args = [
-                        "../obfuseStringGradle.jar",
-                        project.name,
-                        variant.javaCompile.destinationDir
-                ]
-            }
-            println  ("obfuse finish")
-        }
     }
     externalNativeBuild {
         cmake {
@@ -95,7 +79,6 @@ dependencies {
 
     annotationProcessor project(':ItemProcesser')
 
-
     implementation 'com.github.kyuubiran:EzXHelper:0.8.8'
 
     def appCenterSdkVersion = '4.4.3'
@@ -104,19 +87,4 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
-    implementation 'com.github.megatronking.stringfog:xor:1.1.0'
-}
-
-apply plugin: 'stringfog'
-
-stringfog {
-    key 'Hello World'
-    enable false
-    implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
-    fogPackages = ['cc.hicore']
-}
-BlackObfuscator {
-    enabled false
-    depth 2
-    obfClass = ["cc.hicore.qtool"]
 }
