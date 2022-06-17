@@ -63,9 +63,8 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 HookEnv.AppApkPath = lpparam.appInfo.processName;
                 XposedBridge.log("startup module from:"+HookEnv.ToolApkPath);
 
-                if (!BeforeConfig.getBoolean("Enable_SafeMode")){
-                    EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
-                }
+                EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
+
                 EnvHook.HookForContext();
             }
         }

@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
+import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
@@ -57,25 +58,22 @@ public class EnvHook {
                     ExtraPathInit.InitPath();
 
                     //然后注入资源
-                    if (!BeforeConfig.getBoolean("Enable_SafeMode")){
-                        EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
-                        ResUtils.StartInject(HookEnv.AppContext);
-                        //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                        HookForDelay();
+                    EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
+                    ResUtils.StartInject(HookEnv.AppContext);
+                    //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
+                    HookForDelay();
 
-                        if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
-                            LogcatCatcher.startCatcherOnce();
-                        }
+                    if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                        LogcatCatcher.startCatcherOnce();
                     }
 
                     SettingInject.startInject();
 
-                    if (HookEnv.ExtraDataPath != null && !BeforeConfig.getBoolean("Enable_SafeMode") && !MethodFinder.NeedLockAndFindDex()) {
-
+                    if (HookEnv.ExtraDataPath != null) {
                         InitActivityProxy();
                         //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
 
-                        HookLoader.SearchAndLoadAllHook();
+                        CoreLoader.onBeforeLoad();
                     }
 
                 } finally {
@@ -118,22 +116,10 @@ public class EnvHook {
                     ExtraPathInit.ShowPathSetDialog(false);
                     return;
                 }
+                CoreLoader.onAfterLoad();
 
-                if (MethodFinder.NeedLockAndFindDex()){
-                    HookLoader.SearchAndPreCheckInstance();
-                    MethodFinder.PreLoadDexFindDialogAndLock(Utils.getTopActivity());
-
-
-                    InitActivityProxy();
-                    HookLoader.SearchAndLoadAllHook();
-                    HookLoader.CallAllDelayHook();
-                    InitAppCenter();
-                    return;
-                }
-
-                HookLoader.CallAllDelayHook();
+                InitActivityProxy();
                 InitAppCenter();
-                new Thread(CloudBlack::startCheckCloudBlack).start();
 
                 XposedBridge.log("[QTool]Delay Hook End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
             });

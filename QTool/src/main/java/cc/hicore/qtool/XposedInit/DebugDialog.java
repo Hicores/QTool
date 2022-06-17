@@ -56,17 +56,6 @@ public class DebugDialog {
         btnChangeDir.setOnClickListener(vx -> ExtraPathInit.ShowPathSetDialog(true));
         ll.addView(btnChangeDir);
 
-        Button startLogcatDumper = new Button(context);
-        startLogcatDumper.setText("开启Logcat存储");
-        startLogcatDumper.setOnClickListener(vx->{
-            new AlertDialog.Builder(context)
-                    .setTitle("提示")
-                    .setMessage("在下两次QQ启动的时候,Logcat将会被导出到 "+ HookEnv.ExtraDataPath+"Log目录")
-                    .setNegativeButton("确定导出", (dialog, which) -> GlobalConfig.Put_Boolean("Confirm_Output_Logcat",true))
-                    .show();
-        });
-        //ll.addView(startLogcatDumper);
-
         CheckBox check = new CheckBox(context);
         check.setChecked(GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main",false));
         check.setTextColor(Color.BLACK);
@@ -79,14 +68,6 @@ public class DebugDialog {
         check.setTextColor(Color.BLACK);
         check.setText("阻止Java层的闪退(不一定总是有效)");
         check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Prevent_Crash_In_Java",isCheck));
-        mRoot.addView(check);
-
-
-        check = new CheckBox(context);
-        check.setChecked(BeforeConfig.getBoolean("Enable_SafeMode"));
-        check.setTextColor(Color.BLACK);
-        check.setText("启用安全模式");
-        check.setOnCheckedChangeListener((v,isCheck)->BeforeConfig.putBoolean("Enable_SafeMode",isCheck));
         mRoot.addView(check);
 
         check = new CheckBox(context);
