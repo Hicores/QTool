@@ -2,7 +2,7 @@ package cc.hicore.HookItemLoader.core;
 
 import java.util.ArrayList;
 
-public class MethodScanner {
+public class MethodScannerWorker {
     public static class ScannerLink{
         public String ID;
         public ArrayList<String> LinkingID;
