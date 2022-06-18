@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,16 +18,19 @@ import java.util.concurrent.atomic.AtomicReference;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIClick;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseMethodInfo;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
-    private static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
-    private static class XPItemInfo{
+    protected static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
+    protected static class XPItemInfo{
         Object Instance;
 
         HashMap<String,String> ExecutorException = new HashMap<>();
@@ -35,6 +39,7 @@ public class CoreLoader {
 
         boolean isVersionAvailable;
         boolean ScannerSuccess;
+        boolean isEnabled = true;
 
         HashSet<BaseMethodInfo> NeedMethodInfo = new HashSet<>();
         ArrayList<Method> scanResult = new ArrayList<>();
@@ -182,6 +187,72 @@ public class CoreLoader {
             };
             ScanAnnotation(clz,UIClick.class,methodCollector,true,sort);
         }
+        if (MethodScannerWorker.checkIsAvailable()){
+            XPHookInstance(true);
+        }
+    }
+    public static void onAfterLoad(){
+        if (MethodScannerWorker.checkIsAvailable()){
+            XPHookInstance(false);
+        }else {
+            MethodScannerWorker.doFindMethod();
+        }
+    }
+    private static void XPHookInstance(boolean isBefore){
+        for (Class<?> clz : clzInstance.keySet()){
+            XPItemInfo info = clzInstance.get(clz);
+            AnnoScanResult<XPExecutor> xpExecutor = (m, Anno) -> {
+                int index = Anno.index();
+                if (index < info.scanResult.size() && info.scanResult.get(index) != null){
+                    if (m.getReturnType().equals(BaseXPExecutor.class)){
+                        try {
+                            BaseXPExecutor executor = (BaseXPExecutor) m.invoke(info.Instance);
+                            if (Anno.period() == XPExecutor.Before){
+                                XPBridge.HookBefore(info.scanResult.get(index),param -> {
+                                    try{
+                                        if (info.isEnabled) {
+                                            executor.onInvoke(param);
+                                        }
+                                    }catch (Throwable th){
+                                        info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
+                                    }
+                                });
+                            }else {
+                                XPBridge.HookAfter(info.scanResult.get(index),param -> {
+                                    try{
+                                        if (info.isEnabled) {
+                                            executor.onInvoke(param);
+                                        }
+                                    }catch (Throwable th){
+                                        info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            };
+            AnnoScanSort<XPExecutor> sort = new AnnoScanSort<XPExecutor>() {
+                ArrayList<XPExecutor> executors = new ArrayList<>();
+                int targetVer = 0;
+                @Override
+                public void onResult(Method m, XPExecutor Anno) {
+                    if (targetVer < Anno.target()){
+                        targetVer = Anno.target();
+                        executors.clear();
+                    }
+                    executors.add(Anno);
+                }
+
+                @Override
+                public List<XPExecutor> onGetResult() {
+                    return executors;
+                }
+            };
+            ScanAnnotation(clz,XPExecutor.class,xpExecutor,true,sort);
+        }
+
     }
     private static boolean checkVersionAvailable(int version,boolean isStrict){
         if (version > 1){
@@ -230,7 +301,5 @@ public class CoreLoader {
         void onResult(Method m,T Anno);
         List<T> onGetResult();
     }
-    public static void onAfterLoad(){
 
-    }
 }
