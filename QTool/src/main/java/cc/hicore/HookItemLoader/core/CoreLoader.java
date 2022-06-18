@@ -1,5 +1,6 @@
 package cc.hicore.HookItemLoader.core;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseMethodInfo;
@@ -25,15 +27,22 @@ import de.robv.android.xposed.XposedBridge;
 public class CoreLoader {
     private static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
     private static class XPItemInfo{
-        HashMap<String,String> ExecutorException = new HashMap<>();
-        boolean isVersionAvailable;
         Object Instance;
-        boolean ScannerSuccess;
+
+        HashMap<String,String> ExecutorException = new HashMap<>();
         HashMap<String,String> CheckerException = new HashMap<>();
         ArrayList<String> cacheException = new ArrayList<>();
-        HashSet<Method> XPExecutors = new HashSet<>();
+
+        boolean isVersionAvailable;
+        boolean ScannerSuccess;
+
         HashSet<BaseMethodInfo> NeedMethodInfo = new HashSet<>();
+        ArrayList<Method> scanResult = new ArrayList<>();
+
+        HashSet<Method> XPExecutors = new HashSet<>();
+
         UIInfo ui;
+        Method uiClick;
     }
     static {
         ClassLoader loader = CoreLoader.class.getClassLoader();
@@ -139,6 +148,37 @@ public class CoreLoader {
                 }
             };
             ScanAnnotation(clz,UIItem.class,methodCollector,true,sort);
+        }
+        for (Class<?> clz : clzInstance.keySet()){
+            XPItemInfo info = clzInstance.get(clz);
+            //排序类
+            AnnoScanSort<UIClick> sort = new AnnoScanSort<UIClick>() {
+                int maxVer = 0;
+                UIClick scannerAnno;
+                @Override
+                public void onResult(Method m, UIClick Anno) {
+                    if (maxVer < Anno.target()){
+                        scannerAnno=Anno;
+                    }
+                }
+                @Override
+                public List<UIClick> onGetResult() {
+                    ArrayList<UIClick> scanner = new ArrayList<>();
+                    if (scannerAnno != null){
+                        scanner.add(scannerAnno);
+                    }
+                    return scanner;
+                }
+            };
+            AnnoScanResult<UIClick> methodCollector = (m, Anno) -> {
+                XposedBridge.log(m.getDeclaringClass().getName()+"."+m.getName());
+                if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
+                    if (m.getParameterCount() == 1 && m.getParameterTypes()[0].equals(Context.class)) {
+                        info.uiClick = m;
+                    }
+                }
+            };
+            ScanAnnotation(clz,UIClick.class,methodCollector,true,sort);
         }
     }
     private static boolean checkVersionAvailable(int version,boolean isStrict){
