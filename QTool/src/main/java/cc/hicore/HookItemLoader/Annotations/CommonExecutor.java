@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UIClick {
+public @interface CommonExecutor {
     int target() default -1;
     boolean isStrict() default false;
 }

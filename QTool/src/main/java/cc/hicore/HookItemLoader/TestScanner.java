@@ -15,8 +15,13 @@ public class TestScanner {
 
         };
     }
-    @MethodScanner(target = QQVersion.QQ_8_8_11)
+    @MethodScanner(target = QQVersion.QQ_8_8_11,isStrict = true)
     public void MethodScannerTest(MethodContainer container) throws NoSuchMethodException {
         container.addMethod(Class.class.getMethod("getAnnotation", Class.class));
+    }
+
+    @MethodScanner(target = QQVersion.QQ_8_4_5)
+    public void testOldMethodScanner(MethodContainer container){
+
     }
 }

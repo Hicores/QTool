@@ -85,6 +85,7 @@ public class CoreLoader {
                 @Override
                 public void onResult(Method m, MethodScanner Anno) {
                     if (maxVer < Anno.target()){
+                        maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
                 }
@@ -98,7 +99,6 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<MethodScanner> methodCollector = (m, Anno) -> {
-                XposedBridge.log(m.getDeclaringClass().getName()+"."+m.getName());
                 if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
                     if (m.getParameterCount() == 1 && m.getParameterTypes()[0] == MethodContainer.class) {
                         MethodContainer container = new MethodContainer();
@@ -123,6 +123,7 @@ public class CoreLoader {
                 @Override
                 public void onResult(Method m, UIItem Anno) {
                     if (maxVer < Anno.target()){
+                        maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
                 }
@@ -158,6 +159,7 @@ public class CoreLoader {
                 @Override
                 public void onResult(Method m, UIClick Anno) {
                     if (maxVer < Anno.target()){
+                        maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
                 }
