@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIClick;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
@@ -104,7 +105,7 @@ public class CoreLoader {
                 MethodScanner scannerAnno;
                 @Override
                 public void onResult(Method m, MethodScanner Anno) {
-                    if (maxVer < Anno.target()){
+                    if (maxVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
                         maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
@@ -142,7 +143,7 @@ public class CoreLoader {
                 UIItem scannerAnno;
                 @Override
                 public void onResult(Method m, UIItem Anno) {
-                    if (maxVer < Anno.target()){
+                    if (maxVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
                         maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
@@ -157,7 +158,6 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<UIItem> methodCollector = (m, Anno) -> {
-                XposedBridge.log(m.getDeclaringClass().getName()+"."+m.getName());
                 if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
                     if (m.getReturnType().equals(UIInfo.class)) {
                         try {
@@ -178,7 +178,7 @@ public class CoreLoader {
                 UIClick scannerAnno;
                 @Override
                 public void onResult(Method m, UIClick Anno) {
-                    if (maxVer < Anno.target()){
+                    if (maxVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
                         maxVer = Anno.target();
                         scannerAnno=Anno;
                     }
@@ -255,7 +255,7 @@ public class CoreLoader {
                 int targetVer = 0;
                 @Override
                 public void onResult(Method m, XPExecutor Anno) {
-                    if (targetVer < Anno.target()){
+                    if (targetVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
                         targetVer = Anno.target();
                         executors.clear();
                     }
@@ -270,6 +270,37 @@ public class CoreLoader {
             ScanAnnotation(clz,XPExecutor.class,xpExecutor,true,sort);
         }
 
+    }
+    private static void CommonExecutorWorker(boolean isBefore){
+        for (Class<?> clz : clzInstance.keySet()){
+            XPItemInfo info = clzInstance.get(clz);
+            if (isBefore != info.isLoadEarly) continue;
+            AnnoScanResult<CommonExecutor> xpExecutor = (m, Anno) -> {
+                try {
+                    m.invoke(info.Instance);
+                }catch (Exception e){
+
+                }
+            };
+            AnnoScanSort<CommonExecutor> sort = new AnnoScanSort<CommonExecutor>() {
+                final ArrayList<CommonExecutor> executors = new ArrayList<>();
+                int targetVer = 0;
+                @Override
+                public void onResult(Method m, CommonExecutor Anno) {
+                    if (targetVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
+                        targetVer = Anno.target();
+                        executors.clear();
+                    }
+                    executors.add(Anno);
+                }
+
+                @Override
+                public List<CommonExecutor> onGetResult() {
+                    return executors;
+                }
+            };
+            ScanAnnotation(clz,CommonExecutor.class,xpExecutor,true,sort);
+        }
     }
     private static boolean checkVersionAvailable(int version,boolean isStrict){
         if (version > 1){
@@ -318,5 +349,4 @@ public class CoreLoader {
         void onResult(Method m,T Anno);
         List<T> onGetResult();
     }
-
 }
