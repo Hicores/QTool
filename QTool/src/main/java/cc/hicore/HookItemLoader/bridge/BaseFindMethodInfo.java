@@ -2,7 +2,6 @@ package cc.hicore.HookItemLoader.bridge;
 
 public class BaseFindMethodInfo extends BaseMethodInfo{
     public String LinkedToMethodID;
-    public String MethodID;
 
     public BaseMethodInfo.MethodChecker checker;
 
