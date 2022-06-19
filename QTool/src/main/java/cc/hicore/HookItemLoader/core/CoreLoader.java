@@ -204,11 +204,13 @@ public class CoreLoader {
         }
         if (MethodScannerWorker.checkIsAvailable()){
             XPHookInstance(true);
+            CommonExecutorWorker(true);
         }
     }
     public static void onAfterLoad(){
         if (MethodScannerWorker.checkIsAvailable()){
             XPHookInstance(false);
+            CommonExecutorWorker(false);
         }else {
             MethodScannerWorker.doFindMethod();
         }
