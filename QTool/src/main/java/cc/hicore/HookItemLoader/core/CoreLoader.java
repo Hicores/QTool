@@ -25,11 +25,14 @@ import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
+    protected static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();
     protected static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
+
     protected static class XPItemInfo{
         Object Instance;
 
@@ -38,6 +41,7 @@ public class CoreLoader {
         ArrayList<String> cacheException = new ArrayList<>();
 
         boolean isVersionAvailable;
+        boolean isLoadEarly;
         boolean ScannerSuccess;
         boolean isEnabled = true;
 
@@ -48,6 +52,8 @@ public class CoreLoader {
 
         UIInfo ui;
         Method uiClick;
+
+        String ItemName;
     }
     static {
         ClassLoader loader = CoreLoader.class.getClassLoader();
@@ -61,7 +67,7 @@ public class CoreLoader {
                     Object newInstance = ItemClz.newInstance();
                     XPItemInfo newInfo = new XPItemInfo();
                     newInfo.Instance = newInstance;
-                    clzInstance.put(ItemClz,newInfo);
+                    allInstance.put(ItemClz,newInfo);
                 }catch (Exception e){
 
                 }
@@ -77,7 +83,16 @@ public class CoreLoader {
             XPItemInfo info = clzInstance.get(clz);
             XPItem item = clz.getAnnotation(XPItem.class);
             if (item != null && info != null){
-                info.isVersionAvailable = checkVersionAvailable(item.target(),item.isStrict());
+                if (item.proc() == XPItem.PROC_MAIN){
+                    info.isVersionAvailable = HookEnv.IsMainProcess && checkVersionAvailable(item.target(),item.isStrict());
+                }else if (item.proc() == XPItem.PROC_ALL){
+                    info.isVersionAvailable = checkVersionAvailable(item.target(),item.isStrict());
+                }
+                info.ItemName = item.name();
+                if (info.isVersionAvailable){
+                    clzInstance.put(clz,info);
+                }
+                info.isLoadEarly = item.period() == XPItem.Period_Early;
             }
         }
         //扫描所有需要的方法查找内容
@@ -201,6 +216,7 @@ public class CoreLoader {
     private static void XPHookInstance(boolean isBefore){
         for (Class<?> clz : clzInstance.keySet()){
             XPItemInfo info = clzInstance.get(clz);
+            if (isBefore != info.isLoadEarly) continue;
             AnnoScanResult<XPExecutor> xpExecutor = (m, Anno) -> {
                 int index = Anno.index();
                 if (index < info.scanResult.size() && info.scanResult.get(index) != null){
@@ -229,12 +245,13 @@ public class CoreLoader {
                                 });
                             }
                         } catch (Exception e) {
+                            info.ExecutorException.put(m.getName(),Log.getStackTraceString(e));
                         }
                     }
                 }
             };
             AnnoScanSort<XPExecutor> sort = new AnnoScanSort<XPExecutor>() {
-                ArrayList<XPExecutor> executors = new ArrayList<>();
+                final ArrayList<XPExecutor> executors = new ArrayList<>();
                 int targetVer = 0;
                 @Override
                 public void onResult(Method m, XPExecutor Anno) {

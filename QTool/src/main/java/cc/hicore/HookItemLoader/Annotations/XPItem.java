@@ -17,7 +17,12 @@ public @interface XPItem {
 
     int PROC_MAIN = 1;
     int PROC_ALL = -1;
+    int proc() default PROC_MAIN;
 
     String name();
-    int proc() default PROC_MAIN;
+
+    int Period_Early = 1;
+    int Period_InitData = 2;
+    int period() default Period_Early;
+
 }
