@@ -13,6 +13,7 @@ public @interface XPItem {
     int itemType();
 
     int target() default -1;
+    int max_target() default -1;
     boolean isStrict() default false;
 
     int PROC_MAIN = 1;

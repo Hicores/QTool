@@ -85,9 +85,9 @@ public class CoreLoader {
             XPItem item = clz.getAnnotation(XPItem.class);
             if (item != null && info != null){
                 if (item.proc() == XPItem.PROC_MAIN){
-                    info.isVersionAvailable = HookEnv.IsMainProcess && checkVersionAvailable(item.target(),item.isStrict());
+                    info.isVersionAvailable = HookEnv.IsMainProcess && checkVersionAvailable(item.target(),item.isStrict(),item.max_target());
                 }else if (item.proc() == XPItem.PROC_ALL){
-                    info.isVersionAvailable = checkVersionAvailable(item.target(),item.isStrict());
+                    info.isVersionAvailable = checkVersionAvailable(item.target(),item.isStrict(),item.max_target());
                 }
                 info.ItemName = item.name();
                 if (info.isVersionAvailable){
@@ -120,7 +120,7 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<MethodScanner> methodCollector = (m, Anno) -> {
-                if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
+                if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
                     if (m.getParameterCount() == 1 && m.getParameterTypes()[0] == MethodContainer.class) {
                         MethodContainer container = new MethodContainer();
                         try {
@@ -158,7 +158,7 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<UIItem> methodCollector = (m, Anno) -> {
-                if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
+                if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
                     if (m.getReturnType().equals(UIInfo.class)) {
                         try {
                             info.ui = (UIInfo) m.invoke(info.Instance);
@@ -194,7 +194,7 @@ public class CoreLoader {
             };
             AnnoScanResult<UIClick> methodCollector = (m, Anno) -> {
                 XposedBridge.log(m.getDeclaringClass().getName()+"."+m.getName());
-                if (checkVersionAvailable(Anno.target(), Anno.isStrict())) {
+                if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
                     if (m.getParameterCount() == 1 && m.getParameterTypes()[0].equals(Context.class)) {
                         info.uiClick = m;
                     }
@@ -303,7 +303,10 @@ public class CoreLoader {
             ScanAnnotation(clz,CommonExecutor.class,xpExecutor,true,sort);
         }
     }
-    private static boolean checkVersionAvailable(int version,boolean isStrict){
+    private static boolean checkVersionAvailable(int version,boolean isStrict,int max_version){
+        if (max_version > 1){
+            if (HostInfo.getVerCode() > max_version)return false;
+        }
         if (version > 1){
             if (isStrict){
                 return HostInfo.getVerCode() == version;
