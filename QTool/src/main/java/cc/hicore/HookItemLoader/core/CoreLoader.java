@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIClick;
@@ -45,6 +46,9 @@ public class CoreLoader {
         boolean isLoadEarly;
         boolean ScannerSuccess;
         boolean isEnabled = true;
+
+        boolean isApi;
+        Method apiExecutor;
 
         HashSet<BaseMethodInfo> NeedMethodInfo = new HashSet<>();
         ArrayList<Method> scanResult = new ArrayList<>();
@@ -90,6 +94,7 @@ public class CoreLoader {
                     info.isVersionAvailable = checkVersionAvailable(item.target(),item.isStrict(),item.max_target());
                 }
                 info.ItemName = item.name();
+                info.isApi = item.itemType() == XPItem.ITEM_Api;
                 if (info.isVersionAvailable){
                     clzInstance.put(clz,info);
                 }
@@ -170,6 +175,7 @@ public class CoreLoader {
             };
             ScanAnnotation(clz,UIItem.class,methodCollector,true,sort);
         }
+        //查找UIClick内容
         for (Class<?> clz : clzInstance.keySet()){
             XPItemInfo info = clzInstance.get(clz);
             //排序类
@@ -193,7 +199,6 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<UIClick> methodCollector = (m, Anno) -> {
-                XposedBridge.log(m.getDeclaringClass().getName()+"."+m.getName());
                 if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
                     if (m.getParameterCount() == 1 && m.getParameterTypes()[0].equals(Context.class)) {
                         info.uiClick = m;
@@ -201,6 +206,36 @@ public class CoreLoader {
                 }
             };
             ScanAnnotation(clz,UIClick.class,methodCollector,true,sort);
+        }
+        //查找ApiExecutor的内容
+        for (Class<?> clz : clzInstance.keySet()){
+            XPItemInfo info = clzInstance.get(clz);
+            //排序类
+            AnnoScanSort<ApiExecutor> sort = new AnnoScanSort<ApiExecutor>() {
+                int maxVer = 0;
+                ApiExecutor scannerAnno;
+                @Override
+                public void onResult(Method m, ApiExecutor Anno) {
+                    if (maxVer < Anno.target() && HostInfo.getVerCode() >= Anno.target()){
+                        maxVer = Anno.target();
+                        scannerAnno=Anno;
+                    }
+                }
+                @Override
+                public List<ApiExecutor> onGetResult() {
+                    ArrayList<ApiExecutor> scanner = new ArrayList<>();
+                    if (scannerAnno != null){
+                        scanner.add(scannerAnno);
+                    }
+                    return scanner;
+                }
+            };
+            AnnoScanResult<ApiExecutor> methodCollector = (m, Anno) -> {
+                if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
+                    info.apiExecutor = m;
+                }
+            };
+            ScanAnnotation(clz,ApiExecutor.class,methodCollector,true,sort);
         }
         if (MethodScannerWorker.checkIsAvailable()){
             XPHookInstance(true);
