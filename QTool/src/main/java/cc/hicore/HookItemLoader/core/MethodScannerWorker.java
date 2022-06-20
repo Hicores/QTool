@@ -34,7 +34,7 @@ public class MethodScannerWorker {
         }
         return true;
     }
-    private static ArrayList<ScannerLink> rootNode = new ArrayList<>();
+    private static final ArrayList<ScannerLink> rootNode = new ArrayList<>();
 
     private static void CollectLinkInfo(){
         ArrayList<BaseMethodInfo> allFindMethodInfo = new ArrayList<>();

@@ -80,8 +80,8 @@ public class CoreLoader {
     }
     public static void onBeforeLoad(){
         //扫描所有的类要求版本号
-        for (Class<?> clz : clzInstance.keySet()){
-            XPItemInfo info = clzInstance.get(clz);
+        for (Class<?> clz : allInstance.keySet()){
+            XPItemInfo info = allInstance.get(clz);
             XPItem item = clz.getAnnotation(XPItem.class);
             if (item != null && info != null){
                 if (item.proc() == XPItem.PROC_MAIN){
@@ -271,7 +271,6 @@ public class CoreLoader {
             };
             ScanAnnotation(clz,XPExecutor.class,xpExecutor,true,sort);
         }
-
     }
     private static void CommonExecutorWorker(boolean isBefore){
         for (Class<?> clz : clzInstance.keySet()){

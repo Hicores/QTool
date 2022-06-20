@@ -16,7 +16,7 @@ public @interface XPItem {
     boolean isStrict() default false;
 
     int PROC_MAIN = 1;
-    int PROC_ALL = -1;
+    int PROC_ALL = 2;
     int proc() default PROC_MAIN;
 
     String name();
