@@ -35,7 +35,7 @@ public class CoreLoader {
     protected static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();
     protected static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
 
-    protected static class XPItemInfo{
+    public static class XPItemInfo{
         Object Instance;
 
         HashMap<String,String> ExecutorException = new HashMap<>();
@@ -125,12 +125,16 @@ public class CoreLoader {
                 }
             };
             AnnoScanResult<MethodScanner> methodCollector = (m, Anno) -> {
+
                 if (checkVersionAvailable(Anno.target(), Anno.isStrict(),-1)) {
                     if (m.getParameterCount() == 1 && m.getParameterTypes()[0] == MethodContainer.class) {
                         MethodContainer container = new MethodContainer();
                         try {
                             m.invoke(info.Instance, container);
                             info.NeedMethodInfo.addAll(container.getInfo());
+                            for (BaseMethodInfo methodInfo : info.NeedMethodInfo){
+                                methodInfo.bandToInfo = info;
+                            }
                         } catch (Throwable th) {
                             info.cacheException.add(Log.getStackTraceString(th));
                         }

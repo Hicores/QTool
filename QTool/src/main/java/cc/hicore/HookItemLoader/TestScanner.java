@@ -5,6 +5,7 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 
 @XPItem(name = "ScannerTest",itemType = XPItem.ITEM_Hook)
@@ -20,9 +21,14 @@ public class TestScanner {
 
     }
 
-    @MethodScanner(target = QQVersion.QQ_8_8_11,isStrict = true)
-    public void MethodScannerTest(MethodContainer container) throws NoSuchMethodException {
-        container.addMethod(Class.class.getMethod("getAnnotation", Class.class));
+    @MethodScanner(target = QQVersion.QQ_8_8_11)
+    public void MethodScannerTest(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("TestFinder","troopmemberinfo/#/#/#",m ->{
+            return true;
+        }));
+        container.addMethod(MethodFinderBuilder.newFinderByString("TestFinder233333","onGetConfig | mDialogType = ",m ->{
+            return true;
+        }));
     }
 
     @MethodScanner(target = QQVersion.QQ_8_4_5)
