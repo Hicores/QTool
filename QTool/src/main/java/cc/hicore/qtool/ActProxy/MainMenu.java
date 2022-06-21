@@ -55,7 +55,7 @@ public class MainMenu {
             now_version.setText("当前版本:"+ BuildConfig.VERSION_NAME);
 
             TextView new_version = v.findViewById(R.id.Version_New);
-            new_version.setText("最新CI版本:v"+ HookEnv.New_Version);
+            new_version.setText("最新版本:v"+ HookEnv.New_Version);
 
             try{
                 if (BeforeConfig.getBoolean("Enable_SubMode") && (Integer.parseInt(HookEnv.New_Version) > BuildConfig.VERSION_CODE)){

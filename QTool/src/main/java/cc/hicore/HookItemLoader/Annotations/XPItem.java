@@ -12,9 +12,8 @@ public @interface XPItem {
     int ITEM_Api = 2;
     int itemType();
 
-    int target() default -1;
-    int max_target() default -1;
-    boolean isStrict() default false;
+    int targetVer() default -1;
+    int max_targetVer() default -1;
 
     int PROC_MAIN = 1;
     int PROC_ALL = 2;
@@ -25,5 +24,9 @@ public @interface XPItem {
     int Period_Early = 1;
     int Period_InitData = 2;
     int period() default Period_Early;
+
+    int Target_App_QQ = 1;
+    int Target_App_Tim = 1 << 1;
+    int targetApp() default Target_App_QQ;
 
 }

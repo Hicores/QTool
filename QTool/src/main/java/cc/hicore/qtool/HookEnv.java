@@ -33,4 +33,5 @@ public class HookEnv {
     public static ClassLoader SubClassLoader;
 
     public static StringBuilder loadFailed = new StringBuilder();
+    public static int CurrentApp = 1;
 }

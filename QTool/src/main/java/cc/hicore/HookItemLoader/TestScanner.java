@@ -1,6 +1,7 @@
 package cc.hicore.HookItemLoader;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
@@ -10,18 +11,15 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 
 @XPItem(name = "ScannerTest",itemType = XPItem.ITEM_Hook)
 public class TestScanner {
-    @XPExecutor
-    public BaseXPExecutor MethodExecuteTest(){
-        return param -> {
 
-        };
-    }
-    @MethodScanner(target = QQVersion.QQ_8_8_95)
+    @VerController(targetVer = QQVersion.QQ_8_8_95)
+    @MethodScanner
     public void TooHighScannerTest(MethodContainer container){
 
     }
 
-    @MethodScanner(target = QQVersion.QQ_8_8_11)
+    @VerController(targetVer = QQVersion.QQ_8_8_11)
+    @MethodScanner
     public void MethodScannerTest(MethodContainer container) {
         container.addMethod(MethodFinderBuilder.newFinderByString("TestFinder","troopmemberinfo/#/#/#",m ->{
             return true;
@@ -31,7 +29,8 @@ public class TestScanner {
         }));
     }
 
-    @MethodScanner(target = QQVersion.QQ_8_4_5)
+    @VerController(targetVer = QQVersion.QQ_8_4_5)
+    @MethodScanner
     public void testOldMethodScanner(MethodContainer container){
 
     }

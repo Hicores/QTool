@@ -7,10 +7,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface XPExecutor {
-    int Before = 1;
-    int After = 1 << 1;
+public @interface VerController {
+    int targetVer() default -1;
+    int max_targetVer() default -1;
 
-    String methodID();
-    int period() default Before;
+    int Target_App_QQ = 1;
+    int Target_App_Tim = 1 << 1;
+    int targetApp() default Target_App_QQ;
 }

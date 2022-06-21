@@ -8,6 +8,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XPChecker {
-    int target() default -1;
-    boolean isStrict() default false;
+
 }

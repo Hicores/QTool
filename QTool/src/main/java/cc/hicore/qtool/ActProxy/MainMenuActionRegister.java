@@ -42,6 +42,6 @@ public class MainMenuActionRegister {
             Intent in = new Intent(Intent.ACTION_VIEW, u);
             v.startActivity(in);
         });
-        MainMenu.addItemData(31,"CI版本下载",0,"DownloadNewVer", R.drawable.main_down);
+        MainMenu.addItemData(31,"最新版本下载",0,"DownloadNewVer", R.drawable.main_down);
     }
 }

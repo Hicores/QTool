@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="最新CI版本:0.0.1-CI-244"/>
+            android:text="最新版本:0.0.1-CI-244"/>
     </RelativeLayout>
 
     <ScrollView

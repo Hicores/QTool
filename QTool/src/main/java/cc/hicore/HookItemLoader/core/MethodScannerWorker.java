@@ -30,6 +30,7 @@ import cc.hicore.HookItemLoader.bridge.FindMethodsWhichInvokeMethod;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XposedBridge;
@@ -43,8 +44,8 @@ public class MethodScannerWorker {
         public ScannerLink LinkToID;
     }
     public static boolean checkIsAvailable(){
-        String QQVer = HostInfo.getVersion()+"."+HostInfo.getVerCode();
-        if (GlobalConfig.Get_String("cacheQQVer").equals(QQVer)){
+        String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
+        if (GlobalConfig.Get_String("cacheVer").equals(cacheVer)){
             return true;
         }
         for (CoreLoader.XPItemInfo info : CoreLoader.clzInstance.values()){
@@ -176,6 +177,7 @@ public class MethodScannerWorker {
                         nodeView.setTextColor(Color.RED);
                     }
                 }
+                Utils.ShowToastL("重启QQ以正常使用模块");
             },"QTool_Method_Finder").start();
         });
 
