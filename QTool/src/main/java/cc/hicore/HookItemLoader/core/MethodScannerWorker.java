@@ -6,6 +6,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -169,8 +172,11 @@ public class MethodScannerWorker {
                             info.bandToInfo.scanResult.add(findResult);
                             Utils.PostToMain(()->{
                                 nodeView.setTextColor(Color.GREEN);
-                                nodeView.setText(info.id + "\n↓\n"+
-                                        findResult.getDeclaringClass().getName()+"."+findResult.getName());
+                                SpannableString text = new SpannableString(info.id + "\n"+
+                                        "("+findResult.getDeclaringClass().getName()+"."+findResult.getName()+")");
+                                text.setSpan(new AbsoluteSizeSpan(Utils.dip2px(context,12)),info.id.length()+1,text.length(),0);
+                                text.setSpan(new ForegroundColorSpan(Color.GRAY),info.id.length()+1,text.length(),0);
+                                nodeView.setText(text);
                             });
                         }
                     }catch (Exception e){
