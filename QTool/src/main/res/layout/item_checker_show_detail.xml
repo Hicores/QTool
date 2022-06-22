@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_above="@+id/EditText_Button_Save_All">
+
+        <EditText
+            android:id="@+id/EditText_EditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:scrollbars="horizontal"
+            android:singleLine="false"
+            android:textIsSelectable="true"
+            android:gravity="top"
+            android:textSize="12sp" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/EditText_Button_Save_All"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="复制"/>
+
+</RelativeLayout>

@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -69,15 +70,15 @@ public class CatchInstance {
             return "";
         }
     }
-    public static void ICatchEx(Thread thread,Throwable th){
-        CatcherPacker packer = CatcherPacker.getInstance();
-        //收集Throwable信息
+    public static String IGetAvailableInfo(Thread thread){
         StringBuilder thOut = new StringBuilder();
         thOut.append("ProcessName:").append(HookEnv.ProcessName).append("\n");
         thOut.append("ThreadName:").append(thread.getName()).append("\n");
         thOut.append("XposedTag:").append(CollectBridgeTag()).append("\n");
         thOut.append("XposedTagDec:").append(TGetFrameName()).append("\n");
-        thOut.append("QQVersion:").append(InitPackVersion()).append("\n");
+        thOut.append("AppVersion:").append(InitPackVersion()).append("\n");
+        thOut.append("AppType:").append(HookEnv.CurrentApp == 1 ? "QQ" : "TIM").append("\n");
+        thOut.append("ModuleVer:").append(BuildConfig.VERSION_NAME).append("\n");
         thOut.append("Time:").append(Utils.GetNowTime()).append("\n");
         thOut.append("AndroidVersion:").append(Build.VERSION.RELEASE).append("\n");
         thOut.append("SDK_Level:").append(Build.VERSION.SDK_INT).append("\n");
@@ -87,14 +88,17 @@ public class CatchInstance {
         thOut.append("BOARD:").append(Build.BOARD).append("\n");
         thOut.append("DEVICE:").append(Build.DEVICE).append("\n");
         thOut.append("PRODUCT:").append(Build.PRODUCT).append("\n");
+        return thOut.toString();
+    }
+    public static void ICatchEx(Thread thread,Throwable th){
+        CatcherPacker packer = CatcherPacker.getInstance();
+        //收集Throwable信息
 
 
+        String thOut = IGetAvailableInfo(thread) + "\n" +
+                CollectThrow(th);
 
-
-        thOut.append("\n");
-        thOut.append(CollectThrow(th));
-
-        packer.AddStackTrace(thOut.toString());
+        packer.AddStackTrace(thOut);
 
         //收集Logcat信息
         packer.AddLogcatInfo(StringPool_Logcat.getAll());

@@ -183,6 +183,8 @@ public class MethodScannerWorker {
                         nodeView.setTextColor(Color.RED);
                     }
                 }
+                String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
+                GlobalConfig.Put_String("cacheVer",cacheVer);
                 Utils.ShowToastL("重启QQ以正常使用模块");
             },"QTool_Method_Finder").start();
         });

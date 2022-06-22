@@ -115,18 +115,6 @@ public class DebugDialog {
         });
         mRoot.addView(btnCleanMethodCache);
 
-        TextView titleClzInfo = new TextView(context);
-        titleClzInfo.setTextColor(Color.parseColor("#6666ff"));
-        titleClzInfo.setText("模块加载状态");
-        titleClzInfo.setTextSize(24);
-        mRoot.addView(titleClzInfo, getMarginParam());
-
-        TextView hookInfo = new TextView(context);
-        hookInfo.setText(getClassReport());
-        hookInfo.setTextSize(12);
-        hookInfo.setTextColor(Color.BLACK);
-        mRoot.addView(hookInfo, getMarginParam());
-
         fullScreen.setContentView(view);
         fullScreen.show();
 

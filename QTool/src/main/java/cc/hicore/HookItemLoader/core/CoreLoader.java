@@ -34,33 +34,33 @@ import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
-    protected static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();
+    public static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();
     protected static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
 
     public static class XPItemInfo{
-        Object Instance;
+        public Object Instance;
 
-        HashMap<String,String> ExecutorException = new HashMap<>();
-        HashMap<String,String> CheckerException = new HashMap<>();
-        ArrayList<String> cacheException = new ArrayList<>();
+        public HashMap<String,String> ExecutorException = new HashMap<>();
+        public ArrayList<String> cacheException = new ArrayList<>();
 
-        boolean isVersionAvailable;
-        boolean isLoadEarly;
-        boolean ScannerSuccess;
-        boolean isEnabled = true;
+        public XPItem item;
 
-        boolean isApi;
-        Method apiExecutor;
+        public boolean isVersionAvailable;
+        public boolean isLoadEarly;
+        public boolean isEnabled = true;
 
-        HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
-        ArrayList<Method> scanResult = new ArrayList<>();
+        public boolean isApi;
+        public Method apiExecutor;
 
-        ArrayList<Method> fitMethods = new ArrayList<>();
+        public HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
+        public ArrayList<Method> scanResult = new ArrayList<>();
 
-        UIInfo ui;
-        Method uiClick;
+        public ArrayList<Method> fitMethods = new ArrayList<>();
 
-        String ItemName;
+        public UIInfo ui;
+        public Method uiClick;
+
+        public String ItemName;
     }
     static {
         ClassLoader loader = CoreLoader.class.getClassLoader();
@@ -89,7 +89,9 @@ public class CoreLoader {
         for (Class<?> clz : allInstance.keySet()){
             XPItemInfo info = allInstance.get(clz);
             XPItem item = clz.getAnnotation(XPItem.class);
+
             if (item != null && info != null){
+                XposedBridge.log(item.toString());
                 if (item.proc() == XPItem.PROC_MAIN){
                     info.isVersionAvailable = HookEnv.IsMainProcess && checkVersionAvailable(item.targetVer(),item.targetApp(),item.max_targetVer());
                 }else if (item.proc() == XPItem.PROC_ALL){
@@ -100,6 +102,7 @@ public class CoreLoader {
                 if (info.isVersionAvailable){
                     clzInstance.put(clz,info);
                 }
+                info.item = item;
                 info.isLoadEarly = item.period() == XPItem.Period_Early;
             }
         }

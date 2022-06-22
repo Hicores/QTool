@@ -27,7 +27,10 @@ public class MainMenuActionRegister {
 
 
         ActionUtils.registerAction("DebugUtils", DebugDialog::startShow);
-        MainMenu.addItemData(10,"调试功能",0,"DebugUtils",R.drawable.debug);
+        MainMenu.addItemData(10,"状态查看",0,"DebugUtils",R.drawable.debug);
+
+        ActionUtils.registerAction("ItemStatus", ShowModuleItemStatus::onShow);
+        MainMenu.addItemData(11,"故障排查",0,"ItemStatus",R.drawable.debug);
 
 
         ActionUtils.registerAction("AddGroup", context->{
