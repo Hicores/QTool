@@ -35,7 +35,7 @@ import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
     public static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();
-    protected static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
+    public static final HashMap<Class<?>,XPItemInfo> clzInstance = new HashMap<>();
 
     public static class XPItemInfo{
         public Object Instance;
@@ -61,6 +61,7 @@ public class CoreLoader {
         public Method uiClick;
 
         public String ItemName;
+        public String id;
     }
     static {
         ClassLoader loader = CoreLoader.class.getClassLoader();
@@ -74,6 +75,7 @@ public class CoreLoader {
                     Object newInstance = ItemClz.newInstance();
                     XPItemInfo newInfo = new XPItemInfo();
                     newInfo.Instance = newInstance;
+                    newInfo.id = ItemClz.getName();
                     allInstance.put(ItemClz,newInfo);
                 }catch (Exception e){
 
@@ -143,6 +145,7 @@ public class CoreLoader {
                     if (m.getReturnType().equals(UIInfo.class)) {
                         try {
                             info.ui = (UIInfo) m.invoke(info.Instance);
+                            info.ui.connectTo = info;
                         } catch (Throwable th) {
                             info.cacheException.add(Log.getStackTraceString(th));
                         }

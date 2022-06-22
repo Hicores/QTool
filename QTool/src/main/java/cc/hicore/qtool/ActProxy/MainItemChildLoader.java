@@ -2,6 +2,7 @@ package cc.hicore.qtool.ActProxy;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
+import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 public class MainItemChildLoader {
     public static void startLoad(int i, Activity act){
@@ -44,15 +46,18 @@ public class MainItemChildLoader {
     }
     private static View createView(int i,Context context){
         LayoutInflater inflater = LayoutInflater.from(context);
-        LinkedHashSet<HookLoader.UiInfo> infos = HookLoader.getUiInfos();
-        HashMap<String, ArrayList<HookLoader.UiInfo>> sortsUIItems = new HashMap<>();
-        for (HookLoader.UiInfo info : infos){
+        LinkedHashSet<UIInfo> infos = new LinkedHashSet<>();
+        for (CoreLoader.XPItemInfo itemInfo : CoreLoader.clzInstance.values()){
+            if (itemInfo.ui != null){
+                infos.add(itemInfo.ui);
+            }
+        }
+
+        HashMap<String, ArrayList<UIInfo>> sortsUIItems = new HashMap<>();
+        for (UIInfo info : infos){
             if (info.targetID == i){
-                info.UIInstance = HookLoader.searchForUiInstance(info.clzName);
-                if (info.UIInstance != null){
-                    ArrayList<HookLoader.UiInfo> groupItems = sortsUIItems.computeIfAbsent(info.groupName, s -> new ArrayList<>());
-                    groupItems.add(info);
-                }
+                ArrayList<UIInfo> groupItems = sortsUIItems.computeIfAbsent(info.groupName, s -> new ArrayList<>());
+                groupItems.add(info);
             }
         }
         ScrollView scrollView = new ScrollView(context);
@@ -70,7 +75,7 @@ public class MainItemChildLoader {
             groupNameView.setText(groupName);
 
             LinearLayout ItemContainer = mContainer.findViewById(R.id.ItemContainer);
-            for (HookLoader.UiInfo info : sortsUIItems.get(groupName)){
+            for (UIInfo info : sortsUIItems.get(groupName)){
                 RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.child_item,null);
                 TextView item_title = layout.findViewById(R.id.Item_Title);
                 item_title.setText(info.name);
@@ -91,14 +96,23 @@ public class MainItemChildLoader {
                 if (info.type == 1){
                     Switch mSwitch = layout.findViewById(R.id.Item_Switch);
                     mSwitch.setVisibility(View.VISIBLE);
-                    mSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch", info.id, info.defCheck));
+                    mSwitch.setChecked(HookEnv.Config.getBoolean("Main_Switch", info.connectTo.id, false));
                     mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        HookEnv.Config.setBoolean("Main_Switch", info.id, isChecked);
-                        info.UIInstance.SwitchChange(isChecked);
+                        HookEnv.Config.setBoolean("Main_Switch", info.connectTo.id, isChecked);
+                        info.connectTo.isEnabled = isChecked;
                     });
                 }else {
                     layout.findViewById(R.id.Item_Click).setVisibility(View.VISIBLE);
-                    layout.setOnClickListener(v-> info.UIInstance.ListItemClick(context));
+                    layout.setOnClickListener(v-> {
+                        if (info.connectTo.uiClick != null){
+                            try{
+                                info.connectTo.uiClick.invoke(info.connectTo.Instance);
+                            }catch (Throwable th){
+                                info.connectTo.ExecutorException.put(info.connectTo.uiClick.getName(), Log.getStackTraceString(th));
+                            }
+                        }
+
+                    });
                 }
                 ItemContainer.addView(layout);
             }
