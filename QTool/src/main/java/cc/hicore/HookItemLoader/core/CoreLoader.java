@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -146,6 +147,7 @@ public class CoreLoader {
                         try {
                             info.ui = (UIInfo) m.invoke(info.Instance);
                             info.ui.connectTo = info;
+                            info.isEnabled = HookEnv.Config.getBoolean("Main_Switch",info.id,false);
                         } catch (Throwable th) {
                             info.cacheException.add(Log.getStackTraceString(th));
                         }
