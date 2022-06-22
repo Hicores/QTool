@@ -52,7 +52,7 @@ public class CoreLoader {
         boolean isApi;
         Method apiExecutor;
 
-        HashSet<BaseMethodInfo> NeedMethodInfo = new HashSet<>();
+        HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
         ArrayList<Method> scanResult = new ArrayList<>();
 
         ArrayList<Method> fitMethods = new ArrayList<>();
@@ -125,9 +125,9 @@ public class CoreLoader {
                         MethodContainer container = new MethodContainer();
                         try {
                             m.invoke(info.Instance, container);
-                            info.NeedMethodInfo.addAll(container.getInfo());
-                            for (BaseMethodInfo methodInfo : info.NeedMethodInfo){
+                            for (BaseMethodInfo methodInfo : container.getInfo()){
                                 methodInfo.bandToInfo = info;
+                                info.NeedMethodInfo.put(methodInfo.id,methodInfo);
                             }
                         } catch (Throwable th) {
                             info.cacheException.add(Log.getStackTraceString(th));
@@ -180,6 +180,7 @@ public class CoreLoader {
                 XPExecutor executor = m.getAnnotation(XPExecutor.class);
                 if (executor != null && (info.isLoadEarly == isEarly)){
                     try{
+
                         Method hookMethod = MethodScannerWorker.getMethodFromCache(executor.methodID());
                         BaseXPExecutor baseXPExecutor = (BaseXPExecutor) m.invoke(info.Instance);
                         Assert.notNull(hookMethod,"hookMethod is NULL,for "+m.getName());
@@ -239,12 +240,5 @@ public class CoreLoader {
         }else {
             return true;
         }
-    }
-    interface AnnoScanResult<T>{
-        void onResult(Method m,T Anno);
-    }
-    interface AnnoScanSort<T>{
-        void onResult(Method m,T Anno);
-        List<T> onGetResult();
     }
 }

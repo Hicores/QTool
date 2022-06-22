@@ -54,7 +54,7 @@ public class MethodScannerWorker {
         for (CoreLoader.XPItemInfo info : CoreLoader.clzInstance.values()){
             XposedBridge.log(info.isVersionAvailable + ":" + info.NeedMethodInfo);
             if (info.isVersionAvailable && info.NeedMethodInfo != null){
-                for (BaseMethodInfo methodInfo : info.NeedMethodInfo){
+                for (BaseMethodInfo methodInfo : info.NeedMethodInfo.values()){
                     if (methodInfo instanceof CommonMethodInfo) continue;
                     return false;
                 }
@@ -68,7 +68,7 @@ public class MethodScannerWorker {
         ArrayList<BaseMethodInfo> allFindMethodInfo = new ArrayList<>();
         for (CoreLoader.XPItemInfo item : CoreLoader.clzInstance.values()){
             if (item.NeedMethodInfo != null){
-                allFindMethodInfo.addAll(item.NeedMethodInfo);
+                allFindMethodInfo.addAll(item.NeedMethodInfo.values());
             }
         }
         //编号查找的Link
@@ -252,6 +252,18 @@ public class MethodScannerWorker {
         }catch (Exception e){
             return null;
         }
+    }
+    private static void cleanAllCache(){
+        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
+        SharedPreferences.Editor editor = share.edit();
+        editor.clear().apply();
+    }
+    private static void writeMethodToCache(String ID,Method method){
+        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
+        String s = getMethodDesc(method);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putString(ID,s);
+        editor.apply();
     }
     private static String getMethodDesc(Method m){
         try{

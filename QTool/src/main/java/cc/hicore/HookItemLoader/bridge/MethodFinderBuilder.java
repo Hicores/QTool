@@ -3,10 +3,11 @@ package cc.hicore.HookItemLoader.bridge;
 import java.lang.reflect.Member;
 
 public class MethodFinderBuilder {
-    public static BaseMethodInfo newCommonMethod(Member member){
+    public static BaseMethodInfo newCommonMethod(String ID,Member member){
         CommonMethodInfo info = new CommonMethodInfo();
         info.methods = member;
         info.type = BaseMethodInfo.TYPE_METHOD;
+        info.id = ID;
         return info;
     }
     public static BaseMethodInfo newFinderByString(String ID,String str, BaseMethodInfo.MethodChecker findCallback){
