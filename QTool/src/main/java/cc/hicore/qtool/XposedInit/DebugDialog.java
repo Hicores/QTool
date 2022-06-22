@@ -125,16 +125,4 @@ public class DebugDialog {
         params.setMarginEnd(30);
         return params;
     }
-
-    public static String getClassReport() {
-        StringBuilder builder = new StringBuilder();
-        for (HookLoader.CheckResult result : HookLoader.CheckForItemsStatus()) {
-            builder.append(result.Name).append("\n").append("开启:").append(result.IsEnable).append("  ,可用:").append(result.IsAvailable).append(" ,已加载:").append(result.IsLoaded).append("\n");
-            if (!TextUtils.isEmpty(result.ErrorInfo)) {
-                builder.append("报告异常信息:\n").append(result.ErrorInfo).append("\n-------------------------\n");
-            }
-            builder.append("\n");
-        }
-        return builder.toString();
-    }
 }
