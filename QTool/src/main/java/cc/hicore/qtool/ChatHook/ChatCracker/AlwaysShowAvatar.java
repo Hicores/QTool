@@ -1,74 +1,60 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
-
-import static cc.hicore.qtool.ChatHook.Repeater.RepeaterHelper.findView;
-
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import java.lang.reflect.Method;
-
-import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import cc.hicore.Utils.LayoutUtils;
 
-@HookItem(isRunInAllProc = false,isDelayInit = false)
-@UIItem(name = "总是显示头像",desc = "针对某些全屏卡片",groupName = "聊天净化",id = "AlwaysShowAvatar",type = 1,targetID = 2)
-public class AlwaysShowAvatar extends BaseHookItem implements BaseUiItem {
-    @Override
-    public String getTag() {
-        return "总是显示头像";
+@XPItem(name = "聊天消息强制显示头像",itemType = XPItem.ITEM_Hook)
+public class AlwaysShowAvatar{
+
+    @UIItem
+    @VerController
+    public UIInfo getUIInfo(){
+        UIInfo ui = new UIInfo();
+        ui.name = "聊天消息强制显示头像";
+        ui.desc = "主要针对某些全屏卡片";
+        ui.targetID = 2;
+        ui.type = 1;
+        ui.groupName = "聊天净化";
+        return ui;
     }
 
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(),param -> {
-            if (IsEnable){
-                Object mGetView = param.getResult();
-                RelativeLayout mLayout;
-                if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-                View avatar = findView("VasAvatar",mLayout);
-                if (avatar != null){
-                    if (avatar.getVisibility() != View.VISIBLE){
-                        avatar.setVisibility(View.VISIBLE);
-                    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor hookWorker(){
+        return param -> {
+            Object mGetView = param.getResult();
+            RelativeLayout mLayout;
+            if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
+            View avatar = LayoutUtils.findView("VasAvatar",mLayout);
+            if (avatar != null){
+                if (avatar.getVisibility() != View.VISIBLE){
+                    avatar.setVisibility(View.VISIBLE);
                 }
             }
-        });
-        return true;
+        };
     }
 
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
 
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
 
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsEnable) HookLoader.CallHookStart(AlwaysShowAvatar.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method getMethod(){
-        return MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+    @MethodScanner
+    @VerController
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
-        });
+        }));
     }
+
 }
