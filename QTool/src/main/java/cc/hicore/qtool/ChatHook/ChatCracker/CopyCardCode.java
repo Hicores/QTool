@@ -1,7 +1,6 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,31 +14,42 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(name = "可复制卡片代码", type = 1, id = "CopyCardMsg", targetID = 1,groupName = "聊天界面增强")
-public class CopyCardCode extends BaseHookItem implements BaseUiItem {
-    @Override
-    public String getTag() {
-        return "可复制卡片代码";
+@SuppressLint("ResourceType")
+@XPItem(itemType = XPItem.ITEM_Hook,name = "长按复制卡片代码")
+public class CopyCardCode{
+    @UIItem
+    @VerController
+    public UIInfo getUIInfo(){
+        UIInfo info = new UIInfo();
+        info.name = "长按复制卡片代码";
+        info.type = 1;
+        info.targetID = 1;
+        info.groupName = "聊天界面增强";
+        return info;
     }
 
-    boolean IsEnable;
-    @SuppressLint("ResourceType")
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(), param -> {
-            if (!isEnable()) return;
+    @VerController
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    public BaseXPExecutor xpWorker(){
+        return param -> {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
             if (mGetView instanceof RelativeLayout) {
@@ -99,39 +109,16 @@ public class CopyCardCode extends BaseHookItem implements BaseUiItem {
                     return false;
                 });
             }
-        });
-
-
-        return true;
+        };
     }
 
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(CopyCardCode.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-
-    public Method getMethod() {
-        Method HookMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+    @MethodScanner
+    @VerController
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
-        });
-        return HookMethod;
+        }));
     }
 }
