@@ -107,11 +107,8 @@ public class DebugDialog {
         Button btnCleanMethodCache = new Button(context);
         btnCleanMethodCache.setText("清除适配数据并重启");
         btnCleanMethodCache.setOnClickListener(v->{
-            HookEnv.Config.removeAll("cache_dex_finder_ver");
-            GlobalConfig.Put_String("cache_qq_ver","0");
-            GlobalConfig.Put_String("cache_qtool_ver", "0");
+            GlobalConfig.Put_String("cacheVer","");
             QQEnvUtils.ExitQQAnyWays();
-
         });
         mRoot.addView(btnCleanMethodCache);
 

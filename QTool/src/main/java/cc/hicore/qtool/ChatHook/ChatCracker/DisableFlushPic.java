@@ -20,7 +20,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(itemType = XPItem.ITEM_Hook,name = "闪照破解",targetVer = QQVersion.QQ_8_7_0)
+@XPItem(itemType = XPItem.ITEM_Hook,name = "闪照破解",targetVer = QQVersion.QQ_8_8_95)
 public class DisableFlushPic{
     @MethodScanner
     @VerController
@@ -40,7 +40,7 @@ public class DisableFlushPic{
         }));
     }
 
-    @XPExecutor(methodID = "replaceRecord")
+    @XPExecutor(methodID = "replaceRecord",period = XPExecutor.After)
     @VerController
     public BaseXPExecutor onReplaceRecord1(){
         return param -> {

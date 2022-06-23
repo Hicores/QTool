@@ -11,17 +11,26 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:layout_above="@+id/EditText_Button_Save_All">
-
-        <EditText
-            android:id="@+id/EditText_EditTextView"
+        <HorizontalScrollView
+            android:fillViewport="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:scrollbars="horizontal"
-            android:singleLine="false"
-            android:textIsSelectable="true"
-            android:gravity="top"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/EditText_EditTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:scrollbars="horizontal"
+                android:scrollbarStyle="insideInset"
+                android:scrollHorizontally="true"
+                android:singleLine="false"
+                android:textIsSelectable="true"
+
+                android:gravity="top"
+                android:textSize="12sp"
+                android:autofillHints="" />
+        </HorizontalScrollView>
+
     </ScrollView>
 
     <Button
