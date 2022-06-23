@@ -3,6 +3,7 @@ package cc.hicore.qtool.ActProxy;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.CrashHandler.CatchInstance;
 import cc.hicore.qtool.R;
 
+@SuppressLint("ResourceType")
 public class ShowModuleItemStatus {
-    @SuppressLint("ResourceType")
     public static void onShow(Context context){
         ViewGroup vg = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.item_checker_main,null);
         LinearLayout ll = vg.findViewById(R.id.Item_Show_View);
@@ -30,6 +31,7 @@ public class ShowModuleItemStatus {
             ViewGroup group = (ViewGroup) inflater.inflate(R.layout.item_checker_hook_item,null);
 
             TextView title = group.findViewById(R.id.Item_Checker_Title);
+            title.setTextColor(checkAvailable(info));
             title.setText(info.ItemName);
 
             TextView available = group.findViewById(R.id.Item_Checker_Available);
@@ -55,6 +57,12 @@ public class ShowModuleItemStatus {
         if(!info.cacheException.isEmpty())return "功能:存在加载异常";
         if (!info.ExecutorException.isEmpty())return "功能:存在执行异常";
         return "功能:无异常";
+    }
+    private static int checkAvailable(CoreLoader.XPItemInfo info){
+        if(!info.isVersionAvailable)return Color.YELLOW;
+        if(!info.cacheException.isEmpty())return Color.RED;
+        if (!info.ExecutorException.isEmpty())return Color.RED;
+        return Color.BLACK;
     }
     private static void showItemDetail(Context context,CoreLoader.XPItemInfo info){
         StringBuilder detail = new StringBuilder();

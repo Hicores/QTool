@@ -40,7 +40,7 @@ public class DisableFlushPic{
         }));
     }
 
-    @XPExecutor(methodID = "replaceRecord",period = XPExecutor.After)
+    @XPExecutor(methodID = "replaceRecord")
     @VerController
     public BaseXPExecutor onReplaceRecord1(){
         return param -> {
