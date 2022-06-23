@@ -54,7 +54,7 @@ public class CoreLoader {
         public Method apiExecutor;
 
         public HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
-        public ArrayList<Method> scanResult = new ArrayList<>();
+        public HashMap<String,Method> scanResult = new HashMap<>();
 
         public ArrayList<Method> fitMethods = new ArrayList<>();
 

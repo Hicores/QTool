@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.DexFinder.DexFinder;
@@ -52,7 +53,6 @@ public class MethodScannerWorker {
             return true;
         }
         for (CoreLoader.XPItemInfo info : CoreLoader.clzInstance.values()){
-            XposedBridge.log(info.isVersionAvailable + ":" + info.NeedMethodInfo);
             if (info.isVersionAvailable && info.NeedMethodInfo != null){
                 for (BaseMethodInfo methodInfo : info.NeedMethodInfo.values()){
                     if (methodInfo instanceof CommonMethodInfo) continue;
@@ -60,7 +60,22 @@ public class MethodScannerWorker {
                 }
             }
         }
+        preLoadMethod();
         return true;
+    }
+    private static final AtomicBoolean isLoaded = new AtomicBoolean();
+    private static void preLoadMethod(){
+        if (!isLoaded.getAndSet(true)){
+            for (CoreLoader.XPItemInfo item : CoreLoader.clzInstance.values()){
+                for (BaseMethodInfo info : item.NeedMethodInfo.values()){
+                    if (info instanceof CommonMethodInfo){
+                        item.scanResult.put(info.id, (Method) ((CommonMethodInfo) info).methods);
+                    }else {
+                        item.scanResult.put(info.id,getMethodFromCache(info.id));
+                    }
+                }
+            }
+        }
     }
     private static final ArrayList<ScannerLink> rootNode = new ArrayList<>();
 
@@ -127,6 +142,7 @@ public class MethodScannerWorker {
     }
     @SuppressLint({"ResourceType", "SetTextI18n"})
     public static void doFindMethod(){
+        cleanAllCache();
         CollectLinkInfo();
         Utils.PostToMain(()->{
             Context context = Utils.getTopActivity();
@@ -169,7 +185,7 @@ public class MethodScannerWorker {
                         if (findResult == null){
                             nodeView.setTextColor(Color.RED);
                         }else {
-                            info.bandToInfo.scanResult.add(findResult);
+                            info.bandToInfo.scanResult.put(info.id,findResult);
                             Utils.PostToMain(()->{
                                 nodeView.setTextColor(Color.GREEN);
                                 SpannableString text = new SpannableString(info.id + "\n"+
@@ -178,6 +194,7 @@ public class MethodScannerWorker {
                                 text.setSpan(new ForegroundColorSpan(Color.GRAY),info.id.length()+1,text.length(),0);
                                 nodeView.setText(text);
                             });
+                            writeMethodToCache(info.id,findResult);
                         }
                     }catch (Exception e){
                         nodeView.setTextColor(Color.RED);
