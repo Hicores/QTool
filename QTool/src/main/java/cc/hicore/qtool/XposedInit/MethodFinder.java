@@ -1,29 +1,15 @@
 package cc.hicore.qtool.XposedInit;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import cc.hicore.ConfigUtils.GlobalConfig;
-import cc.hicore.DexFinder.DexFinder;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 
 public class MethodFinder {

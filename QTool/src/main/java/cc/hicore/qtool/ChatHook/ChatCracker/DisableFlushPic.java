@@ -9,19 +9,33 @@ import android.widget.TextView;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(itemType = XPItem.ITEM_Hook,name = "闪照破解",targetVer = QQVersion.QQ_8_8_95)
+@XPItem(itemType = XPItem.ITEM_Hook,name = "闪照破解")
 public class DisableFlushPic{
+
+    @UIItem
+    @VerController
+    public UIInfo getUIInfo(){
+        UIInfo info = new UIInfo();
+        info.name = "闪照破解";
+        info.type = 1;
+        info.targetID = 1;
+        info.groupName = "聊天界面增强";
+        return info;
+    }
+
     @MethodScanner
     @VerController
     public void getAllMethod(MethodContainer container){
