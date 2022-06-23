@@ -1,14 +1,10 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
-import android.content.Context;
-
 import java.io.File;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;

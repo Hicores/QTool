@@ -1,16 +1,13 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -21,13 +18,9 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.LayoutUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @XPItem(name = "转发消息来源定位",itemType = XPItem.ITEM_Hook)
 public class TransShowUin{
