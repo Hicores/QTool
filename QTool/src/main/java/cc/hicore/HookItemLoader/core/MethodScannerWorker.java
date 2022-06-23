@@ -73,7 +73,7 @@ public class MethodScannerWorker {
                     if (info instanceof CommonMethodInfo){
                         item.scanResult.put(info.id, (Method) ((CommonMethodInfo) info).methods);
                     }else {
-                        item.scanResult.put(info.id,getMethodFromCache(info.id));
+                        item.scanResult.put(info.id,getMethodFromCache(item.id+"_"+info.id));
                     }
                 }
             }
@@ -196,7 +196,7 @@ public class MethodScannerWorker {
                                 text.setSpan(new ForegroundColorSpan(Color.GRAY),info.id.length()+1,text.length(),0);
                                 nodeView.setText(text);
                             });
-                            writeMethodToCache(info.id,findResult);
+                            writeMethodToCache(info.bandToInfo.id+"_"+info.id,findResult);
                         }
                     }catch (Exception e){
                         nodeView.setTextColor(Color.RED);
@@ -226,7 +226,7 @@ public class MethodScannerWorker {
             if (newNode.checkMethod != null){
                 linkNode = (Method) newNode.checkMethod;
             }else if (newNode.LinkedToMethodID != null){
-                linkNode = getMethodFromCache(newNode.LinkedToMethodID);
+                linkNode = getMethodFromCache(info.bandToInfo.id + "_" + newNode.LinkedToMethodID);
             }else {
                 return null;
             }
@@ -241,7 +241,7 @@ public class MethodScannerWorker {
             if (newNode.checkMethod != null){
                 linkNode = (Method) newNode.checkMethod;
             }else if (newNode.LinkedToMethodID != null){
-                linkNode = getMethodFromCache(newNode.LinkedToMethodID);
+                linkNode = getMethodFromCache(info.bandToInfo.id + "_" + newNode.LinkedToMethodID);
             }else {
                 return null;
             }
