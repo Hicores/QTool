@@ -94,7 +94,6 @@ public class CoreLoader {
             XPItem item = clz.getAnnotation(XPItem.class);
 
             if (item != null && info != null){
-                XposedBridge.log(item.toString());
                 if (item.proc() == XPItem.PROC_MAIN){
                     info.isVersionAvailable = HookEnv.IsMainProcess && checkVersionAvailable(item.targetVer(),item.targetApp(),item.max_targetVer());
                 }else if (item.proc() == XPItem.PROC_ALL){
@@ -189,7 +188,7 @@ public class CoreLoader {
                 if (executor != null && (info.isLoadEarly == isEarly)){
                     try{
 
-                        Method hookMethod = MethodScannerWorker.getMethodFromCache(executor.methodID());
+                        Method hookMethod = info.scanResult.get(executor.methodID());
                         BaseXPExecutor baseXPExecutor = (BaseXPExecutor) m.invoke(info.Instance);
                         Assert.notNull(hookMethod,"hookMethod is NULL,for "+m.getName());
                         Assert.notNull(baseXPExecutor,"baseXPExecutor is NULL,for "+m.getName());

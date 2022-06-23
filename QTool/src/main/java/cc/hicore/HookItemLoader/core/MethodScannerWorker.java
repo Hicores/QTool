@@ -50,6 +50,7 @@ public class MethodScannerWorker {
     public static boolean checkIsAvailable(){
         String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
         if (GlobalConfig.Get_String("cacheVer").equals(cacheVer)){
+            preLoadMethod();
             return true;
         }
         for (CoreLoader.XPItemInfo info : CoreLoader.clzInstance.values()){
@@ -68,6 +69,7 @@ public class MethodScannerWorker {
         if (!isLoaded.getAndSet(true)){
             for (CoreLoader.XPItemInfo item : CoreLoader.clzInstance.values()){
                 for (BaseMethodInfo info : item.NeedMethodInfo.values()){
+                    XposedBridge.log(info.id);
                     if (info instanceof CommonMethodInfo){
                         item.scanResult.put(info.id, (Method) ((CommonMethodInfo) info).methods);
                     }else {
@@ -250,7 +252,7 @@ public class MethodScannerWorker {
         }
         return null;
     }
-    public static Method getMethodFromCache(String ID){
+    private static Method getMethodFromCache(String ID){
         SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
         String s = share.getString(ID,null);
         if (s == null)return null;
