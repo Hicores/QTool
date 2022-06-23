@@ -1,7 +1,5 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
-import static cc.hicore.qtool.QQGroupHelper.AvatarMenu.AvatarMenuHooker.findView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
@@ -13,23 +11,50 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
+import cc.hicore.Utils.LayoutUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "转发消息来源定位",desc = "在合并转发消息中可以点击头像显示资料卡,可以在标题显示来源群号",groupName = "聊天界面增强",targetID = 1,type = 1,id = "TransShowUin")
-public class TransShowUin extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(),param -> {
+@XPItem(name = "转发消息来源定位",itemType = XPItem.ITEM_Hook)
+public class TransShowUin{
+    @UIItem
+    @VerController
+    public UIInfo getUIInfo(){
+        UIInfo ui = new UIInfo();
+        ui.name = "转发消息来源定位";
+        ui.desc = "在合并转发消息中可以点击头像显示资料卡,可以在标题显示来源群号";
+        ui.targetID = 1;
+        ui.type = 1;
+        ui.groupName = "聊天界面增强";
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void  getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+                int.class,
+                View.class,
+                ViewGroup.class
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor xpWorker(){
+        return param -> {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
             if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
@@ -52,7 +77,7 @@ public class TransShowUin extends BaseHookItem implements BaseUiItem {
                         mView.setOnClickListener(v1 -> QQEnvUtils.OpenTroopCard(Troop));
                     }
                 }
-                View avatar = findView("VasAvatar",mLayout);
+                View avatar = LayoutUtils.findView("VasAvatar",mLayout);
                 if (avatar != null){
                     String UserUin = MField.GetField(ChatMsg,ChatMsg.getClass() ,"senderuin", String.class);
                     avatar.setOnClickListener(v->{
@@ -61,37 +86,6 @@ public class TransShowUin extends BaseHookItem implements BaseUiItem {
                 }
 
             }
-
-
-        });
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(TransShowUin.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method getMethod() {
-        return MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        });
+        };
     }
 }

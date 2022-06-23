@@ -13,6 +13,7 @@ import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
@@ -22,6 +23,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 
+@XPItem(name = "耗流量卡片屏蔽",itemType = XPItem.ITEM_Hook)
 public class FuckDLCard{
     private static long mStartTime=0;
     private static HashMap<String,Long> mCache = new HashMap<>();
