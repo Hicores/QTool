@@ -101,12 +101,21 @@ public class MainItemChildLoader {
                         HookEnv.Config.setBoolean("Main_Switch", info.connectTo.id, isChecked);
                         info.connectTo.isEnabled = isChecked;
                     });
+                    if (info.connectTo.uiClick != null){
+                        layout.setOnClickListener(v ->{
+                            try{
+                                info.connectTo.uiClick.invoke(info.connectTo.Instance,context);
+                            }catch (Throwable th){
+                                info.connectTo.ExecutorException.put(info.connectTo.uiClick.getName(), Log.getStackTraceString(th));
+                            }
+                        });
+                    }
                 }else {
                     layout.findViewById(R.id.Item_Click).setVisibility(View.VISIBLE);
                     layout.setOnClickListener(v-> {
                         if (info.connectTo.uiClick != null){
                             try{
-                                info.connectTo.uiClick.invoke(info.connectTo.Instance);
+                                info.connectTo.uiClick.invoke(info.connectTo.Instance,context);
                             }catch (Throwable th){
                                 info.connectTo.ExecutorException.put(info.connectTo.uiClick.getName(), Log.getStackTraceString(th));
                             }
