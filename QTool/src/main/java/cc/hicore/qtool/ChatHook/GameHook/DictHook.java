@@ -6,11 +6,18 @@ import android.content.Context;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
@@ -18,80 +25,67 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "自定义骰子猜拳",groupName = "聊天辅助",type = 1,targetID = 1,id = "CrackDict")
-public class DictHook extends BaseHookItem implements BaseUiItem {
-    int CurrentRamdonDict = -1;
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookBefore(m[0],param -> {
-            if (IsEnable){
-                String Name = MField.GetField(param.args[3],"name");
-                if(Name.contains("骰子") && CurrentRamdonDict==-1) {
-                    param.setResult(null);
-                    selectDictGame(param);
-                }else if(Name.equals("猜拳") && CurrentRamdonDict==-1) {
-                    param.setResult(null);
-                    selectCFGGame(param);
-                }
+@XPItem(name = "自定义骰子猜拳",itemType = XPItem.ITEM_Hook)
+public class DictHook{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "自定义骰子猜拳";
+        ui.groupName = "聊天辅助";
+        ui.type = 1;
+        ui.targetID = 1;
+        return ui;
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_1")
+    public BaseXPExecutor worker_1(){
+        return param -> {
+            String Name = MField.GetField(param.args[3],"name");
+            if(Name.contains("骰子") && CurrentRamdonDict==-1) {
+                param.setResult(null);
+                selectDictGame(param);
+            }else if(Name.equals("猜拳") && CurrentRamdonDict==-1) {
+                param.setResult(null);
+                selectCFGGame(param);
             }
-        });
-        XPBridge.HookBefore(m[1],param -> {
-            if (IsEnable){
-                if(CurrentRamdonDict==-1)return;
-                if(CurrentRamdonDict==666) {
-                    CurrentRamdonDict=-1;
-                    return;
-                }
-                int MaxValue = (int) param.args[0];
-                if(MaxValue==6 || MaxValue ==3) {
-                    param.setResult(CurrentRamdonDict);
-                    CurrentRamdonDict = -1;
-                }
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor worker_2(){
+        return param -> {
+            if(CurrentRamdonDict==-1)return;
+            if(CurrentRamdonDict==666) {
+                CurrentRamdonDict=-1;
+                return;
             }
-        });
-        XPBridge.HookBefore(m[2],param -> {
-            if (IsEnable)param.setResult(true);
-        });
-        return true;
+            int MaxValue = (int) param.args[0];
+            if(MaxValue==6 || MaxValue ==3) {
+                param.setResult(CurrentRamdonDict);
+                CurrentRamdonDict = -1;
+            }
+        };
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    @VerController
+    @XPExecutor(methodID = "hook_3")
+    public BaseXPExecutor worker_3(){
+        return param -> {
+            param.setResult(true);
+        };
     }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null && m[2] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(DictHook.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method[] getMethod(){
-        Method[] m = new Method[3];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon",void.class,new Class[]{
+    public void getMethod(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon",void.class,new Class[]{
                 MClass.loadClass("com.tencent.common.app.business.BaseQQAppInterface"),
                 Context.class,
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
                 MClass.loadClass("com.tencent.mobileqq.data.Emoticon"),
                 MClass.loadClass("com.tencent.mobileqq.emoticon.StickerInfo")
-        });
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.magicface.drawable.PngFrameUtil",null,int.class,new Class[]{int.class});
-        m[2] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticon.api.impl.EmojiManagerServiceImpl"),"getMagicFaceSendAccessControl",boolean.class,new Class[0]);
-        return m;
+        }));
+        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.magicface.drawable.PngFrameUtil",null,int.class,new Class[]{int.class}));
+        container.addMethod("hook_3",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticon.api.impl.EmojiManagerServiceImpl"),"getMagicFaceSendAccessControl",boolean.class,new Class[0]));
     }
+    int CurrentRamdonDict = -1;
     private void selectCFGGame(XC_MethodHook.MethodHookParam params){
         final String[] SelectItem = new String[]{"石头","剪刀","布"};
         new AlertDialog.Builder(Utils.getTopActivity(),3)
