@@ -101,7 +101,7 @@ public class AvatarMenuHooker extends BaseHookItem implements BaseUiItem, View.O
                 View.class,
                 ViewGroup.class
         });
-        m[2] = BaseChatPie.getMethod();
+        //m[2] = BaseChatPie.getMethod();
         return m;
     }
 

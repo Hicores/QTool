@@ -50,18 +50,17 @@ public class SendBtnHooker{
     public void getMethodInfo(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("before_method","em_gb_ice_sticker",m -> true));
         container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("getAIORoot","before_method",m -> ((Method)m).getReturnType().equals(ViewGroup.class)));
-        container.addMethod(MethodFinderBuilder.newFinderByString("basechatpie_init","AIO_doOnCreate_initUI",m ->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie")));
     }
     @MethodScanner
-    @VerController(max_targetVer = QQVersion.QQ_8_8_90)
+    @VerController
     public void getBaseChatPieInit(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("basechatpie_init","AIO_doOnCreate_initUI",m ->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie")));
     }
-    @XPExecutor(methodID = "basechatpie_init")
+    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
     @VerController(max_targetVer = QQVersion.QQ_8_8_90)
     public BaseXPExecutor xpWorker_old(){
         return param -> {
-            ViewGroup vg = MField.GetFirstField(param.thisObject,ViewGroup.class);;
+            ViewGroup vg = MField.GetFirstField(param.thisObject,ViewGroup.class);
             if (vg == null)return;
             Context ctx = vg.getContext();
             int fun_btn = ctx.getResources().getIdentifier("fun_btn", "id", ctx.getPackageName());
@@ -84,7 +83,7 @@ public class SendBtnHooker{
         };
     }
 
-    @XPExecutor(methodID = "basechatpie_init")
+    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     public BaseXPExecutor xpWorker(){
         return param -> {

@@ -69,7 +69,6 @@ public class MethodScannerWorker {
         if (!isLoaded.getAndSet(true)){
             for (CoreLoader.XPItemInfo item : CoreLoader.clzInstance.values()){
                 for (BaseMethodInfo info : item.NeedMethodInfo.values()){
-                    XposedBridge.log(info.id);
                     if (info instanceof CommonMethodInfo){
                         item.scanResult.put(info.id, (Method) ((CommonMethodInfo) info).methods);
                     }else {

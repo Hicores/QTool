@@ -182,7 +182,7 @@ public class RepeatWithPic extends BaseHookItem implements BaseUiItem {
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"),
                 List.class, boolean.class});
 
-        m[3] = BaseChatPie.getMethod();
+        //m[3] = BaseChatPie.getMethod();
 
 
         return m;
