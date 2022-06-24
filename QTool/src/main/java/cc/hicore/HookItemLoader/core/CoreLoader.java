@@ -107,6 +107,17 @@ public class CoreLoader {
                 info.item = item;
                 info.isLoadEarly = item.period() == XPItem.Period_Early;
             }
+            try{
+                for (Field f :clz.getDeclaredFields()){
+                    if (f.getType().equals(XPItemInfo.class)){
+                        f.setAccessible(true);
+                        f.set(info.Instance,info);
+                    }
+                }
+            }catch (Exception e){
+                info.cacheException.add(Log.getStackTraceString(e));
+            }
+
         }
         //扫描有效的方法并将其加入到方法列表中
         for (Class<?> clz : clzInstance.keySet()){

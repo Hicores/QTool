@@ -1,7 +1,6 @@
 package cc.hicore.HookItemLoader.core;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +8,9 @@ import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -20,7 +21,6 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.ConfigUtils.GlobalConfig;
@@ -30,7 +30,7 @@ import cc.hicore.HookItemLoader.bridge.BaseMethodInfo;
 import cc.hicore.HookItemLoader.bridge.CommonMethodInfo;
 import cc.hicore.HookItemLoader.bridge.FindMethodByName;
 import cc.hicore.HookItemLoader.bridge.FindMethodInvokingMethod;
-import cc.hicore.HookItemLoader.bridge.FindMethodsWhichInvokeMethod;
+import cc.hicore.HookItemLoader.bridge.FindMethodsWhichInvokeToTargetMethod;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
@@ -166,6 +166,9 @@ public class MethodScannerWorker {
             ArrayList<TextView> nodeList = new ArrayList<>();
             for (ScannerLink node : sortedLinkScannerInfo){
                 TextView view = new TextView(context);
+                if (node.Info instanceof CommonMethodInfo){
+                    view.setVisibility(View.GONE);
+                }
                 view.setGravity(Gravity.CENTER);
                 view.setText(node.ID);
                 view.setTextSize(16);
@@ -175,6 +178,7 @@ public class MethodScannerWorker {
                 param.topMargin = Utils.dip2px(context,12);
                 mRoot.addView(view,param);
                 nodeList.add(view);
+
             }
             dialog.show();
             new Thread(()->{
@@ -198,7 +202,8 @@ public class MethodScannerWorker {
                             });
                             writeMethodToCache(info.bandToInfo.id+"_"+info.id,findResult);
                         }
-                    }catch (Exception e){
+                    }catch (Throwable e){
+                        Utils.ShowToastL(Log.getStackTraceString(e));
                         nodeView.setTextColor(Color.RED);
                     }
                 }
@@ -235,8 +240,8 @@ public class MethodScannerWorker {
                 if (newNode.checker.onMethod(m))return m;
             }
         }
-        if (info instanceof FindMethodsWhichInvokeMethod){
-            FindMethodsWhichInvokeMethod newNode = (FindMethodsWhichInvokeMethod) info;
+        if (info instanceof FindMethodsWhichInvokeToTargetMethod){
+            FindMethodsWhichInvokeToTargetMethod newNode = (FindMethodsWhichInvokeToTargetMethod) info;
             Method linkNode;
             if (newNode.checkMethod != null){
                 linkNode = (Method) newNode.checkMethod;
@@ -245,7 +250,7 @@ public class MethodScannerWorker {
             }else {
                 return null;
             }
-            Method[] findResult = DexFinder.getInstance().findMethodInvokeTarget(linkNode);
+            Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
             for (Method m : findResult){
                 if (newNode.checker.onMethod(m))return m;
             }

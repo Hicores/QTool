@@ -35,7 +35,7 @@ public class MethodFinderBuilder {
         return newInfo;
     }
     public static BaseMethodInfo newFinderWhichMethodInvoking(String ID, Member targetMethod, BaseMethodInfo.MethodChecker findCallback){
-        FindMethodsWhichInvokeMethod newInfo = new FindMethodsWhichInvokeMethod();
+        FindMethodsWhichInvokeToTargetMethod newInfo = new FindMethodsWhichInvokeToTargetMethod();
         newInfo.type = BaseMethodInfo.TYPE_FINDER_INFO;
         newInfo.id = ID;
         newInfo.checkMethod = targetMethod;
@@ -43,7 +43,7 @@ public class MethodFinderBuilder {
         return newInfo;
     }
     public static BaseMethodInfo newFinderWhichMethodInvokingLinked(String ID, String LinkedMethod, BaseMethodInfo.MethodChecker findCallback){
-        FindMethodsWhichInvokeMethod newInfo = new FindMethodsWhichInvokeMethod();
+        FindMethodsWhichInvokeToTargetMethod newInfo = new FindMethodsWhichInvokeToTargetMethod();
         newInfo.type = BaseMethodInfo.TYPE_FINDER_INFO;
         newInfo.id = ID;
         newInfo.LinkedToMethodID = LinkedMethod;

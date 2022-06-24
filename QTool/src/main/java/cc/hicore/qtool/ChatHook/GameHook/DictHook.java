@@ -74,6 +74,8 @@ public class DictHook{
             param.setResult(true);
         };
     }
+    @MethodScanner
+    @VerController
     public void getMethod(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon",void.class,new Class[]{
                 MClass.loadClass("com.tencent.common.app.business.BaseQQAppInterface"),

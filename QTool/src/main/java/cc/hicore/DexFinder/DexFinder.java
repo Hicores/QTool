@@ -76,7 +76,7 @@ public class DexFinder {
         }
         return retArr.toArray(new Method[0]);
     }
-    public Method[] findMethodInvoking(Method beInvoked){
+    public Method[] findMethodBeInvoked(Method beInvoked){
         long[] dexIndexes = helper.findMethodInvoked(helper.encodeMethodIndex(beInvoked),-1,(short) -1,null,-1,null,
                 null,null,false);
         ArrayList<Method> retArr = new ArrayList<>();
@@ -88,7 +88,7 @@ public class DexFinder {
         }
         return retArr.toArray(new Method[0]);
     }
-    public Method[] findMethodInvokeTarget(Method beInvoked){
+    public Method[] findMethodInvoking(Method beInvoked){
         long[] dexIndexes = helper.findMethodInvoking(helper.encodeMethodIndex(beInvoked),-1,(short) -1,null,-1,null,
                 null,null,false);
         ArrayList<Method> retArr = new ArrayList<>();
