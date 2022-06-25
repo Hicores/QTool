@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class CoreLoader {
         public Method apiExecutor;
 
         public HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
-        public HashMap<String,Method> scanResult = new HashMap<>();
+        public HashMap<String, Member> scanResult = new HashMap<>();
 
         public ArrayList<Method> fitMethods = new ArrayList<>();
 
@@ -199,7 +200,7 @@ public class CoreLoader {
                 if (executor != null && (info.isLoadEarly == isEarly)){
                     try{
 
-                        Method hookMethod = info.scanResult.get(executor.methodID());
+                        Member hookMethod = info.scanResult.get(executor.methodID());
                         BaseXPExecutor baseXPExecutor = (BaseXPExecutor) m.invoke(info.Instance);
                         Assert.notNull(hookMethod,"hookMethod is NULL,for "+m.getName());
                         Assert.notNull(baseXPExecutor,"baseXPExecutor is NULL,for "+m.getName());

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,7 +71,7 @@ public class MethodScannerWorker {
             for (CoreLoader.XPItemInfo item : CoreLoader.clzInstance.values()){
                 for (BaseMethodInfo info : item.NeedMethodInfo.values()){
                     if (info instanceof CommonMethodInfo){
-                        item.scanResult.put(info.id, (Method) ((CommonMethodInfo) info).methods);
+                        item.scanResult.put(info.id, ((CommonMethodInfo) info).methods);
                     }else {
                         item.scanResult.put(info.id,getMethodFromCache(item.id+"_"+info.id));
                     }
@@ -186,7 +187,7 @@ public class MethodScannerWorker {
                     Utils.PostToMain(()->nodeView.setTextColor(Color.BLUE));
                     try{
                         BaseMethodInfo info = node.Info;
-                        Method findResult = findMethod(info);
+                        Member findResult = findMethod(info);
                         if (findResult == null){
                             nodeView.setTextColor(Color.RED);
                         }else {
@@ -199,7 +200,7 @@ public class MethodScannerWorker {
                                 text.setSpan(new ForegroundColorSpan(Color.GRAY),info.id.length()+1,text.length(),0);
                                 nodeView.setText(text);
                             });
-                            writeMethodToCache(info.bandToInfo.id+"_"+info.id,findResult);
+                            writeMethodToCache(info.bandToInfo.id+"_"+info.id, (Method) findResult);
                         }
                     }catch (Throwable e){
                         Utils.ShowToastL(Log.getStackTraceString(e));
@@ -213,9 +214,9 @@ public class MethodScannerWorker {
         });
 
     }
-    private static Method findMethod(BaseMethodInfo info){
+    private static Member findMethod(BaseMethodInfo info){
         if (info instanceof CommonMethodInfo){
-            return (Method) ((CommonMethodInfo) info).methods;
+            return ((CommonMethodInfo) info).methods;
         }
         if (info instanceof FindMethodByName){
             FindMethodByName newNode = (FindMethodByName) info;

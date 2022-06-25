@@ -5,51 +5,46 @@ import android.content.Context;
 import java.lang.reflect.Member;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "替换群侧滑",desc = "替换群聊侧滑为成员探测器",targetID = 1,groupName = "聊天界面增强",id = "ReplaceSlide",type = 1)
-public class ReplaceSlide extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookBefore(getMethod(),param -> {
-            if (IsEnable){
-                Object obj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopMultiCardDrawer"),param.args);
-                param.setResult(obj);
-            }
-        });
-        return true;
+@XPItem(name = " 替换群侧滑",itemType = XPItem.ITEM_Hook)
+public class ReplaceSlide{
+    @VerController
+    @UIItem
+    public UIInfo getUIInfo(){
+        UIInfo ui = new UIInfo();
+        ui.groupName = "聊天界面增强";
+        ui.targetID = 1;
+        ui.type = 1;
+        ui.desc = "替换群聊侧滑为成员探测器";
+        ui.name = "替换群侧滑";
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(ReplaceSlide.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Member getMethod(){
-        return MClass.findCons(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopAppShortcutDrawer"),new Class[]{
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MClass.findCons(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopAppShortcutDrawer"),new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")
-        });
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> {
+            Object obj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopMultiCardDrawer"),param.args);
+            param.setResult(obj);
+        };
     }
 }

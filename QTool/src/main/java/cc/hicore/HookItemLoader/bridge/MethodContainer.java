@@ -1,5 +1,6 @@
 package cc.hicore.HookItemLoader.bridge;
 
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import cc.hicore.qtool.XposedInit.MethodFinder;
 
 public class MethodContainer {
     private final ArrayList<BaseMethodInfo> NeedMethodList = new ArrayList<>();
-    public void addMethod(String id,Method m){
+    public void addMethod(String id, Member m){
         NeedMethodList.add(MethodFinderBuilder.newCommonMethod(id,m));
     }
     public void addMethod(BaseMethodInfo m){
