@@ -5,6 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XPExecutor {
@@ -13,4 +16,5 @@ public @interface XPExecutor {
 
     String methodID();
     int period() default Before;
+    int hook_period() default XC_MethodHook.PRIORITY_DEFAULT;
 }

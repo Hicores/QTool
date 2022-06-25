@@ -213,7 +213,7 @@ public class CoreLoader {
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
                                     }
                                 }
-                            });
+                            }, executor.hook_period());
                         }else {
                             XPBridge.HookBefore(hookMethod,param -> {
                                 if (info.isEnabled){
@@ -223,7 +223,7 @@ public class CoreLoader {
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
                                     }
                                 }
-                            });
+                            }, executor.hook_period());
                         }
                     }catch (Throwable e){
                         info.cacheException.add(Log.getStackTraceString(e));
