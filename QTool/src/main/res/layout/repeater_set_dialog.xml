@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:visibility="gone"
         android:text="复读总开关"
         android:textColor="@color/font_plugin"
         android:textSize="24sp"/>

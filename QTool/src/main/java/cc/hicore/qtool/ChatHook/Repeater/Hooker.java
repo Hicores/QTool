@@ -11,32 +11,54 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 
-@HookItem(isDelayInit = true, isRunInAllProc = false)
-@UIItem(targetID = 1,groupName = "聊天辅助",name = "消息复读+1",id = "RepeaterHooker",type = 2)
-public class Hooker extends BaseHookItem implements BaseUiItem {
-
-    public static Drawable cacheDrawable;
-    @Override
-    public String getTag() {
-        return "消息复读+1";
+public class Hooker{
+    @VerController
+    @UIItem
+    public UIInfo getUIInfo(){
+        UIInfo ui = new UIInfo();
+        ui.groupName = "聊天辅助";
+        ui.name = "消息复读+1";
+        ui.desc = "点击进行更多设置";
+        ui.type = 1;
+        ui.targetID = 1;
+        return ui;
     }
-
-    @Override
-    public boolean startHook() throws Throwable {
-        requestRepeatIcon();
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0], param -> {
-            if (!HookEnv.Config.getBoolean("Repeater","Open",false)) return;
+    @VerController
+    @UIClick
+    public void SetClick(Context context){
+        RepeaterSet.startShow(context);
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+                int.class,
+                View.class,
+                ViewGroup.class
+        }));
+        container.addMethod("hide_def_icon",MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]));
+    }
+    @XPExecutor(methodID = "hook_1")
+    @VerController
+    public BaseXPExecutor hook_work(){
+        return param -> {
             Object mGetView = param.getResult();
             RelativeLayout baseChatItem = null;
             if (mGetView instanceof RelativeLayout) baseChatItem = (RelativeLayout) mGetView;
@@ -50,15 +72,16 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
             String ActivityName = baseChatItem.getContext().getClass().getName();
             if (ActivityName.contains("MultiForwardActivity")) return;
             RepeaterHelper.createRepeatIcon(baseChatItem, ChatMsg);
-        });
-
-        XPBridge.HookBefore(m[1],param -> {
-            if (HookEnv.Config.getBoolean("Repeater","Open",false)){
-                param.setResult(false);
-            }
-        });
-        return true;
+        };
     }
+    @XPExecutor(methodID = "hide_def_icon")
+    @VerController
+    public BaseXPExecutor hide_def_icon(){
+        return param -> {
+            param.setResult(false);
+        };
+    }
+    public static Drawable cacheDrawable;
 
     private static void requestRepeatIcon(){
         String iconPath = HookEnv.ExtraDataPath + "res/repeat.png";
@@ -81,35 +104,4 @@ public class Hooker extends BaseHookItem implements BaseUiItem {
 
     }
 
-    @Override
-    public boolean isEnable() {
-        return HookEnv.Config.getBoolean("Repeater","Open",false);
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-        RepeaterSet.startShow(context);
-    }
-
-    private Method[] getMethod() {
-        Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        });
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]);
-        return m;
-    }
 }

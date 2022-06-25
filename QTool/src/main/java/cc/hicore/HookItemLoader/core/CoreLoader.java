@@ -250,7 +250,7 @@ public class CoreLoader {
         if ((targetApp & HookEnv.CurrentApp) == 0)return false;
         //检测最大版本号是否符合
         if (max_version > 1){
-            if (HostInfo.getVerCode() > max_version)return false;
+            if (HostInfo.getVerCode() >= max_version)return false;
         }
         //检测目标版本号是否符合
         if (version > 1){
