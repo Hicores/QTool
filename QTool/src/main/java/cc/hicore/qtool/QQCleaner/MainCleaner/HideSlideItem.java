@@ -10,24 +10,55 @@ import java.util.HashMap;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.MethodFinder;
+@XPItem(name = "主界面侧滑净化",itemType = XPItem.ITEM_Hook)
+public class HideSlideItem{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "主界面侧滑净化";
+        ui.groupName = "主界面净化";
+        ui.type = 1;
+        ui.targetID = 2;
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        Method[] m = new Method[2];
+        Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.qqsettingme.config.QQSettingMeMenuConfigBean");
+        for (Method m1 : clz.getDeclaredMethods()){
+            if (m1.getReturnType().isArray()){
+                m[0] = m1;
+                break;
+            }
+        }
 
-@HookItem(isRunInAllProc = false,isDelayInit = false)
-@UIItem(name = "侧滑净化",groupName = "主界面净化",targetID = 2,type = 2,id = "HideSlideItem")
-public class HideSlideItem extends BaseHookItem implements BaseUiItem {
-    static HashMap<String,String> cacheItemData = new HashMap<>();
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0],param -> {
+        container.addMethod("hook1",m[0]);
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook2","VipInfoHandler payRuleUin changed",m2->m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe")));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook1")
+    public BaseXPExecutor worker1(){
+        return param -> {
             Object mArr = param.getResult();
             cacheItemData = new HashMap<>();
             List<String> HideSingle = HookEnv.Config.getList("Set","HideSlideItem",true);
@@ -44,33 +75,19 @@ public class HideSlideItem extends BaseHookItem implements BaseUiItem {
                 Array.set(newArr,i,saveArrays.get(i));
             }
             param.setResult(newArr);
-        });
-
-        XPBridge.HookBefore(m[1],param -> {
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook2")
+    public BaseXPExecutor worker2(){
+        return param -> {
             List<String> HideSingle = HookEnv.Config.getList("Set","HideSlideItem",true);
             if (HideSingle.contains("d_vip_identity"))param.setResult(null);
-        });
-        return true;
+        };
     }
-
-    @Override
-    public boolean isEnable() {
-        return true;
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
+    @VerController
+    @UIClick
+    public void UIClick(Context context){
         ArrayList<String> showText = new ArrayList<>();
         ArrayList<String> signleList = new ArrayList<>();
         List<String> HideSingle = HookEnv.Config.getList("Set","HideSlideItem",true);
@@ -97,23 +114,5 @@ public class HideSlideItem extends BaseHookItem implements BaseUiItem {
                     HookEnv.Config.setList("Set","HideSlideItem",save);
                 }).show();
     }
-    public Method[] getMethod(){
-        Method[] m = new Method[2];
-        Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.qqsettingme.config.QQSettingMeMenuConfigBean");
-        for (Method m1 : clz.getDeclaredMethods()){
-            if (m1.getReturnType().isArray()){
-                m[0] = m1;
-                break;
-            }
-        }
-        m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.QQSettingMe"),"j",void.class,new Class[0]);
-
-        if (m[1] == null){
-            m[1] = MethodFinder.findMethodFromCache("HideSlideItem");
-            if (m[1] == null){
-                MethodFinder.NeedReportToFindMethod("HideSlideItem","侧滑净化","VipInfoHandler payRuleUin changed",ma->ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe"));
-            }
-        }
-        return m;
-    }
+    static HashMap<String,String> cacheItemData = new HashMap<>();
 }
