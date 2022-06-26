@@ -8,19 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "消息长按菜单净化",targetID = 2,groupName = "聊天界面净化",type = 2,id = "ChatLongClickCleaner")
-public class ChatLongClickCleaner extends BaseHookItem implements BaseUiItem {
+@XPItem(name = "消息长按菜单净化",itemType = XPItem.ITEM_Hook)
+public class ChatLongClickCleaner{
     private static final ArrayList<String> defCheckItem = new ArrayList<>();
     static {
         defCheckItem.add("复制");
@@ -44,35 +50,37 @@ public class ChatLongClickCleaner extends BaseHookItem implements BaseUiItem {
         defCheckItem.add("存微云");
         defCheckItem.add("发给电脑");
     }
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookBefore(getMethod(),param -> {
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "消息长按菜单净化";
+        ui.targetID = 2;
+        ui.type = 1;
+        ui.groupName = "聊天界面净化";
+        ui.desc = "点击设置净化的项目";
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenu"),null,void.class,new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem")
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor hook(){
+        return param -> {
             List<String> savedList = HookEnv.Config.getList("Set","ChatLongClickItemCleaner",true);
             if (savedList.isEmpty())return;
             String Name = MField.GetField(param.args[0],"a",String.class);
             if (savedList.contains(Name))param.setResult(null);
-        });
-        return true;
+        };
     }
-
-    @Override
-    public boolean isEnable() {
-        List<String> savedList = HookEnv.Config.getList("Set","ChatLongClickItemCleaner",true);
-        return !savedList.isEmpty();
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
+    @VerController
+    @UIClick
+    public void uiClick(Context context){
         boolean[] b = new boolean[defCheckItem.size()];
         List<String> savedList = HookEnv.Config.getList("Set","ChatLongClickItemCleaner",true);
         for (int i = 0;i<defCheckItem.size();i++){
@@ -93,10 +101,5 @@ public class ChatLongClickCleaner extends BaseHookItem implements BaseUiItem {
                     if (!saveList.isEmpty()) HookLoader.CallHookStart(ChatLongClickCleaner.class.getName());
                     HookEnv.Config.setList("Set","ChatLongClickItemCleaner",saveList);
                 }).show();
-    }
-    public Method getMethod(){
-        return MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenu"),null,void.class,new Class[]{
-                MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem")
-        });
     }
 }
