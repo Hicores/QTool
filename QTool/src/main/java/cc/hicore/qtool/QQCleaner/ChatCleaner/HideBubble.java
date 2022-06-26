@@ -8,83 +8,68 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "屏蔽聊天特殊气泡",groupName = "聊天净化",type = 1,id = "ChatBubbleHider",targetID = 2)
-public class HideBubble extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-
-    @Override
-    public String getTag() {
-        return "屏蔽聊天气泡";
+@XPItem(name = "屏蔽聊天特殊气泡",itemType = XPItem.ITEM_Hook)
+public class HideBubble{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "屏蔽聊天特殊气泡";
+        ui.groupName = "聊天净化";
+        ui.type = 1;
+        ui.targetID = 2;
+        return ui;
     }
-
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0],param -> {
-            if (IsEnable){
-                List list = MField.GetFirstField(param.thisObject, List.class);
-                if(list==null)return;
-                Object ChatMsg = list.get((int) param.args[0]);
-                MField.SetField(ChatMsg,"vipBubbleID",(long)0);
-                MField.SetField(ChatMsg,"vipBubbleDiyTextId",0);
-                MField.SetField(ChatMsg,"vipSubBubbleId",0);
-            }
-        });
-        XPBridge.HookBefore(m[1],param -> {
-            if (IsEnable){
-                Object ChatMsg = param.args[2];
-                MField.SetField(ChatMsg,"vipBubbleID",(long)0);
-                MField.SetField(ChatMsg,"vipBubbleDiyTextId",0);
-                MField.SetField(ChatMsg,"vipSubBubbleId",0);
-            }
-        });
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(HideBubble.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method[] getMethod(){
-        Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1","getView", View.class,new Class[]{
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook_1", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1","getView", View.class,new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
-        });;
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
+        }));
+        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
                 String.class,
                 int.class,
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 boolean.class
-        });
-        return m;
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_1")
+    public BaseXPExecutor fuck_bubble_1(){
+        return param -> {
+            List list = MField.GetFirstField(param.thisObject, List.class);
+            if(list==null)return;
+            Object ChatMsg = list.get((int) param.args[0]);
+            MField.SetField(ChatMsg,"vipBubbleID",(long)0);
+            MField.SetField(ChatMsg,"vipBubbleDiyTextId",0);
+            MField.SetField(ChatMsg,"vipSubBubbleId",0);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor fuck_bubble_2(){
+        return param -> {
+            Object ChatMsg = param.args[2];
+            MField.SetField(ChatMsg,"vipBubbleID",(long)0);
+            MField.SetField(ChatMsg,"vipBubbleDiyTextId",0);
+            MField.SetField(ChatMsg,"vipSubBubbleId",0);
+        };
     }
 }
