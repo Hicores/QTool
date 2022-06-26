@@ -5,61 +5,46 @@ import android.content.Context;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import cc.hicore.qtool.XposedInit.MethodFinder;
 import de.robv.android.xposed.XposedBridge;
 
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "隐藏主界面右上角入口",desc = "(不支持旧版QQ)可能包含小世界入口等",groupName = "主界面净化",targetID = 2,type = 1,id = "HideMainAdEntry")
-public class HideAdIcon extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookBefore(m[0],param -> {
-            if (IsEnable){
-                param.setResult(null);
-            }
-        });
-        return true;
+@XPItem(name = "隐藏主界面右上角入口",itemType = XPItem.ITEM_Hook)
+public class HideAdIcon{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "隐藏主界面右上角入口";
+        ui.desc = "可能包含小世界入口等";
+        ui.groupName ="主界面净化";
+        ui.type = 1;
+        ui.targetID = 2;
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> param.setResult(null);
     }
-
-    @Override
-    public boolean check() {
-        return getMethod()[0]!=null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(HideAdIcon.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method[] getMethod(){
-        Method[] m = new Method[1];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.ConversationTitleBtnCtrl"),"a",void.class,new Class[0]);
-        if (m[0] == null){
-            m[0] = MethodFinder.findMethodFromCache("HideAdIcon");
-            if (m[0] == null){
-                MethodFinder.NeedReportToFindMethod("Conver_Init","隐藏主界面右上角","#666666",ma->ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.home.Conversation"));
-                MethodFinder.NeedReportToFindMethodConnectTag("HideAdIcon","隐藏主界面右上角","Conver_Init",ma -> ma.getParameterCount() == 0 && ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.ConversationTitleBtnCtrl"));
-            }
-        }
-        return m;
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_before","#666666",m->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.home.Conversation")));
+        container.addMethod(MethodFinderBuilder.newFinderWhichMethodInvokingLinked("hook","hook_before",m -> ((Method)m).getParameterCount() == 0 && m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.ConversationTitleBtnCtrl")));
     }
 }
