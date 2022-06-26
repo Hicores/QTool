@@ -5,60 +5,42 @@ import android.content.Context;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import cc.hicore.qtool.XposedInit.MethodFinder;
-
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "屏蔽一起听歌顶栏",groupName = "聊天界面净化",targetID = 2,type = 1,id = "HideListenerTogether")
-public class HideListenerTogether extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookBefore(getMethod(),param -> {
-            if (IsEnable){
-                param.setResult(null);
-            }
-
-        });
-        return true;
+@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook)
+public class HideListenerTogether{
+    @UIItem
+    @VerController
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "屏蔽一起听歌顶栏";
+        ui.groupName = "聊天界面净化";
+        ui.targetID = 2;
+        ui.type = 1;
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","onUIModuleNeedRefresh, uidata=",m->true));
     }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(HideListenerTogether.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method getMethod(){
-        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ui.BaseListenTogetherPanel"),"a",void.class,new Class[]{
-                MClass.loadClass("com.tencent.mobileqq.listentogether.ListenTogetherSession")
-        });
-        if (m == null){
-            m = MethodFinder.findMethodFromCache("HideListenTogether");
-            if (m == null){
-                MethodFinder.NeedReportToFindMethod("HideListenTogether","屏蔽一起听歌顶栏","onUIModuleNeedRefresh, uidata=",a -> true);
-            }
-        }
-        return m;
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> param.setResult(null);
     }
 }

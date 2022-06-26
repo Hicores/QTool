@@ -3,6 +3,9 @@ package cc.hicore.HookItemLoader.bridge;
 import java.lang.reflect.Member;
 
 public class MethodFinderBuilder {
+    private MethodFinderBuilder(){
+
+    }
     public static BaseMethodInfo newCommonMethod(String ID,Member member){
         CommonMethodInfo info = new CommonMethodInfo();
         info.methods = member;
