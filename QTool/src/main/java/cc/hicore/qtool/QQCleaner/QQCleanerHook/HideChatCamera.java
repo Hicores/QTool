@@ -48,7 +48,7 @@ public class HideChatCamera extends BaseHookItem implements BaseUiItem {
 
     @Override
     public boolean isEnable() {
-        return IsEnable || HookInjectEmoTabView.IsEnable;
+        return IsEnable;
     }
 
     @Override

@@ -18,6 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -25,7 +35,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.QQReflect;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
@@ -40,45 +49,84 @@ import cc.hicore.qtool.XposedInit.MethodFinder;
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
  */
-@UIItem(name = "表情面板",type = 1,targetID = 1,id = "EmoHelper",groupName = "聊天辅助")
-@HookItem(isDelayInit = true, isRunInAllProc = false)
-public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
-    public static boolean IsEnable = true;
+@SuppressLint("ResourceType")
+@XPItem(name = "表情面板",itemType = XPItem.ITEM_Hook)
+public class HookInjectEmoTabView{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "表情面板";
+        ui.groupName = "聊天辅助";
+        ui.type = 1;
+        ui.targetID = 1;
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getMethod(MethodContainer container){
+        Method[] m = new Method[9];
+        container.addMethod("common_icon_create",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
+                null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")}));
+        container.addMethod("pic_item_menu_inject",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder")));
+        container.addMethod("pic_item_menu_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", null, void.class, new Class[]{
+                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
+        container.addMethod("mix_item_menu_inject",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder")));
+        container.addMethod("mix_item_meun_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", null, void.class, new Class[]{
+                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
+        container.addMethod("marker_item_menu_inject", QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder")));
+        container.addMethod("marker_item_menu_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", null, void.class, new Class[]{
+                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_8_93)
+    @MethodScanner
+    public void getPanelIconCreateMethod_8893(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create","initui() simple mode  bottomMargin 1 = ",m -> m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper")));
+        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","em_aio_input_box",m->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent")));
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_8_93)
+    @MethodScanner
+    public void getPanelIconCreateMethod(MethodContainer container){
+        container.addMethod("simple_emo_icon_create",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
+        container.addMethod("guild_emo_icon_create",MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]));
 
-    @SuppressLint("ResourceType")
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0], param -> {
+    }
+    @VerController
+    @XPExecutor(methodID = "common_icon_create")
+    public BaseXPExecutor inject_emo_bar(){
+        return param -> {
             LinearLayout l = (LinearLayout) param.thisObject;
             if (l.findViewById(11223366)!=null)return;
             View v = l.getChildAt(2);
-            if (IsEnable) {
-                if (v == null)return;
-                ResUtils.StartInject(v.getContext());
-                ImageView image = new ImageView(v.getContext());
-                image.setImageResource(R.drawable.huaji);
-                image.setId(11223366);
-                image.setTag(123456);
-                l.addView(image, 4, v.getLayoutParams());
-                new Handler(Looper.getMainLooper()).post(image::invalidate);
-                image.setOnClickListener(vxx -> EmoPanel.createShow(image.getContext()));
-            }
-        });
+            if (v == null)return;
+            ResUtils.StartInject(v.getContext());
+            ImageView image = new ImageView(v.getContext());
+            image.setImageResource(R.drawable.huaji);
+            image.setId(11223366);
+            image.setTag(123456);
+            l.addView(image, 4, v.getLayoutParams());
+            new Handler(Looper.getMainLooper()).post(image::invalidate);
+            image.setOnClickListener(vxx -> EmoPanel.createShow(image.getContext()));
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "pic_item_menu_inject")
+    public BaseXPExecutor inject_pic_menu_builder(){
+        return param -> {
+            Object arr = param.getResult();
+            Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
+            System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
+            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
+            Array.set(ret, 0, MenuItem);
 
-        XPBridge.HookAfter(m[1], param -> {
-            if (IsEnable) {
-                Object arr = param.getResult();
-                Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
-                System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
-                MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
-                Array.set(ret, 0, MenuItem);
-
-                param.setResult(ret);
-            }
-        });
-        XPBridge.HookBefore(m[2], param -> {
+            param.setResult(ret);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "pic_item_menu_click")
+    public BaseXPExecutor inject_pic_menu_click(){
+        return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
             Object chatMsg = param.args[2];
@@ -87,20 +135,26 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                 String URL = "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + MD5 + "/0?term=2";
                 new Handler(Looper.getMainLooper()).post(() -> EmoPanel.PreSavePicToList(URL, MD5, mContext));
             }
-        });
-        XPBridge.HookAfter(m[3], param -> {
-            if (IsEnable) {
-                Object arr = param.getResult();
-                Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
-                System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
-                MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
-                Array.set(ret, 0, MenuItem);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "mix_item_menu_inject")
+    public BaseXPExecutor inject_mix_menu_builder(){
+        return param -> {
+            Object arr = param.getResult();
+            Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
+            System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
+            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
+            Array.set(ret, 0, MenuItem);
 
-                param.setResult(ret);
-            }
-        });
-        XPBridge.HookBefore(m[4], param -> {
+            param.setResult(ret);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "mix_item_meun_click")
+    public BaseXPExecutor inject_mix_menu_click(){
+        return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
             Object chatMsg = param.args[2];
@@ -125,62 +179,26 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                     EmoPanel.PreSaveMultiPicList(urls, MD5, mContext);
                 }
             }
-        });
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "marker_item_menu_inject")
+    public BaseXPExecutor inject_market_menu_builder(){
+        return param -> {
+            Object arr = param.getResult();
+            Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
+            System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
+            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
+            Array.set(ret, 0, MenuItem);
 
-        XPBridge.HookAfter(m[5], param -> {
-            if (IsEnable) {
-                new Handler(Looper.getMainLooper())
-                        .postDelayed(() -> {
-                            try {
-                                View XEdit = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.widget.XEditTextEx"));
-                                ViewGroup parentLayout = (ViewGroup) XEdit.getParent();
-
-                                for (int i = 0; i < parentLayout.getChildCount(); i++) {
-                                    View v = parentLayout.getChildAt(i);
-                                    CharSequence content = v.getContentDescription();
-                                    if (content != null && content.toString().contains("拉起表情面板")) {
-                                        v.setOnLongClickListener((a) -> {
-                                            EmoPanel.createShow(v.getContext());
-                                            return true;
-                                        });
-                                    }
-                                }
-                            } catch (Exception e) {
-                                LogUtils.error("InjectEmoPanelToGuild", e);
-                            }
-
-                        }, 200);
-            }
-
-
-        });
-
-        XPBridge.HookAfter(m[6], param -> {
-            if (IsEnable) {
-                View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 1);
-                if (button != null) {
-                    button.setOnLongClickListener(v -> {
-                        EmoPanel.createShow(v.getContext());
-                        return true;
-                    });
-                }
-            }
-
-        });
-
-        XPBridge.HookAfter(m[7], param -> {
-            if (IsEnable) {
-                Object arr = param.getResult();
-                Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
-                System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-                Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
-                MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
-                Array.set(ret, 0, MenuItem);
-
-                param.setResult(ret);
-            }
-        });
-        XPBridge.HookBefore(m[8], param -> {
+            param.setResult(ret);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "marker_item_menu_click")
+    public BaseXPExecutor inject_marker_menu_click(){
+        return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
             Object chatMsg = param.args[2];
@@ -189,72 +207,46 @@ public class HookInjectEmoTabView extends BaseHookItem implements BaseUiItem {
                 String LocalPath = DecodeForEncPic.decodeGifForLocalPath(MField.GetField(mMarkFaceMessage, "dwTabID"), MField.GetField(mMarkFaceMessage, "sbufID"));
                 new Handler(Looper.getMainLooper()).post(() -> EmoPanel.PreSavePicToList(LocalPath, DataUtils.getFileMD5(new File(LocalPath)), mContext));
             }
-        });
-
-        return true;
+        };
     }
+    @VerController
+    @XPExecutor(methodID = "guild_emo_icon_create")
+    public BaseXPExecutor guild_emo_button(){
+        return param -> {
+            new Handler(Looper.getMainLooper())
+                    .postDelayed(() -> {
+                        try {
+                            View XEdit = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.widget.XEditTextEx"));
+                            ViewGroup parentLayout = (ViewGroup) XEdit.getParent();
 
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+                            for (int i = 0; i < parentLayout.getChildCount(); i++) {
+                                View v = parentLayout.getChildAt(i);
+                                CharSequence content = v.getContentDescription();
+                                if (content != null && content.toString().contains("拉起表情面板")) {
+                                    v.setOnLongClickListener((a) -> {
+                                        EmoPanel.createShow(v.getContext());
+                                        return true;
+                                    });
+                                }
+                            }
+                        } catch (Exception e) {
+                            LogUtils.error("InjectEmoPanelToGuild", e);
+                        }
+
+                    }, 200);
+        };
     }
-
-    @Override
-    public boolean check() {
-        Method[] methods = getMethod();
-        for (Method m : methods) {
-            if (m == null) return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) {
-            HookLoader.CallHookStart(HookInjectEmoTabView.class.getName());
-        }
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-
-    public Method[] getMethod() {
-        Method[] m = new Method[9];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
-                null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")});
-
-        m[1] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder"));
-        m[2] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", null, void.class, new Class[]{
-                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
-
-        m[3] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder"));
-        m[4] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", null, void.class, new Class[]{
-                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
-
-
-        if (HostInfo.getVerCode() > 8000){
-            m[5] = MethodFinder.findMethodFromCache("GuildViewIniter");
-            if (m[5] == null){
-                MethodFinder.NeedReportToFindMethod("GuildViewIniter","频道表情面板","em_aio_input_box",ma -> ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent"));
+    @VerController
+    @XPExecutor(methodID = "simple_emo_icon_create")
+    public BaseXPExecutor simple_mode_emo_button(){
+        return param -> {
+            View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 1);
+            if (button != null) {
+                button.setOnLongClickListener(v -> {
+                    EmoPanel.createShow(v.getContext());
+                    return true;
+                });
             }
-
-            m[6] = MethodFinder.findMethodFromCache("SimpleModeViewIniter");
-            if (m[6] == null){
-                MethodFinder.NeedReportToFindMethod("SimpleModeViewIniter","简洁模式表情面板","initui() simple mode  bottomMargin 1 = ",ma -> ma.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper"));
-            }
-
-        }else {
-            m[5] = MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]);
-            m[6] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]);
-        }
-
-        m[7] = QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder"));
-        m[8] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", null, void.class, new Class[]{
-                int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")});
-
-        return m;
+        };
     }
 }
