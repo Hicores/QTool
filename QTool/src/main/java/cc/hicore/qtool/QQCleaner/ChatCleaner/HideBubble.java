@@ -51,7 +51,7 @@ public class HideBubble{
         }));
     }
     @VerController
-    @XPExecutor(methodID = "hook_1")
+    @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
     public BaseXPExecutor fuck_bubble_1(){
         return param -> {
             List list = MField.GetFirstField(param.thisObject, List.class);
