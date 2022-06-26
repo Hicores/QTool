@@ -8,49 +8,64 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-
-@HookItem(isDelayInit = true, isRunInAllProc = false)
-@UIItem(name = "表情收藏上限后存在本地", type = 1, targetID = 1, id = "HookForUnlockSaveLimit",groupName = "功能辅助")
-public class HookForUnlockSaveLimit extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0], param -> {
-            if (IsEnable) {
-                MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "a", int.class, 2000);
-                MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "b", int.class, 2000);
-            }
-
-        });
-        XPBridge.HookBefore(m[1], param -> {
-            if (IsEnable) {
-                Message message = (Message) param.args[0];
-                int code = message.what;
-                Object emoData = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.mobileqq.data.CustomEmotionData"));
-                String emoMD5 = MField.GetField(emoData, "md5", String.class);
-                if (code == 2) {
-                    message.what = 3;
-                    AddToLocal(emoMD5);
-                }
-            }
-        });
-
-        return true;
+@XPItem(name = "表情收藏上限后存在本地",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
+public class HookForUnlockSaveLimit{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "表情收藏上限后存在本地";
+        ui.type = 1;
+        ui.targetID = 1;
+        ui.groupName = "功能辅助";
+        return ui;
     }
-
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.emosm.api.impl.FavroamingDBManagerServiceImpl", "getEmoticonDataList", List.class, new Class[0]));
+        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.emosm.favroaming.EmoAddedAuthCallback", "handleMessage", boolean.class, new Class[]{Message.class}));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_1")
+    public BaseXPExecutor worker(){
+        return param -> {
+            MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "a", int.class, 2000);
+            MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "b", int.class, 2000);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor worker_2(){
+        return param -> {
+            Message message = (Message) param.args[0];
+            int code = message.what;
+            Object emoData = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.mobileqq.data.CustomEmotionData"));
+            String emoMD5 = MField.GetField(emoData, "md5", String.class);
+            if (code == 2) {
+                message.what = 3;
+                AddToLocal(emoMD5);
+            }
+        };
+    }
     private void AddToLocal(String md5) {
         try {
             Object manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.EmoticonFromGroupManager"), HookEnv.AppInterface);
@@ -64,38 +79,5 @@ public class HookForUnlockSaveLimit extends BaseHookItem implements BaseUiItem {
         } catch (Exception e) {
             LogUtils.error("AddPicToLocal", e);
         }
-
-
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) {
-            HookLoader.CallHookStart(HookForUnlockSaveLimit.class.getName());
-        }
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-
-    public Method[] getMethod() {
-        Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod("com.tencent.mobileqq.emosm.api.impl.FavroamingDBManagerServiceImpl", "getEmoticonDataList", List.class, new Class[0]);
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.emosm.favroaming.EmoAddedAuthCallback", "handleMessage", boolean.class, new Class[]{Message.class});
-        return m;
     }
 }
