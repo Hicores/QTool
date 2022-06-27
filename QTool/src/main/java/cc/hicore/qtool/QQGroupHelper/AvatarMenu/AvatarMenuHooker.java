@@ -8,103 +8,91 @@ import android.widget.RelativeLayout;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XposedBridge;
-
-@HookItem(isRunInAllProc = false,isDelayInit = false)
-@UIItem(name = "群聊便捷菜单",desc = "长按头像显示",targetID = 1,type = 1,id = "GroupAvatarMenu",groupName = "群聊助手")
-public class AvatarMenuHooker extends BaseHookItem implements BaseUiItem, View.OnLongClickListener {
-    static Object chatPie;
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookBefore(m[0],param -> {
-            if (IsEnable){
-                View v = (View) param.thisObject;
-                Context context = v.getContext();
-                if (context.getClass().getName().contains("MultiForwardActivity"))return;
-
-                Object chatMsg = v.getTag();
-                if (chatMsg != null){
-                    int istroop = MField.GetField(chatMsg,"istroop",int.class);
-                    if (istroop == 1){
-                        XposedBridge.invokeOriginalMethod(param.method,param.thisObject,new Object[]{this});
-                        param.setResult(null);
-                    }
-                }
-
-            }
-        });
-        XPBridge.HookBefore(m[1],param -> {
-            if (IsEnable){
-                Object mGetView = param.getResult();
-                RelativeLayout mLayout;
-                if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-                Context context= mLayout.getContext();
-                if (context.getClass().getName().contains("MultiForwardActivity"))return;
-
-                View avatar = findView("VasAvatar",mLayout);
-                if (avatar != null){
-                    Object chatMsg = avatar.getTag();
-                    if (chatMsg != null){
-                        int istroop = MField.GetField(chatMsg,"istroop",int.class);
-                        if (istroop == 1){
-                            avatar.setOnLongClickListener(null);
-                        }
-                    }
-
-                }
-            }
-        });
-
-        XPBridge.HookBefore(m[2],param -> chatPie = param.thisObject);
-        return true;
+@XPItem(name = "群聊便捷菜单",itemType = XPItem.ITEM_Hook)
+public class AvatarMenuHooker implements View.OnLongClickListener {
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "群聊便捷菜单";
+        ui.desc = "长按群聊内头像显示";
+        ui.groupName = "群聊助手";
+        ui.targetID = 1;
+        ui.type = 1;
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null && m[2] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(AvatarMenuHooker.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method[] getMethod(){
-        Method[] m = new Method[3];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.vas.avatar.VasAvatar"),"setOnLongClickListener",void.class,new Class[]{
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.vas.avatar.VasAvatar"),"setOnLongClickListener",void.class,new Class[]{
                 MClass.loadClass("android.view.View$OnLongClickListener")
-        });
-        m[1] = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+        }));
+        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
-        });
-        //m[2] = BaseChatPie.getMethod();
-        return m;
+        }));
     }
+    @VerController
+    @XPExecutor(methodID = "hook_1")
+    public BaseXPExecutor worker_1(){
+        return param -> {
+            View v = (View) param.thisObject;
+            Context context = v.getContext();
+            if (context.getClass().getName().contains("MultiForwardActivity"))return;
 
+            Object chatMsg = v.getTag();
+            if (chatMsg != null){
+                int istroop = MField.GetField(chatMsg,"istroop",int.class);
+                if (istroop == 1){
+                    XposedBridge.invokeOriginalMethod(param.method,param.thisObject,new Object[]{this});
+                    param.setResult(null);
+                }
+            }
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor worker_2(){
+        return param -> {
+            Object mGetView = param.getResult();
+            RelativeLayout mLayout;
+            if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
+            Context context= mLayout.getContext();
+            if (context.getClass().getName().contains("MultiForwardActivity"))return;
+
+            View avatar = findView("VasAvatar",mLayout);
+            if (avatar != null){
+                Object chatMsg = avatar.getTag();
+                if (chatMsg != null){
+                    int istroop = MField.GetField(chatMsg,"istroop",int.class);
+                    if (istroop == 1){
+                        avatar.setOnLongClickListener(null);
+                    }
+                }
+
+            }
+        };
+    }
+    static Object chatPie;
     @Override
     public boolean onLongClick(View v) {
         Object chatMsg = v.getTag();

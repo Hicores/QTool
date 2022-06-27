@@ -20,7 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cc.hicore.UIItem;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.BaseProxyAct;
@@ -29,11 +33,25 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-
-@UIItem(name = "存储空间清理",groupName = "空间清理",targetID = 4,type = 2,id = "StorageCleanView")
+@XPItem(name = "存储空间清理",itemType = XPItem.ITEM_Hook)
 @SuppressLint("ResourceType")
-public class StorageView implements BaseUiItem {
+public class StorageView{
     private static final HashMap<String,String> cleanPaths = new LinkedHashMap<>();
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "存储空间清理";
+        ui.groupName = "空间清理";
+        ui.targetID = 4;
+        ui.type = 2;
+        return ui;
+    }
+    @VerController
+    @UIClick
+    public void uiClick(Context context){
+        createDialog(context);
+    }
     static {
         cleanPaths.put("默认外部cache目录","%extra%/cache");
         cleanPaths.put("默认内部cache目录","%private%/cache");
@@ -92,16 +110,6 @@ public class StorageView implements BaseUiItem {
         cleanPaths.put("pddata","%private%/files/pddata");
         cleanPaths.put("礼物,花里胡哨的VIP图标缓存","%private%/files/vas_material_folder");
     }
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-        createDialog(context);
-    }
-
     public void createDialog(Context context){
         BaseProxyAct.createNewView("StorageCleanView", (Activity) context, context1 -> getContentView(context1));
 
