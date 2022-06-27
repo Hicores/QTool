@@ -7,11 +7,18 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
@@ -19,14 +26,35 @@ import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 
-@UIItem(name = "屏蔽空间热播广告",groupName = "其他净化",targetID = 2,type = 1,id = "HideQzoneAd")
-@HookItem(isDelayInit = false,isRunInAllProc = true)
-public class HideQzoneAd extends BaseHookItem implements BaseUiItem {
-    static AtomicBoolean IsLoad = new AtomicBoolean();
-    @Override
-    public boolean startHook() throws Throwable {
-        Method[] m = getMethod();
-        XPBridge.HookAfter(m[0],param -> {
+@XPItem(name = "屏蔽空间热播广告",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
+public class HideQzoneAd{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "屏蔽空间热播广告";
+        ui.groupName = "其他净化";
+        ui.targetID = 2;
+        ui.type = 1;
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pluginsdk.PluginStatic"),"getOrCreateClassLoaderByPath",ClassLoader.class,new Class[]{
+                Context.class, String.class, String.class, boolean.class
+        }));
+        container.addMethod("hook_2",MMethod.FindMethod(MClass.loadClass("com.qzone.module.feedcomponent.ui.FeedViewBuilder"),"setFeedViewData",void.class,new Class[]{
+                Context.class,
+                MClass.loadClass("com.qzone.proxy.feedcomponent.ui.AbsFeedView"),
+                MClass.loadClass("com.qzone.proxy.feedcomponent.model.BusinessFeedData"),
+                boolean.class,boolean.class,
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_1")
+    public BaseXPExecutor worker_1(){
+        return param -> {
             String sName = (String) param.args[1];
             if(sName.equals("qzone_plugin.apk") && !IsLoad.getAndSet(true)){
                 ClassLoader pluginLoader = (ClassLoader) param.getResult();
@@ -40,85 +68,27 @@ public class HideQzoneAd extends BaseHookItem implements BaseUiItem {
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                 super.beforeHookedMethod(param);
-                                if(HookEnv.Config.getBoolean("Set","HideQzoneAd",false)){
-                                    if((int) MField.GetField(param.args[2],"isAdFeeds")==1)param.setResult(null);
-                                    Object Child = MField.GetField(param.args[2],"cellOperationInfo");
+                                if((int) MField.GetField(param.args[2],"isAdFeeds")==1)param.setResult(null);
+                                Object Child = MField.GetField(param.args[2],"cellOperationInfo");
 
-                                    Map<Integer,String> map = MField.GetField(Child,"busiParam");
-                                    if(map.containsKey(194))param.setResult(null);
-                                }
+                                Map<Integer,String> map = MField.GetField(Child,"busiParam");
+                                if(map.containsKey(194))param.setResult(null);
                             }
                         }
                 );
             }
-        });
-        if (m[1]!= null){
-            XPBridge.HookBefore(m[1],param -> {
-                if(HookEnv.Config.getBoolean("Set","HideQzoneAd",false)){
-                    if((int) MField.GetField(param.args[2],"isAdFeeds")==1)param.setResult(null);
-                    Object Child = MField.GetField(param.args[2],"cellOperationInfo");
-
-                    Map<Integer,String> map = MField.GetField(Child,"busiParam");
-                    if(map.containsKey(194))param.setResult(null);
-
-                    /*
-                    for (int ss : map.keySet()){
-                        XposedBridge.log(ss  + "->" + map.get(ss));
-                    }
-
-                     */
-                }
-            });
-        }
-        /*
-
-        XposedHelpers.findAndHookMethod(MClass.loadClass("com.qzone.module.feedcomponent.FeedcomponentModule$1"), "handleDetailCommentOnIdle", ViewGroup.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                super.beforeHookedMethod(param);
-                ViewGroup group = (ViewGroup) param.args[0];
-                XposedBridge.log(group+"->"+group.getChildCount());
-                for (int i=0;i<group.getChildCount();i++){
-                    XposedBridge.log(group.getChildAt(i)+"->"+group.getChildAt(i).getTag());
-                }
-            }
-        });
-
-         */
-        return true;
+        };
     }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor worker_2(){
+        return param -> {
+            if((int) MField.GetField(param.args[2],"isAdFeeds")==1)param.setResult(null);
+            Object Child = MField.GetField(param.args[2],"cellOperationInfo");
 
-    @Override
-    public boolean isEnable() {
-        return HookEnv.Config.getBoolean("Set","HideQzoneAd",false);
+            Map<Integer,String> map = MField.GetField(Child,"busiParam");
+            if(map.containsKey(194))param.setResult(null);
+        };
     }
-
-    @Override
-    public boolean check() {
-        return getMethod()[0] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        HookEnv.Config.setBoolean("Set","HideQzoneAd",IsCheck);
-        HookLoader.CallHookStart(HideQzoneAd.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method[] getMethod(){
-        Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pluginsdk.PluginStatic"),"getOrCreateClassLoaderByPath",ClassLoader.class,new Class[]{
-                Context.class, String.class, String.class, boolean.class
-        });
-        m[1] = MMethod.FindMethod(MClass.loadClass("com.qzone.module.feedcomponent.ui.FeedViewBuilder"),"setFeedViewData",void.class,new Class[]{
-                Context.class,
-                MClass.loadClass("com.qzone.proxy.feedcomponent.ui.AbsFeedView"),
-                MClass.loadClass("com.qzone.proxy.feedcomponent.model.BusinessFeedData"),
-                boolean.class,boolean.class,
-        });
-        return m;
-    }
+    static AtomicBoolean IsLoad = new AtomicBoolean();
 }
