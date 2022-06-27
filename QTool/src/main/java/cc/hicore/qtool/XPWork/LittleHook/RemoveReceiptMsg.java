@@ -5,71 +5,58 @@ import android.content.Context;
 import java.lang.reflect.Member;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XposedHelpers;
-
-@HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(name = "屏蔽回执消息提示", type = 1, id = "RemoveReceiptMsg", targetID = 2,groupName = "消息屏蔽")
-public class RemoveReceiptMsg extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-
-    @Override
-    public boolean startHook() throws Throwable {
-        Member[] m = getMethod();
-        XPBridge.HookBefore(m[1], param -> {
-            if (IsEnable) {
-                Object Message = param.args[0];
-                int NeedRemove = HostInfo.getVerCode() > 7540 ? 13 : 12;
-                int sr = MField.GetField(Message, "bizType", int.class);
-                if (sr == NeedRemove) {
-                    param.setResult(null);
-                }
+@XPItem(name = "屏蔽回执消息提示",itemType = XPItem.ITEM_Hook)
+public class RemoveReceiptMsg{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "屏蔽回执消息提示";
+        ui.groupName = "消息屏蔽";
+        ui.type = 1;
+        ui.targetID = 2;
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",XposedHelpers.findConstructorBestMatch(MClass.loadClass("com.tencent.mobileqq.activity.recent.msg.TroopReceiptMsg"), Context.class));
+        container.addMethod("hook_2",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"), "notifyMessageReceived", void.class, new Class[]{MClass.loadClass("com.tencent.imcore.message.Message"), boolean.class, boolean.class}));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    public BaseXPExecutor worker_1(){
+        return param -> {
+            MField.SetField(param.thisObject, "c", String.class, "");
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook_2")
+    public BaseXPExecutor worker_2(){
+        return param -> {
+            Object Message = param.args[0];
+            int NeedRemove = HostInfo.getVerCode() > 7540 ? 13 : 12;
+            int sr = MField.GetField(Message, "bizType", int.class);
+            if (sr == NeedRemove) {
+                param.setResult(null);
             }
-        });
-        XPBridge.HookAfter(m[0], param -> {
-            if (IsEnable) {
-                MField.SetField(param.thisObject, "c", String.class, "");
-            }
-        });
-
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        Member[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(RemoveReceiptMsg.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-
-    public Member[] getMethod() {
-        Member[] m = new Member[2];
-
-        m[0] = XposedHelpers.findConstructorBestMatch(MClass.loadClass("com.tencent.mobileqq.activity.recent.msg.TroopReceiptMsg"), Context.class);
-        m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"), "notifyMessageReceived", void.class, new Class[]{MClass.loadClass("com.tencent.imcore.message.Message"), boolean.class, boolean.class});
-        return m;
+        };
     }
 }
