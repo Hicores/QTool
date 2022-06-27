@@ -20,7 +20,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import cc.hicore.UIItem;
+import cc.hicore.HookItemLoader.Annotations.UIClick;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.BaseProxyAct;
 import cc.hicore.qtool.HookEnv;
@@ -32,16 +36,21 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import de.robv.android.xposed.XposedBridge;
 
-@UIItem(name = "聊天数据库清理",groupName = "空间清理",targetID = 4,type = 2,id = "DBCleanerCleanView")
-public class DBCleaner implements BaseUiItem {
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-
+@XPItem(name = "聊天数据库清理",itemType = XPItem.ITEM_Hook)
+public class DBCleaner{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "聊天数据库清理";
+        ui.groupName = "空间清理";
+        ui.targetID = 4;
+        ui.type = 2;
+        return ui;
     }
-
-    @Override
-    public void ListItemClick(Context context) {
+    @VerController
+    @UIClick
+    public void uiClick(Context context){
         String[] selectItems = new String[]{"群组消息","好友消息"};
         new AlertDialog.Builder(context)
                 .setItems(selectItems, (dialog, which) -> calc_db(context,which))
