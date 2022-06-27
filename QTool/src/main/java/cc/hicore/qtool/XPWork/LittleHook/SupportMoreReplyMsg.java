@@ -5,53 +5,45 @@ import android.content.Context;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(name = "解锁更多类型消息左滑回复", type = 1, id = "SupportModeMsgReply", targetID = 1,groupName = "聊天界面增强")
-public class SupportMoreReplyMsg extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookBefore(getMethod(), param -> {
-            if (IsEnable) param.setResult(true);
-        });
-        return true;
+@XPItem(name = "解锁更过类型消息左滑回复",itemType = XPItem.ITEM_Hook)
+public class SupportMoreReplyMsg {
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "解锁更过类型消息左滑回复";
+        ui.groupName = "聊天界面增强";
+        ui.type = 1;
+        ui.targetID = 1;
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",getMethod());
     }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> param.setResult(true);
     }
-
     public Method getMethod() {
         Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.bubble.LeftSwipeReplyHelper"), "h", boolean.class, new Class[0]);
         if (m == null) m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.bubble.LeftSwipeReplyHelper"), "H", boolean.class, new Class[0]);
         return m;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) {
-            HookLoader.CallHookStart(SupportMoreReplyMsg.class.getName());
-        }
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
     }
 }
