@@ -9,59 +9,53 @@ import android.widget.Toast;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@HookItem(isDelayInit = false,isRunInAllProc = false)
-@UIItem(name = "屏蔽部分烦人提示",groupName = "其他净化",targetID = 2,type = 1,desc = "语音转换文字失败,资源域名已拦截,设置禁言,解除禁言",id = "HideSomeToast")
-public class HideSomeToast extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookBefore(getMethod(),param -> {
-            if (IsEnable){
-                Toast toast = (Toast) param.thisObject;
-                ViewGroup vg = (ViewGroup) toast.getView();
-                if(vg==null) return;
-                TextView textView = (TextView) traversalView(vg);
-                if (textView != null){
-                    String ToastText = (String) textView.getText();
-                    if (ToastText.equals("转发成功") || ToastText.equals("语音转换文字失败") || ToastText.equals("资源域名已拦截")
-                            || ToastText.contains("设置禁言") || ToastText.contains("解除禁言")){
-                        param.setResult(null);
-                    }
+@XPItem(name = "屏蔽部分烦人提示",itemType = XPItem.ITEM_Hook)
+public class HideSomeToast{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "屏蔽部分烦人提示";
+        ui.groupName = "其他净化";
+        ui.targetID = 2;
+        ui.type = 1;
+        ui.desc = "语音转换文字失败,资源域名已拦截,设置禁言,解除禁言";
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.widget.QQToast$ProtectedToast","show",void.class,new Class[0]));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> {
+            Toast toast = (Toast) param.thisObject;
+            ViewGroup vg = (ViewGroup) toast.getView();
+            if(vg==null) return;
+            TextView textView = (TextView) traversalView(vg);
+            if (textView != null){
+                String ToastText = (String) textView.getText();
+                if (ToastText.equals("转发成功") || ToastText.equals("语音转换文字失败") || ToastText.equals("资源域名已拦截")
+                        || ToastText.contains("设置禁言") || ToastText.contains("解除禁言")){
+                    param.setResult(null);
                 }
             }
-        });
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(HideSomeToast.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method getMethod(){
-        return MMethod.FindMethod("com.tencent.mobileqq.widget.QQToast$ProtectedToast","show",void.class,new Class[0]);
+        };
     }
     public static View traversalView(ViewGroup viewGroup) {
         int count = viewGroup.getChildCount();
