@@ -5,59 +5,46 @@ import android.content.Context;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@HookItem(isDelayInit = false, isRunInAllProc = false)
-@UIItem(name = "隐藏打卡提示", type = 1, id = "HideSignTip", targetID = 2,groupName = "聊天界面净化")
-public class HideSignTip extends BaseHookItem implements BaseUiItem {
-    private boolean IsEnable;
-
-    @Override
-    public boolean startHook() throws Throwable {
-
-        Method m = getMethod();
-        XPBridge.HookBefore(m, param -> {
+@XPItem(name = "隐藏打卡提示",itemType = XPItem.ITEM_Hook)
+public class HideSignTip{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "隐藏打卡提示";
+        ui.groupName = "聊天界面净化";
+        ui.type = 1;
+        ui.targetID = 2;
+        return ui;
+    }
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.graytip.UniteGrayTipUtil", null, MClass.loadClass("com.tencent.mobileqq.graytip.UniteEntity"),
+                new Class[]{String.class}));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> {
             String paramText = String.valueOf(param.args[0]);
-            if (IsEnable && paramText.contains("我也要打卡")) {
+            if (paramText.contains("我也要打卡")) {
                 param.setResult(null);
-                return;
             }
-        });
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
-    }
-
-    private Method getMethod() {
-        Method m = MMethod.FindMethod("com.tencent.mobileqq.graytip.UniteGrayTipUtil", null, MClass.loadClass("com.tencent.mobileqq.graytip.UniteEntity"),
-                new Class[]{String.class});
-        return m;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) {
-            HookLoader.CallHookStart(HideSignTip.class.getName());
-        }
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
+        };
     }
 }
