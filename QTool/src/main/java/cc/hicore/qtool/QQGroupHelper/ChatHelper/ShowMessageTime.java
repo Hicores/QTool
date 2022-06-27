@@ -15,49 +15,49 @@ import java.util.List;
 import java.util.Locale;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-
-@UIItem(name = "在消息右下角显示时间", type = 1, id = "ShowMessageTime", targetID = 1,groupName = "聊天界面增强")
-@HookItem(isDelayInit = true, isRunInAllProc = false)
-public class ShowMessageTime extends BaseHookItem implements BaseUiItem {
-    private static final HashMap<String, String> supportShow = new HashMap<>();
-
-    {
-        supportShow.put("MessageForPic", "RelativeLayout");
-        supportShow.put("MessageForText", "ETTextView");
-        supportShow.put("MessageForLongTextMsg", "ETTextView");
-        supportShow.put("MessageForFoldMsg", "ETTextView");
-        supportShow.put("MessageForPtt", "BreathAnimationLayout");
-        supportShow.put("MessageForMixedMsg", "MixedMsgLinearLayout");
-        supportShow.put("MessageForReplyText", "SelectableLinearLayout");
-        supportShow.put("MessageForScribble", "RelativeLayout");
-        supportShow.put("MessageForMarketFace", "RelativeLayout");
-        supportShow.put("MessageForArkApp", "ArkAppRootLayout");
-        supportShow.put("MessageForStructing", "RelativeLayout");
-        supportShow.put("MessageForTroopPobing", "LinearLayout");
-        supportShow.put("MessageForTroopEffectPic", "RelativeLayout");
-        supportShow.put("MessageForAniSticker", "FrameLayout");
-        supportShow.put("MessageForArkFlashChat", "ArkAppRootLayout");
-        supportShow.put("MessageForShortVideo", "RelativeLayout");
-        supportShow.put("MessageForPokeEmo", "RelativeLayout");
+@XPItem(name = "在消息右下角显示时间",itemType = XPItem.ITEM_Hook)
+@SuppressLint("ResourceType")
+public class ShowMessageTime{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.groupName = "聊天界面增强";
+        ui.name = "在消息右下角显示时间";
+        ui.type = 1;
+        ui.targetID = 1;
+        return ui;
     }
-
-    boolean IsEnable;
-
-    @Override
-    @SuppressLint("ResourceType")
-    public boolean startHook() throws Throwable {
-        Method m = getMethod();
-        XPBridge.HookAfter(m, param -> {
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
+                int.class,
+                View.class,
+                ViewGroup.class
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> {
             Object mGetView = param.getResult();
-            if (!IsEnable || !(mGetView instanceof RelativeLayout)) return;
+            if (!(mGetView instanceof RelativeLayout)) return;
             List msgList = MField.GetFirstField(param.thisObject,  List.class);
             if (msgList == null) return;
             Object ChatMsg = msgList.get((int) param.args[0]);
@@ -98,43 +98,28 @@ public class ShowMessageTime extends BaseHookItem implements BaseUiItem {
                     showText.setLayoutParams(params);
                 }
             }
-
-        });
-        return true;
+        };
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    private static final HashMap<String, String> supportShow = new HashMap<>();
+    {
+        supportShow.put("MessageForPic", "RelativeLayout");
+        supportShow.put("MessageForText", "ETTextView");
+        supportShow.put("MessageForLongTextMsg", "ETTextView");
+        supportShow.put("MessageForFoldMsg", "ETTextView");
+        supportShow.put("MessageForPtt", "BreathAnimationLayout");
+        supportShow.put("MessageForMixedMsg", "MixedMsgLinearLayout");
+        supportShow.put("MessageForReplyText", "SelectableLinearLayout");
+        supportShow.put("MessageForScribble", "RelativeLayout");
+        supportShow.put("MessageForMarketFace", "RelativeLayout");
+        supportShow.put("MessageForArkApp", "ArkAppRootLayout");
+        supportShow.put("MessageForStructing", "RelativeLayout");
+        supportShow.put("MessageForTroopPobing", "LinearLayout");
+        supportShow.put("MessageForTroopEffectPic", "RelativeLayout");
+        supportShow.put("MessageForAniSticker", "FrameLayout");
+        supportShow.put("MessageForArkFlashChat", "ArkAppRootLayout");
+        supportShow.put("MessageForShortVideo", "RelativeLayout");
+        supportShow.put("MessageForPokeEmo", "RelativeLayout");
     }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) {
-            HookLoader.CallHookStart(ShowMessageTime.class.getName());
-        }
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-
-    public Method getMethod() {
-        Method m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        });
-        return m;
-    }
-
     private static View searchForView(String Name, ViewGroup vg) {
         for (int i = 0; i < vg.getChildCount(); i++) {
             if (vg.getChildAt(i).getClass().getSimpleName().contains(Name)) {
