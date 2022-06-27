@@ -3,50 +3,39 @@ package cc.hicore.qtool.XPWork.QQProxy;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
-@HookItem(isRunInAllProc = false, isDelayInit = false)
-public class BaseMsgProxy extends BaseHookItem {
+@XPItem(name = "Proxy_Base_msg",itemType = XPItem.ITEM_Hook)
+public class BaseMsgProxy{
     private static final String TAG = "BaseMsgProxy";
     private static final long StartTime = System.currentTimeMillis();
-
-    @Override
-    public String getTag() {
-        return TAG;
-    }
-
-    @Override
-    public boolean startHook() {
-        XPBridge.HookBefore(getMethod(), param -> {
-            Object MessageRecord = param.args[0];
-            if (System.currentTimeMillis() - StartTime < 10 * 1000) return;
-            PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(MessageRecord));
-
-        });
-        return true;
-    }
-
-    @Override
-    public boolean isEnable() {
-        return true;
-    }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    public Method getMethod() {
-        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), "a", void.class, new Class[]{
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), "a", void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 MClass.loadClass("com.tencent.mobileqq.persistence.EntityManager"),
                 boolean.class, boolean.class, boolean.class, boolean.class,
                 MClass.loadClass("com.tencent.imcore.message.BaseMessageManager$AddMessageContext")
-        });
-        return m;
+        }));
+    }
+    @VerController
+    @XPExecutor(methodID = "hook")
+    public BaseXPExecutor worker(){
+        return param -> {
+            Object MessageRecord = param.args[0];
+            if (System.currentTimeMillis() - StartTime < 10 * 1000) return;
+            PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(MessageRecord));
+        };
     }
 }
