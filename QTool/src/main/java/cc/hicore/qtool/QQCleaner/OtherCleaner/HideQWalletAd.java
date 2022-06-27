@@ -9,66 +9,59 @@ import android.view.ViewTreeObserver;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.UIItem;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.UIItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XposedBridge;
 
-@HookItem(isDelayInit = false,isRunInAllProc = true)
-@UIItem(name = "隐藏QQ钱包广告",groupName = "其他净化",targetID = 2,type = 1,id = "HideQWalletAd")
-public class HideQWalletAd extends BaseHookItem implements BaseUiItem {
-    boolean IsEnable;
-    ViewTreeObserver.OnGlobalLayoutListener listener = null;
-    @Override
-    public boolean startHook() throws Throwable {
-        XPBridge.HookAfter(getMethod(),param -> {
-            if (IsEnable){
-                ViewGroup group = MField.GetFirstField(param.thisObject,MClass.loadClass("com.qwallet.view.QWalletHeaderView"));
-                listener = () -> {
-                    try {
-                        View v = MField.GetFirstField(group,MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
-                        if (v == null)return;
-                        group.removeView(v);
-                        group.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-                    } catch (Exception e) {
-                        XposedBridge.log(e);
-                    }
-                };
-                group.getViewTreeObserver().addOnGlobalLayoutListener(listener);
-            }
-
-        });
-        return true;
+@XPItem(name = "隐藏QQ钱包广告",itemType = XPItem.ITEM_Hook)
+public class HideQWalletAd{
+    @VerController
+    @UIItem
+    public UIInfo getUI(){
+        UIInfo ui = new UIInfo();
+        ui.name = "隐藏QQ钱包广告";
+        ui.groupName = "其他净化";
+        ui.targetID = 2;
+        ui.type = 1;
+        return ui;
     }
-
-    @Override
-    public boolean isEnable() {
-        return IsEnable;
+    @VerController
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    public BaseXPExecutor worker(){
+        return param -> {
+            ViewGroup group = MField.GetFirstField(param.thisObject,MClass.loadClass("com.qwallet.view.QWalletHeaderView"));
+            listener = () -> {
+                try {
+                    View v = MField.GetFirstField(group,MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
+                    if (v == null)return;
+                    group.removeView(v);
+                    group.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+                } catch (Exception e) {
+                    XposedBridge.log(e);
+                }
+            };
+            group.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+        };
     }
-
-    @Override
-    public boolean check() {
-        return getMethod() != null;
-    }
-
-    @Override
-    public void SwitchChange(boolean IsCheck) {
-        IsEnable = IsCheck;
-        if (IsCheck) HookLoader.CallHookStart(HideQWalletAd.class.getName());
-    }
-
-    @Override
-    public void ListItemClick(Context context) {
-
-    }
-    public Method getMethod(){
-        return MMethod.FindMethod(MClass.loadClass("com.qwallet.activity.QWalletHomeActivity"),"onViewCreated",void.class,new Class[]{
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.qwallet.activity.QWalletHomeActivity"),"onViewCreated",void.class,new Class[]{
                 View.class, Bundle.class
-        });
+        }));
     }
+    ViewTreeObserver.OnGlobalLayoutListener listener = null;
 }
