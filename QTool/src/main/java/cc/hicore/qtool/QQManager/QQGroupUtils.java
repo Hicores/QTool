@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.UtilsImpl.Get_Group_Name_By_Contact;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQGroupUtils {
@@ -165,15 +167,7 @@ public class QQGroupUtils {
 
     }
     public static String GetTroopNameByContact(String GroupUin) {
-        try{
-            String mStr = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ContactUtils"),
-                    HostInfo.getVerCode() > 8000 ? "W":"a",String.class,HookEnv.AppInterface,GroupUin,true);
-            return mStr;
-        }catch (Exception ex) {
-            LogUtils.error("GetTroopNameByContact",ex);
-            return GroupUin;
-        }
-
+        return ApiHelper.invoke(Get_Group_Name_By_Contact.class,GroupUin);
     }
 
     public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin) {

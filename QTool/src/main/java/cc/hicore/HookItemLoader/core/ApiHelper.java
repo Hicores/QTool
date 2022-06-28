@@ -1,11 +1,22 @@
 package cc.hicore.HookItemLoader.core;
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class ApiHelper {
-    protected static HashMap<Class<?>,Method> ApiInvoker = new HashMap<>();
     public static <Any> Any invoke(Class<?> ApiClass,Object... AnyParam){
-        return null;
+        CoreLoader.XPItemInfo info = CoreLoader.clzInstance.get(ApiClass);
+        if (info != null){
+            try {
+                return (Any) info.apiExecutor.invoke(info.Instance,AnyParam);
+            }catch (Throwable th){
+                info.ExecutorException.put(info.apiExecutor+"", Log.getStackTraceString(th));
+                return null;
+            }
+        }else {
+            throw new RuntimeException("No impl found for "+ApiClass);
+        }
     }
 }
