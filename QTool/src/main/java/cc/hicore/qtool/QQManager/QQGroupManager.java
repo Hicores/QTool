@@ -33,10 +33,6 @@ public class QQGroupManager {
             LogUtils.error("Group_Kick", th);
         }
     }
-    public static void WaitForRefreshGroupMember(String GroupUin){
-
-    }
-
     public static void Group_Kick(String GroupUin, String[] UserUin, boolean isBlack) {
         try {
             Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
