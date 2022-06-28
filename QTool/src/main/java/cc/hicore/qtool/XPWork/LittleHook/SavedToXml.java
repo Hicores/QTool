@@ -1,13 +1,11 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 

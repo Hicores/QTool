@@ -1,7 +1,5 @@
 package cc.hicore.qtool.VoiceHelper.OnlineHelper;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,10 +14,7 @@ import java.util.ArrayList;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
-import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.VoiceHelper.Panel.VoiceProvider;
 
 public class OnlineBundleHelper {

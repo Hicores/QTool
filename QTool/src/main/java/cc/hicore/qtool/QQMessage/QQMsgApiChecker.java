@@ -14,7 +14,6 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.MethodFinder;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 public class QQMsgApiChecker extends BaseHookItem {

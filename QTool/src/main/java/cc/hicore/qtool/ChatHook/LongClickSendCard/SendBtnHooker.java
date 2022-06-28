@@ -7,7 +7,6 @@ import android.widget.EditText;
 
 import java.lang.reflect.Method;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -20,17 +19,9 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
-import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import cc.hicore.qtool.XposedInit.MethodFinder;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "长按发送卡片消息",itemType = XPItem.ITEM_Hook)
 public class SendBtnHooker{

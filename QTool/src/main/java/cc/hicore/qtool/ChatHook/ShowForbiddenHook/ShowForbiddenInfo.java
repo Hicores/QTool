@@ -1,10 +1,5 @@
 package cc.hicore.qtool.ChatHook.ShowForbiddenHook;
 
-import android.content.Context;
-
-import java.lang.reflect.Method;
-
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -15,17 +10,11 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Utils;
-import cc.hicore.Utils.XPUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQTools.QQHighTipHelper;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.callbacks.XCallback;
 
 @XPItem(name = "显示精确禁言信息",itemType = XPItem.ITEM_Hook)
 public class ShowForbiddenInfo {

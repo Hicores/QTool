@@ -1,11 +1,7 @@
 package cc.hicore.qtool.ServerKiller;
 
-import android.content.Context;
 import android.os.Message;
 
-import java.lang.reflect.Method;
-
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -16,10 +12,6 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @XPItem(name = "禁用Toggle",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
 public class ToggleKiller{
     @VerController

@@ -1,11 +1,7 @@
 package cc.hicore.qtool.ServerKiller;
 
-import android.content.Context;
-
-import java.lang.reflect.Method;
 import java.util.List;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -17,11 +13,6 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @XPItem(name = "禁用ZPlan",itemType = XPItem.ITEM_Hook)
 public class ZPlanKiller{
     @VerController

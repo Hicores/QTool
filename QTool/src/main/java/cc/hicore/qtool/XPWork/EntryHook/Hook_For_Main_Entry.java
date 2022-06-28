@@ -6,11 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
-import cc.hicore.ConfigUtils.GlobalConfig;
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
@@ -20,12 +17,10 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.MainMenu;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 @SuppressLint("ResourceType")
 @XPItem(name = "主界面加号入口",itemType = XPItem.ITEM_Hook)
 public class Hook_For_Main_Entry{

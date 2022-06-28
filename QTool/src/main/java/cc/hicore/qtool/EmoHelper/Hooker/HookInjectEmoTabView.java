@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -34,17 +33,11 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.QQReflect;
 import cc.hicore.ReflectUtils.ResUtils;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import cc.hicore.qtool.XposedInit.MethodFinder;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认

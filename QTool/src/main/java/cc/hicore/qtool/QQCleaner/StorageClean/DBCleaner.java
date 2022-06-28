@@ -3,10 +3,8 @@ package cc.hicore.qtool.QQCleaner.StorageClean;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,8 +31,6 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.QQTools.QQSelectHelper;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "聊天数据库清理",itemType = XPItem.ITEM_Hook)
 public class DBCleaner{

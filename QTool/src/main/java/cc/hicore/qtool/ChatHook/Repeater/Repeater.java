@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
-import de.robv.android.xposed.XposedBridge;
 
 public class Repeater {
     public static void Repeat(Object Session, Object chatMsg) throws Exception {

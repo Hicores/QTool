@@ -1,9 +1,6 @@
 package cc.hicore.qtool.SubLoader;
 
-import java.lang.reflect.Method;
-
 import dalvik.system.PathClassLoader;
-import de.robv.android.xposed.XposedBridge;
 
 public class SubClassLoader extends PathClassLoader {
 

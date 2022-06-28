@@ -2,9 +2,6 @@ package cc.hicore.qtool.XPWork.LittleHook;
 
 import android.content.Context;
 
-import java.lang.reflect.Member;
-
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -16,11 +13,7 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XposedHelpers;
 @XPItem(name = "屏蔽回执消息提示",itemType = XPItem.ITEM_Hook)
 public class RemoveReceiptMsg{

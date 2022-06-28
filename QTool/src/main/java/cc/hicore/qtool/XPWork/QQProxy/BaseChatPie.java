@@ -1,9 +1,5 @@
 package cc.hicore.qtool.XPWork.QQProxy;
 
-import java.lang.reflect.Method;
-
-import cc.hicore.DexFinder.DexFinder;
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
@@ -13,14 +9,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.MethodFinder;
-import de.robv.android.xposed.XposedBridge;
-import me.iacn.biliroaming.utils.DexHelper;
 
 @XPItem(name = "BaseChatPie_Init",itemType = XPItem.ITEM_Hook)
 public class BaseChatPie{

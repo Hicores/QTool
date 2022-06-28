@@ -3,20 +3,12 @@ package cc.hicore.HookItemLoader.core;
 import android.content.Context;
 import android.util.Log;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
-import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -33,7 +25,6 @@ import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
     public static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();

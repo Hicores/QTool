@@ -1,12 +1,8 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
-import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
-
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -20,12 +16,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 @XPItem(name = "显示完整消息数量",itemType = XPItem.ITEM_Hook)
 public class ShowFullMessageCount {
     @VerController

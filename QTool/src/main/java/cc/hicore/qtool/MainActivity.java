@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import cc.hicore.HookItemLoader.Annotations.XPExecutor;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override

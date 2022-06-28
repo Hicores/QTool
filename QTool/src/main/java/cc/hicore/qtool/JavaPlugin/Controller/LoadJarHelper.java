@@ -1,7 +1,5 @@
 package cc.hicore.qtool.JavaPlugin.Controller;
 
-import android.util.Log;
-
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
 import com.android.dx.command.dexer.DxContext;
@@ -21,9 +19,7 @@ import java.util.zip.ZipInputStream;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.HookEntry;
 import dalvik.system.PathClassLoader;
-import de.robv.android.xposed.XposedBridge;
 
 public class LoadJarHelper {
     private static final HashMap<String,ClassLoader> jarCache = new HashMap<>();

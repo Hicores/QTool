@@ -3,7 +3,6 @@ package cc.hicore.qtool.ActProxy;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import de.robv.android.xposed.XposedBridge;
 
 public class MainMenu {
     private static class Item_data{

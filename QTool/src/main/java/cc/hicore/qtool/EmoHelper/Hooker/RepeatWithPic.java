@@ -1,6 +1,5 @@
 package cc.hicore.qtool.EmoHelper.Hooker;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,12 +21,10 @@ import cc.hicore.UIItem;
 import cc.hicore.Utils.StringUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
-import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 @HookItem(isDelayInit = false, isRunInAllProc = false)
 @UIItem(name = "带图回复",type = 1,id = "RepeatWithPic",targetID = 1,groupName = "聊天辅助")

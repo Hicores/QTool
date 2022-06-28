@@ -1,7 +1,5 @@
 package cc.hicore.qtool.VoiceHelper.Panel;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
 
 import cc.hicore.qtool.HookEnv;

@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.List;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIClick;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
@@ -23,11 +21,8 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 @XPItem(name = "消息复读",itemType = XPItem.ITEM_Hook)
 public class Hooker{
     @VerController

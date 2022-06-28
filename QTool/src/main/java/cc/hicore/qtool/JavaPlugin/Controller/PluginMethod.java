@@ -18,7 +18,6 @@ import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.QQTools.QQServletHelper;
-import de.robv.android.xposed.XposedBridge;
 
 //插件Api直接导出方法
 public class PluginMethod {

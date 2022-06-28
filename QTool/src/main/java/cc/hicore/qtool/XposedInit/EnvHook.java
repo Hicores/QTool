@@ -3,7 +3,6 @@ package cc.hicore.qtool.XposedInit;
 import static cc.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
@@ -14,18 +13,15 @@ import com.microsoft.appcenter.crashes.Crashes;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.CrashHandler.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;

@@ -23,7 +23,6 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.MethodFinder;
-import de.robv.android.xposed.XposedBridge;
 
 public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {

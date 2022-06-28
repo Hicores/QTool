@@ -1,13 +1,10 @@
 package cc.hicore.qtool.QQCleaner.ChatCleaner;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -19,10 +16,6 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 @XPItem(name = "屏蔽聊天特殊气泡",itemType = XPItem.ITEM_Hook)
 public class HideBubble{
     @VerController

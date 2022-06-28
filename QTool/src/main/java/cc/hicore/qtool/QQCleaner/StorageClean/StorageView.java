@@ -32,7 +32,6 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem;
 @XPItem(name = "存储空间清理",itemType = XPItem.ITEM_Hook)
 @SuppressLint("ResourceType")
 public class StorageView{
