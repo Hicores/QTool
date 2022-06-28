@@ -14,6 +14,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.UtilsImpl.Get_Group_Name_By_Contact;
+import cc.hicore.qtool.QQManager.UtilsImpl.Group_Get_Mute_List;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQGroupUtils {
@@ -212,36 +213,8 @@ public class QQGroupUtils {
     }
 
     public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin) {
-        try {
-            Object Manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), new Class[]{HookEnv.AppInterface.getClass()}, HookEnv.AppInterface);
-            ArrayList TheList;
-            try {
-                TheList = MMethod.CallMethod(Manager, "a", ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
-            } catch (Exception e) {
-                TheList = MMethod.CallMethod(Manager, null, ArrayList.class, new Class[]{String.class, boolean.class}, GroupUin, true);
-            }
-
-            if (TheList != null) {
-                ArrayList<MuteList> newList = new ArrayList<>();
-                for (Object item : TheList) {
-                    MuteList newItem = new MuteList();
-                    String UserUin = MField.GetField(item, "a", String.class);
-                    long TimeStamp;
-                    try {
-                        TimeStamp = MField.GetField(item, "a", long.class);
-                    } catch (Exception e) {
-                        TimeStamp = MField.GetField(item, "b", long.class);
-                    }
-                    newItem.Uin = UserUin;
-                    newItem.delayTime = TimeStamp * 1000 - System.currentTimeMillis();
-                    newList.add(newItem);
-                }
-                return newList;
-            }
-            return null;
-        } catch (Exception e) {
-            return new ArrayList();
-        }
+        ArrayList<MuteList> list = ApiHelper.invoke(Group_Get_Mute_List.class,GroupUin);
+        return list == null ? new ArrayList<>() : list;
     }
 
 
