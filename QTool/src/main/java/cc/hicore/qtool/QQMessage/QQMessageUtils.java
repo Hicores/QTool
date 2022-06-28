@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
@@ -21,28 +22,13 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_GetMessageByTimeSeq;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.MethodFinder;
 
 public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {
-        try {
-            if (HookEnv.AppInterface == null) return null;
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            if (HostInfo.getVerCode() > 8000) {
-                Method m = MethodFinder.findMethodFromCache("GetMessageByTimeSeq");
-                return m.invoke(MessageFacade,uin,istroop,msgseq);
-            }else {
-                return MMethod.CallMethod(MessageFacade, "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
-                        String.class, int.class, long.class
-                }, uin, istroop, msgseq);
-            }
-
-        } catch (Exception e) {
-            LogUtils.error("QQMessageUtils", "GetMessageByTimeSeq error:\n" + e);
-            return null;
-        }
+        return ApiHelper.invoke(MsgApi_GetMessageByTimeSeq.class,uin,istroop,msgseq);
     }
 
     public static void revokeMsg(Object msg) {
