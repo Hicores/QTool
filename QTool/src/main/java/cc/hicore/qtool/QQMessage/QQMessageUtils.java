@@ -33,12 +33,12 @@ public class QQMessageUtils {
 
     public static void revokeMsg(Object msg) {
         try {
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
+
             if (msg.getClass().toString().contains("MessageForTroopFile")) {
                 RevokeTroopFile(msg);
             }
-
+            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
+                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
             Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
                     MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
             if (HostInfo.getVerCode() > 8000){
