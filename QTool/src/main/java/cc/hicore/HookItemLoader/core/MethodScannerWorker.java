@@ -96,7 +96,7 @@ public class MethodScannerWorker {
     private static boolean checkAndAddItemToTree(BaseMethodInfo info){
         if (info instanceof CommonMethodInfo){
             ScannerLink newNode = new ScannerLink();
-            newNode.ID = info.id;
+            newNode.ID = info.bandToInfo.ItemName+"->"+info.id;
             newNode.LinkingID = new ArrayList<>();
             newNode.Info = info;
             newNode.item = info.bandToInfo;
@@ -106,7 +106,7 @@ public class MethodScannerWorker {
         if (info instanceof BaseFindMethodInfo){
             if (((BaseFindMethodInfo) info).LinkedToMethodID == null){
                 ScannerLink newNode = new ScannerLink();
-                newNode.ID = info.id;
+                newNode.ID = info.bandToInfo.ItemName+"->"+info.id;
                 newNode.LinkingID = new ArrayList<>();
                 newNode.Info = info;
                 newNode.item = info.bandToInfo;
@@ -118,7 +118,7 @@ public class MethodScannerWorker {
                     ScannerLink searchResult = searchNode(lnk,LinkedID);
                     if (searchResult != null){
                         ScannerLink newNode = new ScannerLink();
-                        newNode.ID = info.id;
+                        newNode.ID = info.bandToInfo.ItemName+"->"+info.id;
                         newNode.LinkingID = new ArrayList<>();
                         newNode.Info = info;
                         newNode.LinkToID = searchResult;
