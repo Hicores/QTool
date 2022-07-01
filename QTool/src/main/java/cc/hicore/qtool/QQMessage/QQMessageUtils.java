@@ -25,6 +25,7 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddAndSendMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_GetMessageByTimeSeq;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_revokeMsg;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.MethodFinder;
 
@@ -34,26 +35,10 @@ public class QQMessageUtils {
     }
 
     public static void revokeMsg(Object msg) {
-        try {
-
-            if (msg.getClass().toString().contains("MessageForTroopFile")) {
-                RevokeTroopFile(msg);
-            }
-            Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
-                    MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
-            if (HostInfo.getVerCode() > 8000){
-                Method update = MethodFinder.findMethodFromCache("updateCache");
-                update.invoke(MsgCache,true);
-            }else {
-                MMethod.CallMethod(MsgCache, "b", void.class, new Class[]{boolean.class}, true);
-            }
-
-            MessageFacade_RevokeMessage().invoke(MessageFacade, msg);
-        } catch (Exception e) {
-            LogUtils.error("revokeMsg", e);
+        if (msg.getClass().toString().contains("MessageForTroopFile")) {
+            RevokeTroopFile(msg);
         }
+        ApiHelper.invoke(MsgApi_revokeMsg.class,msg);
 
     }
 
