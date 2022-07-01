@@ -22,6 +22,7 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddAndSendMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_GetMessageByTimeSeq;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.MethodFinder;
@@ -70,18 +71,7 @@ public class QQMessageUtils {
     }
 
     public static void AddAndSendMsg(Object MessageRecord) {
-        try {
-            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            Method mMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", null, void.class, new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                    MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver"),boolean.class
-            });
-            mMethod.invoke(MessageFacade, MessageRecord, null,false);
-        } catch (Exception e) {
-            LogUtils.error("AddAndSendMsg", e);
-        }
-
+        ApiHelper.invoke(MsgApi_AddAndSendMsg.class,MessageRecord);
     }
 
     private static void RevokeTroopFile(Object MessageRecord) {
