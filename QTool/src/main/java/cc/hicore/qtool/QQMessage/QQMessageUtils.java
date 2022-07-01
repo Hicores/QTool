@@ -23,6 +23,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddAndSendMsg;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_GetMessageByTimeSeq;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.MethodFinder;
@@ -57,17 +58,7 @@ public class QQMessageUtils {
     }
 
     public static void AddMsg(Object MessageRecord) {
-        try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", null, void.class, new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                    String.class,boolean.class,boolean.class,boolean.class,boolean.class
-            });
-            Object MessageFacade = MMethod.CallMethodNoParam(QQEnvUtils.getAppRuntime(), "getMessageFacade",
-                    MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
-            InvokeMethod.invoke(MessageFacade, MessageRecord, QQEnvUtils.getCurrentUin(),false,false,false,true);
-        } catch (Throwable th) {
-            LogUtils.error("AddMsg", th);
-        }
+       ApiHelper.invoke(MsgApi_AddMsg.class,MessageRecord);
     }
 
     public static void AddAndSendMsg(Object MessageRecord) {
