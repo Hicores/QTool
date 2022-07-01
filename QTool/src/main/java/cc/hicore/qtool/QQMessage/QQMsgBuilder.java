@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
+import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
@@ -25,6 +26,7 @@ import cc.hicore.Utils.NameUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.XposedInit.EnvHook;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
@@ -49,8 +51,7 @@ public class QQMsgBuilder {
         try {
             Method BuildStructMsg = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.TestStructMsg"), "a",
                     MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"), new Class[]{String.class});
-            Object msgData = BuildStructMsg.invoke(null, new Object[]{xml});
-            return msgData;
+            return BuildStructMsg.invoke(null, new Object[]{xml});
         } catch (Throwable th) {
             LogUtils.error(TAG, "build_struct:\n" + th);
             return null;
@@ -129,25 +130,7 @@ public class QQMsgBuilder {
         }
     }
     public static Object buildPic0(Object _Session, String PicPath) {
-        try {
-
-            Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"), new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                    MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
-                    String.class
-            });
-            Object PICMsg = CallMethod.invoke(null,
-                    HookEnv.AppInterface, _Session, PicPath
-            );
-            MField.SetField(PICMsg, "md5", DataUtils.getFileMD5(new File(PicPath)));
-            MField.SetField(PICMsg, "uuid", DataUtils.getFileMD5(new File(PicPath)) + ".jpg");
-            MField.SetField(PICMsg, "localUUID", UUID.randomUUID().toString());
-            MMethod.CallMethodNoParam(PICMsg, "prewrite", void.class);
-            return PICMsg;
-        } catch (Exception e) {
-            LogUtils.error("buildPic0", Log.getStackTraceString(e));
-            return null;
-        }
+        return ApiHelper.invoke(Builder_Pic.class,_Session,PicPath);
     }
     public static Object buildText(String GroupUin, String text) {
         try {
