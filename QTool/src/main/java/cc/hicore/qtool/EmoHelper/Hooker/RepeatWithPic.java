@@ -28,6 +28,7 @@ import cc.hicore.Utils.StringUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "带图回复",itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {
@@ -68,7 +69,7 @@ public class RepeatWithPic {
         container.addMethod(MethodFinderBuilder.newFinderByString("basechatpie_init","AIO_doOnCreate_initUI", m ->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie")));
     }
     @VerController
-    @XPExecutor(methodID = "basechatpie_init")
+    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
     public BaseXPExecutor basechatpie_init(){
         return param -> {
             ed = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.widget.XEditTextEx"));

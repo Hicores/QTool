@@ -27,7 +27,7 @@ public class MsgApi_GetMessageByTimeSeq {
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     public void getMethod(MethodContainer container){
-        container.addMethod("invoker",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"),
+        container.addMethod("invoker",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseQQMessageFacade"),
                 "c", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"), new Class[]{
                         String.class, int.class, long.class
                 }));

@@ -85,7 +85,7 @@ public class HookInjectEmoTabView{
 
     }
     @VerController
-    @XPExecutor(methodID = "common_icon_create")
+    @XPExecutor(methodID = "common_icon_create",period = XPExecutor.After)
     public BaseXPExecutor inject_emo_bar(){
         return param -> {
             LinearLayout l = (LinearLayout) param.thisObject;
@@ -103,7 +103,7 @@ public class HookInjectEmoTabView{
         };
     }
     @VerController
-    @XPExecutor(methodID = "pic_item_menu_inject")
+    @XPExecutor(methodID = "pic_item_menu_inject",period = XPExecutor.After)
     public BaseXPExecutor inject_pic_menu_builder(){
         return param -> {
             Object arr = param.getResult();
@@ -131,7 +131,7 @@ public class HookInjectEmoTabView{
         };
     }
     @VerController
-    @XPExecutor(methodID = "mix_item_menu_inject")
+    @XPExecutor(methodID = "mix_item_menu_inject",period = XPExecutor.After)
     public BaseXPExecutor inject_mix_menu_builder(){
         return param -> {
             Object arr = param.getResult();
@@ -175,7 +175,7 @@ public class HookInjectEmoTabView{
         };
     }
     @VerController
-    @XPExecutor(methodID = "marker_item_menu_inject")
+    @XPExecutor(methodID = "marker_item_menu_inject",period = XPExecutor.After)
     public BaseXPExecutor inject_market_menu_builder(){
         return param -> {
             Object arr = param.getResult();
