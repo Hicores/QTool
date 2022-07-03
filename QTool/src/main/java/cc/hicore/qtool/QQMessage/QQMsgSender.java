@@ -9,6 +9,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
@@ -17,6 +18,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_sentAntEmo;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQMsgSender {
@@ -97,9 +99,7 @@ public class QQMsgSender {
                 path = newPath;
             }
             Method CallMethod =
-                    HostInfo.getVerCode() < 5670 ?
-                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", "a", long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class}) :
-                            MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
+                    MMethod.FindMethod("com.tencent.mobileqq.activity.ChatActivityFacade", null, long.class, new Class[]{Classes.QQAppinterFace(), Classes.SessionInfo(), String.class});
             CallMethod.invoke(null, HookEnv.AppInterface, _Session, path);
         } catch (Exception e) {
             LogUtils.error("sendVoice", e);
@@ -201,23 +201,7 @@ public class QQMsgSender {
     }
 
     public static void sendAntEmo(Object _Session, int ID) {
-        try {
-
-            if (HostInfo.getVerCode() < 5865) {
-                Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack", "sendAniSticker",
-                        boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo")}
-                );
-                m.invoke(null, ID, _Session);
-            } else {
-                Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack", "sendAniSticker",
-                        boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"), int.class}
-                );
-                m.invoke(null, ID, _Session, 0);
-            }
-
-        } catch (Exception es) {
-            LogUtils.error("sendAntEmo", es);
-        }
+        ApiHelper.invoke(MsgApi_sentAntEmo.class,_Session,ID);
     }
 
     public static void sendAnimation(Object Session, int sevrID) {
