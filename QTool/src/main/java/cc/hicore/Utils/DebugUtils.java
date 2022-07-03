@@ -1,7 +1,9 @@
 package cc.hicore.Utils;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
+import cc.hicore.LogUtils.LogUtils;
 import de.robv.android.xposed.XposedBridge;
 
 public class DebugUtils {
@@ -36,6 +38,21 @@ public class DebugUtils {
             }catch (Exception ew){
 
             }
+        }
+    }
+    public static void PrintAllThreadStack(){
+        Map<Thread,StackTraceElement[]> thread = Thread.getAllStackTraces();
+        for (Thread th : thread.keySet()){
+            StackTraceElement[] element = thread.get(th);
+            StringBuilder builder = new StringBuilder();
+            builder.append(th.getName()).append("\n");
+            for (StackTraceElement ele : element){
+                builder.append(ele.getClassName())
+                        .append(".").append(ele.getMethodName())
+                        .append("(").append(ele.getFileName()).append(":").append(ele.getLineNumber()).append(")\n");
+            }
+            builder.append("\n\n");
+            LogUtils.debug("ThreadPrinter",builder.toString());
         }
     }
 

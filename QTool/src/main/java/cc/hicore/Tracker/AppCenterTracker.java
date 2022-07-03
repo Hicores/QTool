@@ -4,14 +4,11 @@ import com.microsoft.appcenter.analytics.Analytics;
 
 import java.util.HashMap;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
-import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 @XPItem(name = "AppCenter_Init",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
 public class AppCenterTracker{

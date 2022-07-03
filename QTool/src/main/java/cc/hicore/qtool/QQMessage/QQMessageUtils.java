@@ -1,34 +1,23 @@
 package cc.hicore.qtool.QQMessage;
 
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
-import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddAndSendMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_AddMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_GetMessageByTimeSeq;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_SendFakeMultiMsg;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_revokeMsg;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.MethodFinder;
 
 public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {

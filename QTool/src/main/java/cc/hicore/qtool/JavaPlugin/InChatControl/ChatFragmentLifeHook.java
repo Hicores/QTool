@@ -3,9 +3,6 @@ package cc.hicore.qtool.JavaPlugin.InChatControl;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.lang.reflect.Method;
-
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
@@ -17,10 +14,6 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-import cc.hicore.qtool.XposedInit.MethodFinder;
 
 /*
 挂钩判断聊天窗口显示/隐藏事件

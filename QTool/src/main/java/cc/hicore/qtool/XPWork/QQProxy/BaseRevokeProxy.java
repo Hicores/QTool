@@ -1,10 +1,8 @@
 package cc.hicore.qtool.XPWork.QQProxy;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
@@ -14,12 +12,11 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
+
 @XPItem(name = "BaseRevokeProxy",itemType = XPItem.ITEM_Hook)
 public class BaseRevokeProxy{
     private static final String TAG = "BaseRevokeProxy";

@@ -1,7 +1,6 @@
 package cc.hicore.annotationsprocesser;
 
 import com.google.auto.service.AutoService;
-import cc.hicore.HookItem;
 import com.sun.tools.javac.code.Symbol;
 
 import java.io.IOException;

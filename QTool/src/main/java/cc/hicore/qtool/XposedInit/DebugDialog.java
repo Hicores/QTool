@@ -14,6 +14,7 @@ import android.widget.TextView;
 import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
+import cc.hicore.Utils.DebugUtils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
@@ -105,6 +106,11 @@ public class DebugDialog {
             QQEnvUtils.ExitQQAnyWays();
         });
         mRoot.addView(btnCleanMethodCache);
+
+        Button printStack = new Button(context);
+        printStack.setText("输出所有线程调用栈");
+        printStack.setOnClickListener(v-> DebugUtils.PrintAllThreadStack());
+        mRoot.addView(printStack);
 
         fullScreen.setContentView(view);
         fullScreen.show();

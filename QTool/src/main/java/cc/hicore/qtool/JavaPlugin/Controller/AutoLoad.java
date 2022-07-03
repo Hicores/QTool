@@ -5,13 +5,11 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Properties;
 
-import cc.hicore.HookItem;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
 
 @XPItem(name = "脚本自动加载",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
 public class AutoLoad{

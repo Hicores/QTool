@@ -27,7 +27,7 @@ public class SettingInject {
 
                 View item = MField.GetFirstField(act, MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"));
                 ViewGroup mRoot = (ViewGroup) item.getParent();
-                View newItem = FormItemUtils.createMultiItem(act, "QTool", BuildConfig.VERSION_NAME, v -> { MainMenu.onCreate(act); });
+                View newItem = FormItemUtils.createMultiItem(act, "QTool", BuildConfig.VERSION_NAME, v -> MainMenu.onCreate(act));
                 newItem.setOnLongClickListener(v -> {
                     DebugDialog.startShow(v.getContext());
                     return true;
