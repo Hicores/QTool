@@ -26,6 +26,7 @@ import cc.hicore.Utils.NameUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Common_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Copy_Tuya;
@@ -303,22 +304,7 @@ public class QQMsgBuilder {
     }
 
     public static Object build_common_message_record(int type){
-        try{
-            if (HostInfo.getVerCode() > 8000){
-                Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","d", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
-                        int.class
-                });
-                return CallMethod.invoke(null,type);
-            }else {
-                Method CallMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory","a", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),new Class[]{
-                        int.class
-                });
-                return CallMethod.invoke(null,type);
-            }
-        }catch (Exception e){
-            LogUtils.error("build_common_message_record",e);
-            return null;
-        }
+        return ApiHelper.invoke(Build_Common_Msg.class,type);
     }
     public static Object rebuild_message(Object record){
         try{
