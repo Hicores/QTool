@@ -148,9 +148,7 @@ public class QQSessionUtils {
         }
 
     }
-
-    @HookItem(isDelayInit = false, isRunInAllProc = false)
-    public static class Table_Session_Field extends BaseHookItem {
+    public static class Table_Session_Field{
         private static Class<?> SessionInfo() {
             return MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
         }
@@ -199,39 +197,6 @@ public class QQSessionUtils {
                     MField.FindField(SessionInfo(), "i", String.class);
             if (f != null) f.setAccessible(true);
             return f;
-        }
-
-        private StringBuilder checkResult = new StringBuilder();
-
-        @Override
-        public String getTag() {
-            return "Session_Field_Table";
-        }
-
-        @Override
-        public boolean startHook() {
-            return false;
-        }
-
-        @Override
-        public boolean isEnable() {
-            return false;
-        }
-
-        @Override
-        public String getErrorInfo() {
-            return checkResult.toString();
-        }
-
-        @Override
-        public boolean check() {
-            checkResult = new StringBuilder();
-            if (isTroop() == null) checkResult.append("isTroop is null");
-            if (friendUin() == null) checkResult.append("friendUin is null");
-            if (TroopCode() == null) checkResult.append("TroopCode is null");
-            if (InTroopUin() == null) checkResult.append("InTroopUin is null");
-            if (CodeName() == null) checkResult.append("CodeName is null");
-            return checkResult.length() == 0;
         }
     }
 }

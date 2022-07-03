@@ -203,22 +203,6 @@ public class QQMsgSender {
     public static void sendAntEmo(Object _Session, int ID) {
         ApiHelper.invoke(MsgApi_sentAntEmo.class,_Session,ID);
     }
-
-    public static void sendAnimation(Object Session, int sevrID) {
-        try {
-
-            if (HostInfo.getVerCode() < 5865) {
-                MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack"), "sendAniSticker",
-                        boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo")}, sevrID, Session);
-            } else {
-                MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack"), "sendAniSticker",
-                        boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"), int.class}, sevrID, Session, 0);
-            }
-        } catch (Exception es) {
-            LogUtils.error("sendAnimation", es);
-        }
-    }
-
     public static void QQ_Forward_ShortVideo(Object _SessionInfo, Object ChatMessage) {
         try {
             MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), null, void.class, new Class[]{

@@ -5,6 +5,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import cc.hicore.HookItem;
+import cc.hicore.HookItemLoader.Annotations.MethodScanner;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPExecutor;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
+import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -14,20 +20,23 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem;
-
-@HookItem(isRunInAllProc = false, isDelayInit = false)
-public class BaseRevokeProxy extends BaseHookItem {
+@XPItem(name = "BaseRevokeProxy",itemType = XPItem.ITEM_Hook)
+public class BaseRevokeProxy{
     private static final String TAG = "BaseRevokeProxy";
-
-    @Override
-    public String getTag() {
-        return TAG;
+    @VerController
+    @MethodScanner
+    public void getHookMethod(MethodContainer container){
+        container.addMethod("hook1",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"), null, void.class, new Class[]{
+                ArrayList.class, boolean.class
+        }));
+        container.addMethod("hook2",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), null, void.class, new Class[]{
+                ArrayList.class
+        }));
     }
-
-    @Override
-    public boolean startHook() {
-        Method[] m = getMethod();
-        XPBridge.HookBefore(m[0], param -> {
+    @VerController
+    @XPExecutor(methodID = "hook1")
+    public BaseXPExecutor hook_1(){
+        return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
             if (msgList == null || msgList.isEmpty()) return;
 
@@ -57,9 +66,12 @@ public class BaseRevokeProxy extends BaseHookItem {
             if (RevokeMsg != null) {
                 PluginMessageProcessor.submit(() -> PluginMessageProcessor.onRevoke(RevokeMsg, OpUin));
             }
-        });
-
-        XPBridge.HookBefore(m[1], param -> {
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook2")
+    public BaseXPExecutor hook_2(){
+        return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
             if (msgList == null || msgList.isEmpty()) return;
 
@@ -81,37 +93,9 @@ public class BaseRevokeProxy extends BaseHookItem {
             if (RevokeMsg != null) {
                 PluginMessageProcessor.submit(() -> PluginMessageProcessor.onRevoke(RevokeMsg, OpUin));
             }
-
-        });
-
-        return true;
+        };
     }
-
-    @Override
-    public boolean isEnable() {
-        return true;
-    }
-
-    @Override
-    public boolean check() {
-        Method[] m = getMethod();
-        return m[0] != null && m[1] != null;
-    }
-
-    public Method[] getMethod() {
-        Method[] m = new Method[2];
-        m[0] = MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"), null, void.class, new Class[]{
-                ArrayList.class, boolean.class
-        });
-        m[1] = MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), null, void.class, new Class[]{
-                ArrayList.class
-        });
-        return m;
-
-    }
-
-    @HookItem(isRunInAllProc = false, isDelayInit = false)
-    public static class Table_RevokeInfo_Field extends BaseHookItem {
+    public static class Table_RevokeInfo_Field{
         public static Class RevokeMsgInfo() {
             return MClass.loadClass("com.tencent.mobileqq.revokemsg.RevokeMsgInfo");
         }
@@ -153,35 +137,6 @@ public class BaseRevokeProxy extends BaseHookItem {
                             MField.FindField(RevokeMsgInfo(),"f",long.class);;
             if (f != null) f.setAccessible(true);
             return f;
-        }
-
-        @Override
-        public boolean startHook() {
-            return false;
-        }
-
-        @Override
-        public boolean isEnable() {
-            return false;
-        }
-
-        private StringBuilder errCache = new StringBuilder();
-
-        @Override
-        public String getErrorInfo() {
-            return super.getErrorInfo();
-        }
-
-        @Override
-        public boolean check() {
-            errCache.setLength(0);
-            if (GroupUin() == null) errCache.append("GroupUin is null\n");
-            if (OpUin() == null) errCache.append("OpUin is null\n");
-            if (Sender() == null) errCache.append("Sender is null\n");
-            if (IsTroop() == null) errCache.append("IsTroop is null\n");
-            if (shmsgseq() == null) errCache.append("shmsgseq is null\n");
-
-            return errCache.length() == 0;
         }
     }
 

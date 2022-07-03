@@ -79,7 +79,7 @@ public class Repeater {
             }
             case "MessageForAniSticker": {
                 int servID = QQMessageUtils.DecodeAntEmoCode(MField.GetField(chatMsg, "sevrId", int.class));
-                QQMsgSender.sendAnimation(Session, servID);
+                QQMsgSender.sendAntEmo(Session, servID);
                 break;
             }
             case "MessageForArkFlashChat": {
