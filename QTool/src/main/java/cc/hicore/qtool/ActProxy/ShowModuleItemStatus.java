@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import cc.hicore.HookItemLoader.Annotations.XPItem;
@@ -57,7 +58,7 @@ public class ShowModuleItemStatus {
         return "功能:无异常";
     }
     private static int checkAvailable(CoreLoader.XPItemInfo info){
-        if(!info.isVersionAvailable)return Color.YELLOW;
+        if(!info.isVersionAvailable)return Color.GRAY;
         if(!info.cacheException.isEmpty())return Color.RED;
         if (!info.ExecutorException.isEmpty())return Color.RED;
         return Color.BLACK;
@@ -83,18 +84,27 @@ public class ShowModuleItemStatus {
                 detail.append(annotation.toString()).append("\n");
             }
         }
+        detail.append("--------------------------\n\n");
+        detail.append("项目报告的方法").append("\n");
         detail.append("--------------------------\n");
-
+        for (String ID : info.scanResult.keySet()){
+            Member m = info.scanResult.get(ID);
+            detail.append(ID).append("->").append(m).append("\n");
+        }
+        detail.append("--------------------------\n\n");
         detail.append("执行异常列表:\n");
+        detail.append("--------------------------\n");
         for (String s : info.ExecutorException.keySet()){
             String value = info.ExecutorException.get(s);
             detail.append(s).append("\n").append(value).append("\n\n");
         }
-
+        detail.append("--------------------------\n\n");
         detail.append("加载异常列表:\n");
+        detail.append("--------------------------\n");
         for (String s : info.cacheException){
             detail.append(s).append("\n\n");
         }
+        detail.append("--------------------------\n\n");
         ViewGroup vg = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.item_checker_show_detail,null);
         EditText ed = vg.findViewById(R.id.EditText_EditTextView);
         ed.setText(detail.toString());
