@@ -38,6 +38,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class MethodScannerWorker {
     public static class ScannerLink{
@@ -47,7 +48,16 @@ public class MethodScannerWorker {
         public ArrayList<ScannerLink> LinkingID;
         public ScannerLink LinkToID;
     }
+    static AtomicBoolean result = new AtomicBoolean();
+    static volatile boolean isInit = false;
     public static boolean checkIsAvailable(){
+        if (isInit) {
+            return result.get();
+        }
+        result.set(checkIsAvailableInner());
+        return result.get();
+    }
+    public static boolean checkIsAvailableInner(){
         String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
         if (GlobalConfig.Get_String("cacheVer").equals(cacheVer)){
             preLoadMethod();
@@ -90,7 +100,9 @@ public class MethodScannerWorker {
         //编号查找的Link
         int restLink = 0;
         while (restLink != allFindMethodInfo.size()){
+            restLink = allFindMethodInfo.size();
             allFindMethodInfo.removeIf(MethodScannerWorker::checkAndAddItemToTree);
+
         }
     }
     private static boolean checkAndAddItemToTree(BaseMethodInfo info){
@@ -115,7 +127,7 @@ public class MethodScannerWorker {
             }else {
                 String LinkedID = ((BaseFindMethodInfo) info).LinkedToMethodID;
                 for (ScannerLink lnk : rootNode){
-                    ScannerLink searchResult = searchNode(lnk,LinkedID);
+                    ScannerLink searchResult = searchNode(lnk,info.bandToInfo.ItemName+"->"+LinkedID);
                     if (searchResult != null){
                         ScannerLink newNode = new ScannerLink();
                         newNode.ID = info.bandToInfo.ItemName+"->"+info.id;
@@ -193,13 +205,15 @@ public class MethodScannerWorker {
                             info.bandToInfo.scanResult.put(info.id,findResult);
                             Utils.PostToMain(()->{
                                 nodeView.setTextColor(Color.GREEN);
-                                SpannableString text = new SpannableString(info.id + "\n"+
+                                SpannableString text = new SpannableString(node.ID + "\n"+
                                         "("+findResult.getDeclaringClass().getName()+"."+findResult.getName()+")");
-                                text.setSpan(new AbsoluteSizeSpan(Utils.dip2px(context,12)),info.id.length()+1,text.length(),0);
-                                text.setSpan(new ForegroundColorSpan(Color.GRAY),info.id.length()+1,text.length(),0);
+                                text.setSpan(new AbsoluteSizeSpan(Utils.dip2px(context,12)),node.ID.length()+1,text.length(),0);
+                                text.setSpan(new ForegroundColorSpan(Color.GRAY),node.ID.length()+1,text.length(),0);
                                 nodeView.setText(text);
                             });
-                            writeMethodToCache(info.bandToInfo.id+"_"+info.id, (Method) findResult);
+                            if (!(info instanceof CommonMethodInfo)){
+                                writeMethodToCache(info.bandToInfo.id+"_"+info.id, (Method) findResult);
+                            }
                         }
                     }catch (Throwable e){
                         Utils.ShowToastL(Log.getStackTraceString(e));

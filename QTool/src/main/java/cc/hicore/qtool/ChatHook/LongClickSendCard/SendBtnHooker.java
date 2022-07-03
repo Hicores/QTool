@@ -78,7 +78,7 @@ public class SendBtnHooker{
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     public BaseXPExecutor xpWorker(){
         return param -> {
-            ViewGroup vg = (ViewGroup) info.scanResult.get("getAIORoot").invoke(param.thisObject);
+            ViewGroup vg = (ViewGroup) (((Method)info.scanResult.get("getAIORoot")).invoke(param.thisObject));
             if (vg == null)return;
             Context ctx = vg.getContext();
             int fun_btn = ctx.getResources().getIdentifier("fun_btn", "id", ctx.getPackageName());

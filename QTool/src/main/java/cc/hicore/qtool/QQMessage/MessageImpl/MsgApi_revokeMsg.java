@@ -31,9 +31,7 @@ public class MsgApi_revokeMsg {
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     public void getCacheMethod(MethodContainer container) throws Exception {
-        Object MsgCache = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMsgCache",
-                MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"));
-        container.addMethod("updateCache",MMethod.FindMethod(MsgCache.getClass(), "b", void.class, new Class[]{boolean.class}));
+        container.addMethod("updateCache",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"), "b", void.class, new Class[]{boolean.class}));
     }
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_8_11)
