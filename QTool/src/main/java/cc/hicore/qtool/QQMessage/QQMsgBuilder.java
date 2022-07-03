@@ -26,6 +26,7 @@ import cc.hicore.Utils.NameUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.XposedInit.EnvHook;
 import cc.hicore.qtool.XposedInit.HostInfo;
@@ -145,8 +146,7 @@ public class QQMsgBuilder {
                     short.class,
                     String.class
             });
-            Object TextMessageRecord = InvokeMethod.invoke(null, HookEnv.AppInterface, "", GroupUin, QQEnvUtils.getCurrentUin(), 1, (byte) 0, (byte) 0, (short) 0, text);
-            return TextMessageRecord;
+            return InvokeMethod.invoke(null, HookEnv.AppInterface, "", GroupUin, QQEnvUtils.getCurrentUin(), 1, (byte) 0, (byte) 0, (short) 0, text);
         } catch (Exception e) {
             LogUtils.error("buildText", Log.getStackTraceString(e));
             return null;
@@ -172,29 +172,7 @@ public class QQMsgBuilder {
         }
     }
     public static Object buildMix(Object session, ArrayList msgElems) {
-        try {
-            Method m = null;
-            Class<?> clz = MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory");
-            for (Method ma : clz.getDeclaredMethods()){
-                if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))){
-                    m = ma;
-                    break;
-                }
-            }
-
-            Object MixMessageRecord;
-            if (QQSessionUtils.getSessionID(session) == 10014) {
-                MixMessageRecord = m.invoke(null, HookEnv.AppInterface, QQSessionUtils.getChannelID(session), QQEnvUtils.getCurrentUin(), 10014);
-            } else {
-                MixMessageRecord = m.invoke(null, HookEnv.AppInterface, QQSessionUtils.getGroupUin(session), QQEnvUtils.getCurrentUin(), 1);
-            }
-            MField.SetField(MixMessageRecord, "msgElemList", msgElems);
-            MixMessageRecord = MMethod.CallMethodNoParam(MixMessageRecord, "rebuildMixedMsg", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"));
-            return MixMessageRecord;
-        } catch (Exception e) {
-            LogUtils.error("buildMix", e);
-            return null;
-        }
+        return ApiHelper.invoke(Build_Mix.class,session,msgElems);
     }
     public static Object Copy_NewFlashChat(Object SourceChat) {
         try {
@@ -209,8 +187,7 @@ public class QQMsgBuilder {
             Object sArk = MField.GetField(SourceChat, "ark_app_message");
             int isTroop = MField.GetField(SourceChat, "istroop", int.class);
             String FriendUin = MField.GetField(SourceChat, "frienduin", String.class);
-            Object NewChat = ArkChatObj.invoke(null, HookEnv.AppInterface, FriendUin, QQEnvUtils.getCurrentUin(), isTroop, sArk);
-            return NewChat;
+            return ArkChatObj.invoke(null, HookEnv.AppInterface, FriendUin, QQEnvUtils.getCurrentUin(), isTroop, sArk);
         } catch (Exception e) {
             LogUtils.error("Copy_NewFlashChat", e);
             return null;
