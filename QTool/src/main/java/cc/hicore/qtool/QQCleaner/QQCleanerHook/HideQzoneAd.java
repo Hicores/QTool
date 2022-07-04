@@ -12,11 +12,13 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 @XPItem(name = "屏蔽空间热播广告",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
@@ -45,7 +47,7 @@ public class HideQzoneAd{
         }));
     }
     @VerController
-    @XPExecutor(methodID = "hook_1")
+    @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
     public BaseXPExecutor worker_1(){
         return param -> {
             String sName = (String) param.args[1];
@@ -72,7 +74,7 @@ public class HideQzoneAd{
             }
         };
     }
-    @VerController
+    @VerController(targetVer = QQVersion.QQ_8_8_38)
     @XPExecutor(methodID = "hook_2")
     public BaseXPExecutor worker_2(){
         return param -> {

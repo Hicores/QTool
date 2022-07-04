@@ -40,7 +40,7 @@ public class ShowFullMessageCount {
     public BaseXPExecutor before(){
         return param -> param.args[4]=Integer.MAX_VALUE;
     }
-    @VerController(targetVer = QQVersion.QQ_8_8_11)
+    @VerController
     @XPExecutor(methodID = "hook")
     public BaseXPExecutor after(){
         return param -> {

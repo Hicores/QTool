@@ -272,13 +272,17 @@ public class MethodScannerWorker {
             }else {
                 return null;
             }
-            Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
-            for (Method m : findResult){
-                try{
-                    if (newNode.checker.onMethod(m))return m;
-                }catch (Throwable th){
+            if (linkNode != null){
+                Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
+                for (Method m : findResult){
+                    try{
+                        if (newNode.checker.onMethod(m))return m;
+                    }catch (Throwable th){
 
+                    }
                 }
+            }else {
+                return null;
             }
         }
         return null;

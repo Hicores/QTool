@@ -13,15 +13,7 @@ import cc.hicore.ReflectUtils.MMethod;
 
 @XPItem(name = "MsgApi_sentAntEmo",itemType = XPItem.ITEM_Api)
 public class MsgApi_sentAntEmo {
-    @VerController(max_targetVer = QQVersion.QQ_8_8_20)
-    @ApiExecutor
-    public void send(Object _Session, int ID) throws InvocationTargetException, IllegalAccessException {
-        Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack", "sendAniSticker",
-                boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo")}
-        );
-        m.invoke(null, ID, _Session);
-    }
-    @VerController(targetVer = QQVersion.QQ_8_8_20)
+    @VerController
     @ApiExecutor
     public void send_8820(Object _Session, int ID) throws InvocationTargetException, IllegalAccessException {
         Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack", "sendAniSticker",

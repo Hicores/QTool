@@ -9,6 +9,10 @@ import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.MClass;
+import cc.hicore.ReflectUtils.MMethod;
+import de.robv.android.xposed.XposedBridge;
+
 @XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook)
 public class HideListenerTogether{
     @UIItem
@@ -24,7 +28,10 @@ public class HideListenerTogether{
     @VerController
     @MethodScanner
     public void getHookMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","onUIModuleNeedRefresh, uidata=",m->true));
+        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ui.BaseListenTogetherPanel"),null,void.class,new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.listentogether.ListenTogetherSession")
+        }));
+
     }
     @VerController
     @XPExecutor(methodID = "hook")

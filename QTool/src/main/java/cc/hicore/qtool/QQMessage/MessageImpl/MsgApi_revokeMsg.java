@@ -34,12 +34,7 @@ public class MsgApi_revokeMsg {
         container.addMethod("updateCache",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache"), "b", void.class, new Class[]{boolean.class}));
     }
     @MethodScanner
-    @VerController(max_targetVer = QQVersion.QQ_8_8_11)
-    public void getMethod(MethodContainer container){
-        container.addMethod("revoke",MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "d", void.class, new Class[]{Classes.MessageRecord()}));
-    }
-    @MethodScanner
-    @VerController(targetVer = QQVersion.QQ_8_8_11,max_targetVer = QQVersion.QQ_8_8_93)
+    @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     public void get2Revoke(MethodContainer container){
         container.addMethod("revoke",MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", "f", void.class, new Class[]{Classes.MessageRecord()}));
     }

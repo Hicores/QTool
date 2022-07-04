@@ -9,10 +9,11 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用LoggerWriter",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
+@XPItem(name = "禁用LoggerWriter",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_50)
 public class LogWriterKiller{
     @VerController
     @UIItem

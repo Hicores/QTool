@@ -6,12 +6,13 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 
-@XPItem(name = "Proxy_Guild_Msg",itemType = XPItem.ITEM_Hook)
+@XPItem(name = "Proxy_Guild_Msg",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_35)
 public class BaseGuildMsgProxy{
     @VerController
     @MethodScanner
