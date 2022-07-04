@@ -13,7 +13,7 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用ZPlan",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_50)
+@XPItem(name = "禁用ZPlan",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_55)
 public class ZPlanKiller{
     @VerController
     @UIItem

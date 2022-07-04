@@ -13,7 +13,7 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用LoggerWriter",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_50)
+@XPItem(name = "禁用LoggerWriter",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_88)
 public class LogWriterKiller{
     @VerController
     @UIItem
