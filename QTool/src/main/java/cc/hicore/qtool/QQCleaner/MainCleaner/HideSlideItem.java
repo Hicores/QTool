@@ -50,7 +50,7 @@ public class HideSlideItem{
         container.addMethod(MethodFinderBuilder.newFinderByString("hook2","VipInfoHandler payRuleUin changed",m2->m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe")));
     }
     @VerController
-    @XPExecutor(methodID = "hook1")
+    @XPExecutor(methodID = "hook1",period = XPExecutor.After)
     public BaseXPExecutor worker1(){
         return param -> {
             Object mArr = param.getResult();

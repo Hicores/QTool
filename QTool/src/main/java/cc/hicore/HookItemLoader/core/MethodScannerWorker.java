@@ -200,7 +200,7 @@ public class MethodScannerWorker {
                         BaseMethodInfo info = node.Info;
                         Member findResult = findMethod(info);
                         if (findResult == null){
-                            nodeView.setTextColor(Color.RED);
+                            Utils.PostToMain(()->nodeView.setTextColor(Color.RED));
                         }else {
                             info.bandToInfo.scanResult.put(info.id,findResult);
                             Utils.PostToMain(()->{
@@ -217,7 +217,7 @@ public class MethodScannerWorker {
                         }
                     }catch (Throwable e){
                         Utils.ShowToastL(Log.getStackTraceString(e));
-                        nodeView.setTextColor(Color.RED);
+                        Utils.PostToMain(()->nodeView.setTextColor(Color.RED));
                     }
                 }
                 String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
@@ -235,7 +235,12 @@ public class MethodScannerWorker {
             FindMethodByName newNode = (FindMethodByName) info;
             Method[] findResult = DexFinder.getInstance().findMethodByString(newNode.name);
             for (Method m : findResult){
-                if (newNode.checker.onMethod(m))return m;
+                try{
+                    if (newNode.checker.onMethod(m))return m;
+                }catch (Throwable th){
+
+                }
+
             }
         }
         if (info instanceof FindMethodInvokingMethod){
@@ -250,7 +255,11 @@ public class MethodScannerWorker {
             }
             Method[] findResult = DexFinder.getInstance().findMethodInvoking(linkNode);
             for (Method m : findResult){
-                if (newNode.checker.onMethod(m))return m;
+                try{
+                    if (newNode.checker.onMethod(m))return m;
+                }catch (Throwable th){
+
+                }
             }
         }
         if (info instanceof FindMethodsWhichInvokeToTargetMethod){
@@ -265,7 +274,11 @@ public class MethodScannerWorker {
             }
             Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
             for (Method m : findResult){
-                if (newNode.checker.onMethod(m))return m;
+                try{
+                    if (newNode.checker.onMethod(m))return m;
+                }catch (Throwable th){
+
+                }
             }
         }
         return null;
