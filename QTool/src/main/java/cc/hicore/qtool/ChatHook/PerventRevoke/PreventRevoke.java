@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -57,9 +60,20 @@ public class PreventRevoke{
         container.addMethod("hook_3",MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager",null,void.class,new Class[]{
                 ArrayList.class
         }));
+
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_8_93)
+    @MethodScanner
+    public void getAIORevokeHelper(MethodContainer container){
         container.addMethod("hook_4",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper","c",void.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")
         }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_8_93)
+    @MethodScanner
+    public void getAIORevokeHelper_New(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4_before","tips_exp",m->m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
+        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("hook_4","hook_4_before",m->((Method)m).getParameterCount() == 1 && m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
     }
     @VerController
     @XPExecutor(methodID = "hook_1")
