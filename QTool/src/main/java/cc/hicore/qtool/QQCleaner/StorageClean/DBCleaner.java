@@ -109,8 +109,19 @@ public class DBCleaner{
                         }else{
                             uin = LocalTableInit.query(tablesName.substring(9,9+32));
                         }
+                        try{
+                            Long.parseLong(uin);
+                        }catch (Exception e){
+                            uin = "";
+                        }
 
                         if (uin.isEmpty())uin = DBHelper.decodeData(helper.getOneData(tablesName,"frienduin"));
+                        try{
+                            Long.parseLong(uin);
+                        }catch (Exception e){
+                            uin = "";
+                        }
+
                         if (TextUtils.isEmpty(uin)){
                             uin = DBHelper.decodeData(slowTable.getOneData(tablesName,"frienduin"));
                         }
