@@ -14,11 +14,13 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.ConfigUtils.GlobalConfig;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.CrashHandler.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
@@ -48,6 +50,7 @@ public class EnvHook {
                     //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                     HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
 
+
                     moduleLoader = EnvHook.class.getClassLoader();
 
                     //优先初始化Path
@@ -58,6 +61,8 @@ public class EnvHook {
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                     HookForDelay();
+                    if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35)return;
+                    if (HostInfo.getVersion().length() > 7)return;
 
                     if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
                         LogcatCatcher.startCatcherOnce();
@@ -107,6 +112,14 @@ public class EnvHook {
             XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"), "doStep"), param -> {
                 long timeStart = System.currentTimeMillis();
                 BeforeCheck.StartCheckAndShow();
+                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35){
+                    CheckWrongVersion.ShowToast1(Utils.getTopActivity());
+                    return;
+                }
+                if (HostInfo.getVersion().length() > 7){
+                    CheckWrongVersion.ShowWrongVersionDialog(Utils.getTopActivity());
+                    return;
+                }
 
                 if (HookEnv.ExtraDataPath == null){
                     ExtraPathInit.ShowPathSetDialog(false);
