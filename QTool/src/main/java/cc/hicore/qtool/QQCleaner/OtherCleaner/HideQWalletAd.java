@@ -38,7 +38,7 @@ public class HideQWalletAd{
         ui.type = 1;
         return ui;
     }
-    @VerController(max_targetVer = QQVersion.QQ_8_8_55)
+    @VerController(max_targetVer = QQVersion.QQ_8_8_68)
     @MethodScanner
     public void getPluginLoad(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pluginsdk.PluginStatic"),"getOrCreateClassLoaderByPath",ClassLoader.class,new Class[]{
@@ -46,7 +46,7 @@ public class HideQWalletAd{
         }));
     }
     static AtomicBoolean IsLoad = new AtomicBoolean();
-    @VerController(max_targetVer = QQVersion.QQ_8_8_55)
+    @VerController(max_targetVer = QQVersion.QQ_8_8_68)
     @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor hookForPlugin(){
         return param -> {
@@ -77,7 +77,7 @@ public class HideQWalletAd{
             }
         };
     }
-    @VerController(targetVer = QQVersion.QQ_8_8_55)
+    @VerController(targetVer = QQVersion.QQ_8_8_68)
     @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor worker(){
         return param -> {
@@ -96,7 +96,7 @@ public class HideQWalletAd{
         };
     }
 
-    @VerController(targetVer = QQVersion.QQ_8_8_55)
+    @VerController(targetVer = QQVersion.QQ_8_8_68)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.qwallet.activity.QWalletHomeActivity"),"onViewCreated",void.class,new Class[]{
