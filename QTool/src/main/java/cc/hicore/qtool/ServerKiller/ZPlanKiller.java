@@ -25,7 +25,7 @@ public class ZPlanKiller{
         ui.type = 1;
         return ui;
     }
-    @VerController(max_targetVer = QQVersion.QQ_8_8_93)
+    @VerController(max_targetVer = QQVersion.QQ_8_8_90)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
@@ -35,7 +35,7 @@ public class ZPlanKiller{
                 long.class,long.class
         }));
     }
-    @VerController(targetVer = QQVersion.QQ_8_8_93)
+    @VerController(targetVer = QQVersion.QQ_8_8_90)
     @MethodScanner
     public void getHookMethod_8_8_95(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
