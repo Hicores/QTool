@@ -74,7 +74,7 @@ public class HideQzoneAd{
             }
         };
     }
-    @VerController(targetVer = QQVersion.QQ_8_8_68)
+    @VerController(targetVer = QQVersion.QQ_8_8_83)
     @XPExecutor(methodID = "hook_2")
     public BaseXPExecutor worker_2(){
         return param -> {
