@@ -50,6 +50,8 @@ public class MsgApi_revokeMsg {
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     public void getUpdateCache(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("getMethod_Before","qq queryEmojiInfo: result:",m -> true));
-        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("revoke","getMethod_Before",m -> ((Method)m).getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache")) && ((Method)m).getReturnType().equals(void.class) && ((Method)m).getParameterCount() == 1 && ((Method)m).getParameterTypes()[0].equals(boolean.class)));
+        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("updateCache","getMethod_Before",m -> ((Method)m).getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.service.message.MessageCache")) && ((Method)m).getReturnType().equals(void.class) && ((Method)m).getParameterCount() == 1 && ((Method)m).getParameterTypes()[0].equals(boolean.class)));
+
+
     }
 }
