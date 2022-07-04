@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import java.io.File;
 import java.util.List;
 
+import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIClick;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
@@ -21,6 +22,7 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 @XPItem(name = "消息复读",itemType = XPItem.ITEM_Hook)
@@ -51,7 +53,7 @@ public class Hooker{
         }));
         container.addMethod("hide_def_icon",MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]));
     }
-    @XPExecutor(methodID = "hook_1")
+    @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
     @VerController
     public BaseXPExecutor hook_work(){
         return param -> {
@@ -62,9 +64,9 @@ public class Hooker{
             Context context= baseChatItem.getContext();
             if (context.getClass().getName().contains("MultiForwardActivity"))return;
             List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
-            if (MessageRecoreList == null) return;
+            Assert.notNull(MessageRecoreList,"List is NULL");
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
-            if (ChatMsg == null) return;
+            Assert.notNull(MessageRecoreList,"ChatMessage is NULL");
             String ActivityName = baseChatItem.getContext().getClass().getName();
             if (ActivityName.contains("MultiForwardActivity")) return;
             RepeaterHelper.createRepeatIcon(baseChatItem, ChatMsg);
@@ -79,7 +81,9 @@ public class Hooker{
     }
     public static Drawable cacheDrawable;
 
-    private static void requestRepeatIcon(){
+    @VerController
+    @CommonExecutor
+    public void requestRepeatIcon(){
         String iconPath = HookEnv.ExtraDataPath + "res/repeat.png";
         try{
             if (!new File(iconPath).exists()){

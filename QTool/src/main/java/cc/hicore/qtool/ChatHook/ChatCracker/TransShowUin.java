@@ -45,7 +45,7 @@ public class TransShowUin{
         }));
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor xpWorker(){
         return param -> {
             Object mGetView = param.getResult();

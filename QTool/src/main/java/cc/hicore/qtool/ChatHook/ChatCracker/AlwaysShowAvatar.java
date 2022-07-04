@@ -30,7 +30,7 @@ public class AlwaysShowAvatar{
     }
 
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor hookWorker(){
         return param -> {
             Object mGetView = param.getResult();

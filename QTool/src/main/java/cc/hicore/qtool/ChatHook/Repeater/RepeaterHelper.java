@@ -32,7 +32,6 @@ public class RepeaterHelper {
         supportMessageTypes.put("MessageForMarketFace", "RelativeLayout");
         supportMessageTypes.put("MessageForArkApp", "ArkAppRootLayout");
         supportMessageTypes.put("MessageForStructing", "RelativeLayout");
-        supportMessageTypes.put("MessageForTroopPobing", "LinearLayout");
         supportMessageTypes.put("MessageForTroopEffectPic", "RelativeLayout");
         supportMessageTypes.put("MessageForAniSticker", "FrameLayout");
         supportMessageTypes.put("MessageForArkFlashChat", "ArkAppRootLayout");

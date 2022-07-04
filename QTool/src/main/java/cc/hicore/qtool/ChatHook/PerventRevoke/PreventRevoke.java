@@ -104,7 +104,7 @@ public class PreventRevoke{
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook_2")
+    @XPExecutor(methodID = "hook_2",period = XPExecutor.After)
     public BaseXPExecutor hook_2(){
         return param -> {
             Object mGetView = param.getResult();

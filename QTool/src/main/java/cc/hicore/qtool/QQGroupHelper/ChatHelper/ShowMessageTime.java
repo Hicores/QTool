@@ -46,7 +46,7 @@ public class ShowMessageTime{
         }));
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor worker(){
         return param -> {
             Object mGetView = param.getResult();

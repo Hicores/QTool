@@ -20,6 +20,7 @@ import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 
 public class AvatarMenuBuilder {
 
@@ -145,9 +146,9 @@ public class AvatarMenuBuilder {
     }
     public static void Add_At_Text(String GroupUin,String UserUin){
         //只有在群聊的时候才会添加艾特信息,私聊时不进行添加
-        if(AvatarMenuHooker.chatPie.getClass().getName().equals("com.tencent.mobileqq.activity.aio.core.TroopChatPie")){
+        if(BaseChatPie.cacheChatPie.getClass().getName().equals("com.tencent.mobileqq.activity.aio.core.TroopChatPie")){
             try {
-                MMethod.CallMethod(AvatarMenuHooker.chatPie,null,void.class,new Class[]{String.class,String.class,boolean.class,int.class},
+                MMethod.CallMethod(BaseChatPie.cacheChatPie,null,void.class,new Class[]{String.class,String.class,boolean.class,int.class},
                         UserUin, QQGroupUtils.Group_Get_Member_Name(GroupUin,UserUin),false,1);
             } catch (Exception e) {
                 e.printStackTrace();

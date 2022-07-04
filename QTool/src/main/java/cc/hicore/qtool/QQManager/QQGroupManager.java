@@ -13,6 +13,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.ManagerImpl.Group_Change_Name;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Change_Title;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Kick;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Kick_Multi;
@@ -33,6 +34,6 @@ public class QQGroupManager {
         ApiHelper.invoke(Group_Change_Title.class,GroupUin,UserUin,title);
     }
     public static void Group_Change_Name(String GroupUin, String UserUin, String name) {
-        ApiHelper.invoke(Group_Change_Title.class,GroupUin,UserUin,name);
+        ApiHelper.invoke(Group_Change_Name.class,GroupUin,UserUin,name);
     }
 }

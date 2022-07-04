@@ -8,12 +8,13 @@ import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import de.robv.android.xposed.XposedBridge;
 
-@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook)
+@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_90)
 public class HideListenerTogether{
     @UIItem
     @VerController

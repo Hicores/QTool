@@ -61,7 +61,7 @@ public class AvatarMenuHooker implements View.OnLongClickListener {
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook_2")
+    @XPExecutor(methodID = "hook_2",period = XPExecutor.After)
     public BaseXPExecutor worker_2(){
         return param -> {
             Object mGetView = param.getResult();
@@ -83,7 +83,6 @@ public class AvatarMenuHooker implements View.OnLongClickListener {
             }
         };
     }
-    static Object chatPie;
     @Override
     public boolean onLongClick(View v) {
         Object chatMsg = v.getTag();
