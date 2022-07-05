@@ -445,7 +445,7 @@ public class PluginController {
                     }
                 } else if (istroop == 0 || istroop == 1000) {
                     String friendUin = MField.GetField(msg, "frienduin", String.class);
-                    Object change = checkAndInvokeNotNull("", "getMsg", msgContain, friendUin, 1);
+                    Object change = checkAndInvokeNotNull("", "getMsg", msgContain, friendUin, 2);
                     if (change instanceof String) {
                         String textChange = (String) change;
                         MField.SetField(msg, "msg", textChange);
