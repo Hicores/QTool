@@ -18,10 +18,13 @@ import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
+import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
+import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
+import de.robv.android.xposed.XC_MethodHook;
 
 @XPItem(name = "长按发送卡片消息",itemType = XPItem.ITEM_Hook)
 public class SendBtnHooker{
@@ -47,7 +50,7 @@ public class SendBtnHooker{
     public void getBaseChatPieInit(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("basechatpie_init","AIO_doOnCreate_initUI",m ->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie")));
     }
-    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
+    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After,hook_period = XC_MethodHook.PRIORITY_LOWEST)
     @VerController(max_targetVer = QQVersion.QQ_8_8_90)
     public BaseXPExecutor xpWorker_old(){
         return param -> {
@@ -58,6 +61,14 @@ public class SendBtnHooker{
             View sendBtn = vg.findViewById(fun_btn);
             int ed_id = ctx.getResources().getIdentifier("input", "id", ctx.getPackageName());
             EditText ed = vg.findViewById(ed_id);
+            View.OnLongClickListener upListener = null;
+            try{
+                Object listener = MField.GetField(sendBtn,"mListenerInfo");
+                upListener = MField.GetField(listener,"mOnLongClickListener");
+            }catch (Exception e){
+
+            }
+            View.OnLongClickListener finalUpListener = upListener;
             sendBtn.setOnLongClickListener(v->{
                 String input = ed.getText().toString();
                 if (input.startsWith("{")){
@@ -68,6 +79,9 @@ public class SendBtnHooker{
                     QQMsgSender.sendStruct(HookEnv.SessionInfo, QQMsgBuilder.build_struct(input));
                     ed.setText("");
                     return true;
+                }
+                if (finalUpListener != null){
+                    return finalUpListener.onLongClick(v);
                 }
                 return false;
             });
