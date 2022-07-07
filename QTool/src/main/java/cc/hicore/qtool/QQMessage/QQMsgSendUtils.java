@@ -14,6 +14,8 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import cc.hicore.qtool.QQManager.QQGuildManager;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQMsgSendUtils {
     private static final int TYPE_TEXT = 1;
@@ -88,12 +90,21 @@ public class QQMsgSendUtils {
                 if (result.content.equals("0")) {
                     atText = "@全体成员 ";
                 } else {
-                    atText = "@" + QQGroupUtils.Group_Get_Member_Name(QQSessionUtils.getGroupUin(_Session), result.content) + " ";
+                    if (QQSessionUtils.getSessionID() == 10014){
+                        atText = "@" + QQGuildManager.Get_User_Name(QQSessionUtils.getGuildID(_Session), result.content) + " ";
+                    }else {
+                        atText = "@" + QQGroupUtils.Group_Get_Member_Name(QQSessionUtils.getGroupUin(_Session), result.content) + " ";
+                    }
                 }
                 summary.append(atText);
-                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length));
+                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length,Long.parseLong(QQSessionUtils.getChannelID(_Session))));
                 length += atText.length();
-                records.add(QQMsgBuilder.buildText(QQSessionUtils.getGroupUin(_Session), atText));
+                if (QQSessionUtils.getSessionID() == 10014){
+                    records.add(QQMsgBuilder.buildText(QQSessionUtils.getGuildID(_Session), atText));
+                }else {
+                    records.add(QQMsgBuilder.buildText(QQSessionUtils.getGroupUin(_Session), atText));
+                }
+
             }
         }
         if (extraRecord != null) {

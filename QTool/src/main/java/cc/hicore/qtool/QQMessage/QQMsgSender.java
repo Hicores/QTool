@@ -20,6 +20,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_sentAntEmo;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQMsgSender {
     public static void sendFileByPath(String Path, String TroopUin) {

@@ -33,7 +33,6 @@ public class BaseGuildMsgProxy{
         return param -> {
             if (!param.args[1].getClass().getSimpleName().equals("MessageRecord")) {
                 PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(param.args[1]));
-
             }
         };
     }

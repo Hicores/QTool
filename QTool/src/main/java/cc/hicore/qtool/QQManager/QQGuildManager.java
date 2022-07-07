@@ -9,6 +9,7 @@ import java.util.List;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 
 public class QQGuildManager {
@@ -97,6 +98,14 @@ public class QQGuildManager {
         } catch (Exception e) {
             LogUtils.error("getChannelList", e);
             return null;
+        }
+    }
+    public static String Get_User_Name(String GuildID,String UserTinyID){
+        try {
+            Object IGpsManager = QQEnvUtils.GetIGpsManager();
+            return MMethod.CallMethodParams(IGpsManager, "getGuildMemberName", String.class, GuildID,UserTinyID);
+        } catch (Exception e) {
+            return UserTinyID;
         }
     }
 

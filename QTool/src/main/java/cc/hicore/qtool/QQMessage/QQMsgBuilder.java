@@ -23,6 +23,7 @@ import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
@@ -32,6 +33,7 @@ import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Copy_Tuya;
 import cc.hicore.qtool.XposedInit.EnvHook;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQMsgBuilder {
     private static final String TAG = "QQMsgBuilder";
@@ -154,15 +156,19 @@ public class QQMsgBuilder {
             return null;
         }
     }
-    public static Object buildAtInfo(String Useruin, String AtText, short StartPos) {
+    public static Object buildAtInfo(String Useruin, String AtText, short StartPos,long ChannelID) {
         try {
             Object AtInfoObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.AtTroopMemberInfo"));
             if (Useruin.isEmpty()) return null;
             if (Useruin.equals("0")) {
-                MField.SetField(AtInfoObj, "flag", (byte) 1);
+                MField.SetField(AtInfoObj, "flag",byte.class ,(byte) 1);
                 MField.SetField(AtInfoObj, "startPos", StartPos);
                 MField.SetField(AtInfoObj, "textLen", (short) AtText.length());
             } else {
+                if (ChannelID != 0){
+                    MField.SetField(AtInfoObj, "flag",byte.class ,(byte) 0);
+                    MField.SetField(AtInfoObj, "isResvAttr",boolean.class ,true);
+                }
                 MField.SetField(AtInfoObj, "uin", Long.parseLong(Useruin));
                 MField.SetField(AtInfoObj, "startPos", StartPos);
                 MField.SetField(AtInfoObj, "textLen", (short) AtText.length());
@@ -284,7 +290,7 @@ public class QQMsgBuilder {
                     atText = "@" + QQGroupUtils.Group_Get_Member_Name(fakeGroup, result.content) + " ";
                 }
                 summary.append(atText);
-                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length));
+                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length,0));
                 length += atText.length();
                 records.add(QQMsgBuilder.buildText(fakeGroup, atText));
             }
