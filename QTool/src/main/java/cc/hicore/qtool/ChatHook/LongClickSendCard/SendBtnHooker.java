@@ -24,6 +24,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XC_MethodHook;
 
 @XPItem(name = "长按发送卡片消息",itemType = XPItem.ITEM_Hook)
@@ -46,9 +47,28 @@ public class SendBtnHooker{
         container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("getAIORoot","before_method",m -> ((Method)m).getReturnType().equals(ViewGroup.class)));
     }
     @MethodScanner
-    @VerController
+    @VerController(targetVer = QQVersion.QQ_8_8_93)
     public void getBaseChatPieInit(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("basechatpie_init","AIO_doOnCreate_initUI",m ->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.core.BaseChatPie")));
+    }
+    @MethodScanner
+    @VerController(max_targetVer = QQVersion.QQ_8_8_93)
+    public void getBaseChatPieOld(MethodContainer container){
+        Method m;
+        if (HostInfo.getVerCode() > 6440) {
+            m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.core.BaseChatPie",
+                    "s", void.class, new Class[0]);
+        } else if (HostInfo.getVerCode() > 5870) {
+            m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.core.BaseChatPie",
+                    "r", void.class, new Class[0]);
+        } else if (HostInfo.getVerCode() > 5570) {
+            m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.core.BaseChatPie",
+                    "q", void.class, new Class[0]);
+        } else {
+            m = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.core.BaseChatPie",
+                    "f", void.class, new Class[0]);
+        }
+        container.addMethod("basechatpie_init",m);
     }
     @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After,hook_period = XC_MethodHook.PRIORITY_LOWEST)
     @VerController(max_targetVer = QQVersion.QQ_8_8_90)
