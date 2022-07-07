@@ -43,7 +43,9 @@ public class EmoPanel {
         public int type;
         public String MD5;
         public String URL;
+        public String thumb;
     }
+
 
     static String choiceName = "";
 

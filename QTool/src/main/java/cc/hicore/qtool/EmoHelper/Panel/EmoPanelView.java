@@ -247,11 +247,20 @@ public class EmoPanelView extends BottomPopupView {
                         });
                     } else if (info.type == 2) {
                         try {
-                            Glide.with(HookEnv.AppContext)
-                                    .load(new URL(info.URL))
-                                    .placeholder(R.drawable.loading)
-                                    .fitCenter()
-                                    .into(view);
+                            if (TextUtils.isEmpty(info.thumb)){
+                                Glide.with(HookEnv.AppContext)
+                                        .load(new URL(info.URL))
+                                        .placeholder(R.drawable.loading)
+                                        .fitCenter()
+                                        .into(view);
+                            }else {
+                                Glide.with(HookEnv.AppContext)
+                                        .load(new URL(info.thumb))
+                                        .placeholder(R.drawable.loading)
+                                        .fitCenter()
+                                        .into(view);
+                            }
+
                             cacheImageView.add(view);
                             view.setOnClickListener(null);
                         } catch (MalformedURLException e) {
@@ -551,6 +560,7 @@ public class EmoPanelView extends BottomPopupView {
                             EmoPanel.EmoInfo infoItem = new EmoPanel.EmoInfo();
                             infoItem.type = 2;
                             infoItem.URL = "https://cdn.haonb.cc/" + item.getString("URI");
+                            infoItem.thumb = "https://cdn.haonb.cc/" + item.getString("Thumb");
                             infoItem.MD5 = item.getString("MD5");
                             data.add(infoItem);
                         }
