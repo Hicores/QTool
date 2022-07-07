@@ -4,7 +4,6 @@
 [![license](https://img.shields.io/github/license/Hicores/QTool.svg?)](https://www.gnu.org/licenses/agpl-3.0.html)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
 [![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Action&color=cc66cc)](https://github.com/Hicores/QTool/actions)
-[![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Mirror&color=9900ff)](https://down.haonb.cc/CIDL/?C=M&O=D)
 </div>
 
 -----
