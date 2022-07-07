@@ -25,6 +25,7 @@ jobs:
           echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
           git submodule update --init --recursive
           ./gradlew :QTool:assembleRelease
+          mv ./QTool/build/outputs/apk/release/QTool-release.apk ./QTool/build/outputs/apk/release/QTool-v${{ github.run_number }}.apk
         env:
           KEYSTORE_PATH: "../key.jks"
           KEYSTORE_PASSWORD: ${{ secrets.SIGN_PASS }}
@@ -35,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: ${{ !github.event.pull_request }}
         with:
-          path: 'QTool/build/outputs/apk/release/QTool-release.apk'
+          path: 'QTool/build/outputs/apk/release/QTool-v${{ github.run_number }}.apk'
           name: QTool-v${{ github.run_number }}
       - name: Write Commit Message To File
         run: |
@@ -66,7 +67,7 @@ jobs:
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
           chmod +x telegram-bot-api-binary
-          export qtool=$(find artifacts -name "QTool-release.apk")
+          export qtool=$(find artifacts -name "QTool-*.apk")
           ./telegram-bot-api-binary --api-id=${{ secrets.TG_API_ID }} --api-hash=${{ secrets.TG_API_HASH }} --local 2>&1 > /dev/null &
           curl -v "http://127.0.0.1:8081/bot${{ secrets.TG_BOT_TOKEN  }}/sendMediaGroup?chat_id=-1001722417051&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fqtool%22%2C%22caption%22:${ESCAPED}%7D%5D" \
             -F qtool="@$qtool"
@@ -114,6 +115,10 @@ jobs:
     needs:
       - build
     steps:
+      - name: Donwload Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
       - name: mkd
         uses: fifsky/ssh-action@master
         with:
@@ -126,7 +131,7 @@ jobs:
       - name: CopyReleaseInfo
         run: |
           mkdir QTool
-          cp $(find artifacts -name "QTool-release.apk") ./QTool/release.apk
+          cp $(find artifacts -name "QTool-*.apk") ./QTool/QTool-release.apk
           cp $(find artifacts -name "Commit信息.txt") ./QTool/commit信息.txt
       - name: Remote SSH Pusblish
         uses: nerd4ever/ssh-action@master
