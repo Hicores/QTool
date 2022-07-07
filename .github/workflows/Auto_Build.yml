@@ -42,3 +42,68 @@ jobs:
           cat << ENDOFCOMMIT > ./QTool/build/outputs/apk/release/Commit信息.txt
           ${{ github.event.head_commit.message }}
           ENDOFCOMMIT
+  upload-to-telegram:
+    name: Upload Release
+    if: ${{ success() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - telegram-bot-api
+    steps:
+      - name: Donwload Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+      - name: Download Telegram Bot API Binary
+        uses: actions/download-artifact@master
+        with:
+          name: telegram-bot-api-binary
+          path: .
+      - name: Release
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+        run: |
+          ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+          chmod +x telegram-bot-api-binary
+          export release=$(find artifacts -name "release.apk")
+          ./telegram-bot-api-binary --api-id=${{ secrets.TG_API_ID }} --api-hash=${{ secrets.TG_API_HASH }} --local 2>&1 > /dev/null &
+          curl -v "http://127.0.0.1:8081/bot${{ secrets.TG_BOT_TOKEN  }}/sendMediaGroup?chat_id=-1001722417051&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fqtool%22%2C%22caption%22%3A%24%7BESCAPED%7D%7D%5D" \
+            -F qtool="@$release"
+          pkill telegram-bot
+
+  telegram-bot-api:
+    name: Telegram Bot API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Clone Telegram Bot API
+        run: |
+          git clone --recursive https://github.com/tdlib/telegram-bot-api.git
+          git status telegram-bot-api >> telegram-bot-api-status
+      - name: Cache Bot API Binary
+        id: cache-bot-api
+        uses: actions/cache@v2
+        with:
+          path: telegram-bot-api-binary
+          key: CI-telegram-bot-api-${{ hashFiles('telegram-bot-api-status') }}
+      - name: Compile Telegram Bot API
+        if: steps.cache-bot-api.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install make git zlib1g-dev libssl-dev gperf cmake g++
+          cd telegram-bot-api
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=.. ..
+          cmake --build . --target install -j$(nproc)
+          cd ../..
+          ls -l telegram-bot-api/bin/telegram-bot-api*
+          cp telegram-bot-api/bin/telegram-bot-api telegram-bot-api-binary
+      - name: Upload Binary
+        uses: actions/upload-artifact@master
+        with:
+          name: telegram-bot-api-binary
+          path: telegram-bot-api-binary
