@@ -43,7 +43,7 @@ jobs:
           ${{ github.event.head_commit.message }}
           ENDOFCOMMIT
   upload-to-telegram:
-    name: Upload Release
+    name: Upload Telegram
     if: ${{ success() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs:
@@ -108,7 +108,7 @@ jobs:
           name: telegram-bot-api-binary
           path: telegram-bot-api-binary
   upload-to-server:
-    name: Upload Release
+    name: Upload Server
     if: ${{ success() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs:
