@@ -112,9 +112,9 @@ public class QQSessionUtils {
         try {
             int SessionType = (int) Table_Session_Field.isTroop().get(session);
             if (SessionType == 10014) return (String) Table_Session_Field.ChannelID().get(session);
-            return "";
+            return "0";
         } catch (Exception e) {
-            return "";
+            return "0";
         }
     }
 
