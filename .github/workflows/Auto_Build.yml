@@ -107,3 +107,29 @@ jobs:
         with:
           name: telegram-bot-api-binary
           path: telegram-bot-api-binary
+  upload-to-server:
+    name: Upload Release
+    if: ${{ success() && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: mkd
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            mkdir ${{ secrets.DEPLOY_DEST }}v${{ github.run_number }}/
+          host: ${{ secrets.SERVER_IP }}
+          user: ${{ secrets.SERVER_USERNAME }}
+          port: 22
+          pass: ${{ secrets.SERVER_PASSWORD }}
+      - name: Remote SSH Pusblish
+        uses: nerd4ever/ssh-action@master
+        with:
+          from: ./QTool/build/outputs/apk/release/*.*
+          to: /Storage/Link/Dowm/CIDL/v${{ github.run_number }}/
+          sync: local
+          host: ${{ secrets.SERVER_IP }}
+          user: ${{ secrets.SERVER_USERNAME }}
+          port: 22
+          pass: ${{ secrets.SERVER_PASSWORD }}
