@@ -131,6 +131,7 @@ jobs:
       - name: CopyReleaseInfo
         run: |
           mkdir QTool
+          ls artifacts -l
           mv artifacts/QTool-v${{ github.run_number }}.apk QTool/QTool-release.apk
           mv artifacts/commit信息.txt QTool/commit信息.txt
       - name: Remote SSH Pusblish
