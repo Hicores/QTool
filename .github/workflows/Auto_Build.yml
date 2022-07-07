@@ -131,8 +131,8 @@ jobs:
       - name: CopyReleaseInfo
         run: |
           mkdir QTool
-          mv $(find artifacts -name "QTool-*.apk") QTool/QTool-release.apk
-          mv $(find artifacts -name "Commit*.txt") QTool/commit信息.txt
+          mv artifacts/QTool-v${{ github.run_number }}.apk QTool/QTool-release.apk
+          mv artifacts/commit信息.txt QTool/commit信息.txt
       - name: Remote SSH Pusblish
         uses: nerd4ever/ssh-action@master
         with:
