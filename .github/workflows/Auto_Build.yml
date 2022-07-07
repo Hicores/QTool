@@ -123,7 +123,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            mkdir ${{ secrets.DEPLOY_DEST }}v${{ github.run_number }}/
+            mkdir /Storage/Link/Down/CIDL/v${{ github.run_number }}/
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
           port: 22
