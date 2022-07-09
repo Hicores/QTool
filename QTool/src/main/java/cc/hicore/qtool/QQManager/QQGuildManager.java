@@ -9,7 +9,6 @@ import java.util.List;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 
 public class QQGuildManager {

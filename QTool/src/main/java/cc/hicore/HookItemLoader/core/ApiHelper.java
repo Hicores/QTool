@@ -2,9 +2,6 @@ package cc.hicore.HookItemLoader.core;
 
 import android.util.Log;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-
 public class ApiHelper {
     public static <Any> Any invoke(Class<?> ApiClass,Object... AnyParam){
         CoreLoader.XPItemInfo info = CoreLoader.clzInstance.get(ApiClass);

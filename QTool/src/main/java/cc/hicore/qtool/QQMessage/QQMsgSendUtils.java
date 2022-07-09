@@ -15,7 +15,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQManager.QQGuildManager;
-import de.robv.android.xposed.XposedBridge;
 
 public class QQMsgSendUtils {
     private static final int TYPE_TEXT = 1;

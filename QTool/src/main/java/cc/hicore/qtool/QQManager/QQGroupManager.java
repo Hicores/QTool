@@ -1,18 +1,6 @@
 package cc.hicore.qtool.QQManager;
 
-import android.text.TextUtils;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-
 import cc.hicore.HookItemLoader.core.ApiHelper;
-import cc.hicore.LogUtils.LogUtils;
-import cc.hicore.ReflectUtils.MClass;
-import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Change_Name;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Change_Title;
 import cc.hicore.qtool.QQManager.ManagerImpl.Group_Kick;

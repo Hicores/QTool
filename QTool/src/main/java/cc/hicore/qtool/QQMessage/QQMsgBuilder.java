@@ -11,7 +11,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.UUID;
 
 import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
@@ -19,11 +18,9 @@ import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
@@ -32,8 +29,6 @@ import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Copy_Tuya;
 import cc.hicore.qtool.XposedInit.EnvHook;
-import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 public class QQMsgBuilder {
     private static final String TAG = "QQMsgBuilder";

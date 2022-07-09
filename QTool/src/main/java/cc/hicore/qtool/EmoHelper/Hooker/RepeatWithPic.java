@@ -29,7 +29,6 @@ import cc.hicore.Utils.StringUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "带图回复",itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {

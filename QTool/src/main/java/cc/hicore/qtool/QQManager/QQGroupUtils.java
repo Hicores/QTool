@@ -15,7 +15,6 @@ import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.UtilsImpl.Get_Group_Name_By_Contact;
 import cc.hicore.qtool.QQManager.UtilsImpl.Group_Get_Mute_List;
-import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQGroupUtils {
     public static String Group_Get_Name(String GroupUin) {

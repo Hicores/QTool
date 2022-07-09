@@ -3,13 +3,10 @@ package cc.hicore.qtool.VoiceHelper.Panel;
 import java.util.ArrayList;
 
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.VoiceHelper.OnlineHelper.OnlineBundleHelper;
 
 public class VoiceProvider {
     public static final String PROVIDER_LOCAL_FILE = "LocalFile::";
-    public static final String PROVIDER_ONLINE = "OnlineFile::";
     public static final String PROVIDER_LOCAL_SEARCH = " LOCAL_SEARCH::";
-    public static final String PROVIDER_ONLINE_SEARCH = "OnlineSearch::";
 
     public static class FileInfo {
         public String Name;
@@ -49,9 +46,6 @@ public class VoiceProvider {
         } else if (Path.startsWith(PROVIDER_LOCAL_SEARCH)) {
             String searchName = Path.substring(PROVIDER_LOCAL_SEARCH.length());
             return LocalVoiceSearchHelper.searchForName(HookEnv.ExtraDataPath + "Voice/", searchName);
-        } else if (Path.startsWith(PROVIDER_ONLINE_SEARCH)) {
-            String ControlCode = Path.substring(PROVIDER_ONLINE_SEARCH.length());
-            return OnlineBundleHelper.searchForName(ControlCode);
         }
         return new ArrayList<>();
     }

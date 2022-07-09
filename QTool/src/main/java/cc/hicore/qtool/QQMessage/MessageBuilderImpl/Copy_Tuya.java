@@ -10,7 +10,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 
 @XPItem(name = "Copy_Tuya",itemType = XPItem.ITEM_Api)

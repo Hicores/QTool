@@ -25,7 +25,6 @@ import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 public class CoreLoader {
     public static final HashMap<Class<?>,XPItemInfo> allInstance = new HashMap<>();

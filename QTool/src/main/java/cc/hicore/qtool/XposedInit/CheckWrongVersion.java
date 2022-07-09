@@ -2,7 +2,6 @@ package cc.hicore.qtool.XposedInit;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 public class CheckWrongVersion {
     public static void ShowToast1(Context context){

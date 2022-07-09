@@ -24,14 +24,10 @@ import com.lxj.xpopup.widget.VerticalRecyclerView;
 import java.io.File;
 import java.util.ArrayList;
 
-import cc.hicore.Utils.FileUtils;
-import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.VoiceHelper.OnlineHelper.OnlineBundleHelper;
-import cc.hicore.qtool.XposedInit.EnvHook;
 
 public final class VoicePanelController extends BottomPopupView {
     int ControllerMode = 0;
@@ -58,7 +54,7 @@ public final class VoicePanelController extends BottomPopupView {
             protected void bind(@NonNull ViewHolder viewHolder, VoiceProvider.FileInfo fileInfo, int i) {
                 RelativeLayout mItem = (RelativeLayout) viewHolder.getConvertView();
                 ImageView image = mItem.findViewById(R.id.mIcon);
-                if (fileInfo.type == 1 || fileInfo.type == 6)
+                if (fileInfo.type == 1)
                     image.setImageResource(R.drawable.voice_item);
                 else image.setImageResource(R.drawable.folder);
 
@@ -69,18 +65,7 @@ public final class VoicePanelController extends BottomPopupView {
                         QQMsgSender.sendVoice(HookEnv.SessionInfo, fileInfo.Path);
                         dismiss();
                     });
-                } else if (fileInfo.type == 6) {
-                    clickButton.setOnClickListener(v -> {
-                        EnvHook.requireCachePath();
-                        String cachePath = HookEnv.ExtraDataPath + "Cache/" + fileInfo.Name.hashCode();
-                        HttpUtils.ProgressDownload(fileInfo.Path, cachePath, () -> {
-                            QQMsgSender.sendVoice(HookEnv.SessionInfo, cachePath);
-                            new Handler(Looper.getMainLooper()).post(() -> dismiss());
-
-                        }, getContext());
-                    });
-
-                } else {
+                }else {
                     clickButton.setOnLongClickListener(null);
                 }
 
@@ -90,51 +75,16 @@ public final class VoicePanelController extends BottomPopupView {
                 //设置目录和语音的点击信息
                 if (fileInfo.type == 1) {
                     mItem.setOnClickListener(null);
-                    mItem.setOnLongClickListener(v -> {
-                        new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                                .setTitle("选择操作")
-                                .setItems(new String[]{"删除", "上传"}, (dialog, which) -> {
-                                    if (which == 0) {
-                                        FileUtils.deleteFile(new File(fileInfo.Path));
-                                        UpdateProviderDate();
-                                    } else if (which == 1) {
-                                        ArrayList<String> paths = new ArrayList<>();
-                                        paths.add(fileInfo.Path);
-                                        AddVoiceToPacket(paths);
-                                    }
-                                }).show();
-                        return true;
-                    });
-
                 } else if (fileInfo.type == 2) {
                     mItem.setOnClickListener(v -> {
                         provider = provider.getChild(fileInfo.Name);
                         UpdateProviderDate();
-                    });
-                    mItem.setOnLongClickListener(v->{
-                        new AlertDialog.Builder(getContext(), Utils.getDarkModeStatus(getContext()) ? AlertDialog.THEME_HOLO_DARK : AlertDialog.THEME_HOLO_LIGHT)
-                                .setTitle("选择操作")
-                                .setItems(new String[]{"上传"}, (dialog, which) -> {
-                                    if (which == 0) {
-                                        AddVoiceToPacket(searchVoices(fileInfo.Path));
-                                    }
-                                }).show();
-                        return true;
                     });
                 } else if (fileInfo.type == -1) {
                     mItem.setOnClickListener(v -> {
                         provider = provider.getParent();
                         UpdateProviderDate();
                     });
-                    mItem.setOnLongClickListener(null);
-                } else if (fileInfo.type == 5) {
-                    mItem.setOnClickListener(v -> {
-                        provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE + fileInfo.Path);
-                        UpdateProviderDate();
-                    });
-                    mItem.setOnLongClickListener(null);
-                } else if (fileInfo.type == 6) {
-                    mItem.setOnClickListener(null);
                     mItem.setOnLongClickListener(null);
                 }
             }
@@ -184,16 +134,6 @@ public final class VoicePanelController extends BottomPopupView {
                                     provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_SEARCH + search);
                                     UpdateProviderDate();
                                 }
-                            } else if (ControllerMode == 1) {
-                                String search = v.getText().toString();
-                                if (search.trim().isEmpty()) {
-                                    Utils.ShowToastL("必须输入搜索内容");
-                                    return true;
-                                }
-                                provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE_SEARCH + search);
-                                UpdateProviderDate();
-                            } else {
-                                Utils.ShowToastL("这里不支持搜索");
                             }
 
                         }
@@ -219,14 +159,17 @@ public final class VoicePanelController extends BottomPopupView {
         });
 
         imageLocalFile = new ImageView(getContext());
-        imageLocalFile.setImageResource(R.drawable.voice_down);
+        imageLocalFile.setImageResource(R.drawable.convert);
         param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 25), Utils.dip2px(getContext(), 25));
         param.setMargins(Utils.dip2px(getContext(), 12), 10, Utils.dip2sp(getContext(), 5), 10);
         topBar.addView(imageLocalFile, param);
 
         imageLocalFile.setOnClickListener(v -> {
-            ControllerMode = 1;
-            UpdateControlData();
+            recyclerView.setVisibility(GONE);
+            mFrame.setVisibility(VISIBLE);
+
+            mFrame.removeAllViews();
+            mFrame.addView(TTSPanel.initView(getContext()));
         });
     }
 
@@ -260,38 +203,7 @@ public final class VoicePanelController extends BottomPopupView {
         if (ControllerMode == 0) {
             provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_FILE);
             UpdateProviderDate();
-        } else if (ControllerMode == 1) {
-            provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_ONLINE);
-            UpdateProviderDate();
         }
-    }
-
-    private void AddVoiceToPacket(ArrayList<String> Paths) {
-        new Handler(Looper.getMainLooper())
-                .post(() -> {
-                    ProgressDialog uploadProgress = new ProgressDialog(getContext(), 3);
-                    uploadProgress.setTitle("正在处理...");
-                    uploadProgress.setMessage("正在上传....");
-                    uploadProgress.setCancelable(false);
-                    uploadProgress.show();
-                    new Thread(() -> {
-                        try {
-                            int sumAll = Paths.size();
-                            int curr = 0;
-                            for (String Path : Paths){
-                                OnlineBundleHelper.RequestUpload(new File(Path).getName(), Path);
-                                curr++;
-                                int finalCurr = curr;
-                                new Handler(Looper.getMainLooper()).post(()->uploadProgress.setMessage("正在上传("+ finalCurr +"/"+sumAll+")..."));
-                            }
-                            Utils.ShowToast("上传结束");
-                        } catch (Exception e) {
-                            Utils.ShowToastL("发生错误:\n" + e);
-                        } finally {
-                            new Handler(Looper.getMainLooper()).post(uploadProgress::dismiss);
-                        }
-                    }).start();
-                });
     }
     public VoicePanelController(@NonNull Context context) {
         super(context);

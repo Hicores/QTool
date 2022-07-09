@@ -1,7 +1,5 @@
 package cc.hicore.qtool.JavaPlugin.Controller;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -17,12 +15,10 @@ import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
-import de.robv.android.xposed.XposedBridge;
 
 public class PluginMessageProcessor {
     static HashMap<String, String> fileDLCache = new HashMap<>();

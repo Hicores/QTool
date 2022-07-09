@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -21,7 +20,6 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;

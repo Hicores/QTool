@@ -18,7 +18,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 @XPItem(name = "屏蔽空间热播广告",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
