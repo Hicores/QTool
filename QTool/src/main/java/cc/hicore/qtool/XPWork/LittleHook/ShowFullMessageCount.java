@@ -40,7 +40,7 @@ public class ShowFullMessageCount {
         return param -> param.args[4]=Integer.MAX_VALUE;
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor after(){
         return param -> {
             int Type = (int) param.args[1];
