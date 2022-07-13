@@ -235,7 +235,13 @@ public class MethodScannerWorker {
             Method[] findResult = DexFinder.getInstance().findMethodByString(newNode.name);
             for (Method m : findResult){
                 try{
-                    if (newNode.checker.onMethod(m))return m;
+                    Object ret = newNode.checker.onMethod(m);
+                    if (ret instanceof Boolean){
+                        if ((Boolean) ret)return m;
+                    }
+                    if (ret instanceof Method){
+                        return (Member) ret;
+                    }
                 }catch (Throwable th){
 
                 }
@@ -255,7 +261,13 @@ public class MethodScannerWorker {
             Method[] findResult = DexFinder.getInstance().findMethodInvoking(linkNode);
             for (Method m : findResult){
                 try{
-                    if (newNode.checker.onMethod(m))return m;
+                    Object ret = newNode.checker.onMethod(m);
+                    if (ret instanceof Boolean){
+                        if ((Boolean) ret)return m;
+                    }
+                    if (ret instanceof Method){
+                        return (Member) ret;
+                    }
                 }catch (Throwable th){
 
                 }
@@ -275,7 +287,13 @@ public class MethodScannerWorker {
                 Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
                 for (Method m : findResult){
                     try{
-                        if (newNode.checker.onMethod(m))return m;
+                        Object ret = newNode.checker.onMethod(m);
+                        if (ret instanceof Boolean){
+                            if ((Boolean) ret)return m;
+                        }
+                        if (ret instanceof Method){
+                            return (Member) ret;
+                        }
                     }catch (Throwable th){
 
                     }

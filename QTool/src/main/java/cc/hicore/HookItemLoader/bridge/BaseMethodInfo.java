@@ -12,6 +12,6 @@ public class BaseMethodInfo {
     public String id;
     public CoreLoader.XPItemInfo bandToInfo;
     public interface MethodChecker{
-        boolean onMethod(Member member);
+        Object onMethod(Member member);
     }
 }
