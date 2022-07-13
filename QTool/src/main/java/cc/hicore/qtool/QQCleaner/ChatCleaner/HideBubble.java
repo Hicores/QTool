@@ -12,6 +12,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -28,7 +30,7 @@ public class HideBubble{
         ui.targetID = 2;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook_1", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1","getView", View.class,new Class[]{
@@ -42,6 +44,12 @@ public class HideBubble{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 boolean.class
         }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_1","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_2","insertToList ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message")));
     }
     @VerController
     @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
