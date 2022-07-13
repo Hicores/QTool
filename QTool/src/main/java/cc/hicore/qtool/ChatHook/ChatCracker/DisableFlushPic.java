@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -15,7 +16,10 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -36,7 +40,7 @@ public class DisableFlushPic{
     }
 
     @MethodScanner
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public void getAllMethod(MethodContainer container){
         container.addMethod("replaceRecord",MMethod.FindMethod("com.tencent.mobileqq.app.FlashPicHelper",null,boolean.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")}));
@@ -51,6 +55,18 @@ public class DisableFlushPic{
                 View.class,
                 ViewGroup.class
         }));
+    }
+    @MethodScanner
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    public void getAllMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("replaceRecord","FlashPicHelper",m ->
+                MMethod.FindMethod(m.getDeclaringClass(),null,boolean.class,new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.data.MessageRecord")})));
+
+        container.addMethod(MethodFinderBuilder.newFinderWhichMethodInvoking("replaceRecord2",MMethod.FindMethod("com.tencent.mobileqq.pic.api.IPicFlash","isFlashPicMsg",boolean.class, new Class[]{Classes.MessageRecord()}),
+               m->m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.item") && !m.getDeclaringClass().getName().contains("ItemBuilder")));
+
+        container.addMethod(MethodFinderBuilder.newFinderByString("replaceRecord3","AIO_ChatAdapter_getView",m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
     }
 
     @XPExecutor(methodID = "replaceRecord",period = XPExecutor.After)
