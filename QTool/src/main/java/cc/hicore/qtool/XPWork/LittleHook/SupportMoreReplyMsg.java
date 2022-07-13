@@ -9,10 +9,12 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "解锁更过类型消息左滑回复",itemType = XPItem.ITEM_Hook)
+@XPItem(name = "解锁更多类型消息左滑回复",itemType = XPItem.ITEM_Hook)
 public class SupportMoreReplyMsg {
     @VerController
     @UIItem
@@ -24,10 +26,17 @@ public class SupportMoreReplyMsg {
         ui.targetID = 1;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",getMethod());
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","isInterestedMotionEvent() is called. ev",m->
+            MMethod.FindMethod(m.getDeclaringClass(), "H", boolean.class, new Class[0])
+        ));
     }
     @VerController
     @XPExecutor(methodID = "hook")

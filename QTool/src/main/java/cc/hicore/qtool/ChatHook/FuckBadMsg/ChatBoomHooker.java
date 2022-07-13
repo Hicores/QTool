@@ -27,6 +27,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -101,7 +103,7 @@ public class ChatBoomHooker{
                     HookEnv.Config.setInt("Set","Chat_Too_Long_Length",Integer.parseInt(ed_long_length.getText().toString()));
                 }).show();
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookItem(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
@@ -112,6 +114,14 @@ public class ChatBoomHooker{
         container.addMethod("bugFix",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemLayout30"),null,View.class,new Class[]{
                 Context.class, View.class, Bundle.class
         }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookItem_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        container.addMethod(MethodFinderBuilder.newFinderByString("bugFix","Layout30",m->MMethod.FindMethod(m.getDeclaringClass(),null,View.class,new Class[]{
+                Context.class, View.class, Bundle.class
+        })));
     }
     @VerController
     @XPExecutor(methodID = "hook")

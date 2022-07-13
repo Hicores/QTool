@@ -13,7 +13,7 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用Toggle",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_88)
+@XPItem(name = "禁用Toggle",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_88,max_targetVer = QQVersion.QQ_8_9_0)
 public class ToggleKiller{
     @VerController
     @UIItem
