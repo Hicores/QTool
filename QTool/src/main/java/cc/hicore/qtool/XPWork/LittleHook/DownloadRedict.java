@@ -30,6 +30,7 @@ public class DownloadRedict{
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
         ui.name = "下载重定向";
+        ui.desc = "点击设置重定向路径";
         ui.groupName = "功能辅助";
         ui.targetID = 1;
         ui.type = 1;
@@ -66,11 +67,6 @@ public class DownloadRedict{
         LinearLayout mRoot = new LinearLayout(context);
         mRoot.setOrientation(LinearLayout.VERTICAL);
 
-        CheckBox box = new CheckBox(context);
-        box.setText("开启重定向");
-        box.setChecked(HookEnv.Config.getBoolean("Set","DownloadRedictOpen",false));
-        mRoot.addView(box);
-
         EditText ed = new EditText(context);
         ed.setText(HookEnv.Config.getString("Set","DownloadRedictPath",HookEnv.AppContext.getExternalCacheDir().getParent()+"/Tencent/QQfile_recv/"));
         mRoot.addView(ed);
@@ -79,24 +75,20 @@ public class DownloadRedict{
                 .setTitle("下载重定向设置")
                 .setView(mRoot)
                 .setNegativeButton("保存", (dialog, which) -> {
-                    if (box.isChecked()){
-                        String path = ed.getText().toString();
-                        if (!checkMkDir(path)){
-                            new AlertDialog.Builder(context)
-                                    .setTitle("警告")
-                                    .setMessage("设置的路径没有访问权限,请输入有访问权限的路径")
-                                    .setNegativeButton("确定", (dialog1, which1) -> {
+                    String path = ed.getText().toString();
+                    if (!checkMkDir(path)){
+                        new AlertDialog.Builder(context)
+                                .setTitle("警告")
+                                .setMessage("设置的路径没有访问权限,请输入有访问权限的路径")
+                                .setNegativeButton("确定", (dialog1, which1) -> {
 
-                                    }).show();
-                            return;
-                        }
-                        HookEnv.Config.setBoolean("Set","DownloadRedictOpen",true);
-                        if (!path.endsWith("/"))path = path + "/";
-                        HookEnv.Config.setString("Set","DownloadRedictPath",path);
-                        Utils.ShowToast("重启QQ生效");
-                    }else {
-                        HookEnv.Config.setBoolean("Set","DownloadRedictOpen",false);
+                                }).show();
+                        return;
                     }
+                    HookEnv.Config.setBoolean("Set","DownloadRedictOpen",true);
+                    if (!path.endsWith("/"))path = path + "/";
+                    HookEnv.Config.setString("Set","DownloadRedictPath",path);
+                    Utils.ShowToast("重启QQ生效");
 
                 }).show();
     }

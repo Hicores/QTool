@@ -30,6 +30,7 @@ public class HideSlideItem{
         UIInfo ui = new UIInfo();
         ui.name = "主界面侧滑净化";
         ui.groupName = "主界面净化";
+        ui.desc = "点击设置净化的项目";
         ui.type = 1;
         ui.targetID = 2;
         return ui;

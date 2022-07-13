@@ -18,7 +18,7 @@ public class SupportMoreReplyMsg {
     @UIItem
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
-        ui.name = "解锁更过类型消息左滑回复";
+        ui.name = "允许更多类型消息左滑回复";
         ui.groupName = "聊天界面增强";
         ui.type = 1;
         ui.targetID = 1;

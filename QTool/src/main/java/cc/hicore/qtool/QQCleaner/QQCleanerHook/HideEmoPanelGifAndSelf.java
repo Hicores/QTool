@@ -29,6 +29,7 @@ public class HideEmoPanelGifAndSelf{
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
         ui.name = "隐藏表情面板图标";
+        ui.desc = "点击设置隐藏的图标";
         ui.type = 1;
         ui.targetID = 2;
         ui.groupName = "聊天界面净化";
