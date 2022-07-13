@@ -39,7 +39,7 @@ public class GroupHelperHooker{
         container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.troop.troopsetting.activity.TroopSettingActivity","doOnCreate",boolean.class,new Class[]{Bundle.class}));
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor worker(){
         return param -> {
             View mGetItem = MField.GetFirstField(param.thisObject,MClass.loadClass("com.tencent.mobileqq.widget.QFormSimpleItem"));
