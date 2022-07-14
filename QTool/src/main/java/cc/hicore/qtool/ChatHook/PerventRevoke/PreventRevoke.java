@@ -52,15 +52,25 @@ public class PreventRevoke{
         container.addMethod("hook_1",MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade",null,void.class,new Class[]{
                 ArrayList.class,boolean.class
         }));
+
+        container.addMethod("hook_3",MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager",null,void.class,new Class[]{
+                ArrayList.class
+        }));
+
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getViewAdapter(MethodContainer container){
         container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
         }));
-        container.addMethod("hook_3",MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager",null,void.class,new Class[]{
-                ArrayList.class
-        }));
-
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getViewAdapter_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_2","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
     }
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner

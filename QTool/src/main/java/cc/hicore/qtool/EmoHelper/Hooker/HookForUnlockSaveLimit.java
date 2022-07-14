@@ -12,7 +12,9 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -21,6 +23,7 @@ import cc.hicore.qtool.HookEnv;
 
 @XPItem(name = "表情收藏上限后存在本地",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
 public class HookForUnlockSaveLimit{
+    CoreLoader.XPItemInfo info;
     @VerController
     @UIItem
     public UIInfo getUI(){
@@ -36,13 +39,15 @@ public class HookForUnlockSaveLimit{
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.emosm.api.impl.FavroamingDBManagerServiceImpl", "getEmoticonDataList", List.class, new Class[0]));
         container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.emosm.favroaming.EmoAddedAuthCallback", "handleMessage", boolean.class, new Class[]{Message.class}));
+        container.addMethod(MethodFinderBuilder.newFinderByString("get_constant","FavEmoConstant",m ->true));
     }
     @VerController
     @XPExecutor(methodID = "hook_1")
     public BaseXPExecutor worker(){
         return param -> {
-            MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "a", int.class, 2000);
-            MField.SetField(null, MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.FavEmoConstant"), "b", int.class, 2000);
+            Class<?> clz = info.scanResult.get("get_constant").getDeclaringClass();
+            MField.SetField(null, clz, "a", int.class, 2000);
+            MField.SetField(null, clz, "b", int.class, 2000);
         };
     }
     @VerController
