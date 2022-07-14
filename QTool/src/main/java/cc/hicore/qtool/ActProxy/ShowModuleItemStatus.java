@@ -55,12 +55,24 @@ public class ShowModuleItemStatus {
         if(!info.isVersionAvailable)return "功能:版本不匹配";
         if(!info.cacheException.isEmpty())return "功能:存在加载异常";
         if (!info.ExecutorException.isEmpty())return "功能:存在执行异常";
+        for (String s : info.scanResult.keySet()){
+            Member m  = info.scanResult.get(s);
+            if (m == null){
+                return "功能:存在加载异常";
+            }
+        }
         return "功能:无异常";
     }
     private static int checkAvailable(CoreLoader.XPItemInfo info){
         if(!info.isVersionAvailable)return Color.GRAY;
         if(!info.cacheException.isEmpty())return Color.RED;
         if (!info.ExecutorException.isEmpty())return Color.RED;
+        for (String s : info.scanResult.keySet()){
+            Member m  = info.scanResult.get(s);
+            if (m == null){
+                return Color.RED;
+            }
+        }
         return Color.BLACK;
     }
     private static void showItemDetail(Context context,CoreLoader.XPItemInfo info){

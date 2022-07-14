@@ -27,6 +27,7 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Common_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Common_Rebuild_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Copy_Tuya;
 import cc.hicore.qtool.XposedInit.EnvHook;
 
@@ -308,11 +309,6 @@ public class QQMsgBuilder {
         return ApiHelper.invoke(Build_Common_Msg.class,type);
     }
     public static Object rebuild_message(Object record){
-        try{
-            return MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory"),null,MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),record);
-        }catch (Exception e){
-            LogUtils.error("build_common_message_record",e);
-            return null;
-        }
+        return ApiHelper.invoke(Common_Rebuild_Msg.class,record);
     }
 }
