@@ -9,7 +9,7 @@ public class ApiHelper {
             try {
                 return (Any) info.apiExecutor.invoke(info.Instance,AnyParam);
             }catch (Throwable th){
-                info.ExecutorException.put(info.apiExecutor+"", Log.getStackTraceString(th));
+                info.ExecutorException.put(info.apiExecutor+"", Log.getStackTraceString(th.getCause()));
                 return null;
             }
         }else {
