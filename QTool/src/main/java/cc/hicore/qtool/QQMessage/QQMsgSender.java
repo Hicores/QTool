@@ -18,6 +18,8 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_sendMix;
+import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_sendReply;
 import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_sentAntEmo;
 
 public class QQMsgSender {
@@ -106,35 +108,11 @@ public class QQMsgSender {
     }
 
     public static void sendMix(Object _Session, Object mixRecord) {
-        try {
-            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                    MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"),
-                    MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"),
-                    int.class
-            });
-            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), null, MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
-            mMethod.invoke(Call, HookEnv.AppInterface, mixRecord, _Session, 0);
-        } catch (Exception e) {
-            LogUtils.error("sendMix", e);
-        }
+        ApiHelper.invoke(MsgApi_sendMix.class,_Session,mixRecord);
     }
 
     public static void sendReply(Object _Session, Object replyRecord) {
-        try {
-            Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), null, MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
-            Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
-                    MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                    MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
-                    MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
-                    int.class,
-                    int.class,
-                    boolean.class
-            });
-            mMethod.invoke(Call, QQEnvUtils.getAppRuntime(), replyRecord, _Session, 2, 0, false);
-        } catch (Exception e) {
-            LogUtils.error("sendReply", e);
-        }
+        ApiHelper.invoke(MsgApi_sendReply.class,_Session,replyRecord);
     }
 
     public static void sendTuya(Object _Session, Object strikeMsg) {
