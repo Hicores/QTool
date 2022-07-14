@@ -29,6 +29,7 @@ import cc.hicore.Utils.StringUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "带图回复",itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {
@@ -200,12 +201,22 @@ public class RepeatWithPic {
     static Object chatPie = null;
     public static boolean IsNowReplying() {
         try {
-            Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.HelperProvider"));
-            Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.IHelper"),new Class[]{int.class});
-            Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_0){
+                Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bk"));
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bp"),new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
 
-            Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
-            return SourceInfo != null;
+            }else {
+                Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.HelperProvider"));
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.IHelper"),new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
+            }
+
         } catch (Exception e) {
             LogUtils.error("IsNowReplying", e);
             return false;
