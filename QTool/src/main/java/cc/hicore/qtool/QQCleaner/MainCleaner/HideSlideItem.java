@@ -18,6 +18,7 @@ import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -35,7 +36,7 @@ public class HideSlideItem{
         ui.targetID = 2;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         Method[] m = new Method[2];
@@ -50,7 +51,43 @@ public class HideSlideItem{
         container.addMethod("hook1",m[0]);
         container.addMethod(MethodFinderBuilder.newFinderByString("hook2","VipInfoHandler payRuleUin changed",m2->m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe")));
     }
-    @VerController
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook1","parse() group == null || group.length() == 0",m->{
+            for (Method m1 : m.getDeclaringClass().getDeclaredMethods()){
+                if (m1.getReturnType().isArray()){
+                    return m1;
+                }
+            }
+            return null;
+        }));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook2","VipInfoHandler payRuleUin changed",m2->m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe")));
+
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @XPExecutor(methodID = "hook1",period = XPExecutor.After)
+    public BaseXPExecutor worker1_890(){
+        return param -> {
+            Object mArr = param.getResult();
+            cacheItemData = new HashMap<>();
+            List<String> HideSingle = HookEnv.Config.getList("Set","HideSlideItem",true);
+            ArrayList saveArrays = new ArrayList();
+            for (int i = 0;i< Array.getLength(mArr);i++){
+                Object item = Array.get(mArr,i);
+                String Signer = MField.GetFirstField(item,String.class);
+                String Title = MField.GetField(MField.GetField(item,"f"),"a",String.class);
+                HideSlideItem.cacheItemData.put(Signer,Title);
+                if (!HideSingle.contains(Signer))saveArrays.add(item);
+            }
+            Object newArr = Array.newInstance(mArr.getClass().getComponentType(),saveArrays.size());
+            for (int i=0;i<saveArrays.size();i++){
+                Array.set(newArr,i,saveArrays.get(i));
+            }
+            param.setResult(newArr);
+        };
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @XPExecutor(methodID = "hook1",period = XPExecutor.After)
     public BaseXPExecutor worker1(){
         return param -> {
