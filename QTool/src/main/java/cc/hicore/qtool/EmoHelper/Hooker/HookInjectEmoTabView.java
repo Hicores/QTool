@@ -15,6 +15,7 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -74,7 +75,7 @@ public class HookInjectEmoTabView{
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
     public void getPanelIconCreateMethod_8893(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create","initui() simple mode  bottomMargin 1 = ",m -> m.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper")));
+        container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create","initui() simple mode  bottomMargin 1 = ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.helper")));
         container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","em_aio_input_box",m->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent")));
     }
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
@@ -109,7 +110,7 @@ public class HookInjectEmoTabView{
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
             System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            Object MenuItem = MClass.NewInstance(arr.getClass().getComponentType(), 3100, "QT保存");
             MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
             Array.set(ret, 0, MenuItem);
 
@@ -137,7 +138,7 @@ public class HookInjectEmoTabView{
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
             System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            Object MenuItem = MClass.NewInstance(arr.getClass().getComponentType(), 3100, "QT保存");
             MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
             Array.set(ret, 0, MenuItem);
 
@@ -181,7 +182,7 @@ public class HookInjectEmoTabView{
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
             System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "QT保存");
+            Object MenuItem = MClass.NewInstance(arr.getClass().getComponentType(), 3100, "QT保存");
             MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
             Array.set(ret, 0, MenuItem);
 

@@ -17,6 +17,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -55,7 +57,17 @@ public class QQVoicePanelInject{
         container.addMethod("hook_2",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder")));
         container.addMethod("hook_3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.PttItemBuilder", "a", void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
+
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getSimpleInit(MethodContainer container){
         container.addMethod("hook_4",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getSimpleInit_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "a", void.class, new Class[0])));
     }
     @VerController
     @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
@@ -83,7 +95,7 @@ public class QQVoicePanelInject{
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
             System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));
-            Object MenuItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem"), 3100, "保存到QT");
+            Object MenuItem = MClass.NewInstance(arr.getClass().getComponentType(), 3100, "保存到QT");
             MField.SetField(MenuItem, "c", Integer.MAX_VALUE - 1);
             Array.set(ret, 0, MenuItem);
 

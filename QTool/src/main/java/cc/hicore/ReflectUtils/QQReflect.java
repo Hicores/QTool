@@ -10,7 +10,7 @@ public class QQReflect {
                 if (med.getParameterTypes().length == 1) {
                     if (med.getParameterTypes()[0] == View.class) {
                         Class ReturnClz = med.getReturnType();
-                        if (ReturnClz.isArray() && ReturnClz.getComponentType()== MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem")) {
+                        if (ReturnClz.isArray()) {
                             return med;
                         }
                     }
