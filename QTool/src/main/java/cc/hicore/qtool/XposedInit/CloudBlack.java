@@ -5,12 +5,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
+import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 
+@XPItem(itemType = XPItem.ITEM_Api,name = "检测",period = XPItem.Period_InitData)
 public class CloudBlack {
+    @VerController
+    @CommonExecutor
+    public void CommonWorker(){
+        new Thread(CloudBlack::startCheckCloudBlack).start();
+    }
     public static void startCheckCloudBlack(){
         try{
             Thread.sleep(10000);

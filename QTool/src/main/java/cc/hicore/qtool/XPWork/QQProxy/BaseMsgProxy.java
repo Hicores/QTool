@@ -6,6 +6,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
@@ -14,7 +16,7 @@ import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 public class BaseMsgProxy{
     private static final String TAG = "BaseMsgProxy";
     private static final long StartTime = System.currentTimeMillis();
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), "a", void.class, new Class[]{
@@ -23,6 +25,11 @@ public class BaseMsgProxy{
                 boolean.class, boolean.class, boolean.class, boolean.class,
                 MClass.loadClass("com.tencent.imcore.message.BaseMessageManager$AddMessageContext")
         }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","addMessage set sendmsg extra ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message.")));
     }
     @VerController
     @XPExecutor(methodID = "hook")
