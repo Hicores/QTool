@@ -10,6 +10,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -68,7 +70,7 @@ public class DictHook{
         };
     }
     @MethodScanner
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public void getMethod(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon",void.class,new Class[]{
                 MClass.loadClass("com.tencent.common.app.business.BaseQQAppInterface"),
@@ -79,6 +81,13 @@ public class DictHook{
         }));
         container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.magicface.drawable.PngFrameUtil",null,int.class,new Class[]{int.class}));
         container.addMethod("hook_3",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticon.api.impl.EmojiManagerServiceImpl"),"getMagicFaceSendAccessControl",boolean.class,new Class[0]));
+    }
+    @MethodScanner
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    public void getMethod_890(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon"));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_2","func checkRandomPngExist, exception:",m-> MMethod.FindMethod(m.getDeclaringClass(),null,int.class,new Class[]{int.class})));
+        container.addMethod("hook_3",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.emoticon.api.impl.EmojiManagerServiceImpl"),"getMagicFaceSendAccessControl"));
     }
     int CurrentRamdonDict = -1;
     private void selectCFGGame(XC_MethodHook.MethodHookParam params){
