@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Method;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -17,6 +18,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -37,13 +40,24 @@ public class FileFailureRename{
         ui.type = 1;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper"), null, void.class,
                 new Class[]{MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTTransferKey"), int.class,
                         MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTUploadCompleteInfo")}));
     }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        for (Method m : MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper").getDeclaredMethods()){
+            if (m.getReturnType().equals(void.class) && m.getParameterCount() == 3 && m.getParameterTypes()[1].equals(int.class)){
+                container.addMethod("hook",m);
+                break;
+            }
+        }
+    }
+
     @VerController
     @XPExecutor(methodID = "hook")
     public BaseXPExecutor worker(){
