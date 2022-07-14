@@ -38,12 +38,8 @@ public class ZPlanKiller{
     @VerController(targetVer = QQVersion.QQ_8_8_90)
     @MethodScanner
     public void getHookMethod_8_8_95(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
-                List.class,List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
-        }));
-        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl","isZPlanAccessible",boolean.class,new Class[]{
-                long.class,long.class
-        }));
+        container.addMethod("hook_1",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl"),"getZPlanWhiteListFromNet"));
+        container.addMethod("hook_2",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl"),"isZPlanAccessible"));
     }
     @VerController
     @XPExecutor(methodID = "hook_1")

@@ -15,6 +15,7 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import de.robv.android.xposed.XposedBridge;
 
 @SuppressLint("ResourceType")
 public class RepeaterHelper {
@@ -77,6 +78,7 @@ public class RepeaterHelper {
                         Repeater.Repeat(HookEnv.SessionInfo, v.getTag());
                     } catch (Exception e) {
                         Utils.ShowToast("复读发生错误:\n" + e);
+                        XposedBridge.log(e);
                     }
                 });
                 baseChatItem.addView(imageButton, param);

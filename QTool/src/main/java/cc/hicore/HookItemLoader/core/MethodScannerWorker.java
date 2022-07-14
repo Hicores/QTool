@@ -239,7 +239,7 @@ public class MethodScannerWorker {
                     if (ret instanceof Boolean){
                         if ((Boolean) ret)return m;
                     }
-                    if (ret instanceof Method){
+                    if (ret instanceof Member){
                         return (Member) ret;
                     }
                 }catch (Throwable th){
@@ -265,7 +265,7 @@ public class MethodScannerWorker {
                     if (ret instanceof Boolean){
                         if ((Boolean) ret)return m;
                     }
-                    if (ret instanceof Method){
+                    if (ret instanceof Member){
                         return (Member) ret;
                     }
                 }catch (Throwable th){
@@ -291,7 +291,7 @@ public class MethodScannerWorker {
                         if (ret instanceof Boolean){
                             if ((Boolean) ret)return m;
                         }
-                        if (ret instanceof Method){
+                        if (ret instanceof Member){
                             return (Member) ret;
                         }
                     }catch (Throwable th){
