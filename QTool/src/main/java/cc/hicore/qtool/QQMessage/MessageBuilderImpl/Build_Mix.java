@@ -24,7 +24,7 @@ public class Build_Mix {
     @MethodScanner
     @VerController
     public void MethodScaner(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("method","sendReplyMessage chatMessage is null", m->true));
+        container.addMethod(MethodFinderBuilder.newFinderByString("method"," MessageForWantGiftMsg.GIFT_SENDER_UIN  ", m->true));
     }
 
     @ApiExecutor
