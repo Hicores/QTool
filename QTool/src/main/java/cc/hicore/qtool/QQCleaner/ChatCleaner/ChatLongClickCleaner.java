@@ -3,6 +3,7 @@ package cc.hicore.qtool.QQCleaner.ChatCleaner;
 import android.app.AlertDialog;
 import android.content.Context;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -56,11 +59,25 @@ public class ChatLongClickCleaner{
         ui.desc = "点击设置净化的项目";
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenu"),null,void.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.utils.dialogutils.QQCustomMenuItem")
+        }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_before","chatAdapter onLongClick message msgUid = ",m->m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity")));
+        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("hook","hook_before",m ->{
+            if (m instanceof Method){
+                Method cm = (Method) m;
+                if (cm.getReturnType().equals(void.class) && cm.getParameterCount() == 1 && m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.utils.dialogutils")){
+                    return true;
+                }
+            }
+            return false;
         }));
     }
     @VerController
