@@ -7,6 +7,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -26,7 +28,7 @@ public class ChangeTipToSystemMsg{
         return ui;
     }
     @MethodScanner
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public void getHookMethod(MethodContainer container ){
         container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
                 String.class,
@@ -34,6 +36,11 @@ public class ChangeTipToSystemMsg{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 boolean.class
         }));
+    }
+    @MethodScanner
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","insertToList ", m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message")));
     }
     @VerController
     @XPExecutor(methodID = "hook")
