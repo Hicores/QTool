@@ -12,6 +12,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
@@ -28,7 +30,7 @@ public class HookForUploadAvatar{
         ui.targetID = 1;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container) throws NoSuchMethodException {
         container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.pic.compress.Utils", null, boolean.class, new Class[]{
@@ -42,6 +44,20 @@ public class HookForUploadAvatar{
         container.addMethod("hook_3",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.avatar.UploadItem"),"a",new Class[]{
                 int.class
         }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container) throws NoSuchMethodException {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","options == null || TextUtils.isEmpty(filepath)",m->
+                MMethod.FindMethod(m.getDeclaringClass(), null, boolean.class, new Class[]{
+                String.class,
+                Bitmap.class,
+                int.class,
+                String.class,
+                MClass.loadClass("com.tencent.mobileqq.pic.CompressInfo")
+        })));
+        container.addMethod("hook_2",Bitmap.class.getMethod("compress", Bitmap.CompressFormat.class, int.class, OutputStream.class));
+        container.addMethod(MethodFinderBuilder.newFinderByMethodInvoking("hook_3",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.troop.avatar.TroopUploadingThread"),"h"),m-> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.troop.avatar") && m.getDeclaringClass().getSimpleName().length() == 1));
     }
     @VerController
     @XPExecutor(methodID = "hook")

@@ -44,7 +44,7 @@ public class RepeatWithPic {
         ui.targetID = 1;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook_1",MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
@@ -63,6 +63,19 @@ public class RepeatWithPic {
                 String.class,
                 Bundle.class
         }));
+        container.addMethod("hook_3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.photo.PhotoListPanel", null, boolean.class, new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"),
+                List.class, boolean.class}));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.imcore.message.BaseQQMessageFacade", "a", void.class, new Class[]{
+                MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
+                MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver")}));
+
+
+        container.addMethod("hook_2",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.CustomEmotionSenderUtil"), "sendCustomEmotion"));
         container.addMethod("hook_3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.photo.PhotoListPanel", null, boolean.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"),
                 List.class, boolean.class}));
