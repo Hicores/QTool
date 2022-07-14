@@ -1,5 +1,6 @@
 package cc.hicore.ReflectUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Objects;
@@ -41,6 +42,10 @@ public class MMethod {
 
     public static <T> T CallMethodNoParam(Object obj, String MethodName, Class<?> ReturnType) throws Exception {
         return CallMethodParams(obj, MethodName, ReturnType);
+    }
+    public static <T> T CallMethodWithName(Object obj,String MethodName,Object... params) throws InvocationTargetException, IllegalAccessException {
+        Method m = FindMethodByName(obj.getClass(),MethodName);
+        return (T) m.invoke(obj,params);
     }
 
     public static <T, V> T CallMethodSingle(Object obj, String MethodName, Class<?> ReturnType, V Value) throws Exception {
@@ -192,6 +197,13 @@ public class MMethod {
 
                 if (method.getReturnType().equals(ReturnType)) return method;
             }
+        }
+        return null;
+    }
+    public static Method FindMethodByName(Class clz, String Name){
+        Lopp:
+        for (Method method : clz.getDeclaredMethods()) {
+            if (method.getName().equals(Name))return method;
         }
         return null;
     }

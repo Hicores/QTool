@@ -8,6 +8,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
@@ -33,7 +34,7 @@ public class CoreLoader {
     public static class XPItemInfo{
         public Object Instance;
 
-        public HashMap<String,String> ExecutorException = new HashMap<>();
+        public HashMap<String,String> ExecutorException = new LinkedHashMap<>();
         public ArrayList<String> cacheException = new ArrayList<>();
 
         public XPItem item;
@@ -45,8 +46,8 @@ public class CoreLoader {
         public boolean isApi;
         public Method apiExecutor;
 
-        public HashMap<String,BaseMethodInfo> NeedMethodInfo = new HashMap<>();
-        public HashMap<String, Member> scanResult = new HashMap<>();
+        public HashMap<String,BaseMethodInfo> NeedMethodInfo = new LinkedHashMap<>();
+        public HashMap<String, Member> scanResult = new LinkedHashMap<>();
 
         public ArrayList<Method> fitMethods = new ArrayList<>();
 
