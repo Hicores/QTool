@@ -10,6 +10,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
@@ -27,11 +29,23 @@ public class ShowFullMessageCount {
         ui.type = 1;
         return ui;
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.widget.CustomWidgetUtil"),null,void.class,new Class[]{
                 TextView.class, int.class, int.class, int.class, int.class, String.class
+        }));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void getHookMethod_890(MethodContainer container ){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","NEW",m->{
+            if (m.getDeclaringClass().getName().startsWith("com.tencent.widget")){
+                return MMethod.FindMethod(m.getDeclaringClass(),null,void.class,new Class[]{
+                        TextView.class, int.class, int.class, int.class, int.class, String.class
+                });
+            }
+            return false;
         }));
     }
     @VerController
