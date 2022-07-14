@@ -10,6 +10,8 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.LayoutUtils;
@@ -48,13 +50,18 @@ public class AlwaysShowAvatar{
 
 
     @MethodScanner
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public void getHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
                 int.class,
                 View.class,
                 ViewGroup.class
         }));
+    }
+    @MethodScanner
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    public void getHookMethod_890(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
     }
 
 }
