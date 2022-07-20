@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -30,6 +29,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -106,11 +106,7 @@ public class ChatBoomHooker{
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookItem(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView(container);
         container.addMethod("bugFix",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.view.StructMsgItemLayout30"),null,View.class,new Class[]{
                 Context.class, View.class, Bundle.class
         }));
@@ -118,13 +114,13 @@ public class ChatBoomHooker{
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookItem_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView_890(container);
         container.addMethod(MethodFinderBuilder.newFinderByString("bugFix","Layout30",m->MMethod.FindMethod(m.getDeclaringClass(),null,View.class,new Class[]{
                 Context.class, View.class, Bundle.class
         })));
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "onAIOGetView")
     public BaseXPExecutor worker(){
         return param -> {
             List list = MField.GetFirstField(param.thisObject, List.class);
@@ -179,7 +175,7 @@ public class ChatBoomHooker{
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     public BaseXPExecutor worker_after(){
         return param -> {
             Object mGetView = param.getResult();

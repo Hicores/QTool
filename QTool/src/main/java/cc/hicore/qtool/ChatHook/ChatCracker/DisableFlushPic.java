@@ -1,12 +1,9 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -20,6 +17,7 @@ import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.Classes;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -50,11 +48,7 @@ public class DisableFlushPic{
                 MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")
         }));
 
-        container.addMethod("replaceRecord3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView(container);
     }
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
@@ -66,7 +60,7 @@ public class DisableFlushPic{
         container.addMethod(MethodFinderBuilder.newFinderWhichMethodInvoking("replaceRecord2",MMethod.FindMethod("com.tencent.mobileqq.pic.api.IPicFlash","isFlashPicMsg",boolean.class, new Class[]{Classes.MessageRecord()}),
                m->m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.item") && !m.getDeclaringClass().getName().contains("ItemBuilder")));
 
-        container.addMethod(MethodFinderBuilder.newFinderByString("replaceRecord3","AIO_ChatAdapter_getView",m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView_890(container);
     }
 
     @XPExecutor(methodID = "replaceRecord",period = XPExecutor.After)
@@ -100,7 +94,7 @@ public class DisableFlushPic{
         };
     }
 
-    @XPExecutor(methodID = "replaceRecord3",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     @VerController
     public BaseXPExecutor onReplaceRecord3(){
         return param -> {

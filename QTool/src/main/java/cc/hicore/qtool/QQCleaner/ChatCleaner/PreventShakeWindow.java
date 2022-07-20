@@ -10,6 +10,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -28,20 +29,15 @@ public class PreventShakeWindow{
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.troop.data.TroopAndDiscMsgProxy",null, void.class,new Class[]{
-                String.class,
-                int.class,
-                MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
-                boolean.class
-        }));
+        Finders.onTroopMessage(container);
     }
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","insertToList ", m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message")));
+        Finders.onTroopMessageNew(container);
     }
     @VerController
-    @XPExecutor(methodID = "hook")
+    @XPExecutor(methodID = "troopMsgProxy")
     public BaseXPExecutor worker() {
         return param -> {
             Object ChatMsg = param.args[2];

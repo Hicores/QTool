@@ -6,6 +6,7 @@ import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
+import cc.hicore.HookItemLoader.Annotations.XPChecker;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
@@ -30,6 +31,8 @@ public class Group_Kick_Multi {
                 Long.parseLong(GroupUin), KickList, isBlack, false
         );
     }
+    @VerController
+    @XPChecker
     public void check()throws Exception{
         Object runTime = QQEnvUtils.getAppRuntime();
         Assert.notNull(runTime,"AppRuntime is NULL");

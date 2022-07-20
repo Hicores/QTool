@@ -22,6 +22,7 @@ import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Assert;
@@ -48,21 +49,17 @@ public class Hooker{
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView(container);
         container.addMethod("hide_def_icon",MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]));
     }
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_1","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView_890(container);
         container.addMethod("hide_def_icon",MMethod.FindMethod("com.tencent.mobileqq.data.ChatMessage", "isFollowMessage", boolean.class,new Class[0]));
 
     }
-    @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     @VerController
     public BaseXPExecutor hook_work(){
         return param -> {

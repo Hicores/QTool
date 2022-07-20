@@ -1,6 +1,5 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -10,10 +9,9 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
-import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
-import cc.hicore.ReflectUtils.MMethod;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.Utils.LayoutUtils;
 
 @XPItem(name = "聊天消息强制显示头像",itemType = XPItem.ITEM_Hook)
@@ -32,7 +30,7 @@ public class AlwaysShowAvatar{
     }
 
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     public BaseXPExecutor hookWorker(){
         return param -> {
             Object mGetView = param.getResult();
@@ -52,16 +50,12 @@ public class AlwaysShowAvatar{
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView(container);
     }
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView_890(container);
     }
 
 }

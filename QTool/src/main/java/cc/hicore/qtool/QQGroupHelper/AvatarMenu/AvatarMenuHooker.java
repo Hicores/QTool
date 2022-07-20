@@ -15,6 +15,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -38,16 +39,12 @@ public class AvatarMenuHooker implements View.OnLongClickListener {
         container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.vas.avatar.VasAvatar"),"setOnLongClickListener",void.class,new Class[]{
                 MClass.loadClass("android.view.View$OnLongClickListener")
         }));
-        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView(container);
     }
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_2","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView_890(container);
         container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.vas.avatar.VasAvatar"),"setOnLongClickListener",void.class,new Class[]{
                 MClass.loadClass("android.view.View$OnLongClickListener")
         }));
@@ -71,7 +68,7 @@ public class AvatarMenuHooker implements View.OnLongClickListener {
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook_2",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     public BaseXPExecutor worker_2(){
         return param -> {
             Object mGetView = param.getResult();

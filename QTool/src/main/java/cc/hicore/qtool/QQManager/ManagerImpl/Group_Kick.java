@@ -31,7 +31,7 @@ public class Group_Kick {
                 Long.parseLong(GroupUin), KickList, isBlack, false
         );
     }
-    @ApiExecutor
+    @VerController
     @XPChecker
     public void check() throws Exception {
         Object appRuntime = QQEnvUtils.getAppRuntime();

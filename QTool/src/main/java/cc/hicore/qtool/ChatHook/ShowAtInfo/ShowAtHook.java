@@ -23,6 +23,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -42,7 +43,7 @@ public class ShowAtHook{
         return ui;
     }
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
+    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
     public BaseXPExecutor worker(){
         return param -> {
             Object mGetView = param.getResult();
@@ -139,15 +140,11 @@ public class ShowAtHook{
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void methodFinder(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.ChatAdapter1", "getView", View.class, new Class[]{
-                int.class,
-                View.class,
-                ViewGroup.class
-        }));
+        Finders.AIOMessageListAdapter_getView_890(container);
     }
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","AIO_ChatAdapter_getView", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio")));
+        Finders.AIOMessageListAdapter_getView(container);
     }
 }
