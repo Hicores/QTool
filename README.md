@@ -14,7 +14,7 @@ QTool 是一个开源,免费的 Xposed 模块,在使用之前,你应该进行百
 ## 说明
 
 - 支持Android >= 8.1
-- 支持QQ 版本随缘,由于精力有限无法适配旧版QQ,请尽量配合最新版QQ使用,旧版QQ将可能有部分功能不可用
+- 支持QQ 版本随缘,由于作者精力有限无法保证更新适配的时效性和可用性,请确定自己的需求再使用
 - 本模块功能不是很全面,建议同时配合QAuxiliary模块使用:https://github.com/cinit/QAuxiliary
 
 ## 功能列表
@@ -28,24 +28,7 @@ QTool 是一个开源,免费的 Xposed 模块,在使用之前,你应该进行百
 ## 提示
 - 1.仅供学习使用,禁止用于违法违规内容,如果发现大量违法违规使用,将采取禁止账号使用本软件,或者移除被滥用功能的措施
 - 2.该项目完全免费开源,禁止二改倒卖,同时本项目也不接收任何赞助,不提供任何付费版本
-- 3.该项目原作者开发目的仅为自用,如果有功能建议请移步QAuxiliary模块或者自行提交pr
+- 3.该项目原作者开发目的仅为自用,目前暂不接受功能建议,如果使用出现问题请带上完整的日志发issue,但不保证能及时处理
 
 ## 许可证
 - [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html)
-
-```
-Copyright (C) 2022-2022 hicores@163.com
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-```
