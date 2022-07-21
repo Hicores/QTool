@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
@@ -156,7 +158,7 @@ public class MethodScannerWorker {
     public static void doFindMethod(){
         cleanAllCache();
         CollectLinkInfo();
-        Utils.PostToMain(()->{
+        new Handler(Looper.getMainLooper()).postDelayed(()->{
             Context context = Utils.getTopActivity();
 
             ScrollView sc = new ScrollView(context);
@@ -223,7 +225,7 @@ public class MethodScannerWorker {
                 GlobalConfig.Put_String("cacheVer",cacheVer);
                 Utils.ShowToastL("重启QQ以正常使用模块");
             },"QTool_Method_Finder").start();
-        });
+        },3000);
 
     }
     private static Member findMethod(BaseMethodInfo info){
