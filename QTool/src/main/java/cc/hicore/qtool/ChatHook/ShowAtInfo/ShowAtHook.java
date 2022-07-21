@@ -140,11 +140,11 @@ public class ShowAtHook{
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void methodFinder(MethodContainer container){
-        Finders.AIOMessageListAdapter_getView_890(container);
+        Finders.AIOMessageListAdapter_getView(container);
     }
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void getHookMethod_890(MethodContainer container){
-        Finders.AIOMessageListAdapter_getView(container);
+        Finders.AIOMessageListAdapter_getView_890(container);
     }
 }
