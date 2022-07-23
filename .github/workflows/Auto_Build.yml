@@ -21,6 +21,8 @@ jobs:
         uses: Symbitic/install-cmake@v0.1.0
         with:
           cmake: 3.23.2
+          ninja: 1.11.0
+          platform: linux
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
