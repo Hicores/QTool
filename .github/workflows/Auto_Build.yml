@@ -17,12 +17,8 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
-      - name: install-cmake
-        uses: Symbitic/install-cmake@v0.1.0
-        with:
-          cmake: 3.23.2
-          ninja: 1.11.0
-          platform: linux
+      - name: get-cmake
+        uses: lukka/get-cmake@v.3.23.2
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
