@@ -207,17 +207,17 @@ public:
 private:
     std::map<std::string_view, ZipLocalFile*> entries;
 };
-static_assert(offsetof(ZipLocalFile, signature) == 0);
-static_assert(offsetof(ZipLocalFile, version) == 4);
-static_assert(offsetof(ZipLocalFile, flags) == 6);
-static_assert(offsetof(ZipLocalFile, compress) == 8);
-static_assert(offsetof(ZipLocalFile, last_modify_time) == 10);
-static_assert(offsetof(ZipLocalFile, last_modify_date) == 12);
-static_assert(offsetof(ZipLocalFile, crc) == 14);
-static_assert(offsetof(ZipLocalFile, compress_size) == 18);
-static_assert(offsetof(ZipLocalFile, uncompress_size) == 22);
-static_assert(offsetof(ZipLocalFile, file_name_length) == 26);
-static_assert(offsetof(ZipLocalFile, name) == 30);
+static_assert(offsetof(ZipLocalFile, signature) == 0,"error signature");
+static_assert(offsetof(ZipLocalFile, version) == 4,"error version");
+static_assert(offsetof(ZipLocalFile, flags) == 6,"error flags" );
+static_assert(offsetof(ZipLocalFile, compress) == 8,"error compress");
+static_assert(offsetof(ZipLocalFile, last_modify_time) == 10,"error last_modify_time");
+static_assert(offsetof(ZipLocalFile, last_modify_date) == 12,"error last_modify_date");
+static_assert(offsetof(ZipLocalFile, crc) == 14,"error crc");
+static_assert(offsetof(ZipLocalFile, compress_size) == 18,"error compress_size");
+static_assert(offsetof(ZipLocalFile, uncompress_size) == 22,"error uncompress_size");
+static_assert(offsetof(ZipLocalFile, file_name_length) == 26,"error file_name_length");
+static_assert(offsetof(ZipLocalFile, name) == 30,"error name");
 
 using Handler = std::tuple<std::unique_ptr<DexHelper>, std::list<MemMap>>;
 
