@@ -15,7 +15,7 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
-@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_90)
+@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook)
 public class HideListenerTogether{
     @UIItem
     @VerController
