@@ -10,9 +10,11 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+
 @XPItem(name = "Proxy_Troop_Mute",itemType = XPItem.ITEM_Hook)
 public class TroopMuteProxy{
-    private static final String TAG = "TroopMuteProxy";
     @VerController
     @MethodScanner
     public void getHookMethod(MethodContainer container){
@@ -36,7 +38,7 @@ public class TroopMuteProxy{
         }));
     }
     @VerController
-    @XPExecutor(methodID = "hook_1")
+    @XPExecutor(methodID = "hook_1",hook_period = XC_MethodHook.PRIORITY_HIGHEST)
     public BaseXPExecutor worker_1(){
         return param -> {
             String GroupUin = (String) param.args[0];
@@ -48,7 +50,7 @@ public class TroopMuteProxy{
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook_2")
+    @XPExecutor(methodID = "hook_2",hook_period = XC_MethodHook.PRIORITY_HIGHEST)
     public BaseXPExecutor worker_2(){
         return param -> {
             String GroupUin = (String) param.args[0];
