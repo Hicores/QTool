@@ -67,8 +67,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation files('../libs/dx.jar')
-    implementation files('../libs/xpopup.aar')
     implementation project(':easy-adapter')
+    implementation project(':XPopup')
 
     compileOnly 'de.robv.android.xposed:api:82'
 

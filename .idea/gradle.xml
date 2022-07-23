@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/ItemProcesser" />
             <option value="$PROJECT_DIR$/QTool" />
             <option value="$PROJECT_DIR$/libs/EasyAdapter/easy-adapter" />
+            <option value="$PROJECT_DIR$/libs/XPopup/library" />
           </set>
         </option>
       </GradleProjectSettings>

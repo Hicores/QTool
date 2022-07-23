@@ -13,4 +13,5 @@ include ':QTool'
 include ':ItemProcesser'
 include ':easy-adapter'
 project(':easy-adapter').projectDir = new File(rootDir, 'libs/EasyAdapter/easy-adapter/')
-
+include ':XPopup'
+project(':XPopup').projectDir = new File(rootDir, 'libs/XPopup/library/')

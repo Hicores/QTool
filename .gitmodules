@@ -4,3 +4,6 @@
 [submodule "libs/EasyAdapter"]
 	path = libs/EasyAdapter
 	url = https://github.com/Hicores/EasyAdapter
+[submodule "libs/XPopup"]
+	path = libs/XPopup
+	url = https://github.com/Hicores/XPopup

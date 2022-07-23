@@ -22,7 +22,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="QTool.easy-adapter" target="11" />
+      <module name="QTool.library" target="11" />
       <module name="QTool.QTool" target="11" />
+      <module name="QTool.XPopup" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
