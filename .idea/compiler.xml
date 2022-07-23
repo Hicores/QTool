@@ -21,6 +21,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
+      <module name="QTool.beanshell20b6" target="11" />
       <module name="QTool.easy-adapter" target="11" />
       <module name="QTool.library" target="11" />
       <module name="QTool.QTool" target="11" />

@@ -15,3 +15,5 @@ include ':easy-adapter'
 project(':easy-adapter').projectDir = new File(rootDir, 'libs/EasyAdapter/easy-adapter/')
 include ':XPopup'
 project(':XPopup').projectDir = new File(rootDir, 'libs/XPopup/library/')
+include ':beanshell20b6'
+project(':beanshell20b6').projectDir = new File(rootDir, 'libs/BeanShell/beanshell20b6/')

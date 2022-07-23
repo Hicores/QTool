@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import bsh.classpath.BshLoaderManager;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
@@ -36,6 +37,7 @@ public class LoadJarHelper {
         FixJarClassLoader fixLoader = new FixJarClassLoader(HookEnv.mLoader);
         ClassLoader newLoader = new PathClassLoader(dexCache,fixLoader);
         jarCache.put(jarMD5,newLoader);
+        BshLoaderManager.addClassLoader(newLoader);
         return newLoader;
     }
 
@@ -44,17 +46,6 @@ public class LoadJarHelper {
         public FixJarClassLoader(ClassLoader parent){
             this.parent = parent;
         }
-    }
-    public static Class<?> searchForClass(String name) throws ClassNotFoundException {
-        for (ClassLoader loader : jarCache.values()){
-            try{
-                Class<?> clz = loader.loadClass(name);
-                if (clz != null)return clz;
-            }catch (Exception e){
-
-            }
-        }
-        throw new ClassNotFoundException(name);
     }
     private static void CompileJarToDex(String JarPath,String Dest){
         try{

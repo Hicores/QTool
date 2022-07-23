@@ -7,3 +7,6 @@
 [submodule "libs/XPopup"]
 	path = libs/XPopup
 	url = https://github.com/Hicores/XPopup
+[submodule "libs/BeanShell"]
+	path = libs/BeanShell
+	url = https://github.com/Hicores/BeanShell

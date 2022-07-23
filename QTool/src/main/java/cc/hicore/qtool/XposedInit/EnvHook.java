@@ -13,6 +13,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import bsh.classpath.BshLoaderManager;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.core.CoreLoader;
@@ -49,6 +50,8 @@ public class EnvHook {
                     HostInfo.Init();
                     //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
                     HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
+
+                    BshLoaderManager.addClassLoader(HookEnv.mLoader);
 
 
                     moduleLoader = EnvHook.class.getClassLoader();
