@@ -12,6 +12,7 @@ import java.util.zip.ZipInputStream;
 
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import me.iacn.biliroaming.utils.DexHelper;
 
@@ -25,8 +26,13 @@ public class DexFinder {
     private DexHelper helper;
     private DexFinder(){
         ClassLoader loader = HookEnv.mLoader;
-        initLibrary();
-        helper = new DexHelper(loader);
+        try{
+            initLibrary();
+            helper = new DexHelper(loader);
+        }catch (Throwable e){
+            Utils.ShowToastL("无法加载so库,模块部分功能将无法使用:\n"+e);
+        }
+
     }
     private void initLibrary(){
         String cachePath = HookEnv.AppContext.getCacheDir() + "/" +DataUtils.getStrMD5(Settings.Secure.ANDROID_ID+"_").substring(0,8) + "/";
