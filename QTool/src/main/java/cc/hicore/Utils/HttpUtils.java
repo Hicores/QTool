@@ -32,6 +32,8 @@ public class HttpUtils {
                 return builder.toString();
             }
             HttpURLConnection connection = (HttpURLConnection) new URL(Path).openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
             InputStream ins = connection.getInputStream();
             String Content = new String(DataUtils.readAllBytes(ins), StandardCharsets.UTF_8);
             ins.close();
@@ -55,6 +57,8 @@ public class HttpUtils {
             if (!parent.exists()) parent.mkdirs();
             FileOutputStream fOut = new FileOutputStream(local);
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
             InputStream ins = connection.getInputStream();
             byte[] buffer = new byte[4096];
             int read;
@@ -73,6 +77,8 @@ public class HttpUtils {
     public static String PostForResult(String URL, String key, byte[] buffer, int size) {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
             connection.setRequestProperty("key", key);
             connection.setDoOutput(true);
             OutputStream out = connection.getOutputStream();
@@ -114,13 +120,13 @@ public class HttpUtils {
             try {
                 URL u = new URL(url);
                 URLConnection conn = u.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
                 long msize = conn.getContentLengthLong();
                 long readed = 0;
                 new Handler(Looper.getMainLooper()).post(() -> mAllSize.setText("文件大小:" + ((int) msize / 1024) + "KB"));
                 long finalReaded = readed;
                 new Handler(Looper.getMainLooper()).post(() -> mDownedSize.setText("当前已下载:" + ((int) finalReaded / 1024) + "KB"));
-                conn.setConnectTimeout(10000);
-                conn.setReadTimeout(10000);
                 InputStream inp = conn.getInputStream();
                 byte[] buffer = new byte[1024];
                 FileOutputStream fos = new FileOutputStream(filepath);
