@@ -6,6 +6,7 @@ import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPChecker;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
@@ -15,14 +16,21 @@ import cc.hicore.qtool.XposedInit.HostInfo;
 
 @XPItem(name = "get_Group_Name_By_Contact",itemType = XPItem.ITEM_Api)
 public class Get_Group_Name_By_Contact {
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public String GetTroopNameByContact(String GroupUin) throws Exception {
         String mStr = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ContactUtils"),
                 HostInfo.getVerCode() > 8000 ? "W":"a",String.class, HookEnv.AppInterface,GroupUin,true);
         return mStr;
     }
-    @VerController
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @ApiExecutor
+    public String GetTroopNameByContact_New(String GroupUin) throws Exception {
+        String mStr = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.mobileqq.utils.ag"),
+                "W",String.class, HookEnv.AppInterface,GroupUin,true);
+        return mStr;
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @XPChecker
     public void check(){
         Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.utils.ContactUtils"),
@@ -32,4 +40,5 @@ public class Get_Group_Name_By_Contact {
                         Classes.AppInterface(),String.class,boolean.class});
         Assert.notNull(m,"method is NULL");
     }
+
 }
