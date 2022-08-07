@@ -64,10 +64,15 @@ public class QQVoicePanelInject{
     public void getSimpleInit(MethodContainer container){
         container.addMethod("hook_4",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
     }
-    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @VerController(targetVer = QQVersion.QQ_8_9_0,max_targetVer = QQVersion.QQ_8_9_3)
     @MethodScanner
     public void getSimpleInit_890(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "a", void.class, new Class[0])));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_3)
+    @MethodScanner
+    public void getSimpleInit_893(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "b", void.class, new Class[0])));
     }
     @VerController
     @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
