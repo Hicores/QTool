@@ -68,7 +68,7 @@ public class ShowAtHook{
                             builder.append("AtQQ:全体成员\n");
                             continue;
                         }
-                        builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData))).append("(").append(mLongData).append(")\n");
+                        builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")).append("(").append(mLongData).append(")\n");
                     }
                 }
             }
@@ -91,7 +91,7 @@ public class ShowAtHook{
                             builder.append("AtQQ:全体成员\n");
                             continue;
                         }
-                        showText.add("AtQQ:"+QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData))+"("+mLongData+")");
+                        showText.add("AtQQ:"+QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")+"("+mLongData+")");
                     }
                 }
                 for (String text : showText){
@@ -117,7 +117,7 @@ public class ShowAtHook{
                                 builder.append("AtQQ:全体成员\n");
                                 continue;
                             }
-                            builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData))).append("(").append(mLongData).append(")\n");
+                            builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")).append("(").append(mLongData).append(")\n");
                         }
                     }
                 }
