@@ -41,6 +41,7 @@ public class QQGroupUtils {
         try {
             Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
             Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager, "getTroopMember", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"), GroupUin, UserUin);
+            if (GroupMemberInfoR == null)return null;
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();
