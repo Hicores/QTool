@@ -21,8 +21,8 @@ public class Group_Change_Name {
     public void change(String GroupUin, String UserUin, String name) throws Exception {
         Object mCallObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler"), new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface")}, QQEnvUtils.getAppRuntime());
         Object TroopCardObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberCardInfo"), new Class[0], new Object[0]);
-        MField.SetField(TroopCardObj, "", name);
-        MField.SetField(TroopCardObj, "tronameopuin", GroupUin);
+        MField.SetField(TroopCardObj, "name", name);
+        MField.SetField(TroopCardObj, "troopuin", GroupUin);
 
         MField.SetField(TroopCardObj, "memberuin", UserUin);
         MField.SetField(TroopCardObj, "email", "");
@@ -44,8 +44,8 @@ public class Group_Change_Name {
     public void change_new(String GroupUin, String UserUin, String name) throws Exception {
         Object mCallObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.j"), new Class[]{MClass.loadClass("com.tencent.common.app.AppInterface")}, QQEnvUtils.getAppRuntime());
         Object TroopCardObj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberCardInfo"), new Class[0], new Object[0]);
-        MField.SetField(TroopCardObj, "", name);
-        MField.SetField(TroopCardObj, "tronameopuin", GroupUin);
+        MField.SetField(TroopCardObj, "name", name);
+        MField.SetField(TroopCardObj, "troopuin", GroupUin);
 
         MField.SetField(TroopCardObj, "memberuin", UserUin);
         MField.SetField(TroopCardObj, "email", "");
