@@ -375,7 +375,7 @@ public class EmoPanelView extends BottomPopupView {
 
 
                                     TextView title = new TextView(getContext());
-                                    title.setText(bundleInfo.getString("name"));
+                                    title.setText(bundleInfo.getString("name")+"("+bundleInfo.optInt("click")+"点击)");
                                     mItem.addView(title);
                                     TextView size = new TextView(getContext());
                                     size.setText("总大小:" + Utils.bytes2kb(bundleInfo.optLong("size")));
