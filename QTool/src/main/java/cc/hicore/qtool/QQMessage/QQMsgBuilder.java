@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Classes;
@@ -26,6 +27,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Common_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_structMsg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Common_Rebuild_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Copy_Tuya;
@@ -49,14 +51,7 @@ public class QQMsgBuilder {
         }
     }
     public static Object build_struct(String xml) {
-        try {
-            Method BuildStructMsg = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.structmsg.TestStructMsg"), "a",
-                    MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"), new Class[]{String.class});
-            return BuildStructMsg.invoke(null, new Object[]{xml});
-        } catch (Throwable th) {
-            LogUtils.error(TAG, "build_struct:\n" + th);
-            return null;
-        }
+        return ApiHelper.invoke(Build_structMsg.class,xml);
     }
     public static Object build_arkapp(String json) {
         try {
