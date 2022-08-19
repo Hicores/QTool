@@ -32,6 +32,7 @@
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupBanInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupMemberInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginMethod{*;}
+-keep class cc.hicore.qtool.QQTools.QQSelectHelper$RoundImageView{*;}
 -keep class com.tencent.** {*;}
 -keep class me.iacn.biliroaming.**{*;}
 -keep @cc.hicore.HookItemLoader.Annotations.XPItem class * { *;}
