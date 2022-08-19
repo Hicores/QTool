@@ -54,6 +54,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
+import de.robv.android.xposed.XposedBridge;
 
 
 public class EmoPanelView extends BottomPopupView {
@@ -330,13 +331,13 @@ public class EmoPanelView extends BottomPopupView {
                 mRoot.addView(text);
 
                 new Thread(() -> {
-                    String Content = HttpUtils.getContent("https://qtool.haonb.cc/sharePic/getList");
+                    String Content = HttpUtils.getContent("https://qtool.haonb.cc/StickerHelper/getList");
                     try {
                         JSONObject json = new JSONObject(Content);
                         new Handler(Looper.getMainLooper()).post(() -> {
                             mRoot.removeAllViews();
                             try {
-                                JSONArray itemArr = json.getJSONArray("data");
+                                JSONArray itemArr = json.getJSONArray("list");
                                 LinearLayout mChild = null;
                                 int index = 0;
                                 for (int i = itemArr.length()-1; i >-1; i--) {
@@ -346,8 +347,8 @@ public class EmoPanelView extends BottomPopupView {
                                     }
                                     index ++;
                                     JSONObject bundleInfo = itemArr.getJSONObject(i);
-                                    String coverPath = "https://cdn.haonb.cc/" + bundleInfo.optString("cover");
-                                    String ID = bundleInfo.getString("id");
+                                    String coverPath = "https://cdn.haonb.cc/ShareStickers/SData/" + bundleInfo.optString("id")+"/"+bundleInfo.optString("Cover");
+                                    String ID = bundleInfo.optString("id");
                                     LinearLayout.LayoutParams paramab = new LinearLayout.LayoutParams(XPopupUtils.getScreenWidth(getContext()) / 3, ViewGroup.LayoutParams.WRAP_CONTENT);
                                     paramab.setMargins(0, 10, 0, 10);
 
@@ -357,6 +358,7 @@ public class EmoPanelView extends BottomPopupView {
                                     mChild.addView(mItem, paramab);
 
                                     ImageView cover = new ImageView(getContext());
+                                    XposedBridge.log(coverPath);
                                     Glide.with(HookEnv.AppContext)
                                             .load(new URL(coverPath))
                                             .placeholder(R.drawable.loading)
@@ -375,10 +377,10 @@ public class EmoPanelView extends BottomPopupView {
 
 
                                     TextView title = new TextView(getContext());
-                                    title.setText(bundleInfo.getString("name")+"("+bundleInfo.optInt("click")+"点击)");
+                                    title.setText(bundleInfo.getString("name")+"("+bundleInfo.optInt("Click")+")");
                                     mItem.addView(title);
                                     TextView size = new TextView(getContext());
-                                    size.setText("总大小:" + Utils.bytes2kb(bundleInfo.optLong("size")));
+                                    size.setText("总大小:" + Utils.bytes2kb(bundleInfo.optLong("Size")));
                                     mItem.addView(size);
 
 
@@ -610,9 +612,9 @@ public class EmoPanelView extends BottomPopupView {
         dialog.show();
         new Thread(() -> {
             try {
-                String listData = HttpUtils.getContent("https://qtool.haonb.cc/sharePic/getItems?id=" + ID);
+                String listData = HttpUtils.getContent("https://qtool.haonb.cc/StickerHelper/getContent?id=" + ID);
                 JSONObject newJson = new JSONObject(listData);
-                JSONArray dataArr = newJson.getJSONArray("data");
+                JSONArray dataArr = newJson.getJSONArray("list");
                 new Handler(Looper.getMainLooper()).post(() -> {
                     try {
                         data.clear();
@@ -621,8 +623,8 @@ public class EmoPanelView extends BottomPopupView {
                             JSONObject item = dataArr.getJSONObject(i);
                             EmoPanel.EmoInfo infoItem = new EmoPanel.EmoInfo();
                             infoItem.type = 2;
-                            infoItem.URL = "https://cdn.haonb.cc/" + item.getString("uri");
-                            infoItem.MD5 = item.getString("md5");
+                            infoItem.URL = "https://cdn.haonb.cc/ShareStickers/SData/"+ID+"/"+item.optString("MD5");
+                            infoItem.MD5 = item.getString("MD5");
                             data.add(infoItem);
                         }
                         for (View otherItem : titleBarList)

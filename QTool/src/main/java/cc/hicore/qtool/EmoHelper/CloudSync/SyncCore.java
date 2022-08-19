@@ -65,28 +65,29 @@ public class SyncCore {
                     return;
                 }
                 new Handler(Looper.getMainLooper()).post(() -> dialog.setMessage("正在创建远程图集..."));
+                JSONObject requestData = new JSONObject();
+                requestData.put("uin", QQEnvUtils.getCurrentUin());
+                requestData.put("name", Name);
                 String URL =
-                        "https://qtool.haonb.cc/PicSync/CreateBundle?Uin=" + QQEnvUtils.getCurrentUin()
-                                + "&name=" + Name;
+                        "https://qtool.haonb.cc/StickerHelper/createPack?in="+DataUtils.ByteArrayToHex(requestData.toString().getBytes());
                 String result = HttpUtils.getContent(URL);
                 JSONObject json = new JSONObject(result);
                 if (json.getInt("code") == 1) {
-                    Utils.ShowToastL("验证失败,无法创建图集");
+                    Utils.ShowToastL("验证失败,无法创建图集:\n"+json.getString("msg"));
                     return;
                 }
 
                 //执行图片上传,每一张图都是单独的post,如果有一张失败也会直接结束,需要每一张都上传完成
-                String ID = json.getString("id");
+                String key = json.getString("key");
                 new Handler(Looper.getMainLooper()).post(() -> dialog.setMessage("正在上传图片..."));
-                URL = "https://qtool.haonb.cc/PicSync/Upload";
+                URL = "https://qtool.haonb.cc/StickerHelper/upload";
                 for (int i = 0; i < fileList.size(); i++) {
                     int finalI = i;
                     new Handler(Looper.getMainLooper()).post(() -> dialog.setMessage("正在上传图片...[" + (finalI + 1) + "/" + fileList.size() + "]"));
                     String Path = fileList.get(i);
                     HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
                     connection.setDoOutput(true);
-                    connection.setRequestProperty("Uin", QQEnvUtils.getCurrentUin());
-                    connection.setRequestProperty("BundleID", ID);
+                    connection.setRequestProperty("key", key);
                     OutputStream out = connection.getOutputStream();
                     out.write(FileUtils.ReadFile(new File(Path)));
                     out.flush();
@@ -97,10 +98,10 @@ public class SyncCore {
                     ins.close();
                 }
                 new Handler(Looper.getMainLooper()).post(() -> dialog.setMessage("正在分享图集..."));
-                URL = "https://qtool.haonb.cc/PicSync/share?uin=" + QQEnvUtils.getCurrentUin() + "&id=" + ID;
+                URL = "https://qtool.haonb.cc/StickerHelper/uploadStop?key=" + key;
                 String shareResult = HttpUtils.getContent(URL);
                 JSONObject shareResultJson = new JSONObject(shareResult);
-                if (shareResultJson.getInt("code") == 1) {
+                if (shareResultJson.getInt("code") == 0) {
                     Utils.ShowToastL("分享成功,请等待审核通过");
                 }
             } catch (Exception e) {
