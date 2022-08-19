@@ -138,7 +138,7 @@ jobs:
         uses: nerd4ever/ssh-action@master
         with:
           from: ./QTool/*.*
-          to: /Storage/Link/Down/CIDL/v${{ github.run_number }}/
+          to: /Store/Down/CIDL/v${{ github.run_number }}/
           sync: local
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
