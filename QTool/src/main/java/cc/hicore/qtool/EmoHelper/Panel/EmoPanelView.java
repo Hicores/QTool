@@ -436,7 +436,7 @@ public class EmoPanelView extends BottomPopupView {
                 mRoot.addView(text);
 
                 new Thread(() -> {
-                    String Content = HttpUtils.getContent("https://tg.haonb.cc/getByUin?uin=" + QQEnvUtils.getCurrentUin());
+                    String Content = HttpUtils.getContent("https://qtool.haonb.cc/getByUin?uin=" + QQEnvUtils.getCurrentUin());
                     try {
                         JSONObject json = new JSONObject(Content);
                         new Handler(Looper.getMainLooper()).post(() -> {
@@ -501,7 +501,7 @@ public class EmoPanelView extends BottomPopupView {
                             .setTitle("输入ID")
                             .setView(ed)
                             .setNeutralButton("确定", (dialog, which) -> {
-                                String result = HttpUtils.getContent("https://tg.haonb.cc/getByID?id=" + ed.getText().toString());
+                                String result = HttpUtils.getContent("https://qtool.haonb.cc/getByID?id=" + ed.getText().toString());
                                 try {
                                     JSONObject mre = new JSONObject(result);
                                     if (mre.getInt("code") == 1) {
@@ -550,7 +550,7 @@ public class EmoPanelView extends BottomPopupView {
         dialog.show();
         new Thread(() -> {
             try {
-                String listData = HttpUtils.getContent("https://tg.haonb.cc/getContent?id=" + ID);
+                String listData = HttpUtils.getContent("https://qtool.haonb.cc/getContent?id=" + ID);
                 JSONObject newJson = new JSONObject(listData);
                 JSONArray dataArr = newJson.getJSONArray("data");
                 new Handler(Looper.getMainLooper()).post(() -> {
