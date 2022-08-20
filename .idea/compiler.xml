@@ -24,6 +24,7 @@
       <module name="QTool.beanshell20b6" target="11" />
       <module name="QTool.easy-adapter" target="11" />
       <module name="QTool.library" target="11" />
+      <module name="QTool.QQStub" target="11" />
       <module name="QTool.QTool" target="11" />
       <module name="QTool.XPopup" target="11" />
     </bytecodeTargetLevel>

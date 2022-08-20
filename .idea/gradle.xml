@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/ItemProcesser" />
+            <option value="$PROJECT_DIR$/QQStub" />
             <option value="$PROJECT_DIR$/QTool" />
             <option value="$PROJECT_DIR$/libs/BeanShell/beanshell20b6" />
             <option value="$PROJECT_DIR$/libs/EasyAdapter/easy-adapter" />
