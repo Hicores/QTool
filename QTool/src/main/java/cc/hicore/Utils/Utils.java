@@ -30,6 +30,10 @@ public class Utils {
         }
 
     }
+    public static int sp2px(Context context, float spValue){
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
     public static String secondToTime(long second) {
         if(second == 0) return "0秒";
         long days = second / 86400;

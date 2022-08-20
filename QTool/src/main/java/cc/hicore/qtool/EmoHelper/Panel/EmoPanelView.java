@@ -173,19 +173,19 @@ public class EmoPanelView extends BottomPopupView {
 
 
         TextView view = new TextView(getContext());
-        view.setText("查看分享");
+        view.setBackgroundResource(R.drawable.share);
         view.setTextColor(Color.parseColor("#99FFFF"));
         view.setTextSize(24);
-        LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(Utils.sp2px(getContext(), 24), Utils.sp2px(getContext(), 24));
         parans.setMargins(Utils.dip2px(getContext(), 10), 0, Utils.dip2px(getContext(), 10), 0);
         view.setOnClickListener(v -> searchOnline());
         PathBar.addView(view, parans);
 
         view = new TextView(getContext());
-        view.setText("从TG下载");
+        view.setBackgroundResource(R.drawable.dl_from_tg);
         view.setTextColor(Color.parseColor("#99FFFF"));
         view.setTextSize(24);
-        parans = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parans = new LinearLayout.LayoutParams(Utils.sp2px(getContext(), 24), Utils.sp2px(getContext(), 24));
         parans.setMargins(Utils.dip2px(getContext(), 10), 0, Utils.dip2px(getContext(), 10), 0);
         view.setOnClickListener(v -> searchFromTg());
         PathBar.addView(view, parans);
@@ -358,7 +358,6 @@ public class EmoPanelView extends BottomPopupView {
                                     mChild.addView(mItem, paramab);
 
                                     ImageView cover = new ImageView(getContext());
-                                    XposedBridge.log(coverPath);
                                     Glide.with(HookEnv.AppContext)
                                             .load(new URL(coverPath))
                                             .placeholder(R.drawable.loading)
