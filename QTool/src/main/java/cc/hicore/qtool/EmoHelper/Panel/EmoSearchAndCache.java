@@ -6,22 +6,38 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedBridge;
 
 public class EmoSearchAndCache {
+    public static class TempTimeSortHelper{
+        public File file;
+        public long modifiedTime;
+    }
     public static ArrayList<EmoPanel.EmoInfo> searchForEmo(String PathName) {
         String rawPath = HookEnv.ExtraDataPath + "/Pic/" + PathName;
-        String CachePath = HookEnv.ExtraDataPath + "/Pic/" + PathName + ".info";
-
         File[] fs = new File(rawPath).listFiles();
+
 
 
         ArrayList<EmoPanel.EmoInfo> findEmoInfos = new ArrayList<>();
         if (fs != null) {
-            Arrays.sort(fs, (o1, o2) -> {
-                long result = o2.lastModified() - o1.lastModified();
+            TempTimeSortHelper[] temp = new TempTimeSortHelper[fs.length];
+            for (int i = 0; i < fs.length; i++) {
+                temp[i] = new TempTimeSortHelper();
+                temp[i].file = fs[i];
+                temp[i].modifiedTime = fs[i].lastModified();
+            }
+
+
+            Arrays.sort(temp, (o1, o2) -> {
+                long result = o2.modifiedTime - o1.modifiedTime;
                 if (result == 0) return 0;
                 return (result < 0) ? -1 : 1;
             });
+
+            for (int i=0;i<temp.length;i++){
+                fs[i] = temp[i].file;
+            }
 
             for (File f : fs) {
                 if (f.isFile() && !f.getName().endsWith(".bak")) {

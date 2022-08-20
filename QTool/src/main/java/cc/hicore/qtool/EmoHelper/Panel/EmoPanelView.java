@@ -145,7 +145,8 @@ public class EmoPanelView extends BottomPopupView {
             view.requestLayout();
             titleBarList.add(view);
 
-            view.setOnClickListener(v -> {                CacheScrollTop = 0;
+            view.setOnClickListener(v -> {
+                CacheScrollTop = 0;
                 updateShowPath(name);
                 for (View otherItem : titleBarList) {
                     otherItem.setBackgroundColor(getResources().getColor(R.color.bg_plugin, null));
