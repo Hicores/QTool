@@ -278,8 +278,8 @@ public class QQSelectHelper {
             BasePopupView base = NewPop.asCustom(view);
             base.show();
         } catch (Exception e) {
-            LogUtils.error("QQSelectHelper", DebugUtils.getLinkStackMsg(e));
-            Utils.ShowToast("选择器加载失败：\n" + e);
+            LogUtils.error("QQSelectHelper", Log.getStackTraceString(e));
+            Utils.ShowToast("选择器加载失败：\n" + DebugUtils.getLinkStackMsg(e));
         }
 
 
