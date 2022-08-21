@@ -231,7 +231,7 @@ public class HookInjectEmoTabView{
         };
     }
     @VerController
-    @XPExecutor(methodID = "simple_emo_icon_create")
+    @XPExecutor(methodID = "simple_emo_icon_create",period = XPExecutor.After)
     public BaseXPExecutor simple_mode_emo_button(){
         return param -> {
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 1);
