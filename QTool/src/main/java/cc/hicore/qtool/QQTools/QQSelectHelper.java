@@ -14,6 +14,7 @@ import android.graphics.drawable.DrawableWrapper;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -43,6 +44,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQManager.QQGuildManager;
 import cc.hicore.qtool.R;
+import de.robv.android.xposed.XposedBridge;
 
 /*
 显示QQ好友,群聊,频道选择界面,并回调数据
@@ -275,6 +277,7 @@ public class QQSelectHelper {
             BasePopupView base = NewPop.asCustom(view);
             base.show();
         } catch (Exception e) {
+            LogUtils.error("QQSelectHelper", Log.getStackTraceString(e));
             Utils.ShowToast("选择器加载失败：\n" + e);
         }
 
