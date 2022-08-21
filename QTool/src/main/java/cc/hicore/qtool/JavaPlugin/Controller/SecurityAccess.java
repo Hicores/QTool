@@ -56,7 +56,7 @@ public class SecurityAccess {
             if (clickEnd.get()) break;
         }
         if (clickResult.get() == 2) {
-            HookEnv.Config.setLong("Security_Access", Token, System.currentTimeMillis() + 7 * 24 * 3600 * 1000);//授权7天有效
+            HookEnv.Config.setLong("Security_Access", Token, System.currentTimeMillis() + 14 * 24 * 3600 * 1000);//授权7天有效
             cleanAccessExpire();
         }
 

@@ -192,35 +192,35 @@ public class PluginMethod {
     }
 
     public String getSkey() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Skey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.AccessToken)) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Skey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
             return QQTicketManager.getSkey();
         }
         return "";
     }
 
     public String getPskey(String Domain) {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Pskey(" + Domain + "),使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.AccessToken)) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Pskey(" + Domain + "),使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
             return QQTicketManager.getPsKey(Domain);
         }
         return "";
     }
 
     public String getSuperkey() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的SuperKey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.AccessToken)) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的SuperKey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
             return QQTicketManager.getSuperKey();
         }
         return "";
     }
 
     public String getPT4Token(String Domain) {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的PT4Token,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.AccessToken)) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的PT4Token,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" +info_.PluginName+"("+info_.PluginID+")")) {
             return QQTicketManager.getPt4Token(Domain);
         }
         return "";
     }
 
     public String getBKN() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的BKN,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.AccessToken)) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的BKN,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
             return QQTicketManager.getBKN();
         }
         return "";
