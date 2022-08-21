@@ -55,5 +55,15 @@ public class DebugUtils {
             LogUtils.debug("ThreadPrinter",builder.toString());
         }
     }
+    public static String getLinkStackMsg(Throwable th){
+        StringBuilder builder = new StringBuilder();
+        builder.append(th.toString());
+        Throwable up = th.getCause();
+        while (up != null){
+            builder.append("\n--------------\n").append(up);
+            up = up.getCause();
+        }
+        return builder.toString();
+    }
 
 }

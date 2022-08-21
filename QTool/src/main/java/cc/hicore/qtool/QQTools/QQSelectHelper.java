@@ -39,6 +39,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cc.hicore.LogUtils.LogUtils;
+import cc.hicore.Utils.DebugUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
@@ -277,7 +278,7 @@ public class QQSelectHelper {
             BasePopupView base = NewPop.asCustom(view);
             base.show();
         } catch (Exception e) {
-            LogUtils.error("QQSelectHelper", Log.getStackTraceString(e));
+            LogUtils.error("QQSelectHelper", DebugUtils.getLinkStackMsg(e));
             Utils.ShowToast("选择器加载失败：\n" + e);
         }
 
