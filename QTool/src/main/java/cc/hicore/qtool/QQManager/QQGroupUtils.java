@@ -15,6 +15,7 @@ import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.UtilsImpl.Get_Group_Name_By_Contact;
 import cc.hicore.qtool.QQManager.UtilsImpl.Group_Get_Mute_List;
+import de.robv.android.xposed.XposedBridge;
 
 public class QQGroupUtils {
     public static String Group_Get_Name(String GroupUin) {
@@ -77,7 +78,11 @@ public class QQGroupUtils {
                 NewItem.Name = MField.GetField(item, "troopname");
                 NewItem.Creator = MField.GetField(item, "troopowneruin");
                 String admins = MField.GetField(item, "Administrator");
-                NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
+                if (admins == null){
+                    NewItem.adminList = new ArrayList<>();
+                }else {
+                    NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
+                }
                 NewList.add(NewItem);
             }
             return NewList;
