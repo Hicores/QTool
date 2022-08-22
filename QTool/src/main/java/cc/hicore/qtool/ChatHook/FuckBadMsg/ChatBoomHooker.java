@@ -136,7 +136,7 @@ public class ChatBoomHooker{
             }
             String clzName = chatMsg.getClass().getSimpleName();
             //检测第一类卡屏消息
-            if (HookEnv.Config.getBoolean("Set","Chat_Boom_Open",false)){
+            if (HookEnv.Config.getBoolean("Set","Chat_Boom_Default",false)){
                 if (clzName.equals("MessageForStructing")){
                     Object Structing = MField.GetField(chatMsg,"structingMsg", MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"));
                     String xml= MMethod.CallMethod(Structing,MClass.loadClass("com.tencent.mobileqq.structmsg.AbsStructMsg"),"getXml",String.class,new Class[0],new Object[0]);
