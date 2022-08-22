@@ -3,6 +3,7 @@ package cc.hicore.qtool.XposedInit;
 import static cc.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
@@ -19,6 +20,7 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
+import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.Utils.Utils;
@@ -84,6 +86,55 @@ public class EnvHook {
                     if (HookEnv.IsMainProcess) {
                         XposedBridge.log("[QTool]BaseHook Init End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
                     }
+                }
+            }
+        });
+
+        XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication",HookEnv.mLoader,"attachBaseContext", Context.class,new XC_MethodHook(){
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (IsInit.getAndSet(true))return;
+                if (HookEnv.IsMainProcess) {
+                    XposedBridge.log("[QTool]BaseHook Start in Base HookTarget");
+                }
+                long timeStart = System.currentTimeMillis();
+                HookEnv.Application = (Application) param.thisObject;
+                HookEnv.AppContext = (Context) param.args[0];
+                HostInfo.Init();
+                //取代QQ的classLoader防止有一些框架传递了不正确的classLoader
+                HookEnv.mLoader = param.thisObject.getClass().getClassLoader();
+
+                BshLoaderManager.addClassLoader(HookEnv.mLoader);
+
+
+                moduleLoader = EnvHook.class.getClassLoader();
+
+                //优先初始化Path
+                ExtraPathInit.InitPath();
+
+                //然后注入资源
+                EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
+                ResUtils.StartInject(HookEnv.AppContext);
+                //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
+                HookForDelay();
+                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35)return;
+                if (HostInfo.getVersion().length() > 7)return;
+
+                if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                    LogcatCatcher.startCatcherOnce();
+                }
+
+                SettingInject.startInject();
+
+                if (HookEnv.ExtraDataPath != null) {
+                    InitActivityProxy();
+                    //在外部数据路径不为空且有效的情况下才加载Hook,防止意外导致的设置项目全部丢失
+
+                    CoreLoader.onBeforeLoad();
+                }
+
+                if (HookEnv.IsMainProcess) {
+                    XposedBridge.log("[QTool]BaseHook Init End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
                 }
             }
         });

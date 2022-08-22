@@ -136,5 +136,8 @@ public class Utils {
     public static void PostToMain(Runnable run){
         new Handler(Looper.getMainLooper()).post(run);
     }
+    public static void PostToMainDelay(Runnable run,long delay){
+        new Handler(Looper.getMainLooper()).postDelayed(run,delay);
+    }
 
 }
