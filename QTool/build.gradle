@@ -54,7 +54,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     aaptOptions {
-        additionalParameters '--allow-reserved-package-id','--package-id','0x48'
+        additionalParameters '--allow-reserved-package-id','--package-id','0x21'
     }
     externalNativeBuild {
         cmake {

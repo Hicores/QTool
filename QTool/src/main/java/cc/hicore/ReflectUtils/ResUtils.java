@@ -24,7 +24,7 @@ public class ResUtils {
 
     public static boolean CheckResInject(Context context) {
         try {
-            return context.getResources().getString(R.string.TestResInject).contains("Success");
+            return context.getResources().getString(R.string.TestResInject).equals("Test Success");
         } catch (Exception e) {
             return false;
         }
