@@ -71,6 +71,7 @@ dependencies {
     implementation project(':XPopup')
     implementation project(':beanshell20b6')
     implementation files('../libs/BeanShell/beanshell20b6/libs/dx.jar')
+    compileOnly project(':QQStub')
 
     compileOnly 'de.robv.android.xposed:api:82'
 

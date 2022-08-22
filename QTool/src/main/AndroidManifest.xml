@@ -15,8 +15,20 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name="cc.hicore.qtool.MainActivity.Hide"
+            android:targetActivity="cc.hicore.qtool.MainActivity"
+            android:exported="true"
+            android:label="QTool">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+
+            </intent-filter>
+        </activity-alias>
         <activity
             android:name="cc.hicore.qtool.OpenSource">
         </activity>
