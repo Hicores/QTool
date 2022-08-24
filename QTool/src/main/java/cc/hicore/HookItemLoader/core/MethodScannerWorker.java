@@ -39,6 +39,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.XposedInit.HookEntry;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class MethodScannerWorker {
@@ -234,7 +235,7 @@ public class MethodScannerWorker {
         }
         if (info instanceof FindMethodByName){
             FindMethodByName newNode = (FindMethodByName) info;
-            Method[] findResult = DexFinder.getInstance().findMethodByString(newNode.name);
+            Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodByString(newNode.name);
             for (Method m : findResult){
                 try{
                     Object ret = newNode.checker.onMethod(m);
@@ -260,7 +261,7 @@ public class MethodScannerWorker {
             }else {
                 return null;
             }
-            Method[] findResult = DexFinder.getInstance().findMethodInvoking(linkNode);
+            Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodInvoking(linkNode);
             for (Method m : findResult){
                 try{
                     Object ret = newNode.checker.onMethod(m);
@@ -286,7 +287,7 @@ public class MethodScannerWorker {
                 return null;
             }
             if (linkNode != null){
-                Method[] findResult = DexFinder.getInstance().findMethodBeInvoked(linkNode);
+                Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodBeInvoked(linkNode);
                 for (Method m : findResult){
                     try{
                         Object ret = newNode.checker.onMethod(m);

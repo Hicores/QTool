@@ -14,18 +14,24 @@ import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedBridge;
 import me.iacn.biliroaming.utils.DexHelper;
 
 public class DexFinder {
     private static DexFinder instance;
-    public static DexFinder getInstance(){
+    private String apkPath;
+    public static DexFinder getInstance(String apkPath){
         if (instance != null)return instance;
-        instance = new DexFinder();
+        instance = new DexFinder(apkPath);
         return instance;
     }
     private DexHelper helper;
-    private DexFinder(){
+    private DexFinder(String apkPath){
         ClassLoader loader = HookEnv.mLoader;
+
+        String cachePath = HookEnv.AppContext.getCacheDir() + "/base.apk";
+        FileUtils.copy(apkPath,cachePath);
+        this.apkPath = cachePath;
         try{
             initLibrary();
             helper = new DexHelper(loader);
@@ -41,10 +47,12 @@ public class DexFinder {
             outputLibToCache(cachePath,true);
             System.load(cachePath+"libdex_builder.so");
             System.load(cachePath+"libdexfinder.so");
+            System.load(cachePath+"libdexkithelper.so");
         }else {
             outputLibToCache(cachePath,false);
             System.load(cachePath+"libdex_builder.so");
             System.load(cachePath+"libdexfinder.so");
+            System.load(cachePath+"libdexkithelper.so");
         }
     }
     private void outputLibToCache(String cachePath,boolean is64){
@@ -54,9 +62,7 @@ public class DexFinder {
             ZipInputStream zInp = new ZipInputStream(new FileInputStream(apkPath));
             ZipEntry entry;
             while ((entry = zInp.getNextEntry())!= null){
-
                 if (is64 && entry.getName().startsWith("lib/arm64-v8a/")){
-
                     String libName = entry.getName().substring(14);
                     FileUtils.WriteToFile(cachePath + libName,DataUtils.readAllBytes(zInp));
                 }else if (!is64 && entry.getName().startsWith("lib/armeabi-v7a/")){
@@ -109,4 +115,17 @@ public class DexFinder {
         }
         return retArr.toArray(new Method[0]);
     }
+    public Method[] findMethodByString_DexKit(String str){
+        XposedBridge.log("startFind");
+        String[] strResult = DexFinderNative.findMethodUsingString(apkPath,"AIO_doOnCreate_initUI");
+        for (String s : strResult){
+            XposedBridge.log(s);
+        }
+        XposedBridge.log("endFind");
+        return null;
+    }
+    public Method[] findMethodBeInvoked_DexKit(Method method){
+        return null;
+    }
+
 }

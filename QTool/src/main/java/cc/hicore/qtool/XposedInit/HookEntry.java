@@ -60,7 +60,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 HookEnv.IsMainProcess = lpparam.processName.equals("com.tencent.mobileqq");
                 HookEnv.ProcessName = lpparam.processName;
                 HookEnv.mLoader = lpparam.classLoader;
-                HookEnv.AppApkPath = lpparam.appInfo.processName;
+                HookEnv.AppApkPath = lpparam.appInfo.sourceDir;
                 XposedBridge.log("startup module from:"+HookEnv.ToolApkPath);
 
                 EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);

@@ -13,9 +13,12 @@ import android.widget.TextView;
 
 import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
+import cc.hicore.DexFinder.DexFinder;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.DebugUtils;
+import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
+import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
 @SuppressLint("ResourceType")
@@ -111,6 +114,17 @@ public class DebugDialog {
         printStack.setText("输出所有线程调用栈");
         printStack.setOnClickListener(v-> DebugUtils.PrintAllThreadStack());
         mRoot.addView(printStack);
+
+        Button testButton = new Button(context);
+        testButton.setText("测试按钮");
+        testButton.setOnClickListener(v->{
+            new Thread(()->{
+                DexFinder.getInstance(HookEnv.AppApkPath).findMethodByString_DexKit("AIO_doOnCreate_initUI");
+                Utils.ShowToast("Done");
+            }).start();
+
+        });
+        mRoot.addView(testButton);
 
         fullScreen.setContentView(view);
         fullScreen.show();
