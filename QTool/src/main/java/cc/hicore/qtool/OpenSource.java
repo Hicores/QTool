@@ -35,14 +35,17 @@ public class OpenSource extends AppCompatActivity {
         );
         mLists = findViewById(R.id.OpenSourceList);
 
-        createItem("beanshell@2.0b6(Apache2.0)", "https://github.com/beanshell/beanshell");
-        createItem("EzXHelper@0.8.8(Apache2.0)", "https://github.com/KyuubiRan/EzXHelper");
-        createItem("XPopup@2.7.6(Apache2.0)", "https://github.com/li-xiaojun/XPopup");
-        createItem("EasyAdapter@1.2.7", "https://github.com/li-xiaojun/EasyAdapter");
-        createItem("glide@4.13.2(Apache2.0)", "https://github.com/bumptech/glide");
-        createItem("appcenter@4.4.3(MIT)", "https://github.com/microsoft/appcenter-sdk-android");
-        createItem("BiliRoaming@1.6.4(GPL3.0)", "https://github.com/yujincheng08/BiliRoaming");
-        createItem("DexBuilder@1.6.4(LGPL3.0)", "https://github.com/LSPosed/DexBuilder");
+        createItem("beanshell@beanshell(Apache2.0)", "https://github.com/beanshell/beanshell");
+        createItem("EzXHelper@KyuubiRan(Apache2.0)", "https://github.com/KyuubiRan/EzXHelper");
+        createItem("XPopup@li-xiaojun(Apache2.0)", "https://github.com/li-xiaojun/XPopup");
+        createItem("EasyAdapter@li-xiaojun", "https://github.com/li-xiaojun/EasyAdapter");
+        createItem("glide@bumptech(Apache2.0)", "https://github.com/bumptech/glide");
+        createItem("appcenter@microsoft(MIT)", "https://github.com/microsoft/appcenter-sdk-android");
+        createItem("BiliRoaming@yujincheng08(GPL3.0)", "https://github.com/yujincheng08/BiliRoaming");
+        createItem("DexBuilder@LSPosed(LGPL3.0)", "https://github.com/LSPosed/DexBuilder");
+        createItem("DexKit@LuckyPray(LGPL3.0)", "https://github.com/LSPosed/DexBuilder");
+        createItem("dx@google", "https://androidsdkmanager.azurewebsites.net/Buildtools");
+        createItem("XposedBridgeApi@rovo89", "https://api.xposed.info/reference/packages.html");
     }
 
     private void createItem(String title, String url) {
