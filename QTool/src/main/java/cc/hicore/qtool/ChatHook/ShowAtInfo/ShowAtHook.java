@@ -77,7 +77,7 @@ public class ShowAtHook{
                 Object replyTo = MField.GetField(ChatMsg,"mSourceMsgInfo");
                 long replyToUin = MField.GetField(replyTo,"mSourceMsgSenderUin");
                 long replyToU = MField.GetField(replyTo,"mSourceMsgToUin");
-                showText.add("ReplyQQ:"+QQGroupUtils.Group_Get_Member_Name(""+replyToU,""+replyToUin)+"("+replyToUin+")");
+                showText.add("ReplyQQ:"+QQGroupUtils.Group_Get_Member_Name(""+replyToU,""+replyToUin).replace("\n","")+"("+replyToUin+")");
 
                 String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
                 JSONObject atJson = new JSONObject(Extstr);
