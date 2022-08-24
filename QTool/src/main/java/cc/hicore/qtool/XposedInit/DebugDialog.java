@@ -68,6 +68,7 @@ public class DebugDialog {
         check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Prevent_Crash_In_Java",isCheck));
         mRoot.addView(check);
 
+        /*
         check = new CheckBox(context);
         check.setChecked(BeforeConfig.getBoolean("Enable_SubMode"));
         check.setTextColor(Color.BLACK);
@@ -82,6 +83,8 @@ public class DebugDialog {
 
         });
         mRoot.addView(check);
+
+         */
 
 
         LinearLayout crashBar = new LinearLayout(context);

@@ -28,6 +28,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             HookEnv.isInSubMode = false;
             HookEnv.AppPath = lpparam.appInfo.dataDir;
             HookEnv.mLoader = lpparam.classLoader;
+            /*
             if (BeforeConfig.getBoolean("Enable_SubMode")){
                 if (BeforeConfig.getInt("Enable_VerCode") != BuildConfig.VERSION_CODE){
                     BeforeConfig.putBoolean("Enable_SubMode",false);
@@ -35,8 +36,9 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 }else {
                     if (SubIniter.initSubModule(cacheParam,lpparam))return;
                 }
-
             }
+
+             */
 
             XposedBridge.log("[QTool]Load from normal mode.");
 

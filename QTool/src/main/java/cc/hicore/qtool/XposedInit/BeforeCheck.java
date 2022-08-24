@@ -33,7 +33,7 @@ public class BeforeCheck {
                         }).show();
             }
         }
-
+        /*
         if (BeforeConfig.getBoolean("Enable_SubMode")){
             if (HookEnv.loadFailed.length() > 0){
                 Activity act = Utils.getTopActivity();
@@ -45,6 +45,8 @@ public class BeforeCheck {
                         }).show();
             }
         }
+
+         */
     }
     private static void checkNewVersion(){
         HookEnv.New_Version = ServerUtils.getNewestCIBuildVer();

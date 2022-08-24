@@ -109,38 +109,40 @@ jobs:
         with:
           name: telegram-bot-api-binary
           path: telegram-bot-api-binary
-  upload-to-server:
-    name: Upload Server
-    if: ${{ success() && github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - name: Donwload Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
-      - name: mkd
-        uses: fifsky/ssh-action@master
-        with:
-          command: |
-            mkdir /Store/Link/Down/CIDL/v${{ github.run_number }}/
-          host: ${{ secrets.SERVER_IP }}
-          user: ${{ secrets.SERVER_USERNAME }}
-          port: 22
-          pass: ${{ secrets.SERVER_PASSWORD }}
-      - name: CopyReleaseInfo
-        run: |
-          mkdir QTool
-          ls artifacts -l
-          mv artifacts/QTool-v${{ github.run_number }}/QTool-v${{ github.run_number }}.apk QTool/QTool-release.apk
-      - name: Remote SSH Pusblish
-        uses: nerd4ever/ssh-action@master
-        with:
-          from: ./QTool/*.*
-          to: /Store/Link/Down/CIDL/v${{ github.run_number }}/
-          sync: local
-          host: ${{ secrets.SERVER_IP }}
-          user: ${{ secrets.SERVER_USERNAME }}
-          port: 22
-          pass: ${{ secrets.SERVER_PASSWORD }}
+
+#  upload-to-server:
+#    name: Upload Server
+#    if: ${{ success() && github.ref == 'refs/heads/main' }}
+#    runs-on: ubuntu-latest
+#    needs:
+#      - build
+#    steps:
+#      - name: Donwload Artifacts
+#        uses: actions/download-artifact@v2
+#        with:
+#          path: artifacts
+#      - name: mkd
+#        uses: fifsky/ssh-action@master
+#        with:
+#          command: |
+#            mkdir /Store/Link/Down/CIDL/v${{ github.run_number }}/
+#          host: ${{ secrets.SERVER_IP }}
+#          user: ${{ secrets.SERVER_USERNAME }}
+#          port: 22
+#          pass: ${{ secrets.SERVER_PASSWORD }}
+#      - name: CopyReleaseInfo
+#        run: |
+#          mkdir QTool
+#          ls artifacts -l
+#          mv artifacts/QTool-v${{ github.run_number }}/QTool-v${{ github.run_number }}.apk QTool/QTool-release.apk
+#      - name: Remote SSH Pusblish
+#        uses: nerd4ever/ssh-action@master
+#        with:
+#          from: ./QTool/*.*
+#          to: /Store/Link/Down/CIDL/v${{ github.run_number }}/
+#          sync: local
+#          host: ${{ secrets.SERVER_IP }}
+#          user: ${{ secrets.SERVER_USERNAME }}
+#          port: 22
+#          pass: ${{ secrets.SERVER_PASSWORD }}
+
