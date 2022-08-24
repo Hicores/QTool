@@ -19,4 +19,7 @@ public final class Classes {
     public static Class ChatMessage(){
         return MClass.loadClass("com.tencent.mobileqq.data.ChatMessage");
     }
+    public static Class BaseSessionInfo(){
+        return MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo").getSuperclass();
+    }
 }

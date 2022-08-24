@@ -8,6 +8,7 @@ import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
@@ -17,7 +18,7 @@ public class MsgApi_sentAntEmo {
     @ApiExecutor
     public void send_8820(Object _Session, int ID) throws InvocationTargetException, IllegalAccessException {
         Method m = MMethod.FindMethod("com.tencent.mobileqq.emoticonview.AniStickerSendMessageCallBack", "sendAniSticker",
-                boolean.class, new Class[]{int.class, MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"), int.class}
+                boolean.class, new Class[]{int.class, Classes.BaseSessionInfo(), int.class}
         );
         m.invoke(null, ID, _Session, 0);
     }

@@ -13,6 +13,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
@@ -75,7 +76,7 @@ public class DictHook{
         container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.PicEmoticonInfoSender"),"sendMagicEmoticon",void.class,new Class[]{
                 MClass.loadClass("com.tencent.common.app.business.BaseQQAppInterface"),
                 Context.class,
-                MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
+                Classes.BaseSessionInfo(),
                 MClass.loadClass("com.tencent.mobileqq.data.Emoticon"),
                 MClass.loadClass("com.tencent.mobileqq.emoticon.StickerInfo")
         }));

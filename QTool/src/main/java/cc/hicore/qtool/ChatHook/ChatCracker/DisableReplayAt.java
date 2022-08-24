@@ -11,6 +11,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
@@ -32,7 +33,7 @@ public class DisableReplayAt{
     public void findHookMethod(MethodContainer container){
         container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.aio.rebuild.input.InputUIUtils"),"a",void.class,new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.AIOContext"),
-                MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
+                Classes.BaseSessionInfo(),
                 boolean.class
         }));
     }

@@ -8,6 +8,7 @@ import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
@@ -36,8 +37,12 @@ public class BaseMsgProxy{
     public BaseXPExecutor worker(){
         return param -> {
             Object MessageRecord = param.args[0];
+            if (MessageRecord == null)return;
             if (System.currentTimeMillis() - StartTime < 10 * 1000) return;
-            PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(MessageRecord));
+            if (Classes.MessageRecord().isAssignableFrom(MessageRecord.getClass())){
+                PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(MessageRecord));
+            }
+
         };
     }
 }

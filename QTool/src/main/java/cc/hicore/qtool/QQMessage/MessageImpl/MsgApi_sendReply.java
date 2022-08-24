@@ -10,6 +10,7 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.core.CoreLoader;
+import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
@@ -28,7 +29,7 @@ public class MsgApi_sendReply {
         Method mMethod = MMethod.FindMethod("com.tencent.mobileqq.replymsg.ReplyMsgSender", null, void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                 MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
-                MClass.loadClass("com.tencent.mobileqq.activity.aio.BaseSessionInfo"),
+                Classes.BaseSessionInfo(),
                 int.class,
                 int.class,
                 boolean.class
@@ -42,7 +43,7 @@ public class MsgApi_sendReply {
         Method mMethod = MMethod.FindMethod(info.scanResult.get("method").getDeclaringClass(), null, void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
                 MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
-                MClass.loadClass("com.tencent.mobileqq.activity.aio.q"),
+                Classes.BaseSessionInfo(),
                 int.class,
                 int.class,
                 boolean.class
