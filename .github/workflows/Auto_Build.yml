@@ -70,7 +70,7 @@ jobs:
           chmod +x telegram-bot-api-binary
           export qtool=$(find artifacts -name "QTool-*.apk")
           ./telegram-bot-api-binary --api-id=${{ secrets.TG_API_ID }} --api-hash=${{ secrets.TG_API_HASH }} --local 2>&1 > /dev/null &
-          curl -v "http://127.0.0.1:8081/bot${{ secrets.TG_BOT_TOKEN  }}/sendMediaGroup?chat_id=-1001722417051&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fqtool%22%2C%22caption%22:${ESCAPED}%7D%5D" \
+          curl -v "http://127.0.0.1:8081/bot${{ secrets.TG_BOT_TOKEN  }}/sendMediaGroup?disable_notification=true&chat_id=-1001722417051&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fqtool%22%2C%22caption%22:${ESCAPED}%7D%5D" \
             -F qtool="@$qtool"
           pkill telegram-bot
 
