@@ -1,11 +1,15 @@
 package cc.hicore.qtool.VoiceHelper.Hooker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -74,6 +78,7 @@ public class QQVoicePanelInject{
     public void getSimpleInit_893(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "b", void.class, new Class[0])));
     }
+    @SuppressLint("ResourceType")
     @VerController
     @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
     public BaseXPExecutor worker_1(){
@@ -83,6 +88,7 @@ public class QQVoicePanelInject{
             ResUtils.StartInject(RLayout.getContext());
             ImageView image = new ImageView(RLayout.getContext());
             image.setImageResource(R.drawable.voice_panel);
+            image.setId(889565);
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Utils.dip2px(RLayout.getContext(), 25), Utils.dip2px(RLayout.getContext(), 25));
             params.addRule(RelativeLayout.BELOW, mSpeakID);
@@ -90,6 +96,16 @@ public class QQVoicePanelInject{
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
 
             RLayout.addView(image, params);
+
+            TextView tipView = new TextView(RLayout.getContext());
+            tipView.setText("↘语音面板↙");
+            tipView.setTextColor(Color.RED);
+
+            params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ABOVE, 889565);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
+            RLayout.addView(tipView,-1,params);
+
             image.setOnClickListener(v -> VoicePanel.createVoicePanel());
         };
     }
@@ -121,7 +137,7 @@ public class QQVoicePanelInject{
         };
     }
     @VerController
-    @XPExecutor(methodID = "hook_4")
+    @XPExecutor(methodID = "hook_4",period = XPExecutor.After)
     public BaseXPExecutor worker_4(){
         return param -> {
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 0);
