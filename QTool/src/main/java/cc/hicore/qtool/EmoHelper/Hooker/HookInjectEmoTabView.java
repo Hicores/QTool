@@ -15,7 +15,6 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;

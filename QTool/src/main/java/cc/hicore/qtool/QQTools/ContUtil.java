@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.view.LayoutInflater;
 
-import cc.hicore.ReflectUtils.XPBridge;
 import cc.hicore.qtool.HookEnv;
 
 public class ContUtil {

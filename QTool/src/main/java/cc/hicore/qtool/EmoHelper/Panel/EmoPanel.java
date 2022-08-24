@@ -25,7 +25,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
-import de.robv.android.xposed.XposedBridge;
 
 public class EmoPanel {
     public static void createShow(Context context) {

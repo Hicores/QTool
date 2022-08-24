@@ -1,7 +1,5 @@
 package cc.hicore.qtool.ChatHook.ReplaceLeftSlide;
 
-import java.lang.reflect.Member;
-
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.UIItem;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -9,12 +7,10 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
-import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.MClass;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = " 替换群侧滑",itemType = XPItem.ITEM_Hook,max_targetVer = QQVersion.QQ_8_9_0)
 public class ReplaceSlide{

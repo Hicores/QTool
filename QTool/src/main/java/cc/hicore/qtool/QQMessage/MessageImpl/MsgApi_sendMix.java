@@ -13,7 +13,6 @@ import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(itemType = XPItem.ITEM_Api,name = "MsgApi_sendMix")
 public class MsgApi_sendMix {

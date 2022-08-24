@@ -45,7 +45,6 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQManager.QQGuildManager;
 import cc.hicore.qtool.R;
-import de.robv.android.xposed.XposedBridge;
 
 /*
 显示QQ好友,群聊,频道选择界面,并回调数据

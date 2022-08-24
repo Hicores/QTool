@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 public class EmoSearchAndCache {
     public static class TempTimeSortHelper{

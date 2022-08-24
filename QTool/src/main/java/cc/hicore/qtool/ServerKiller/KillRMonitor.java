@@ -4,7 +4,6 @@ import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
-import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;

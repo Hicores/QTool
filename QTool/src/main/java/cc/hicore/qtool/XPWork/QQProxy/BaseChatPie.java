@@ -1,21 +1,16 @@
 package cc.hicore.qtool.XPWork.QQProxy;
 
-import java.lang.reflect.Method;
-
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
-import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.HostInfo;
 
 @XPItem(name = "BaseChatPie_Init",itemType = XPItem.ITEM_Hook)
 public class BaseChatPie{

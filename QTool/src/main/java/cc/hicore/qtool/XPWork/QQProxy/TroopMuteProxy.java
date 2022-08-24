@@ -11,7 +11,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "Proxy_Troop_Mute",itemType = XPItem.ITEM_Hook)
 public class TroopMuteProxy{

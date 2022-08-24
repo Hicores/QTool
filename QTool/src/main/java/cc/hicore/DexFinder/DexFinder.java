@@ -14,7 +14,6 @@ import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 import io.github.qauxv.util.DexMethodDescriptor;
 import me.iacn.biliroaming.utils.DexHelper;
 

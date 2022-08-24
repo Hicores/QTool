@@ -7,13 +7,10 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
-import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.Finders;
-import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.MMethod;
 @XPItem(name = "屏蔽窗口抖动",itemType = XPItem.ITEM_Hook)
 public class PreventShakeWindow{
     @VerController

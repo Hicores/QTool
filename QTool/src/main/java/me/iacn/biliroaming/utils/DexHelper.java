@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Closeable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 
 public class DexHelper implements AutoCloseable, Closeable {

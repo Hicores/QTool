@@ -20,11 +20,9 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MField;
-import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
-import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XC_MethodHook;
 
 @XPItem(name = "长按发送卡片消息",itemType = XPItem.ITEM_Hook)
