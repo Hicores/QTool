@@ -124,7 +124,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            mkdir /Store/Down/CIDL/v${{ github.run_number }}/
+            mkdir /Store/Link/Down/CIDL/v${{ github.run_number }}/
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
           port: 22
@@ -138,7 +138,7 @@ jobs:
         uses: nerd4ever/ssh-action@master
         with:
           from: ./QTool/*.*
-          to: /Store/Down/CIDL/v${{ github.run_number }}/
+          to: /Store/Link/Down/CIDL/v${{ github.run_number }}/
           sync: local
           host: ${{ secrets.SERVER_IP }}
           user: ${{ secrets.SERVER_USERNAME }}
