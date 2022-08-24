@@ -4,14 +4,15 @@
 
 #include <dex_kit.h>
 #include <jni.h>
+#include <android/log.h>
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_cc_hicore_DexFinder_DexFinderNative_findMethodUsingString(JNIEnv *env, jclass clazz, jstring apk_path,
+Java_cc_hicore_DexFinder_DexFinderNative_findMethodUsingString(JNIEnv *env, jclass clazz, jlong dexkitInstance,
                                                                jstring str) {
-    dexkit::DexKit dexKit(env->GetStringUTFChars(apk_path,nullptr));
+    auto dexHelper = (dexkit::DexKit*)dexkitInstance;
     const char* findStr = env->GetStringUTFChars(str, nullptr);
     std::vector<size_t> p{};
-    auto findResult = dexKit.FindMethodUsedString(findStr, {}, {}, {}, {}, p, true, false);
+    auto findResult = dexHelper->FindMethodUsedString(findStr, {}, {}, {}, {}, p, true, false);
     jobjectArray result = env->NewObjectArray(findResult.size(), env->FindClass("java/lang/String"),
                                               env->NewStringUTF(""));
     for (int i = 0; i < findResult.size(); i++) {
@@ -22,14 +23,14 @@ Java_cc_hicore_DexFinder_DexFinderNative_findMethodUsingString(JNIEnv *env, jcla
 }
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_cc_hicore_DexFinder_DexFinderNative_findMethodInvoked(JNIEnv *env, jclass clazz,jstring apk_path,
+Java_cc_hicore_DexFinder_DexFinderNative_findMethodInvoked(JNIEnv *env, jclass clazz,jlong dexkitInstance,
                                                            jstring invoke_method_desc) {
-    dexkit::DexKit dexKit(env->GetStringUTFChars(apk_path,nullptr));
+    auto dexHelper = (dexkit::DexKit*)dexkitInstance;
     const char* methodDesc = env->GetStringUTFChars(invoke_method_desc, nullptr);
     std::vector<size_t> p{};
     std::vector<std::string> v;
-    auto findResult = dexKit.FindMethodInvoked(methodDesc,
-                                               "", "", "", v, p, false);
+    auto findResult = dexHelper->FindMethodInvoked(methodDesc,
+                                               "", "", "", v, p, true);
     jobjectArray result = env->NewObjectArray(findResult.size(), env->FindClass("java/lang/String"),
                                               env->NewStringUTF(""));
     for (int i = 0; i < findResult.size(); i++) {
@@ -37,8 +38,10 @@ Java_cc_hicore_DexFinder_DexFinderNative_findMethodInvoked(JNIEnv *env, jclass c
     }
     return result;
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_cc_hicore_DexFinder_DexFinderNative_InitPath(JNIEnv *env, jclass clazz, jstring apk_path) {
 
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_cc_hicore_DexFinder_DexFinderNative_InitPath(JNIEnv *env, jclass clazz, jstring apk_path) {
+    auto dexKitHelper = new dexkit::DexKit(env->GetStringUTFChars(apk_path,nullptr));
+    return (jlong)dexKitHelper;
 }

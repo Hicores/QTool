@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
     ndkVersion '23.1.7779620'
     defaultConfig {
         applicationId "cc.hicore.qtool"

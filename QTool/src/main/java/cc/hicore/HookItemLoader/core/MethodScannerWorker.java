@@ -235,7 +235,7 @@ public class MethodScannerWorker {
         }
         if (info instanceof FindMethodByName){
             FindMethodByName newNode = (FindMethodByName) info;
-            Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodByString(newNode.name);
+            Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodByString_DexKit(newNode.name);
             for (Method m : findResult){
                 try{
                     Object ret = newNode.checker.onMethod(m);
@@ -248,8 +248,24 @@ public class MethodScannerWorker {
                 }catch (Throwable th){
 
                 }
-
             }
+            //如果DexKit未找到,则尝试使用DexFinder来进行查找
+            findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodByString(newNode.name);
+            for (Method m : findResult){
+                try{
+                    Object ret = newNode.checker.onMethod(m);
+                    if (ret instanceof Boolean){
+                        if ((Boolean) ret)return m;
+                    }
+                    if (ret instanceof Member){
+                        return (Member) ret;
+                    }
+                }catch (Throwable th){
+
+                }
+            }
+
+
         }
         if (info instanceof FindMethodInvokingMethod){
             FindMethodInvokingMethod newNode = (FindMethodInvokingMethod) info;
@@ -287,7 +303,7 @@ public class MethodScannerWorker {
                 return null;
             }
             if (linkNode != null){
-                Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodBeInvoked(linkNode);
+                Method[] findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodBeInvoked_DexKit(linkNode);
                 for (Method m : findResult){
                     try{
                         Object ret = newNode.checker.onMethod(m);
@@ -297,9 +313,19 @@ public class MethodScannerWorker {
                         if (ret instanceof Member){
                             return (Member) ret;
                         }
-                    }catch (Throwable th){
-
-                    }
+                    }catch (Throwable th){ }
+                }
+                findResult = DexFinder.getInstance(HookEnv.AppApkPath).findMethodBeInvoked(linkNode);
+                for (Method m : findResult){
+                    try{
+                        Object ret = newNode.checker.onMethod(m);
+                        if (ret instanceof Boolean){
+                            if ((Boolean) ret)return m;
+                        }
+                        if (ret instanceof Member){
+                            return (Member) ret;
+                        }
+                    }catch (Throwable th){ }
                 }
             }else {
                 return null;

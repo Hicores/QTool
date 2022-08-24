@@ -15,6 +15,6 @@ add_library(
         dex_builder.cpp
 )
 
-target_link_libraries(dexkithelper dex_kit_static)
+target_link_libraries(dexkithelper dex_kit_static log)
 
 

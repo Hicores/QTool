@@ -15,11 +15,14 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XposedBridge;
+import io.github.qauxv.util.DexMethodDescriptor;
 import me.iacn.biliroaming.utils.DexHelper;
 
 public class DexFinder {
     private static DexFinder instance;
     private String apkPath;
+    private long dexkitInstance;
+    private ClassLoader loader;
     public static DexFinder getInstance(String apkPath){
         if (instance != null)return instance;
         instance = new DexFinder(apkPath);
@@ -27,13 +30,13 @@ public class DexFinder {
     }
     private DexHelper helper;
     private DexFinder(String apkPath){
-        ClassLoader loader = HookEnv.mLoader;
+        loader = HookEnv.mLoader;
 
-        String cachePath = HookEnv.AppContext.getCacheDir() + "/base.apk";
-        FileUtils.copy(apkPath,cachePath);
-        this.apkPath = cachePath;
+        this.apkPath = apkPath;
+
         try{
             initLibrary();
+
             helper = new DexHelper(loader);
         }catch (Throwable e){
             Utils.ShowToastL("无法加载so库,模块部分功能将无法使用:\n"+e);
@@ -54,6 +57,7 @@ public class DexFinder {
             System.load(cachePath+"libdexfinder.so");
             System.load(cachePath+"libdexkithelper.so");
         }
+        dexkitInstance = DexFinderNative.InitPath(apkPath);
     }
     private void outputLibToCache(String cachePath,boolean is64){
         new File(cachePath).mkdirs();
@@ -116,16 +120,32 @@ public class DexFinder {
         return retArr.toArray(new Method[0]);
     }
     public Method[] findMethodByString_DexKit(String str){
-        XposedBridge.log("startFind");
-        String[] strResult = DexFinderNative.findMethodUsingString(apkPath,"AIO_doOnCreate_initUI");
+        String[] strResult = DexFinderNative.findMethodUsingString(dexkitInstance,str);
+        ArrayList<Method> newMethod = new ArrayList<>();
         for (String s : strResult){
-            XposedBridge.log(s);
+            try {
+                newMethod.add(MethodSignToMethodInstance(loader,s));
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
-        XposedBridge.log("endFind");
-        return null;
+        return newMethod.toArray(new Method[0]);
+    }
+    public static Method MethodSignToMethodInstance(ClassLoader loader,String methodSign) throws NoSuchMethodException {
+        return new DexMethodDescriptor(methodSign).getMethodInstance(loader);
     }
     public Method[] findMethodBeInvoked_DexKit(Method method){
-        return null;
+        String methodDesc = new DexMethodDescriptor(method).toString();
+        String[] strResult = DexFinderNative.findMethodInvoked(dexkitInstance,methodDesc);
+        ArrayList<Method> newMethod = new ArrayList<>();
+        for (String s : strResult){
+            try {
+                newMethod.add(MethodSignToMethodInstance(loader,s));
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return newMethod.toArray(new Method[0]);
     }
 
 }
