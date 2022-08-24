@@ -41,6 +41,7 @@ import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HookEntry;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class MethodScannerWorker {
     public static class ScannerLink{
@@ -334,8 +335,7 @@ public class MethodScannerWorker {
         return null;
     }
     private static Method getMethodFromCache(String ID){
-        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
-        String s = share.getString(ID,null);
+        String s = HookEnv.Config.getString("method_info",ID,null);
         if (s == null)return null;
         return DescToMethod(s);
     }
@@ -352,20 +352,15 @@ public class MethodScannerWorker {
             }
             return MMethod.FindMethod(clz,json.getString("name"),returnType,paramArrClz);
         }catch (Exception e){
+            XposedBridge.log(Log.getStackTraceString(e));
             return null;
         }
     }
     private static void cleanAllCache(){
-        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
-        SharedPreferences.Editor editor = share.edit();
-        editor.clear().apply();
+        HookEnv.Config.removeAll("method_info");
     }
     private static void writeMethodToCache(String ID,Method method){
-        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("m_info",0);
-        String s = getMethodDesc(method);
-        SharedPreferences.Editor editor = share.edit();
-        editor.putString(ID,s);
-        editor.apply();
+        HookEnv.Config.setString("method_info",ID,getMethodDesc(method));
     }
     private static String getMethodDesc(Method m){
         try{
@@ -381,6 +376,7 @@ public class MethodScannerWorker {
             newJson.put("params",paramTypes);
             return newJson.toString();
         }catch (Exception e){
+            XposedBridge.log(Log.getStackTraceString(e));
             return "";
         }
 

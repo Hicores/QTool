@@ -18,7 +18,7 @@ public class ContUtil {
             try {
                 Class<?> clz = super.loadClass(name);
                 if (clz != null) return clz;
-            } catch (Exception e) {
+            } catch (Throwable e) {
 
             }
             return findClass(name);
@@ -29,7 +29,7 @@ public class ContUtil {
             try {
                 Class<?> clz = super.loadClass(name, resolve);
                 if (clz != null) return clz;
-            } catch (Exception e) {
+            } catch (Throwable e) {
 
             }
             return findClass(name);
@@ -41,7 +41,7 @@ public class ContUtil {
             try {
                 Class<?> clz = super.findClass(name);
                 if (clz != null) return clz;
-            } catch (Exception e) {
+            } catch (Throwable e) {
 
             }
             return HookEnv.moduleLoader.loadClass(name);
@@ -70,15 +70,6 @@ public class ContUtil {
 
     //获得注入了ClassLoader的LayoutInflater,使其能加载模块中的类界面
     public static LayoutInflater getContextInflater(Context context) {
-        try {
-            Context fixContext = new FixContext(context);
-            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class), param -> {
-                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                param.setResult(inflater1.cloneInContext(fixContext));
-            });
-        } catch (Exception e) {
-
-        }
-        return LayoutInflater.from(context);
+        return LayoutInflater.from(context).cloneInContext(getFixContext(context));
     }
 }

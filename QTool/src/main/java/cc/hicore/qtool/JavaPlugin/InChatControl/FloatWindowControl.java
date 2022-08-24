@@ -271,13 +271,6 @@ public class FloatWindowControl {
     private static void ShowButtonDialog(Object Session) {
         Context fixContext = new ContUtil.FixContext(cacheAct);
         LayoutInflater inflater = ContUtil.getContextInflater(cacheAct);
-        try {
-            XPBridge.HookAfterOnce(LayoutInflater.class.getMethod("from", Context.class), param -> {
-                LayoutInflater inflater1 = (LayoutInflater) param.getResult();
-                param.setResult(inflater1.cloneInContext(fixContext));
-            });
-        } catch (Exception e) {
-        }
         BottomPopupView view = new BottomPopupView(fixContext) {
             @Override
             protected int getImplLayoutId() {
