@@ -64,6 +64,13 @@ public class HttpUtils {
             int read;
             while ((read = ins.read(buffer)) != -1) {
                 fOut.write(buffer, 0, read);
+
+                //线程中断
+                if (Thread.currentThread().isInterrupted()){
+                    fOut.close();
+                    ins.close();
+                    return false;
+                }
             }
             fOut.flush();
             fOut.close();

@@ -3,7 +3,7 @@
   <component name="Statistic">
     <option name="excludedDirectories">
       <list>
-        <option value="$PROJECT_DIR$/QTool/src/main/java/bsh" />
+        <option value="$PROJECT_DIR$/libs/BeanShell" />
       </list>
     </option>
   </component>

@@ -38,6 +38,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.ICreator;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
@@ -99,7 +100,8 @@ public class HookInjectEmoTabView{
             image.setTag(123456);
             l.addView(image, 4, v.getLayoutParams());
             new Handler(Looper.getMainLooper()).post(image::invalidate);
-            image.setOnClickListener(vxx -> EmoPanel.createShow(image.getContext()));
+            //image.setOnClickListener(vxx -> EmoPanel.createShow(image.getContext()));
+            image.setOnClickListener(vxx -> ICreator.createPanel(image.getContext()));
         };
     }
     @VerController

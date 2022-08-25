@@ -30,6 +30,9 @@ public class Utils {
         }
 
     }
+    public static int getScreenWidth(Context context){
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
     public static int sp2px(Context context, float spValue){
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);

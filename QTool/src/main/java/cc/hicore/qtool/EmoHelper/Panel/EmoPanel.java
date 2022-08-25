@@ -28,7 +28,6 @@ import cc.hicore.qtool.R;
 
 public class EmoPanel {
     public static void createShow(Context context) {
-        long start = System.currentTimeMillis();
         ResUtils.StartInject(context);
         Context fixContext = ContUtil.getFixContext(context);
         EmoPanelView NewView = new EmoPanelView(fixContext);
