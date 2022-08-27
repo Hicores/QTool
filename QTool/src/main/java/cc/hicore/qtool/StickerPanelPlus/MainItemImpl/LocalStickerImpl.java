@@ -139,7 +139,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     int finalI = i;
                     Utils.PostToMain(() -> progressDialog.setMessage("正在更新表情包,请稍等...("+ finalI +"/"+mPicItems.size()+")"));
                     LocalDataHelper.LocalPicItems item = mPicItems.get(i);
-                    if (item.type == 2 && item.url.startsWith("http")){
+                    if (item.url.startsWith("http")){
                         String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
                         if (!TextUtils.isEmpty(localStorePath)){
                             HttpUtils.DownloadToFile(item.url, localStorePath);
