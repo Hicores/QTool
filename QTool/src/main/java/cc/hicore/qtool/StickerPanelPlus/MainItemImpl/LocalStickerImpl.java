@@ -33,6 +33,7 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
+import cc.hicore.qtool.StickerPanelPlus.RecentStickerHelper;
 import de.robv.android.xposed.XposedBridge;
 
 public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
@@ -68,9 +69,9 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     panelContainer.addView(itemLine,params);
                 }
                 if (item.type == 2){
-                    itemLine.addView(getItemContainer(mContext,item.url, i % 5));
+                    itemLine.addView(getItemContainer(mContext,item.url, i % 5,item));
                 }else if (item.type == 1){
-                    itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalItemPath(mPathInfo,item), i % 5));
+                    itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalItemPath(mPathInfo,item), i % 5,item));
                 }
 
             }
@@ -149,7 +150,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
             }
         }
     }
-    private View getItemContainer(Context context,String coverView,int count){
+    private View getItemContainer(Context context, String coverView, int count, LocalDataHelper.LocalPicItems item){
         int width_item = Utils.getScreenWidth(context) / 6;
         int item_distance = (Utils.getScreenWidth(context) - width_item * 5) / 4;
 
@@ -165,13 +166,33 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
             if (coverView.startsWith("http://") || coverView.startsWith("https://")){
                 HttpUtils.ProgressDownload(coverView,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")),()->{
                     QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                    RecentStickerHelper.addPicItemToRecentRecord(mPathInfo,item);
                 },mContext);
                 ICreator.dismissAll();
+
             }else {
                 QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                RecentStickerHelper.addPicItemToRecentRecord(mPathInfo,item);
                 ICreator.dismissAll();
             }
         });
+
+        img.setOnLongClickListener(v->{
+            new AlertDialog.Builder(mContext,3)
+                    .setTitle("选择你对该表情的操作")
+                    .setItems(new String[]{
+                            "删除该表情", "设置为标题预览"
+                    }, (dialog, which) -> {
+                        if (which == 0){
+                            LocalDataHelper.deletePicItem(mPathInfo,item);
+                            ICreator.dismissAll();
+                        }else if (which == 1){
+                            LocalDataHelper.setPathCover(mPathInfo,item);
+                            ICreator.dismissAll();
+                        }
+                    }).show();
+            return true;
+            });
 
         return img;
 

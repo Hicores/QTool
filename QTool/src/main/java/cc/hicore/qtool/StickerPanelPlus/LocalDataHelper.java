@@ -196,6 +196,22 @@ public class LocalDataHelper {
             e.printStackTrace();
         }
     }
+    public static String getLocalItemPath(RecentStickerHelper.RecentItemInfo recentItemInfo){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + recentItemInfo.pathName + "/info.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("items");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("MD5").equals(recentItemInfo.MD5)){
+                    return HookEnv.ExtraDataPath + "本地表情包/" + recentItemInfo.pathName + "/" + recentItemInfo.MD5;
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static String getLocalItemPath(LocalPath pathInfo,LocalPicItems newItemInfo){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";

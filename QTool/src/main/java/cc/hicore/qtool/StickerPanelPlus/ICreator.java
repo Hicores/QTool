@@ -83,6 +83,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     int myLovePos = 0;
     int recentUsePos = 0;
     private void initDefItemsBefore(){
+        /*
         ViewGroup likeTab = (ViewGroup) createPicImage(R.drawable.sticker_like,"收藏表情", v->{
             listView.setSelection(myLovePos);
             listView.smoothScrollToPositionFromTop(myLovePos,-5);
@@ -91,12 +92,14 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         likeTab.setTag(myLovePos);
         topSelectBar.addView(likeTab);
 
+         */
+
 
         ViewGroup recentUse = (ViewGroup) createPicImage(R.drawable.sticker_recent,"最近使用", v->{
             listView.setSelection(recentUsePos);
             listView.smoothScrollToPositionFromTop(recentUsePos,-5);
         });
-        recentUsePos = adapter.addItemData(new RecentStickerImpl());
+        recentUsePos = adapter.addItemData(new RecentStickerImpl(getContext()));
         recentUse.setTag(recentUsePos);
         topSelectBar.addView(recentUse);
     }
