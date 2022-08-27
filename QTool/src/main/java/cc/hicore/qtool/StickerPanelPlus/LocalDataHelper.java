@@ -23,12 +23,16 @@ public class LocalDataHelper {
             List<LocalPath> paths = new ArrayList<>();
             JSONArray pathList = pathJson.getJSONArray("paths");
             for (int i = 0; i < pathList.length(); i++) {
-                JSONObject path = pathList.getJSONObject(i);
-                LocalPath localPath = new LocalPath();
-                localPath.coverName = path.getString("coverName");
-                localPath.Name = path.getString("Name");
-                localPath.storePath = path.getString("storePath");
-                paths.add(localPath);
+                try {
+                    JSONObject path = pathList.getJSONObject(i);
+                    LocalPath localPath = new LocalPath();
+                    localPath.coverName = path.optString("coverName");
+                    localPath.Name = path.getString("Name");
+                    localPath.storePath = path.getString("storePath");
+                    paths.add(localPath);
+                }catch (Exception e){
+
+                }
             }
             return paths;
         }catch (Exception e){
@@ -50,14 +54,19 @@ public class LocalDataHelper {
             List<LocalPicItems> items = new ArrayList<>();
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
-                JSONObject path = pathList.getJSONObject(i);
-                LocalPicItems localPath = new LocalPicItems();
-                localPath.MD5 = path.getString("MD5");
-                localPath.fileName = path.getString("fileName");
-                localPath.addTime = path.getLong("addTime");
-                localPath.type = path.getInt("type");
-                localPath.url = path.getString("url");
-                items.add(localPath);
+                try {
+                    JSONObject path = pathList.getJSONObject(i);
+                    LocalPicItems localPath = new LocalPicItems();
+                    localPath.MD5 = path.getString("MD5");
+                    localPath.fileName = path.optString("fileName");
+                    localPath.addTime = path.optLong("addTime");
+                    localPath.type = path.getInt("type");
+                    localPath.url = path.optString("url");
+                    items.add(localPath);
+                }catch (Exception e){
+
+                }
+
             }
             return items;
         }catch (Exception e){

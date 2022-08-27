@@ -1,4 +1,4 @@
-package cc.hicore.qtool.EmoHelper.Panel;
+package cc.hicore.qtool.StickerPanelPlus;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,8 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.bumptech.glide.Glide;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.core.BasePopupView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,25 +22,19 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.EmoHelper.Panel.EmoOnlineLoader;
+import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
+import cc.hicore.qtool.EmoHelper.Panel.EmoSearchAndCache;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 
-public class EmoPanel {
-    public static void createShow(Context context) {
-        ResUtils.StartInject(context);
-        Context fixContext = ContUtil.getFixContext(context);
-        EmoPanelView NewView = new EmoPanelView(fixContext);
+public class PanelUtils {
 
-        XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);
-        BasePopupView base = NewPop.asCustom(NewView);
-        base.show();
-    }
+    static LocalDataHelper.LocalPath choicePath;
 
-    static String choiceName = "";
+    //显示确认保存的对话框
     public static void PreSavePicToList(String URL, String MD5, Context context) {
-        choiceName = "";
+        choicePath = null;
         ResUtils.StartInject(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         LinearLayout mRoot = (LinearLayout) inflater.inflate(R.layout.emo_pre_save, null);
@@ -68,17 +60,17 @@ public class EmoPanel {
                     .into(preView);
         }
 
+        List<LocalDataHelper.LocalPath> paths = LocalDataHelper.readPaths();
 
-        ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
         RadioGroup group = mRoot.findViewById(R.id.emo_pre_list_choser);
-        for (String ItemName : NameList) {
+        for (LocalDataHelper.LocalPath path : paths) {
             RadioButton button = new RadioButton(context);
-            button.setText(ItemName);
+            button.setText(path.Name);
             button.setTextSize(16);
             button.setTextColor(context.getResources().getColor(R.color.font_plugin, null));
             button.setOnCheckedChangeListener((v, ischeck) -> {
                 if (v.isPressed() && ischeck) {
-                    choiceName = ItemName;
+                    choicePath = path;
                 }
             });
             group.addView(button);
@@ -96,23 +88,22 @@ public class EmoPanel {
                             Utils.ShowToastL("名字不能为空");
                             return;
                         }
-                        String newPath = HookEnv.ExtraDataPath + "Pic/" + newName;
-                        if (new File(newPath).exists()) {
-                            Utils.ShowToastL("这个名字已经存在");
-                            return;
-                        }
-                        new File(newPath).mkdirs();
-                        ArrayList<String> NewList = EmoSearchAndCache.searchForPathList();
+                        LocalDataHelper.LocalPath path = new LocalDataHelper.LocalPath();
+                        path.Name = newName;
+                        path.storePath = NameUtils.getRandomString(16);
+                        LocalDataHelper.addPath(path);
+
+                        List<LocalDataHelper.LocalPath> allPaths = LocalDataHelper.readPaths();
                         group.removeAllViews();
                         //确认添加列表后会重新扫描列表并显示
-                        for (String ItemName : NewList) {
+                        for (LocalDataHelper.LocalPath pathItem : allPaths) {
                             RadioButton button = new RadioButton(context);
-                            button.setText(ItemName);
+                            button.setText(pathItem.Name);
                             button.setTextSize(16);
                             button.setTextColor(context.getResources().getColor(R.color.font_plugin, null));
                             button.setOnCheckedChangeListener((vaa, ischeck) -> {
                                 if (vaa.isPressed() && ischeck) {
-                                    choiceName = ItemName;
+                                    choicePath = pathItem;
                                 }
                             });
                             group.addView(button);
@@ -126,13 +117,21 @@ public class EmoPanel {
                 .setTitle("是否保存")
                 .setView(mRoot)
                 .setNeutralButton("保存", (dialog, which) -> {
-                    if (TextUtils.isEmpty(choiceName)) {
+                    if (choicePath == null) {
                         Utils.ShowToastL("没有选择任何的保存列表");
                     } else if (TextUtils.isEmpty(NewInfo.Path)) {
                         Utils.ShowToastL("图片尚未加载完毕,保存失败");
                     } else {
-                        FileUtils.copy(NewInfo.Path, HookEnv.ExtraDataPath + "Pic/" + choiceName + "/" + MD5);
-                        Utils.ShowToastL("已保存到:" + HookEnv.ExtraDataPath + "Pic/" + choiceName + "/" + MD5);
+                        FileUtils.copy(NewInfo.Path, HookEnv.ExtraDataPath + "本地表情包/" + choicePath.storePath + "/" + MD5);
+                        LocalDataHelper.LocalPicItems item = new LocalDataHelper.LocalPicItems();
+                        item.type = 1;
+                        item.MD5 = MD5;
+                        item.fileName = MD5;
+                        item.addTime = System.currentTimeMillis();
+                        LocalDataHelper.addPicItem(choicePath.storePath, item);
+
+
+                        Utils.ShowToastL("已保存到:" + HookEnv.ExtraDataPath + "本地表情包/" + choicePath.storePath + "/" + MD5);
                     }
                 }).setOnDismissListener(dialog -> {
                     Glide.with(HookEnv.AppContext).clear(preView);
@@ -149,17 +148,4 @@ public class EmoPanel {
 
                 }).show();
     }
-
-    public static class EmoInfo {
-        public String Path;
-        public String Name;
-        public int type;
-        public String MD5;
-        public String URL;
-        public String thumb;
-    }
-
-
-
-
 }

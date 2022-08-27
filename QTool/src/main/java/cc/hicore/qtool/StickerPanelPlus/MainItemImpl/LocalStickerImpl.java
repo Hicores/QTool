@@ -88,6 +88,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                                 .setTitle("是否删除该表情包("+tv_title.getText()+"),该表情包内的本地表情将被删除并不可恢复")
                                 .setNeutralButton("确定删除", (dialog1, which1) -> {
                                     LocalDataHelper.deletePath(mPathInfo);
+                                    ICreator.dismissAll();
                                 })
                                 .setNegativeButton("取消", (dialog12, which12) -> {
 

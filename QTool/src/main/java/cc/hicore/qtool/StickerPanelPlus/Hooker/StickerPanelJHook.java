@@ -1,4 +1,4 @@
-package cc.hicore.qtool.EmoHelper.Hooker;
+package cc.hicore.qtool.StickerPanelPlus.Hooker;
 
 
 import android.annotation.SuppressLint;
@@ -35,22 +35,22 @@ import cc.hicore.ReflectUtils.QQReflect;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
+import cc.hicore.qtool.StickerPanelPlus.PanelUtils;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
  */
 @SuppressLint("ResourceType")
-@XPItem(name = "表情面板",itemType = XPItem.ITEM_Hook)
-public class HookInjectEmoTabView{
+@XPItem(name = "表情面板#2",itemType = XPItem.ITEM_Hook)
+public class StickerPanelJHook {
     @VerController
     @UIItem
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
-        ui.name = "表情面板#1";
+        ui.name = "表情面板#2";
         ui.groupName = "聊天辅助";
         ui.desc = "和另一个冲突,请不要都开启,否则可能发生莫名其妙的问题";
         ui.type = 1;
@@ -101,7 +101,7 @@ public class HookInjectEmoTabView{
             image.setTag(123456);
             l.addView(image, 4, v.getLayoutParams());
             new Handler(Looper.getMainLooper()).post(image::invalidate);
-            image.setOnClickListener(vxx -> EmoPanel.createShow(image.getContext()));
+            image.setOnClickListener(vxx -> ICreator.createPanel(v.getContext()));
             //image.setOnClickListener(vxx -> ICreator.createPanel(image.getContext()));
         };
     }
@@ -129,7 +129,7 @@ public class HookInjectEmoTabView{
             if (InvokeID == 3100) {
                 String MD5 = MField.GetField(chatMsg, "md5");
                 String URL = "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + MD5 + "/0?term=2";
-                new Handler(Looper.getMainLooper()).post(() -> EmoPanel.PreSavePicToList(URL, MD5, mContext));
+                new Handler(Looper.getMainLooper()).post(() -> PanelUtils.PreSavePicToList(URL, MD5, mContext));
             }
         };
     }
@@ -167,12 +167,12 @@ public class HookInjectEmoTabView{
                     Utils.ShowToastL("没有图片");
                 } else if (MD5.size() == 1) {//如果为单张图片则直接显示了
                     String url = "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + MD5.get(0) + "/0?term=2";
-                    EmoPanel.PreSavePicToList(url, MD5.get(0), mContext);
+                    PanelUtils.PreSavePicToList(url, MD5.get(0), mContext);
                 } else {
                     ArrayList<String> urls = new ArrayList<>();
                     for (String md5 : MD5)
                         urls.add("http://gchat.qpic.cn/gchatpic_new/0/0-0-" + md5 + "/0?term=2");
-                    EmoPanel.PreSaveMultiPicList(urls, MD5, mContext);
+                    PanelUtils.PreSaveMultiPicList(urls, MD5, mContext);
                 }
             }
         };
@@ -201,7 +201,7 @@ public class HookInjectEmoTabView{
             if (InvokeID == 3100) {
                 Object mMarkFaceMessage = MField.GetField(chatMsg, "mMarkFaceMessage");
                 String LocalPath = DecodeForEncPic.decodeGifForLocalPath(MField.GetField(mMarkFaceMessage, "dwTabID"), MField.GetField(mMarkFaceMessage, "sbufID"));
-                new Handler(Looper.getMainLooper()).post(() -> EmoPanel.PreSavePicToList(LocalPath, DataUtils.getFileMD5(new File(LocalPath)), mContext));
+                new Handler(Looper.getMainLooper()).post(() -> PanelUtils.PreSavePicToList(LocalPath, DataUtils.getFileMD5(new File(LocalPath)), mContext));
             }
         };
     }
@@ -220,7 +220,7 @@ public class HookInjectEmoTabView{
                                 CharSequence content = v.getContentDescription();
                                 if (content != null && content.toString().contains("拉起表情面板")) {
                                     v.setOnLongClickListener((a) -> {
-                                        EmoPanel.createShow(v.getContext());
+                                        ICreator.createPanel(v.getContext());
                                         return true;
                                     });
                                 }
@@ -239,7 +239,7 @@ public class HookInjectEmoTabView{
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 1);
             if (button != null) {
                 button.setOnLongClickListener(v -> {
-                    EmoPanel.createShow(v.getContext());
+                    ICreator.createPanel(v.getContext());
                     return true;
                 });
             }

@@ -6,6 +6,7 @@
     <HorizontalScrollView
         android:id="@+id/Sticker_Pack_Select_Bar_Container"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="51dp">
         <LinearLayout
             android:id="@+id/Sticker_Pack_Select_Bar"
