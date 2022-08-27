@@ -46,16 +46,11 @@ public class Utils {
             if (baseContext instanceof Activity) {
                 ((Activity) baseContext).getWindowManager().getDefaultDisplay().getSize(point);
 
-                int top = (int) (rect.height() * 0.5 + rect.top);
-                int left = (int) (rect.width() * 0.5 + rect.left);
-
-                if (top >= 0 && top <= point.y && left >= 0 && left <= point.x) {
+                if (rect.top >= 0 && rect.top <= point.y && rect.left >= 0 && rect.left <= point.x) {
                     return true;
                 }
             }
-
         }
-
         return false;
     }
     public static int getScreenWidth(Context context){
