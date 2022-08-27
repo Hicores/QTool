@@ -120,7 +120,7 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
         items.addView(title);
 
         items.setOnClickListener(v->{
-            new AlertDialog.Builder(context).setTitle("提示")
+            new AlertDialog.Builder(context,3).setTitle("提示")
                     .setMessage("是否将该表情包添加到列表?").
                     setPositiveButton("确定", (dialog, which) -> {
                         saveNetShareStickerPackToLocal(ID,name,coverView);
@@ -173,10 +173,10 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 path.Name = Name;
                 LocalDataHelper.addPath(path);
                 Utils.PostToMain(()->{
-                    new AlertDialog.Builder(mContext).setTitle("提示")
+                    new AlertDialog.Builder(mContext,3).setTitle("提示")
                             .setMessage("添加成功").
                             setPositiveButton("确定", (dialog1, which) -> {
-
+                                ICreator.dismissAll();
                             }).show();
                 });
             }catch (Exception e){

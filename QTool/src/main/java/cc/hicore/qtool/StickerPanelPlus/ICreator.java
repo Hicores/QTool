@@ -40,12 +40,18 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     public ICreator(@NonNull Context context) {
         super(context);
     }
+    private static BasePopupView popupView;
     public static void createPanel(Context context){
         ResUtils.StartInject(context);
         Context fixContext = ContUtil.getFixContext(context);
         XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);
-        BasePopupView base = NewPop.asCustom(new ICreator(fixContext));
-        base.show();
+        popupView = NewPop.asCustom(new ICreator(fixContext));
+        popupView.show();
+    }
+    public static void dismissAll(){
+        if (popupView != null){
+            popupView.dismiss();
+        }
     }
     MainPanelAdapter adapter = new MainPanelAdapter();
     int IdOfShareGroup;

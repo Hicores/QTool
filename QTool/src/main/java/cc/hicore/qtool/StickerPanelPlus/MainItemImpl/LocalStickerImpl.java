@@ -1,7 +1,10 @@
 package cc.hicore.qtool.StickerPanelPlus.MainItemImpl;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,10 +22,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQMessage.QQMsgBuilder;
+import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
+import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
 import de.robv.android.xposed.XposedBridge;
@@ -46,6 +54,9 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         panelContainer = cacheView.findViewById(R.id.Sticker_Item_Container);
         tv_title.setText(mPathInfo.Name);
 
+        View setButton = cacheView.findViewById(R.id.Sticker_Panel_Set_Item);
+        setButton.setOnClickListener(v-> onSetButtonClick());
+
         try {
             LinearLayout itemLine = null;
             for (int i = 0; i < mPicItems.size(); i++){
@@ -56,10 +67,66 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     params.bottomMargin = Utils.dip2px(mContext,16);
                     panelContainer.addView(itemLine,params);
                 }
-                itemLine.addView(getItemContainer(mContext,item.url, i % 5));
+                if (item.type == 2){
+                    itemLine.addView(getItemContainer(mContext,item.url, i % 5));
+                }else if (item.type == 1){
+                    itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalItemPath(mPathInfo,item), i % 5));
+                }
+
             }
         }catch (Exception e){XposedBridge.log(Log.getStackTraceString(e));
         }
+    }
+    private void onSetButtonClick(){
+        new AlertDialog.Builder(mContext,3)
+                .setTitle("选择你的操作").setItems(new String[]{
+                        "删除改表情包", "表情包本地化"
+                }, (dialog, which) -> {
+                    if (which == 0){
+                        new AlertDialog.Builder(mContext,3)
+                                .setTitle("是否删除该表情包("+tv_title.getText()+"),该表情包内的本地表情将被删除并不可恢复")
+                                .setNeutralButton("确定删除", (dialog1, which1) -> {
+                                    LocalDataHelper.deletePath(mPathInfo);
+                                })
+                                .setNegativeButton("取消", (dialog12, which12) -> {
+
+                                }).show();
+                    }else if (which == 1){
+                        updateAllResToLocal();
+                    }
+                }).show();
+    }
+    private void updateAllResToLocal(){
+        ProgressDialog progressDialog = new ProgressDialog(mContext,3);
+        progressDialog.setTitle("正在更新表情包");
+        progressDialog.setMessage("正在更新表情包,请稍等...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < mPicItems.size(); i++){
+                    int finalI = i;
+                    Utils.PostToMain(() -> progressDialog.setMessage("正在更新表情包,请稍等...("+ finalI +"/"+mPicItems.size()+")"));
+                    LocalDataHelper.LocalPicItems item = mPicItems.get(i);
+                    if (item.type == 2 && item.url.startsWith("http")){
+                        String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
+                        if (!TextUtils.isEmpty(localStorePath)){
+                            HttpUtils.DownloadToFile(item.url, localStorePath);
+                            item.type = 1;
+                            item.fileName = item.MD5;
+                            LocalDataHelper.updatePicItemInfo(mPathInfo, item);
+                        }
+                    }
+                }
+            }catch (Exception e){
+
+            }finally {
+                Utils.PostToMain(progressDialog::dismiss);
+                Utils.ShowToast("已更新完成");
+                Utils.PostToMain(ICreator::dismissAll);
+            }
+        }).start();
+
     }
     @Override
     public View getView(ViewGroup parent) {
@@ -94,6 +161,17 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         img.setLayoutParams(params);
 
         img.setTag(coverView);
+        img.setOnClickListener(v->{
+            if (coverView.startsWith("http://") || coverView.startsWith("https://")){
+                HttpUtils.ProgressDownload(coverView,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")),()->{
+                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                },mContext);
+                ICreator.dismissAll();
+            }else {
+                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                ICreator.dismissAll();
+            }
+        });
 
         return img;
 
@@ -110,46 +188,5 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     @Override
     public long getID() {
         return 0;
-    }
-
-    public static class StickerPackViewInfo{
-        public ViewGroup packView;
-        public String ID;
-        public View[] glideViews;
-    }
-    public static class CreatePanelPackInfo{
-        public Context context;
-        public List<PackItemInfo> items;
-    }
-    public static class PackItemInfo{
-        public static final int TYPE_LOCAL = 1;
-        public static final int TYPE_NET_URL = 2;
-        public int type;
-        public int path;
-    }
-    public static StickerPackViewInfo getPanelSticker(CreatePanelPackInfo context){
-        StickerPackViewInfo newInfo = new StickerPackViewInfo();
-        newInfo.ID = NameUtils.getRandomString(16);
-        newInfo.packView = (ViewGroup) LayoutInflater.from(context.context).inflate(R.layout.sticker_panel_plus_pack_item, null);
-        initPackItems(newInfo,context);
-        return newInfo;
-    }
-
-    private static HashMap<String,StickerPackViewInfo> viewCache = new HashMap<>();
-    private static void initPackItems(StickerPackViewInfo retInfo,CreatePanelPackInfo info){
-        LinearLayout container = (LinearLayout) retInfo.packView.findViewById(R.id.Sticker_Item_Container);
-        LinearLayout lineContainer;
-        for (int i=0;i<info.items.size();i++){
-            if (i % 5 == 0){
-                lineContainer = new LinearLayout(info.context);
-                container.addView(lineContainer);
-            }
-        }
-    }
-
-
-
-    public static void destroyStickerPackView(String ViewID){
-
     }
 }

@@ -124,4 +124,92 @@ public class LocalDataHelper {
             return false;
         }
     }
+    public static void deletePath(LocalPath pathInfo){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("paths");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("Name").equals(pathInfo.Name)){
+                    pathList.remove(i);
+                    break;
+                }
+            }
+            FileUtils.WriteToFile(pathSetDir, pathJson.toString());
+            FileUtils.deleteFile(new File(HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void deletePicItem(LocalPath pathInfo,LocalPicItems item){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("items");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("MD5").equals(item.MD5)){
+                    pathList.remove(i);
+                    break;
+                }
+            }
+            FileUtils.WriteToFile(pathSetDir, pathJson.toString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void setPathCover(LocalPath pathInfo,LocalPicItems coverItem){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("paths");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("Name").equals(pathInfo.Name)){
+                    path.put("coverName", coverItem.fileName);
+                    break;
+                }
+            }
+            FileUtils.WriteToFile(pathSetDir, pathJson.toString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void updatePicItemInfo(LocalPath pathInfo,LocalPicItems newItemInfo){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("items");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("MD5").equals(newItemInfo.MD5)){
+                    path.put("fileName", newItemInfo.fileName);
+                    path.put("addTime", newItemInfo.addTime);
+                    path.put("type", newItemInfo.type);
+                    path.put("url", newItemInfo.url);
+                    break;
+                }
+            }
+            FileUtils.WriteToFile(pathSetDir, pathJson.toString());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static String getLocalItemPath(LocalPath pathInfo,LocalPicItems newItemInfo){
+        try {
+            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
+            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
+            JSONArray pathList = pathJson.getJSONArray("items");
+            for (int i = 0; i < pathList.length(); i++) {
+                JSONObject path = pathList.getJSONObject(i);
+                if(path.getString("MD5").equals(newItemInfo.MD5)){
+                    return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.MD5;
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
