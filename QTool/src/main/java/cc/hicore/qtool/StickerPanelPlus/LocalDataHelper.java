@@ -167,7 +167,12 @@ public class LocalDataHelper {
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
                 if(path.getString("Name").equals(pathInfo.Name)){
-                    path.put("coverName", coverItem.fileName);
+                    if (coverItem.type == 1){
+                        path.put("coverName", coverItem.fileName);
+                    }else if (coverItem.type == 2){
+                        path.put("coverName", coverItem.url);
+                    }
+
                     break;
                 }
             }

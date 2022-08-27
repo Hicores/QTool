@@ -129,7 +129,7 @@ public class RecentStickerHelper {
                 }
             }
 
-            if (pathList.length() >= 20){
+            if (pathList.length() >= 30){
                 pathList.remove(0);
                 pathJson.put("items", pathList);
                 FileUtils.WriteToFile(pathSetDir, pathJson.toString());

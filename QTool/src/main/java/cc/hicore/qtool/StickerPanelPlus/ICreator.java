@@ -34,6 +34,7 @@ import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.LocalStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.MyLoveStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.RecentStickerImpl;
+import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.TgConvertStickerImpl;
 
 @SuppressLint("ResourceType")
 public class ICreator extends BottomPopupView implements AbsListView.OnScrollListener {
@@ -75,7 +76,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
                 listView.setSelection(localPathPos);
                 listView.smoothScrollToPositionFromTop(localPathPos,-5);
 
-            });
+            },path);
             sticker_pack_item.setTag(localPathPos);
             topSelectBar.addView(sticker_pack_item);
         }
@@ -103,6 +104,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         recentUse.setTag(recentUsePos);
         topSelectBar.addView(recentUse);
     }
+    int IdOfConvertFromTg;
     private void initDefItemsLast(){
         ViewGroup tabView = (ViewGroup) createPicImage(R.drawable.share,"分享表情", v -> {
             listView.setSelection(IdOfShareGroup);
@@ -112,8 +114,16 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         tabView.setTag(IdOfShareGroup);
         topSelectBar.addView(tabView);
 
+        ViewGroup tgView = (ViewGroup) createPicImage(R.drawable.dl_from_tg,"从TG转换", v -> {
+            listView.setSelection(IdOfConvertFromTg);
+            listView.smoothScrollToPositionFromTop(IdOfConvertFromTg,-5);
+        });
+        IdOfConvertFromTg = adapter.addItemData(new TgConvertStickerImpl());
+        tgView.setTag(IdOfConvertFromTg);
+        topSelectBar.addView(tgView);
 
-        topSelectBar.addView(createPicImage(R.drawable.sticker_pack_set_icon,"设置分组",v -> Utils.ShowToast("Click")));
+
+        //topSelectBar.addView(createPicImage(R.drawable.sticker_pack_set_icon,"设置分组",v -> Utils.ShowToast("Click")));
     }
     public void notifyTabViewSelect(ViewGroup vg){
         for (ViewGroup v : newTabView){
@@ -122,7 +132,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         vg.findViewById(887533).setVisibility(VISIBLE);
     }
     //创建贴纸包面板的滑动按钮
-    private View createPicImage(String imgPath,String title,View.OnClickListener clickListener){
+    private View createPicImage(String imgPath, String title, View.OnClickListener clickListener, LocalDataHelper.LocalPath path){
         ImageView img = new ImageView(getContext());
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
@@ -155,7 +165,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
                 e.printStackTrace();
             }
         }else {
-            Glide.with(HookEnv.AppContext).load(imgPath).into(img);
+            Glide.with(HookEnv.AppContext).load(HookEnv.ExtraDataPath + "本地表情包/" + path.storePath + "/" +imgPath).into(img);
         }
 
 

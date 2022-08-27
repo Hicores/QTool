@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,12 +23,14 @@ import java.util.HashSet;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
+import de.robv.android.xposed.XposedBridge;
 
-public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
+public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
     LinearLayout panelContainer;
     TextView tv_title;
     HashSet<ImageView> cacheImageView = new HashSet<>();
@@ -53,15 +54,15 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
             panelContainer = cacheView.findViewById(R.id.Sticker_Item_Container);
             cacheView.findViewById(R.id.Sticker_Panel_Set_Item).setVisibility(View.GONE);
             new Thread(this::getUpdateInfo).start();
-            notifyMsg = "在线分享的表情包(加载中...)";
+            notifyMsg = "TG转换的表情包(加载中...)";
         }
         tv_title.setText(notifyMsg);
         if (!TextUtils.isEmpty(updateData)){
             try {
                 panelContainer.removeAllViews();
                 Context context = tv_title.getContext();
-                tv_title.setText("在线分享的表情包");
-                JSONArray dataArr = new JSONObject(updateData).getJSONArray("list");
+                tv_title.setText("TG转换的表情包");
+                JSONArray dataArr = new JSONObject(updateData).getJSONArray("data");
                 LinearLayout itemLine = null;
                 for (int  i = 0; i < dataArr.length(); i++){
                     if (i % 4 == 0){
@@ -70,9 +71,11 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     }
 
                     JSONObject item = dataArr.getJSONObject(i);
-                    String id = item.getString("id");
-                    String coverPath = "https://cdn.haonb.cc/ShareStickers/SData/" + id + "/" + item.getString("Cover");
+                    String id = item.getString("ID");
+                    String coverPath = "https://cdn.haonb.cc/" + item.getString("cover");
                     String name = item.getString("name");
+
+                    XposedBridge.log(name);
 
                     itemLine.addView(getItemContainer(context,name,coverPath, id, i % 4));
                 }
@@ -80,12 +83,14 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
         }
     }
     private void getUpdateInfo(){
-        updateData = HttpUtils.getContent("https://qtool.haonb.cc/StickerHelper/getList");
+        updateData = HttpUtils.getContent("https://qtool.haonb.cc/getByUin?uin="+ QQEnvUtils.getCurrentUin());
         if (TextUtils.isEmpty(updateData)){
-            notifyMsg = "在线分享的表情包(加载失败)";
+            notifyMsg = "TG转换的表情包(加载失败)";
         }else {
-            notifyMsg = "在线分享的表情包";
+            notifyMsg = "TG转换的表情包";
         }
+
+        XposedBridge.log(updateData);
         Utils.PostToMain(this::notifyViewUpdate);
     }
     private View getItemContainer(Context context,String name,String coverView,String ID,int count){
@@ -151,12 +156,13 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
         dialog.show();
         new Thread(()->{
             try {
-                String stickerPack = HttpUtils.getContent("https://qtool.haonb.cc/StickerHelper/getContent?id="+ID);
-                JSONArray listArr = new JSONObject(stickerPack).getJSONArray("list");
+                String stickerPack = HttpUtils.getContent("https://qtool.haonb.cc/getContent?id="+ID);
+                JSONArray listArr = new JSONObject(stickerPack).getJSONArray("data");
                 for (int i=0;i<listArr.length();i++){
                     JSONObject item = listArr.getJSONObject(i);
+                    String uri = item.getString("URI");
+                    String url = "https://cdn.haonb.cc/" + uri;
                     String md5 = item.getString("MD5");
-                    String url = "https://cdn.haonb.cc/ShareStickers/SData/" + ID + "/" + md5;
                     LocalDataHelper.LocalPicItems localItem = new LocalDataHelper.LocalPicItems();
                     localItem.url = url;
                     localItem.type = 2;

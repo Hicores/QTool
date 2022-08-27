@@ -192,7 +192,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                         }
                     }).show();
             return true;
-            });
+        });
 
         return img;
 
