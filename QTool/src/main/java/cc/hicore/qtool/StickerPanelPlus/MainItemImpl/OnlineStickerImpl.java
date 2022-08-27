@@ -33,7 +33,6 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
     LinearLayout panelContainer;
     TextView tv_title;
     HashSet<ImageView> cacheImageView = new HashSet<>();
-    Thread lastThread;
 
     ViewGroup cacheView;
     Context mContext;
@@ -59,6 +58,7 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
         tv_title.setText(notifyMsg);
         if (!TextUtils.isEmpty(updateData)){
             try {
+                panelContainer.removeAllViews();
                 Context context = tv_title.getContext();
                 tv_title.setText("在线分享的表情包");
                 JSONArray dataArr = new JSONObject(updateData).getJSONArray("list");

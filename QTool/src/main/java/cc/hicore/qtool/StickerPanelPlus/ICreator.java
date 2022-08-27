@@ -20,6 +20,8 @@ import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.XPopupUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,10 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.LocalStickerImpl;
+import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.MyLoveStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
+import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.RecentStickerImpl;
 
 @SuppressLint("ResourceType")
 public class ICreator extends BottomPopupView implements AbsListView.OnScrollListener {
@@ -57,13 +62,43 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         listView.setOnScrollListener(this);
     }
     private void initStickerPacks(){
+        List<LocalDataHelper.LocalPath> paths = LocalDataHelper.readPaths();
+        for (LocalDataHelper.LocalPath path : paths){
+            int localPathPos = adapter.addItemData(new LocalStickerImpl(path, LocalDataHelper.getPicItems(path.storePath),getContext()));
+            ViewGroup sticker_pack_item = (ViewGroup) createPicImage(path.coverName,path.Name, v->{
+                listView.setSelection(localPathPos);
+                listView.smoothScrollToPositionFromTop(localPathPos,-5);
 
+            });
+            sticker_pack_item.setTag(localPathPos);
+            topSelectBar.addView(sticker_pack_item);
+        }
     }
+    int myLovePos = 0;
+    int recentUsePos = 0;
     private void initDefItemsBefore(){
+        ViewGroup likeTab = (ViewGroup) createPicImage(R.drawable.sticker_like,"收藏表情", v->{
+            listView.setSelection(myLovePos);
+            listView.smoothScrollToPositionFromTop(myLovePos,-5);
+        });
+        myLovePos = adapter.addItemData(new MyLoveStickerImpl());
+        likeTab.setTag(myLovePos);
+        topSelectBar.addView(likeTab);
 
+
+        ViewGroup recentUse = (ViewGroup) createPicImage(R.drawable.sticker_recent,"最近使用", v->{
+            listView.setSelection(recentUsePos);
+            listView.smoothScrollToPositionFromTop(recentUsePos,-5);
+        });
+        recentUsePos = adapter.addItemData(new RecentStickerImpl());
+        recentUse.setTag(recentUsePos);
+        topSelectBar.addView(recentUse);
     }
     private void initDefItemsLast(){
-        ViewGroup tabView = (ViewGroup) createPicImage(R.drawable.share,"分享表情", v -> listView.smoothScrollToPositionFromTop(IdOfShareGroup,0));
+        ViewGroup tabView = (ViewGroup) createPicImage(R.drawable.share,"分享表情", v -> {
+            listView.setSelection(IdOfShareGroup);
+            listView.smoothScrollToPositionFromTop(IdOfShareGroup,-5);
+        });
         IdOfShareGroup = adapter.addItemData(new OnlineStickerImpl());
         tabView.setTag(IdOfShareGroup);
         topSelectBar.addView(tabView);
@@ -78,7 +113,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         vg.findViewById(887533).setVisibility(VISIBLE);
     }
     //创建贴纸包面板的滑动按钮
-    private View createPicImage(String localPath,String title,View.OnClickListener clickListener){
+    private View createPicImage(String imgPath,String title,View.OnClickListener clickListener){
         ImageView img = new ImageView(getContext());
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
@@ -104,11 +139,31 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         panel.addView(titleView);
 
 
-        Glide.with(HookEnv.AppContext).load(localPath).into(img);
+        if (imgPath.startsWith("http://") || imgPath.startsWith("https://")){
+            try {
+                Glide.with(HookEnv.AppContext).load(new URL(imgPath)).into(img);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }else {
+            Glide.with(HookEnv.AppContext).load(imgPath).into(img);
+        }
+
+
         LinearLayout.LayoutParams panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),50),ViewGroup.LayoutParams.WRAP_CONTENT);
         panel_param.leftMargin = Utils.dip2px(getContext(),5);
         panel_param.rightMargin = Utils.dip2px(getContext(),5);
         panel.setLayoutParams(panel_param);
+
+        View greenTip = new View(getContext());
+        greenTip.setBackgroundColor(Color.GREEN);
+        panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),30),50);
+        panel_param.leftMargin = Utils.dip2px(getContext(),5);
+        panel_param.rightMargin = Utils.dip2px(getContext(),5);
+        greenTip.setLayoutParams(panel_param);
+        greenTip.setId(887533);
+        greenTip.setVisibility(GONE);
+        panel.addView(greenTip);
 
         newTabView.add(panel);
         return panel;
@@ -208,6 +263,13 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
             notifyTabViewSelect(vg);
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        adapter.destroyAllViews();
+    }
+
     private ViewGroup findViewByItemNumber(int number){
         for (int i = 0; i < newTabView.size(); i++) {
             Object tag = newTabView.get(i).getTag();
