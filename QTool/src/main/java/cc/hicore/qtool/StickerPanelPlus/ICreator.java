@@ -271,14 +271,9 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         return R.layout.sticker_panel_plus_main;
     }
 
-
-    int status;
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        status = scrollState;
-        if (scrollState == 0){
 
-        }
     }
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -287,11 +282,9 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
             notifyTabViewSelect(vg);
         }
 
-        if (status != 0){
-            int first = view.getFirstVisiblePosition();
-            int last = view.getLastVisiblePosition();
-            adapter.notifyViewUpdate(first,last);
-        }
+        int first = view.getFirstVisiblePosition();
+        int last = view.getLastVisiblePosition();
+        adapter.notifyViewUpdate(first,last);
 
     }
 
