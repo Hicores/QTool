@@ -89,8 +89,6 @@ public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
         }else {
             notifyMsg = "TG转换的表情包";
         }
-
-        XposedBridge.log(updateData);
         Utils.PostToMain(this::notifyViewUpdate);
     }
     private View getItemContainer(Context context,String name,String coverView,String ID,int count){
