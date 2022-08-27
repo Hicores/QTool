@@ -145,6 +145,12 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
     public long getID() {
         return 9999;
     }
+
+    @Override
+    public void notifyViewUpdate0() {
+
+    }
+
     private void saveNetShareStickerPackToLocal(String ID,String Name,String coverPath){
         ProgressDialog dialog = new ProgressDialog(mContext,3);
         dialog.setMessage("正在获取信息...");

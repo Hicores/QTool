@@ -5,8 +5,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
@@ -17,6 +20,8 @@ import java.util.Map;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQTools.ContUtil;
+import de.robv.android.xposed.XposedBridge;
 
 public class Utils {
     public static int dip2px(Context context, float dpValue) {
@@ -29,6 +34,29 @@ public class Utils {
             return -(int) (f * scale + 0.5f);
         }
 
+    }
+    public static boolean isSmallWindowNeedPlay(View v){
+        Rect rect = new Rect();
+        boolean visibleRect = v.getGlobalVisibleRect(rect);
+
+        if (visibleRect) {
+            Point point = new Point();
+            ContUtil.FixContext fix = (ContUtil.FixContext) v.getContext();
+            Context baseContext = fix.getBaseContext();
+            if (baseContext instanceof Activity) {
+                ((Activity) baseContext).getWindowManager().getDefaultDisplay().getSize(point);
+
+                int top = (int) (rect.height() * 0.5 + rect.top);
+                int left = (int) (rect.width() * 0.5 + rect.left);
+
+                if (top >= 0 && top <= point.y && left >= 0 && left <= point.x) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
     }
     public static int getScreenWidth(Context context){
         return context.getResources().getDisplayMetrics().widthPixels;

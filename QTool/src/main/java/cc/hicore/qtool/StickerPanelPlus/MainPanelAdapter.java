@@ -13,6 +13,7 @@ public class MainPanelAdapter extends BaseAdapter {
         View getView(ViewGroup parent);
         void onViewDestroy(ViewGroup parent);
         long getID();
+        void notifyViewUpdate0();
     }
     ArrayList<IMainPanelItem> viewData = new ArrayList<>();
     @Override
@@ -52,6 +53,12 @@ public class MainPanelAdapter extends BaseAdapter {
     public void destroyAllViews(){
         for (IMainPanelItem item : viewData){
             item.onViewDestroy(null);
+        }
+    }
+    public void notifyViewUpdate(int first,int last){
+        for (int i = first;i<last+1;i++){
+            IMainPanelItem item = viewData.get(i);
+            item.notifyViewUpdate0();
         }
     }
 

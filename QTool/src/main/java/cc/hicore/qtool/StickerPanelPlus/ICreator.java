@@ -35,6 +35,7 @@ import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.MyLoveStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.RecentStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.TgConvertStickerImpl;
+import de.robv.android.xposed.XposedBridge;
 
 @SuppressLint("ResourceType")
 public class ICreator extends BottomPopupView implements AbsListView.OnScrollListener {
@@ -270,17 +271,28 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         return R.layout.sticker_panel_plus_main;
     }
 
+
+    int status;
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        status = scrollState;
+        if (scrollState == 0){
 
+        }
     }
-
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         ViewGroup vg = findViewByItemNumber(firstVisibleItem);
         if (vg != null){
             notifyTabViewSelect(vg);
         }
+
+        if (status != 0){
+            int first = view.getFirstVisiblePosition();
+            int last = view.getLastVisiblePosition();
+            adapter.notifyViewUpdate(first,last);
+        }
+
     }
 
     @Override

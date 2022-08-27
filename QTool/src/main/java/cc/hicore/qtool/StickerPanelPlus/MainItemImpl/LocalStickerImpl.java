@@ -42,10 +42,14 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     ViewGroup cacheView;
     Context mContext;
     LinearLayout panelContainer;
-    HashSet<ImageView> cacheImageView = new HashSet<>();
+    HashSet<ViewInfo> cacheImageView = new HashSet<>();
     TextView tv_title;
     LocalDataHelper.LocalPath mPathInfo;
     List<LocalDataHelper.LocalPicItems> mPicItems;
+    public static class ViewInfo{
+        ImageView view;
+        volatile int status = 0;
+    }
     public LocalStickerImpl(LocalDataHelper.LocalPath pathInfo, List<LocalDataHelper.LocalPicItems> picItems,Context mContext){
         mPathInfo = pathInfo;
         mPicItems = picItems;
@@ -163,25 +167,18 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         return cacheView;
     }
     private void notifyDataSetChanged(){
-        for (ImageView img : cacheImageView){
-            String coverView = (String) img.getTag();
-            try {
-                if (coverView.startsWith("http://") || coverView.startsWith("https://")){
-                    Glide.with(HookEnv.AppContext).load(new URL(coverView)).into(img);
-                }else {
-                    Glide.with(HookEnv.AppContext).load(coverView).into(img);
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
     private View getItemContainer(Context context, String coverView, int count, LocalDataHelper.LocalPicItems item){
         int width_item = Utils.getScreenWidth(context) / 6;
         int item_distance = (Utils.getScreenWidth(context) - width_item * 5) / 4;
 
         ImageView img = new ImageView(context);
-        cacheImageView.add(img);
+        ViewInfo info = new ViewInfo();
+        info.view = img;
+        info.status = 0;
+
+        cacheImageView.add(info);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width_item , width_item);
         if (count > 0)params.leftMargin = item_distance;
@@ -226,9 +223,9 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
 
     @Override
     public void onViewDestroy(ViewGroup parent) {
-        for (ImageView img:cacheImageView){
-            img.setImageBitmap(null);
-            Glide.with(HookEnv.AppContext).clear(img);
+        for (ViewInfo img:cacheImageView){
+            img.view.setImageBitmap(null);
+            Glide.with(HookEnv.AppContext).clear(img.view);
         }
     }
 
@@ -236,4 +233,36 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     public long getID() {
         return 0;
     }
+
+    @Override
+    public void notifyViewUpdate0() {
+        for (ViewInfo v : cacheImageView){
+            if (Utils.isSmallWindowNeedPlay(v.view)) {
+                if (v.status != 1){
+                    v.status = 1;
+                    int width_item = Utils.getScreenWidth(mContext) / 6;
+                    String coverView = (String) v.view.getTag();
+                    try {
+                        if (coverView.startsWith("http://") || coverView.startsWith("https://")){
+                            Glide.with(HookEnv.AppContext).load(new URL(coverView)).skipMemoryCache(true).override(width_item,width_item).into(v.view);
+                        }else {
+                            Glide.with(HookEnv.AppContext).load(coverView).skipMemoryCache(true).override(width_item,width_item).into(v.view);
+                        }
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }else {
+                if (v.status != 0){
+                    Glide.with(HookEnv.AppContext).clear(v.view);
+                    v.status = 0;
+                }
+
+
+            }
+        }
+    }
+
+
 }

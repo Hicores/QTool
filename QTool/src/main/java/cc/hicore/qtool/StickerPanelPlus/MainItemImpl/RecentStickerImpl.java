@@ -134,4 +134,9 @@ public class RecentStickerImpl implements MainPanelAdapter.IMainPanelItem {
     public long getID() {
         return 0;
     }
+
+    @Override
+    public void notifyViewUpdate0() {
+
+    }
 }
