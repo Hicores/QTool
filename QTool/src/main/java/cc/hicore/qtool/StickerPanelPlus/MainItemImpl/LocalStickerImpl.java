@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
 import cc.hicore.qtool.StickerPanelPlus.RecentStickerHelper;
+import cc.hicore.qtool.StickerPanelPlus.StickerShareHelper;
 import de.robv.android.xposed.XposedBridge;
 
 public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
@@ -81,7 +83,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     private void onSetButtonClick(){
         new AlertDialog.Builder(mContext,3)
                 .setTitle("选择你的操作").setItems(new String[]{
-                        "删除改表情包", "表情包本地化"
+                        "删除改表情包", "表情包本地化", "分享该表情包"
                 }, (dialog, which) -> {
                     if (which == 0){
                         new AlertDialog.Builder(mContext,3)
@@ -95,6 +97,29 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                                 }).show();
                     }else if (which == 1){
                         updateAllResToLocal();
+                    }else if (which == 2){
+                        if (StickerShareHelper.checkIsOnlineSticker(mPathInfo)){
+                            new AlertDialog.Builder(mContext,3)
+                                    .setTitle("该表情包无法分享,其中包含有在线表情成分")
+                                    .setPositiveButton("确定", (dialog1, which1) -> {
+
+                                    }).show();
+                        }else{
+                            EditText ed = new EditText(mContext);
+                            ed.setText(mPathInfo.Name);
+                            new AlertDialog.Builder(mContext,3)
+                                    .setTitle("请输入分享显示的标题")
+                                    .setView(ed)
+                                    .setNeutralButton("确定", (dialog13, which13) -> {
+                                        String name = ed.getText().toString();
+                                        if (TextUtils.isEmpty(name)){
+                                            Utils.ShowToastL("标题不能为空");
+                                            return;
+                                        }
+                                        StickerShareHelper.startShareSync(mPicItems,mPathInfo,name,mContext);
+
+                                    }).show();
+                        }
                     }
                 }).show();
     }
