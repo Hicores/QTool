@@ -203,7 +203,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 ICreator.dismissAll();
 
             }else {
-                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,LocalDataHelper.getLocalItemPath(mPathInfo,item)));
                 RecentStickerHelper.addPicItemToRecentRecord(mPathInfo,item);
                 ICreator.dismissAll();
             }
