@@ -93,7 +93,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     private void onSetButtonClick(){
         new AlertDialog.Builder(mContext,3)
                 .setTitle("选择你的操作").setItems(new String[]{
-                        "删除改表情包", "表情包本地化", "分享该表情包"
+                        "删除该表情包", "表情包本地化", "分享该表情包"
                 }, (dialog, which) -> {
                     if (which == 0){
                         new AlertDialog.Builder(mContext,3)
