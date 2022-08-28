@@ -239,15 +239,24 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     protected void onCreate() {
         super.onCreate();
         Utils.PostToMainDelay(()->{
+
             initTopSelectBar();
+
+
 
             initListView();
 
+
+
             initDefItemsBefore();
+
+
 
             initStickerPacks();
 
+
             initDefItemsLast();
+
 
 
             adapter.notifyDataSetChanged();

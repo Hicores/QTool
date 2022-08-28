@@ -9,6 +9,7 @@ import java.util.List;
 
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedBridge;
 
 public class LocalDataHelper {
     public static class LocalPath{
@@ -228,15 +229,7 @@ public class LocalDataHelper {
     }
     public static String getLocalItemPath(LocalPath pathInfo,LocalPicItems newItemInfo){
         try {
-            String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
-            JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
-            JSONArray pathList = pathJson.getJSONArray("items");
-            for (int i = 0; i < pathList.length(); i++) {
-                JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("MD5").equals(newItemInfo.MD5)){
-                    return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.MD5;
-                }
-            }
+            return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.MD5;
         }catch (Exception e) {
             e.printStackTrace();
         }
