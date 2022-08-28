@@ -238,19 +238,22 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     @Override
     protected void onCreate() {
         super.onCreate();
+        Utils.PostToMainDelay(()->{
+            initTopSelectBar();
 
-        initTopSelectBar();
+            initListView();
 
-        initListView();
+            initDefItemsBefore();
 
-        initDefItemsBefore();
+            initStickerPacks();
 
-        initStickerPacks();
-
-        initDefItemsLast();
+            initDefItemsLast();
 
 
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
+        },200);
+
+
     }
     @Override
     protected int getMaxHeight() {
