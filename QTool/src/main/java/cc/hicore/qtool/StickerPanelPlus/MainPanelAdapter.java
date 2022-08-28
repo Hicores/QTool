@@ -55,11 +55,16 @@ public class MainPanelAdapter extends BaseAdapter {
             item.onViewDestroy(null);
         }
     }
+    volatile long timeStart;
     public void notifyViewUpdate(int first,int last){
-        for (int i = first;i<last+1;i++){
-            IMainPanelItem item = viewData.get(i);
-            item.notifyViewUpdate0();
+        if (System.currentTimeMillis() - timeStart > 150){
+            timeStart = System.currentTimeMillis();
+            for (int i = first;i<last+1;i++){
+                IMainPanelItem item = viewData.get(i);
+                item.notifyViewUpdate0();
+            }
         }
+
     }
 
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,25 +29,23 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
+import de.robv.android.xposed.XposedBridge;
 
 public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
     LinearLayout panelContainer;
     TextView tv_title;
-    HashSet<ImageView> cacheImageView = new HashSet<>();
+    HashSet<ViewInfo> cacheImageView = new HashSet<>();
 
     ViewGroup cacheView;
     Context mContext;
     String updateData;
     String notifyMsg;
-    @Override
-    public View getView(ViewGroup parent) {
-        mContext = parent.getContext();
-        onViewDestroy(null);
-        notifyViewUpdate();
-
-        return cacheView;
+    private static class ViewInfo{
+        ImageView img;
+        volatile boolean isShow;
     }
-    private void notifyViewUpdate(){
+    public OnlineStickerImpl(Context context){
+        mContext = context;
         if (cacheView == null){
             cacheView = (ViewGroup) View.inflate(mContext, R.layout.sticker_panel_plus_pack_item, null);
             tv_title = cacheView.findViewById(R.id.Sticker_Panel_Item_Name);
@@ -56,6 +55,14 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
             notifyMsg = "在线分享的表情包(加载中...)";
         }
         tv_title.setText(notifyMsg);
+    }
+    @Override
+    public View getView(ViewGroup parent) {
+        onViewDestroy(null);
+        return cacheView;
+    }
+
+    private void notifyViewUpdate(){
         if (!TextUtils.isEmpty(updateData)){
             try {
                 panelContainer.removeAllViews();
@@ -103,13 +110,12 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
         imgItems.topMargin = Utils.dip2px(context,10) / 2;
         img.setLayoutParams(imgItems);
         items.addView(img);
-        cacheImageView.add(img);
 
-        try {
-            Glide.with(HookEnv.AppContext).load(new URL(coverView)).into(img);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        ViewInfo info = new ViewInfo();
+        info.img = img;
+        info.isShow = false;
+        info.img.setTag(coverView);
+        cacheImageView.add(info);
 
         TextView title = new TextView(context);
         title.setTextColor(context.getResources().getColor(R.color.font_plugin));
@@ -134,11 +140,10 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
     }
     @Override
     public void onViewDestroy(ViewGroup parent) {
-        for (ImageView img:cacheImageView){
-            img.setImageBitmap(null);
-            Glide.with(HookEnv.AppContext).clear(img);
+        for (ViewInfo img : cacheImageView){
+            img.img.setImageBitmap(null);
+            Glide.with(HookEnv.AppContext).clear(img.img);
         }
-        cacheImageView.clear();
     }
 
     @Override
@@ -148,7 +153,23 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
 
     @Override
     public void notifyViewUpdate0() {
+        for (ViewInfo img : cacheImageView){
+            if (Utils.isSmallWindowNeedPlay(img.img)){
+                if (img.isShow)continue;
+                img.isShow = true;
+                String coverView = (String) img.img.getTag();
+                try {
+                    Glide.with(HookEnv.AppContext).load(new URL(coverView)).into(img.img);
+                } catch (MalformedURLException e) {
 
+                    e.printStackTrace();
+                }
+            }else {
+                if (!img.isShow)continue;
+                img.isShow = false;
+                Glide.with(HookEnv.AppContext).clear(img.img);
+            }
+        }
     }
 
     private void saveNetShareStickerPackToLocal(String ID,String Name,String coverPath){

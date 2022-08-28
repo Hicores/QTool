@@ -15,6 +15,10 @@ public class RecentStickerHelper {
         public String MD5;
         public String fileName;
         public String url;
+        public String thumbName;
+        public String thumbUrl;
+
+
         public long addTime;
         public int type;
         public String pathName;
@@ -34,6 +38,9 @@ public class RecentStickerHelper {
                 localPath.type = path.getInt("type");
                 localPath.url = path.getString("url");
                 localPath.pathName = path.getString("pathName");
+                localPath.thumbName = path.optString("thumbName");
+                localPath.thumbUrl = path.optString("thumbUrl");
+
                 items.add(localPath);
             }
             return items;
@@ -81,6 +88,8 @@ public class RecentStickerHelper {
             newItem.put("type", item.type);
             newItem.put("url", item.url);
             newItem.put("pathName", bandPath.storePath);
+            newItem.put("thumbName", item.thumbName);
+            newItem.put("thumbUrl", item.thumbUrl);
             pathList.put(newItem);
 
             pathJson.put("items", pathList);
@@ -105,6 +114,10 @@ public class RecentStickerHelper {
             newItem.put("type", itemInfo.type);
             newItem.put("url", itemInfo.url);
             newItem.put("pathName", itemInfo.pathName);
+            newItem.put("thumbName", itemInfo.thumbName);
+            newItem.put("thumbUrl", itemInfo.thumbUrl);
+
+
             pathList.put(newItem);
 
             pathJson.put("items", pathList);

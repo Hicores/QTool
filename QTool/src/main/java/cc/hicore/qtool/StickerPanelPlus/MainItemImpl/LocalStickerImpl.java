@@ -162,12 +162,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
     @Override
     public View getView(ViewGroup parent) {
         onViewDestroy(null);
-        notifyDataSetChanged();
-
         return cacheView;
-    }
-    private void notifyDataSetChanged(){
-
     }
     private View getItemContainer(Context context, String coverView, int count, LocalDataHelper.LocalPicItems item){
         int width_item = Utils.getScreenWidth(context) / 6;

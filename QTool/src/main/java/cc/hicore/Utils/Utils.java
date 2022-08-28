@@ -41,8 +41,13 @@ public class Utils {
 
         if (visibleRect) {
             Point point = new Point();
-            ContUtil.FixContext fix = (ContUtil.FixContext) v.getContext();
-            Context baseContext = fix.getBaseContext();
+            Context baseContext = v.getContext();
+            if (baseContext instanceof ContUtil.FixContext){
+                ContUtil.FixContext fix = (ContUtil.FixContext) v.getContext();
+                baseContext = fix.getBaseContext();
+            }
+
+
             if (baseContext instanceof Activity) {
                 ((Activity) baseContext).getWindowManager().getDefaultDisplay().getSize(point);
 

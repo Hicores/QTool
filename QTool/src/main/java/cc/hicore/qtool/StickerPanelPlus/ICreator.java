@@ -31,11 +31,9 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContUtil;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.LocalStickerImpl;
-import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.MyLoveStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.RecentStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.TgConvertStickerImpl;
-import de.robv.android.xposed.XposedBridge;
 
 @SuppressLint("ResourceType")
 public class ICreator extends BottomPopupView implements AbsListView.OnScrollListener {
@@ -111,7 +109,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
             listView.setSelection(IdOfShareGroup);
             listView.smoothScrollToPositionFromTop(IdOfShareGroup,-5);
         });
-        IdOfShareGroup = adapter.addItemData(new OnlineStickerImpl());
+        IdOfShareGroup = adapter.addItemData(new OnlineStickerImpl(getContext()));
         tabView.setTag(IdOfShareGroup);
         topSelectBar.addView(tabView);
 

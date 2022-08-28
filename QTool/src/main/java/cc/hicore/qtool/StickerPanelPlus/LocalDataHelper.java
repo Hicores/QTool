@@ -44,7 +44,12 @@ public class LocalDataHelper {
     public static class LocalPicItems{
         public String MD5;
         public String fileName;
+        public String thumbName;
+
         public String url;
+        public String thumbUrl;
+
+
         public long addTime;
         public int type;
     }
@@ -63,6 +68,8 @@ public class LocalDataHelper {
                     localPath.addTime = path.optLong("addTime");
                     localPath.type = path.getInt("type");
                     localPath.url = path.optString("url");
+                    localPath.thumbName = path.optString("thumbName");
+                    localPath.thumbUrl = path.optString("thumbUrl");
                     items.add(localPath);
                 }catch (Exception e){
 
@@ -125,6 +132,10 @@ public class LocalDataHelper {
             newPath.put("addTime", addInfo.addTime);
             newPath.put("type", addInfo.type);
             newPath.put("url", addInfo.url);
+            newPath.put("thumbName", addInfo.thumbName);
+            newPath.put("thumbUrl", addInfo.thumbUrl);
+
+
             pathList.put(newPath);
 
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
@@ -203,6 +214,8 @@ public class LocalDataHelper {
                     path.put("addTime", newItemInfo.addTime);
                     path.put("type", newItemInfo.type);
                     path.put("url", newItemInfo.url);
+                    path.put("thumbName", newItemInfo.thumbName);
+                    path.put("thumbUrl", newItemInfo.thumbUrl);
                     break;
                 }
             }

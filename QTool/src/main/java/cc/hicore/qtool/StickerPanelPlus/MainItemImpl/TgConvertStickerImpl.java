@@ -75,8 +75,6 @@ public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     String coverPath = "https://cdn.haonb.cc/" + item.getString("cover");
                     String name = item.getString("name");
 
-                    XposedBridge.log(name);
-
                     itemLine.addView(getItemContainer(context,name,coverPath, id, i % 4));
                 }
             }catch (Exception e){ }
