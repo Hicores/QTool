@@ -164,13 +164,15 @@ public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     JSONObject item = listArr.getJSONObject(i);
                     String uri = item.getString("URI");
                     String url = "https://cdn.haonb.cc/" + uri;
+                    String thumbUrl =  "https://cdn.haonb.cc/" + item.getString("Thumb");;
                     String md5 = item.getString("MD5");
                     LocalDataHelper.LocalPicItems localItem = new LocalDataHelper.LocalPicItems();
                     localItem.url = url;
                     localItem.type = 2;
                     localItem.MD5 = md5;
                     localItem.addTime = System.currentTimeMillis();
-                    localItem.fileName = "";
+                    localItem.fileName = md5;
+                    localItem.thumbUrl = thumbUrl;
 
                     LocalDataHelper.addPicItem(ID,localItem);
                 }

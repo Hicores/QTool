@@ -78,7 +78,12 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 if (item.type == 2){
                     itemLine.addView(getItemContainer(mContext,item.url, i % 5,item));
                 }else if (item.type == 1){
-                    itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalItemPath(mPathInfo,item), i % 5,item));
+                    if (!TextUtils.isEmpty(item.thumbName)){
+                        itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalThumbPath(mPathInfo,item), i % 5,item));
+                    }else {
+                        itemLine.addView(getItemContainer(mContext,LocalDataHelper.getLocalItemPath(mPathInfo,item), i % 5,item));
+                    }
+
                 }
 
             }
@@ -144,8 +149,16 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                         String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
                         if (!TextUtils.isEmpty(localStorePath)){
                             HttpUtils.DownloadToFile(item.url, localStorePath);
+
                             item.type = 1;
                             item.fileName = item.MD5;
+
+
+                            if (!TextUtils.isEmpty(item.thumbUrl)){
+                                String localThumbPath = LocalDataHelper.getLocalThumbPath(mPathInfo,item);
+                                HttpUtils.DownloadToFile(item.thumbUrl,localThumbPath);
+                                item.thumbName = item.MD5 + "_thumb";
+                            }
                             LocalDataHelper.updatePicItemInfo(mPathInfo, item);
                         }
                     }

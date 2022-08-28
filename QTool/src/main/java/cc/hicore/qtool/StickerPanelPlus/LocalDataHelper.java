@@ -235,4 +235,12 @@ public class LocalDataHelper {
         }
         return null;
     }
+    public static String getLocalThumbPath(LocalPath pathInfo,LocalPicItems newItemInfo){
+        try {
+            return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.fileName + "_thumb";
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
