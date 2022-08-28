@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -239,9 +240,9 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     String coverView = (String) v.view.getTag();
                     try {
                         if (coverView.startsWith("http://") || coverView.startsWith("https://")){
-                            Glide.with(HookEnv.AppContext).load(new URL(coverView)).override(width_item,width_item).into(v.view);
+                            Glide.with(HookEnv.AppContext).load(new URL(coverView)).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(width_item,width_item).into(v.view);
                         }else {
-                            Glide.with(HookEnv.AppContext).load(coverView).override(width_item,width_item).into(v.view);
+                            Glide.with(HookEnv.AppContext).load(coverView).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(width_item,width_item).into(v.view);
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
