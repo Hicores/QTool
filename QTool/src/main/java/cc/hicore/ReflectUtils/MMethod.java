@@ -207,4 +207,11 @@ public class MMethod {
         }
         return null;
     }
+    public static Method FindMethodByName(Class clz, String Name,int paramLength){
+        Lopp:
+        for (Method method : clz.getDeclaredMethods()) {
+            if (method.getName().equals(Name) && method.getParameterCount() == paramLength)return method;
+        }
+        return null;
+    }
 }

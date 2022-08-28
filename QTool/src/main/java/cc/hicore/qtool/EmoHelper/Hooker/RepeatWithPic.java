@@ -75,7 +75,7 @@ public class RepeatWithPic {
                 MClass.loadClass("com.tencent.mobileqq.app.BusinessObserver")}));
 
 
-        container.addMethod("hook_2",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.CustomEmotionSenderUtil"), "sendCustomEmotion"));
+        container.addMethod("hook_2",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.emoticonview.sender.CustomEmotionSenderUtil"), "sendCustomEmotion",11));
         container.addMethod("hook_3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.photo.PhotoListPanel", null, boolean.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie"),
                 List.class, boolean.class}));
@@ -186,7 +186,19 @@ public class RepeatWithPic {
     static Object chatPie = null;
     public static boolean IsNowReplying() {
         try {
-            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_0){
+            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_5){
+                Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bs"));
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bx"),new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
+            }else if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_3){
+                Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bp"));
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bu"),new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
+            }else if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_0){
                 Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bk"));
                 Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bp"),new Class[]{int.class});
                 Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
