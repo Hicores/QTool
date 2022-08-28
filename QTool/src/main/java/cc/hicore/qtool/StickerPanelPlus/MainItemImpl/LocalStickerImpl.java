@@ -244,9 +244,9 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     String coverView = (String) v.view.getTag();
                     try {
                         if (coverView.startsWith("http://") || coverView.startsWith("https://")){
-                            Glide.with(HookEnv.AppContext).load(new URL(coverView)).skipMemoryCache(true).override(width_item,width_item).into(v.view);
+                            Glide.with(HookEnv.AppContext).load(new URL(coverView)).override(width_item,width_item).into(v.view);
                         }else {
-                            Glide.with(HookEnv.AppContext).load(coverView).skipMemoryCache(true).override(width_item,width_item).into(v.view);
+                            Glide.with(HookEnv.AppContext).load(coverView).override(width_item,width_item).into(v.view);
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
