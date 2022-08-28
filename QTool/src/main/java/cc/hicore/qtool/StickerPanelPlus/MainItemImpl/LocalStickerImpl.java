@@ -27,6 +27,7 @@ import java.util.List;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
@@ -197,13 +198,23 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         img.setOnClickListener(v->{
             if (coverView.startsWith("http://") || coverView.startsWith("https://")){
                 HttpUtils.ProgressDownload(coverView,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")),()->{
-                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                    if (RepeatWithPic.IsAvailable()){
+                        RepeatWithPic.AddToPreSendList(HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")));
+                    }else {
+                        QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                    }
+
                     RecentStickerHelper.addPicItemToRecentRecord(mPathInfo,item);
                 },mContext);
                 ICreator.dismissAll();
 
             }else {
-                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,LocalDataHelper.getLocalItemPath(mPathInfo,item)));
+                if (RepeatWithPic.IsAvailable()){
+                    RepeatWithPic.AddToPreSendList(LocalDataHelper.getLocalItemPath(mPathInfo,item));
+                }else {
+                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,LocalDataHelper.getLocalItemPath(mPathInfo,item)));
+                }
+
                 RecentStickerHelper.addPicItemToRecentRecord(mPathInfo,item);
                 ICreator.dismissAll();
             }

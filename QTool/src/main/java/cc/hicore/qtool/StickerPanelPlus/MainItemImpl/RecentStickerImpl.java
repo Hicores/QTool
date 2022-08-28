@@ -20,6 +20,7 @@ import java.util.List;
 
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
+import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
@@ -106,13 +107,21 @@ public class RecentStickerImpl implements MainPanelAdapter.IMainPanelItem {
         img.setOnClickListener(v->{
             if (coverView.startsWith("http://") || coverView.startsWith("https://")){
                 HttpUtils.ProgressDownload(coverView,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")),()->{
-                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                    if (RepeatWithPic.IsAvailable()){
+                        RepeatWithPic.AddToPreSendList(HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")));
+                    }else {
+                        QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                    }
                     RecentStickerHelper.addPicItemToRecentRecord(item);
                 },mContext);
                 ICreator.dismissAll();
 
             }else {
-                QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                if (RepeatWithPic.IsAvailable()) {
+                    RepeatWithPic.AddToPreSendList(coverView);
+                }else {
+                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                }
                 RecentStickerHelper.addPicItemToRecentRecord(item);
                 ICreator.dismissAll();
             }
