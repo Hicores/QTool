@@ -189,7 +189,7 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     localItem.type = 2;
                     localItem.MD5 = md5;
                     localItem.addTime = System.currentTimeMillis();
-                    localItem.fileName = "";
+                    localItem.fileName = md5;
 
                     LocalDataHelper.addPicItem(ID,localItem);
                 }
