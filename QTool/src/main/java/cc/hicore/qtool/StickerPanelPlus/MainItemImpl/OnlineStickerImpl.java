@@ -76,7 +76,7 @@ public class OnlineStickerImpl implements MainPanelAdapter.IMainPanelItem {
                         panelContainer.addView(itemLine);
                     }
 
-                    JSONObject item = dataArr.getJSONObject(i);
+                    JSONObject item = dataArr.getJSONObject(dataArr.length() - 1 - i);
                     String id = item.getString("id");
                     String coverPath = "https://cdn.haonb.cc/ShareStickers/SData/" + id + "/" + item.getString("Cover");
                     String name = item.getString("name");
