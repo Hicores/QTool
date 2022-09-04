@@ -113,7 +113,7 @@ public class CatchInstance {
 
 
     }
-    private static String TGetFrameName(){
+    public static String TGetFrameName(){
         String Tag = CollectBridgeTag();
         if (Tag.equals("BugHook"))return "应用转生";
         if (Tag.equals("LSPosed-Bridge"))return "LSPosed";

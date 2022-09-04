@@ -100,6 +100,19 @@ public class HttpUtils {
             return "";
         }
     }
+    public static void Post(String URL,byte[] buffer){
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
+            connection.setDoOutput(true);
+            OutputStream out = connection.getOutputStream();
+            out.write(buffer);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+        }
+    }
     public static void ProgressDownload(String url, String filepath, Runnable callback, Context context) {
         AlertDialog al = new AlertDialog.Builder(context, 3).create();
         al.setTitle("下载中...");
