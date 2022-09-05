@@ -17,4 +17,5 @@ public class QQVersion {
     public static final int QQ_8_9_0 = 8555;
     public static final int QQ_8_9_3 = 8730;
     public static final int QQ_8_9_5 = 8845;
+    public static final int QQ_8_9_8 = 8995;
 }

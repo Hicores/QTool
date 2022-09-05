@@ -33,6 +33,8 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.VoiceHelper.Panel.VoicePanel;
+import de.robv.android.xposed.XposedBridge;
+
 @XPItem(name = "语音面板",itemType = XPItem.ITEM_Hook)
 public class QQVoicePanelInject{
     @VerController
@@ -71,12 +73,17 @@ public class QQVoicePanelInject{
     @VerController(targetVer = QQVersion.QQ_8_9_0,max_targetVer = QQVersion.QQ_8_9_3)
     @MethodScanner
     public void getSimpleInit_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "a", void.class, new Class[0])));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
     }
-    @VerController(targetVer = QQVersion.QQ_8_9_3)
+    @VerController(targetVer = QQVersion.QQ_8_9_3,max_targetVer = QQVersion.QQ_8_9_8)
     @MethodScanner
     public void getSimpleInit_893(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin 1 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "b", void.class, new Class[0])));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_8)
+    @MethodScanner
+    public void getSimpleInit_898(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "C", void.class, new Class[0])));
     }
     @SuppressLint("ResourceType")
     @VerController
@@ -140,6 +147,7 @@ public class QQVoicePanelInject{
     @XPExecutor(methodID = "hook_4",period = XPExecutor.After)
     public BaseXPExecutor worker_4(){
         return param -> {
+            XposedBridge.log("aaaaaaaaaaaaaaaaaaaaaa");
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 0);
             if (button != null) {
                 button.setOnLongClickListener(v -> {
