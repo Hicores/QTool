@@ -22,14 +22,20 @@ import cc.hicore.qtool.CrashHandler.CatchInstance;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
+@XPItem(name = "UsageDataTracker",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
 public class CommonTracker {
     @VerController
     @CommonExecutor
     public void startTrack(){
-        if (isTrackAvailable()){
-            HttpUtils.Post("https://qtool.haonb.cc/track/trackUsageData",collectInfo().getBytes(StandardCharsets.UTF_8));
-        }
+        new Thread(()->{
+            if (isTrackAvailable()){
+                byte[] data = ("in="+DataUtils.ByteArrayToHex(collectInfo().getBytes(StandardCharsets.UTF_8))).getBytes(StandardCharsets.UTF_8);
+                HttpUtils.PostForResult("https://qtool.haonb.cc/track/trackUsageData","2333",data,data.length);
+            }
+        }).start();;
+
     }
     private String collectInfo(){
         try {

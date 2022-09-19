@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+
+import de.robv.android.xposed.XposedBridge;
 
 public class HttpUtils {
     public static String getContent(String Path) {
@@ -100,17 +103,22 @@ public class HttpUtils {
             return "";
         }
     }
-    public static void Post(String URL,byte[] buffer){
+    public static void Post(String u,byte[] buffer){
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(u).openConnection();
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
+            connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             OutputStream out = connection.getOutputStream();
             out.write(buffer);
             out.flush();
             out.close();
+
+
+            XposedBridge.log("Post  Successssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
         } catch (Exception e) {
+            XposedBridge.log(Log.getStackTraceString(e));
         }
     }
     public static void ProgressDownload(String url, String filepath, Runnable callback, Context context) {
