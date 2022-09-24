@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XposedBridge;
 
-public class ContUtil {
+public class ContextFixUtil {
     public static class FixResClassLoader extends ClassLoader {
         protected FixResClassLoader(ClassLoader parent) {
             super(parent);
@@ -16,7 +16,6 @@ public class ContUtil {
         @Override
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             try {
-                XposedBridge.log(name);
                 if (!name.startsWith("com.airbnb.lottie")){
                     Class<?> clz = super.loadClass(name);
                     if (clz != null) return clz;
@@ -30,7 +29,6 @@ public class ContUtil {
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             try {
-                XposedBridge.log(name);
                 if (!name.startsWith("com.airbnb.lottie")){
                     Class<?> clz = super.loadClass(name, resolve);
                     if (clz != null) return clz;

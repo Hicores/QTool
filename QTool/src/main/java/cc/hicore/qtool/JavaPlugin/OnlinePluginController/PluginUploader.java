@@ -33,7 +33,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginController;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginInfo;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.XposedInit.EnvHook;
 
 public class PluginUploader {
@@ -51,7 +51,7 @@ public class PluginUploader {
 
     public static void RequestForUpload(String Path) {
         Activity act = Utils.getTopActivity();
-        Context fixContext = ContUtil.getFixContext(act);
+        Context fixContext = ContextFixUtil.getFixContext(act);
         new XPopup.Builder(fixContext)
                 .asConfirm("提示", TIP, "拒绝", "同意", () -> RequestUpload(Path), () -> {
                 }, false).show();

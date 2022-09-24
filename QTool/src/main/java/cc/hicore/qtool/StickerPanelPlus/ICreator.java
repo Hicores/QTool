@@ -28,7 +28,7 @@ import java.util.List;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.LocalStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
@@ -43,7 +43,7 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     private static BasePopupView popupView;
     public static void createPanel(Context context){
         ResUtils.StartInject(context);
-        Context fixContext = ContUtil.getFixContext(context);
+        Context fixContext = ContextFixUtil.getFixContext(context);
         XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);
         popupView = NewPop.asCustom(new ICreator(fixContext));
         popupView.show();

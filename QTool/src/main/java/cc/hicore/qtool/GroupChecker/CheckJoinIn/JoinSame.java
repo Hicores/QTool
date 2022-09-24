@@ -19,7 +19,7 @@ import java.util.HashSet;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.QQTools.QQSelectHelper;
 import cc.hicore.qtool.R;
 
@@ -97,7 +97,7 @@ public class JoinSame {
         sc.addView(mRoot);
 
         ResUtils.StartInject(context);
-        LayoutInflater inflater = ContUtil.getContextInflater(context);
+        LayoutInflater inflater = ContextFixUtil.getContextInflater(context);
         for (String uin : result.keySet()){
             LinearLayout mItem = (LinearLayout) inflater.inflate(R.layout.join_save_item,null);
             QQSelectHelper.RoundImageView header = mItem.findViewById(R.id.Header);

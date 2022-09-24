@@ -28,7 +28,7 @@ import cc.hicore.qtool.ActProxy.BaseProxyAct;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.QQTools.QQSelectHelper;
 import cc.hicore.qtool.R;
 
@@ -60,7 +60,7 @@ public class DBCleaner{
             sc.addView(mRoot);
             mRoot.setOrientation(LinearLayout.VERTICAL);
 
-            BasePopupView basePopupView = new XPopup.Builder(ContUtil.getFixContext(context1))
+            BasePopupView basePopupView = new XPopup.Builder(ContextFixUtil.getFixContext(context1))
                     .dismissOnBackPressed(false)
                     .dismissOnTouchOutside(false)
                     .asLoading("正在计算...");
@@ -70,7 +70,7 @@ public class DBCleaner{
             new Thread(()->{
                 try{
                     LocalTableInit.initTable();
-                    LayoutInflater inflater = ContUtil.getContextInflater(context1);
+                    LayoutInflater inflater = ContextFixUtil.getContextInflater(context1);
                     DBHelper helper = new DBHelper(HookEnv.AppContext.getDatabasePath(QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
                     DBHelper slowTable = new DBHelper(HookEnv.AppContext.getDatabasePath("slowtable_"+QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
                     HashSet<String> tableName = new HashSet<>();
@@ -173,7 +173,7 @@ public class DBCleaner{
                                         .setTitle("确认操作?")
                                         .setMessage("确认清除所有 "+name.getText() + " 的消息记录(仅本地)?")
                                         .setNegativeButton("清除所有", (dialog, which) -> {
-                                            BasePopupView popup = new XPopup.Builder(ContUtil.getFixContext(context1))
+                                            BasePopupView popup = new XPopup.Builder(ContextFixUtil.getFixContext(context1))
                                                     .dismissOnTouchOutside(false)
                                                     .dismissOnBackPressed(false)
                                                     .asLoading("正在处理,请稍后...");
@@ -194,7 +194,7 @@ public class DBCleaner{
 
 
                                         }).setNeutralButton("仅清除slowtable数据", (dialog, which) -> {
-                                            BasePopupView popup = new XPopup.Builder(ContUtil.getFixContext(context1))
+                                            BasePopupView popup = new XPopup.Builder(ContextFixUtil.getFixContext(context1))
                                                     .dismissOnTouchOutside(false)
                                                     .dismissOnBackPressed(false)
                                                     .asLoading("正在处理,请稍后...");

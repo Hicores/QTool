@@ -25,7 +25,7 @@ import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 
 public class SyncCore {
     public static ExecutorService syncThread = Executors.newFixedThreadPool(16);
@@ -33,7 +33,7 @@ public class SyncCore {
     public static void requestShare(Context context, String Name, String LocalName) {
         String shareAlarm = "你决定上传名字为 " + Name + " 的表情包,上传期间不能进行其他操作,请耐心等待上传完成,过大的图片可能无法完成上传\n\n" +
                 "在上传完成后,你无法上传新的表情包,需要等待审核后才能上传新的,审核通过后表情包即可被他人看到\n\n请确认是否上传";
-        Context fixContext = ContUtil.getFixContext(context);
+        Context fixContext = ContextFixUtil.getFixContext(context);
         new XPopup.Builder(fixContext)
                 .asConfirm("确认上传", shareAlarm, () -> {
                     CollectInfoAndUpload(fixContext, Name, LocalName);

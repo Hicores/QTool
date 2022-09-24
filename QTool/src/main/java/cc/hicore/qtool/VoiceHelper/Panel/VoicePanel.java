@@ -19,14 +19,14 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 
 public class VoicePanel {
     public static void createVoicePanel() {
         Context context = Utils.getTopActivity();
         ResUtils.StartInject(context);
-        Context fixContext = ContUtil.getFixContext(context);
+        Context fixContext = ContextFixUtil.getFixContext(context);
         VoicePanelController controller = new VoicePanelController(fixContext);
 
         XPopup.Builder NewPop = new XPopup.Builder(fixContext)

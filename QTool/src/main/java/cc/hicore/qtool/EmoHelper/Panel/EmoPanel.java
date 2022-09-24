@@ -17,22 +17,19 @@ import com.lxj.xpopup.core.BasePopupView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.FileUtils;
-import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 
 public class EmoPanel {
     public static void createShow(Context context) {
         ResUtils.StartInject(context);
-        Context fixContext = ContUtil.getFixContext(context);
+        Context fixContext = ContextFixUtil.getFixContext(context);
         EmoPanelView NewView = new EmoPanelView(fixContext);
 
         XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);

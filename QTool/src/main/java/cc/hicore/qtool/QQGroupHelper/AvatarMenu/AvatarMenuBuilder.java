@@ -19,7 +19,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
 
 public class AvatarMenuBuilder {
@@ -60,9 +60,9 @@ public class AvatarMenuBuilder {
 
 
 
-            new XPopup.Builder(ContUtil.getFixContext(context))
+            new XPopup.Builder(ContextFixUtil.getFixContext(context))
                     .asBottomList(QQGroupUtils.Group_Get_Member_Name(GroupUin,UserUin)+"("+UserUin+")", menuItems.toArray(new String[0]), (position, text) -> {
-                        InvokeForName(text,chatMsg,ContUtil.getFixContext(context));
+                        InvokeForName(text,chatMsg, ContextFixUtil.getFixContext(context));
                     }).show();
         }catch (Throwable e){
             LogUtils.error("showAvatarMenu",e);

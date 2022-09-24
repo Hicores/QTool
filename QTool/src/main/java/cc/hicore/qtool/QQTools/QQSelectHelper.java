@@ -197,8 +197,8 @@ public class QQSelectHelper {
         try {
             if (defTab < 1 || defTab > 3) throw new RuntimeException("defTab must be 1-3");
 
-            Context fixContext = new ContUtil.FixContext(mContext);
-            inflater = ContUtil.getContextInflater(mContext);
+            Context fixContext = new ContextFixUtil.FixContext(mContext);
+            inflater = ContextFixUtil.getContextInflater(mContext);
             BottomPopupView view = new BottomPopupView(fixContext) {
                 @Override
                 protected int getImplLayoutId() {

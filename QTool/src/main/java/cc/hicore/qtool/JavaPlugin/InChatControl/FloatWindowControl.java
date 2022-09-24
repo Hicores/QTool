@@ -37,7 +37,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQManager.QQGuildManager;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 
 /*
@@ -268,8 +268,8 @@ public class FloatWindowControl {
     }
 
     private static void ShowButtonDialog(Object Session) {
-        Context fixContext = new ContUtil.FixContext(cacheAct);
-        LayoutInflater inflater = ContUtil.getContextInflater(cacheAct);
+        Context fixContext = new ContextFixUtil.FixContext(cacheAct);
+        LayoutInflater inflater = ContextFixUtil.getContextInflater(cacheAct);
         BottomPopupView view = new BottomPopupView(fixContext) {
             @Override
             protected int getImplLayoutId() {

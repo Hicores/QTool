@@ -12,17 +12,15 @@ import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.core.CenterPopupView;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 
 public class CommonHookLoaderDialog {
@@ -34,7 +32,7 @@ public class CommonHookLoaderDialog {
     public CommonHookLoaderDialog(Context context){
         mContext = context;
         releaseJsonFile();
-        popupView = new CenterPopupView(ContUtil.getFixContext(context)){
+        popupView = new CenterPopupView(ContextFixUtil.getFixContext(context)){
             @Override
             protected int getImplLayoutId() {
                 return R.layout.loading_progress;
@@ -75,7 +73,7 @@ public class CommonHookLoaderDialog {
         };
     }
     public void showDialog(){
-        popupDialog = new XPopup.Builder(ContUtil.getFixContext(mContext))
+        popupDialog = new XPopup.Builder(ContextFixUtil.getFixContext(mContext))
                 .dismissOnBackPressed(false)
                 .dismissOnTouchOutside(false)
                 .asCustom(popupView);

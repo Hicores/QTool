@@ -30,7 +30,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.BaseProxyAct;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQTools.ContUtil;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 @XPItem(name = "存储空间清理",itemType = XPItem.ITEM_Hook)
 @SuppressLint("ResourceType")
@@ -130,7 +130,7 @@ public class StorageView{
 
             Button cleanButton = item.findViewById(R.id.Clean_Now);
             cleanButton.setOnClickListener(v->{
-                BasePopupView popup = new XPopup.Builder(ContUtil.getFixContext(context))
+                BasePopupView popup = new XPopup.Builder(ContextFixUtil.getFixContext(context))
                         .dismissOnBackPressed(false)
                         .dismissOnTouchOutside(false)
                         .asLoading("正在清理中...");

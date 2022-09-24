@@ -22,8 +22,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQTools.ContUtil;
-import de.robv.android.xposed.XposedBridge;
+import cc.hicore.qtool.QQTools.ContextFixUtil;
 
 public class Utils {
     public static int dip2px(Context context, float dpValue) {
@@ -44,8 +43,8 @@ public class Utils {
         if (visibleRect) {
             Point point = new Point();
             Context baseContext = v.getContext();
-            if (baseContext instanceof ContUtil.FixContext){
-                ContUtil.FixContext fix = (ContUtil.FixContext) v.getContext();
+            if (baseContext instanceof ContextFixUtil.FixContext){
+                ContextFixUtil.FixContext fix = (ContextFixUtil.FixContext) v.getContext();
                 baseContext = fix.getBaseContext();
             }
 
