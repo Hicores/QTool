@@ -13,6 +13,7 @@ import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
@@ -21,7 +22,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "表情收藏上限后存在本地",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
+@XPItem(name = "表情收藏上限后存在本地",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData,max_targetVer = QQVersion.QQ_8_9_8)
 public class HookForUnlockSaveLimit{
     CoreLoader.XPItemInfo info;
     @VerController
