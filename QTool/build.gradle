@@ -12,6 +12,7 @@ android {
         minSdk 26
         targetSdk 26
         if (System.getenv("CommitNumber") != null){
+            println("${System.getenv("CommitNumber")}")
             versionName "v${System.getenv("CommitNumber")}"
             versionCode Integer.parseInt("${System.getenv("CommitNumber")}")
         }else {
