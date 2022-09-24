@@ -2,11 +2,13 @@
 
 gradle.allprojects {
     ext.getGitHeadRefsSuffix = {
+        println('get git count')
         try {
             // .git/HEAD描述当前目录所指向的分支信息，内容示例："ref: refs/heads/master\n"
-            print('git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger())
+            println('git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger())
             return 'git rev-list HEAD --first-parent --count'.execute().text.trim().toInteger()
         } catch (Exception e) {
+            println('get git count failed:'+e)
             e.printStackTrace()
         }
         return "0"
