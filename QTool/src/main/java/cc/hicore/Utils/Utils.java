@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.qtool.HookEnv;
@@ -60,6 +62,9 @@ public class Utils {
     }
     public static int getScreenWidth(Context context){
         return context.getResources().getDisplayMetrics().widthPixels;
+    }
+    public static int getScreenHeight(Context context){
+        return context.getResources().getDisplayMetrics().heightPixels;
     }
     public static int sp2px(Context context, float spValue){
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
@@ -169,6 +174,14 @@ public class Utils {
     }
     public static void PostToMainDelay(Runnable run,long delay){
         new Handler(Looper.getMainLooper()).postDelayed(run,delay);
+    }
+
+    public static void restartSelf(Context context){
+        Intent in = new Intent(context, MClass.loadClass("com.tencent.mobileqq.activity.SplashActivity"));
+//FLAG_ACTIVITY_CLEAR_TASK不可省略，这个如果没有，开机自启之后，崩溃将无法重启
+        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(in);
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
 }

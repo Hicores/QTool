@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -42,7 +43,15 @@ public class DataUtils {
         }
         return result;
     }
-
+    public static void CopyStream(InputStream ins, OutputStream out){
+        try {
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = ins.read(buffer)) != -1) out.write(buffer, 0, read);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static String ByteArrayToHex(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {

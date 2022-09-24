@@ -39,6 +39,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import cc.hicore.qtool.XposedInit.Initer.CommonHookLoaderDialog;
 import de.robv.android.xposed.XposedBridge;
 
 public class MethodScannerWorker {
@@ -158,74 +159,51 @@ public class MethodScannerWorker {
     public static void doFindMethod(){
         cleanAllCache();
         CollectLinkInfo();
-        new Handler(Looper.getMainLooper()).postDelayed(()->{
+        new Handler(Looper.getMainLooper()).post(()->{
             Context context = Utils.getTopActivity();
-
-            ScrollView sc = new ScrollView(context);
-            sc.setBackgroundColor(Color.WHITE);
-            LinearLayout mRoot = new LinearLayout(context);
-            mRoot.setOrientation(LinearLayout.VERTICAL);
-            sc.addView(mRoot);
-            Dialog dialog = new Dialog(context,3);
-            dialog.setCancelable(false);
-            dialog.setContentView(sc);
+            CommonHookLoaderDialog findDialog = new CommonHookLoaderDialog(context);
 
 
             ArrayList<ScannerLink> sortedLinkScannerInfo = new ArrayList<>();
             for (ScannerLink node : rootNode){
                 getSortedLinkInfo(sortedLinkScannerInfo,node);
             }
-            ArrayList<TextView> nodeList = new ArrayList<>();
-            for (ScannerLink node : sortedLinkScannerInfo){
-                TextView view = new TextView(context);
-                if (node.Info instanceof CommonMethodInfo){
-                    view.setVisibility(View.GONE);
-                }
-                view.setGravity(Gravity.CENTER);
-                view.setText(node.ID);
-                view.setTextSize(16);
-                view.setTextColor(Color.BLACK);
-                view.setTag(node);
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                param.topMargin = Utils.dip2px(context,12);
-                mRoot.addView(view,param);
-                nodeList.add(view);
+            findDialog.showDialog();
+            findDialog.updateProgress(1,sortedLinkScannerInfo.size());
 
-            }
-            dialog.show();
             new Thread(()->{
-                for (TextView nodeView : nodeList){
-                    ScannerLink node = (ScannerLink) nodeView.getTag();
-                    Utils.PostToMain(()->nodeView.setTextColor(Color.BLUE));
+                int i = 0;
+                for (ScannerLink node : sortedLinkScannerInfo){
                     try{
+                        findDialog.updateProgress(++i,sortedLinkScannerInfo.size());
+
                         BaseMethodInfo info = node.Info;
                         Member findResult = findMethod(info);
                         if (findResult == null){
-                            Utils.PostToMain(()->nodeView.setTextColor(Color.RED));
+
                         }else {
                             info.bandToInfo.scanResult.put(info.id,findResult);
-                            Utils.PostToMain(()->{
-                                nodeView.setTextColor(Color.GREEN);
-                                SpannableString text = new SpannableString(node.ID + "\n"+
-                                        "("+findResult.getDeclaringClass().getName()+"."+findResult.getName()+")");
-                                text.setSpan(new AbsoluteSizeSpan(Utils.dip2px(context,12)),node.ID.length()+1,text.length(),0);
-                                text.setSpan(new ForegroundColorSpan(Color.GRAY),node.ID.length()+1,text.length(),0);
-                                nodeView.setText(text);
-                            });
                             if (!(info instanceof CommonMethodInfo)){
                                 writeMethodToCache(info.bandToInfo.id+"_"+info.id, (Method) findResult);
                             }
                         }
                     }catch (Throwable e){
                         Utils.ShowToastL(Log.getStackTraceString(e));
-                        Utils.PostToMain(()->nodeView.setTextColor(Color.RED));
                     }
                 }
                 String cacheVer = HostInfo.getVersion() + "."+HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
                 GlobalConfig.Put_String("cacheVer",cacheVer);
-                Utils.ShowToastL("重启QQ以正常使用模块");
+                Utils.PostToMainDelay(()-> Utils.restartSelf(context),2000);
             },"QTool_Method_Finder").start();
-        },3000);
+        });
+
+        while (true){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
     private static Member findMethod(BaseMethodInfo info){
