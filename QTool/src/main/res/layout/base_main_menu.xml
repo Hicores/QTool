@@ -31,6 +31,7 @@
                 android:background="@drawable/tool" />
         </LinearLayout>
         <TextView
+            android:visibility=""
             android:id="@+id/Version_Now"
             android:layout_marginTop="8dp"
             android:layout_below="@+id/Main_Title"
@@ -42,6 +43,7 @@
             android:text="当前版本:4.0.0"/>
         <TextView
             android:id="@+id/Version_New"
+            android:visibility="gone"
             android:layout_marginTop="8dp"
             android:layout_below="@+id/Version_Now"
             android:textColor="@color/black"
