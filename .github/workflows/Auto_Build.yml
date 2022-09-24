@@ -27,7 +27,7 @@ jobs:
           cd tempDir
           git clone https://github.com/Hicores/QTool
           cd QTool
-          export CommitNumber="git rev-list HEAD --first-parent --count"
+          export CommitNumber="git rev-list --count main"
           $CommitNumber
           cd ../..
           echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
