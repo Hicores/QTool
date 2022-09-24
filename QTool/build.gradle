@@ -72,7 +72,7 @@ android {
     }
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "QTool_v${commitCount}.apk"
+            outputFileName = "QTool_v${versionCode}.apk"
         }
     }
 }
