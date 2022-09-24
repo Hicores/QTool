@@ -31,7 +31,6 @@
                 android:background="@drawable/tool" />
         </LinearLayout>
         <TextView
-            android:visibility=""
             android:id="@+id/Version_Now"
             android:layout_marginTop="8dp"
             android:layout_below="@+id/Main_Title"
