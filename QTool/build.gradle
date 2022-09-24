@@ -11,8 +11,17 @@ android {
         applicationId "cc.hicore.qtool"
         minSdk 26
         targetSdk 26
-        versionName "v${commitCount}"
-        versionCode Integer.parseInt("${commitCount}")
+        if (System.getenv("CommitNumber") != null){
+            versionName "v${System.getenv("CommitNumber")}"
+            versionCode Integer.parseInt("${System.getenv("CommitNumber")}")
+        }else {
+            versionName "v${commitCount}"
+            versionCode Integer.parseInt("${commitCount}")
+        }
+
+        println("versionName:${versionName}")
+        println("versionCode:${versionCode}")
+
         multiDexEnabled false
         signingConfigs {
             release{
