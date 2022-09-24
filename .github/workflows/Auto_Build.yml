@@ -24,7 +24,7 @@ jobs:
       - name: Build with Gradle
         run: |
           pwd
-          export CommitNumber="git rev-list HEAD --first-parent --count"
+          export CommitNumber="git log --oneline | wc -l"
           $CommitNumber
           echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
           git submodule update --init --recursive
