@@ -9,6 +9,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/QTool/TempAAA/QTool" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/QTool/src/main/adfawhf/DexBuilder" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/QTool/src/main/adfawhf/DexBuilder/external/abseil" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/QTool/src/main/adfawhf/DexKit" vcs="Git" />

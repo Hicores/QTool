@@ -23,10 +23,13 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: |
-          pwd
-          git fetch --all
+          mkdir tempDir
+          cd tempDir
+          git clone https://github.com/Hicores/QTool
+          cd QTool
           export CommitNumber="git rev-list HEAD --first-parent --count"
           $CommitNumber
+          cd ../..
           echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
           git submodule update --init --recursive
           ./gradlew :QTool:assembleRelease
