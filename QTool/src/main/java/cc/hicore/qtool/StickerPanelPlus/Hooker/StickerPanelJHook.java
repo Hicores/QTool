@@ -77,7 +77,17 @@ public class StickerPanelJHook {
     @MethodScanner
     public void getPanelIconCreateMethod_8893(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create","initui() simple mode  bottomMargin 1 = ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.helper")));
+
+    }
+    @VerController(max_targetVer = QQVersion.QQ_8_9_3)
+    @MethodScanner
+    public void getGuildPanelHookMethod(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","em_aio_input_box",m->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent")));
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_3)
+    @MethodScanner
+    public void getGuildPanelHookMethod_893(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","mEmojiLayout.findViewByI…id.guild_aio_emoji_image)",m->((Method)m).getReturnType().equals(View.class)));
     }
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
@@ -205,7 +215,7 @@ public class StickerPanelJHook {
             }
         };
     }
-    @VerController
+    @VerController(max_targetVer = QQVersion.QQ_8_9_3)
     @XPExecutor(methodID = "guild_emo_icon_create")
     public BaseXPExecutor guild_emo_button(){
         return param -> {
@@ -230,6 +240,22 @@ public class StickerPanelJHook {
                         }
 
                     }, 200);
+        };
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_3)
+    @XPExecutor(methodID = "guild_emo_icon_create",period = XPExecutor.After)
+    public BaseXPExecutor guild_emo_button_893(){
+        return param -> {
+            ViewGroup vg = (ViewGroup) param.getResult();
+            for (int i=0;i<vg.getChildCount();i++){
+                View v = vg.getChildAt(i);
+                if (v instanceof ImageView){
+                    v.setOnLongClickListener(v1 -> {
+                        ICreator.createPanel(v1.getContext());
+                        return true;
+                    });
+                }
+            }
         };
     }
     @VerController
