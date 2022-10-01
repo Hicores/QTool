@@ -200,8 +200,7 @@ public class PluginController {
 
     //这里负责清理脚本不支持的泛型和注解
     private static String checkAndRemoveNode(String Content) {
-        //TODO 这里需要添加内容清理脚本中的 @xxx 注解和 <>括号
-        return Content;
+        return KeyWordUtils.checkAndRemoveUnusedWord(Content);
     }
 
     //脚本环境首次初始化,注册对脚本开放的接口
@@ -276,17 +275,22 @@ public class PluginController {
 
     //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息
     public static void LoadInner(String FileContent, String LocalPath, String BandVerifyID) throws Exception {
-        String LoadContent = checkAndRemoveNode(FileContent);
-        PluginInfo info = runningInfo.get(BandVerifyID);
-        Interpreter instance = info.Instance;
-        instance.set("context", HookEnv.AppContext);
-        instance.set("PluginID", BandVerifyID);
-        instance.set("SDKVer", 13);
-        instance.set("loader", HookEnv.mLoader);
-        instance.set("AppPath", info.LocalPath);
-        instance.set("MyUin", QQEnvUtils.getCurrentUin());
 
-        instance.eval(LoadContent, LocalPath);
+        if (!KeyWordUtils.checkIsContainForbiddenKeyword(FileContent)){
+
+            String LoadContent = checkAndRemoveNode(FileContent);
+            PluginInfo info = runningInfo.get(BandVerifyID);
+            Interpreter instance = info.Instance;
+            instance.set("context", HookEnv.AppContext);
+            instance.set("PluginID", BandVerifyID);
+            instance.set("SDKVer", 13);
+            instance.set("loader", HookEnv.mLoader);
+            instance.set("AppPath", info.LocalPath);
+            instance.set("MyUin", QQEnvUtils.getCurrentUin());
+
+            instance.eval(LoadContent, LocalPath);
+        }
+
     }
 
     //判断该脚本是否有权利被调用回调
