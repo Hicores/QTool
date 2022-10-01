@@ -147,7 +147,6 @@ public class QQVoicePanelInject{
     @XPExecutor(methodID = "hook_4",period = XPExecutor.After)
     public BaseXPExecutor worker_4(){
         return param -> {
-            XposedBridge.log("aaaaaaaaaaaaaaaaaaaaaa");
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 0);
             if (button != null) {
                 button.setOnLongClickListener(v -> {

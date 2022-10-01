@@ -24,6 +24,14 @@ public class BaseChatPie{
             HookEnv.SessionInfo = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
         };
     }
+    public static Object getNewSessionInfo(){
+        try {
+            return MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     public void getBaseChatPieInit(MethodContainer container){
