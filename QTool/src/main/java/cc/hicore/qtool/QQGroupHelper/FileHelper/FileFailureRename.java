@@ -4,6 +4,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -26,6 +27,8 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.XposedInit.EnvHook;
+import de.robv.android.xposed.XposedBridge;
+
 @XPItem(name = "apk上传失败替换",itemType = XPItem.ITEM_Hook)
 public class FileFailureRename{
     @VerController
@@ -65,7 +68,7 @@ public class FileFailureRename{
             if (i == 202) {
                 Object item = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopFileTransferManager$Item"));
                 String Path = MField.GetField(item, "LocalFile", String.class);
-                if (Path.endsWith(".apk")) {
+                if (Path.endsWith(".apk") && new File(Path).length() < 100 * 1024 * 1024) {
                     File f = new File(Path);
                     EnvHook.requireCachePath();
 
@@ -77,20 +80,21 @@ public class FileFailureRename{
                     }
 
                     new File(dest).delete();
-                    ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(dest));
+                    ZipOutputStream zOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(dest),1024 * 1024));
                     ZipEntry entry = new ZipEntry(f.getName());
                     zOut.putNextEntry(entry);
                     FileInputStream fInp = new FileInputStream(f);
 
-                    byte[] buffer = new byte[4096];
+                    byte[] buffer = new byte[1024 * 1024];
                     int read;
-                    while ((read = fInp.read(buffer)) != -1) zOut.write(buffer, 0, read);
+                    while ((read = fInp.read(buffer)) != -1) {
+                        zOut.write(buffer, 0, read);
+                    }
                     zOut.close();
                     fInp.close();
 
                     long TroopUin = MField.GetField(item, "troopuin", long.class);
                     QQMsgSender.sendFileByPath(dest, String.valueOf(TroopUin));
-
                 }
             }
         };
