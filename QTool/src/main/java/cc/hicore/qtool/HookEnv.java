@@ -34,4 +34,6 @@ public class HookEnv {
 
     public static StringBuilder loadFailed = new StringBuilder();
     public static int CurrentApp = 1;
+
+    public static boolean isCurrentGuild = false;
 }

@@ -5,16 +5,28 @@ import android.text.TextUtils;
 
 import java.lang.reflect.Field;
 
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
+import cc.hicore.qtool.EmoHelper.Hooker.GuildSessionMonitor;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
 public class QQSessionUtils {
     private static final String TAG = "QQSessionUtils";
-
+    public static Object getCurrentSession(){
+        if (HostInfo.getVerCode() < QQVersion.QQ_8_9_3){
+            return HookEnv.SessionInfo;
+        }else {
+            if (HookEnv.isCurrentGuild){
+                return Build_SessionInfo_Guild(GuildSessionMonitor.guildID,GuildSessionMonitor.channelID,false);
+            }else {
+                return HookEnv.SessionInfo;
+            }
+        }
+    }
     public static Object Build_SessionInfo(String GroupUin, String UserUin) {
         try {
             if (GroupUin.contains("&")) {

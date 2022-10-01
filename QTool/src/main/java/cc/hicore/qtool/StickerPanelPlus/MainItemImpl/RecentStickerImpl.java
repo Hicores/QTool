@@ -24,6 +24,7 @@ import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
+import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
@@ -110,7 +111,7 @@ public class RecentStickerImpl implements MainPanelAdapter.IMainPanelItem {
                     if (RepeatWithPic.IsAvailable()){
                         RepeatWithPic.AddToPreSendList(HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/")));
                     }else {
-                        QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
+                        QQMsgSender.sendPic(QQSessionUtils.getCurrentSession(), QQMsgBuilder.buildPic(HookEnv.SessionInfo,HookEnv.ExtraDataPath + "Cache/" + coverView.substring(coverView.lastIndexOf("/"))));
                     }
                     RecentStickerHelper.addPicItemToRecentRecord(item);
                 },mContext);
@@ -120,7 +121,7 @@ public class RecentStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 if (RepeatWithPic.IsAvailable()) {
                     RepeatWithPic.AddToPreSendList(coverView);
                 }else {
-                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo,coverView));
+                    QQMsgSender.sendPic(QQSessionUtils.getCurrentSession(), QQMsgBuilder.buildPic(QQSessionUtils.getCurrentSession(),coverView));
                 }
                 RecentStickerHelper.addPicItemToRecentRecord(item);
                 ICreator.dismissAll();

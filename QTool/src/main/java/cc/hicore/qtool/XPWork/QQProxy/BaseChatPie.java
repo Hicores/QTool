@@ -11,6 +11,7 @@ import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "BaseChatPie_Init",itemType = XPItem.ITEM_Hook)
 public class BaseChatPie{
@@ -22,6 +23,7 @@ public class BaseChatPie{
             cacheChatPie = param.thisObject;
             HookEnv.AppInterface = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"));
             HookEnv.SessionInfo = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
+            HookEnv.isCurrentGuild = false;
         };
     }
     public static Object getNewSessionInfo(){
