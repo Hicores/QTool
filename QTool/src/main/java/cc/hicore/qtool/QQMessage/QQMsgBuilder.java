@@ -26,6 +26,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Common_Msg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Mix;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Text;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_structMsg;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Builder_Pic;
 import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Common_Rebuild_Msg;
@@ -128,23 +129,7 @@ public class QQMsgBuilder {
         return ApiHelper.invoke(Builder_Pic.class,_Session,PicPath);
     }
     public static Object buildText(String GroupUin, String text) {
-        try {
-            Method InvokeMethod = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), new Class[]{
-                    MClass.loadClass("com.tencent.common.app.AppInterface"),
-                    String.class,
-                    String.class,
-                    String.class,
-                    int.class,
-                    byte.class,
-                    byte.class,
-                    short.class,
-                    String.class
-            });
-            return InvokeMethod.invoke(null, HookEnv.AppInterface, "", GroupUin, QQEnvUtils.getCurrentUin(), 1, (byte) 0, (byte) 0, (short) 0, text);
-        } catch (Exception e) {
-            LogUtils.error("buildText", Log.getStackTraceString(e));
-            return null;
-        }
+        return ApiHelper.invoke(Build_Text.class,GroupUin,text);
     }
     public static Object buildAtInfo(String Useruin, String AtText, short StartPos,long ChannelID) {
         try {
