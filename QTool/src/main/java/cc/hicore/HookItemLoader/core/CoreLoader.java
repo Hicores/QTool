@@ -228,7 +228,7 @@ public class CoreLoader {
         for (XPItemInfo info : clzInstance.values()){
             for (Method m : info.fitMethods){
                 CommonExecutor executor = m.getAnnotation(CommonExecutor.class);
-                if (executor != null && (info.isLoadEarly == isEarly)){
+                if (executor != null && (info.isLoadEarly == isEarly) && info.isEnabled){
                     try{
                         m.invoke(info.Instance);
                     }catch (Throwable e){
