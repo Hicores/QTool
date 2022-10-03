@@ -43,9 +43,10 @@ public class OpenSource extends AppCompatActivity {
         createItem("appcenter@microsoft(MIT)", "https://github.com/microsoft/appcenter-sdk-android");
         createItem("BiliRoaming@yujincheng08(GPL3.0)", "https://github.com/yujincheng08/BiliRoaming");
         createItem("DexBuilder@LSPosed(LGPL3.0)", "https://github.com/LSPosed/DexBuilder");
-        createItem("DexKit@LuckyPray(LGPL3.0)", "https://github.com/LSPosed/DexBuilder");
-        createItem("dx@google", "https://androidsdkmanager.azurewebsites.net/Buildtools");
+        createItem("DexKit@LuckyPray(LGPL3.0)", "https://github.com/LuckyPray/DexKit");
+        createItem("dx.jar@google", "https://androidsdkmanager.azurewebsites.net/Buildtools");
         createItem("XposedBridgeApi@rovo89", "https://api.xposed.info/reference/packages.html");
+        createItem("lottie@airbnb(MIT)", "https://github.com/airbnb/lottie");
     }
 
     private void createItem(String title, String url) {

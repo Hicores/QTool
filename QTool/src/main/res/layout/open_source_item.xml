@@ -27,7 +27,8 @@
             android:textStyle="bold"
             android:text="Hicores/QTool"
             android:gravity="center_vertical"
-            android:textSize="20sp"
+            android:breakStrategy="simple"
+            android:textSize="18sp"
             android:textColor="#404040"/>
         <TextView
             android:id="@+id/open_url"
