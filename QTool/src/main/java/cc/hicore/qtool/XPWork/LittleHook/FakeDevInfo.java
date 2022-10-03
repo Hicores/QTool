@@ -3,6 +3,7 @@ package cc.hicore.qtool.XPWork.LittleHook;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -30,6 +31,8 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
+import de.robv.android.xposed.XposedBridge;
+
 @XPItem(name = "修改设备型号",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
 public class FakeDevInfo{
     @VerController
@@ -65,12 +68,18 @@ public class FakeDevInfo{
     @VerController
     @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor fix_base(){
-        return param -> param.setResult(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
+        return param -> {
+            String BuildSet = HookEnv.Config.getString("Set","FakeDevInfoSet","");
+            param.setResult(BuildSet);
+        };
     }
     @VerController
     @CommonExecutor
     public void fix_build() throws Exception {
-        MField.SetField(null, Build.class,"MODEL",String.class,HookEnv.Config.getString("Set","FakeDevInfoSet",""));
+        String BuildSet = HookEnv.Config.getString("Set","FakeDevInfoSet","");
+        if (!TextUtils.isEmpty(BuildSet)){
+            MField.SetField(null, Build.class,"MODEL",String.class,BuildSet);
+        }
     }
     @VerController
     @UIClick
