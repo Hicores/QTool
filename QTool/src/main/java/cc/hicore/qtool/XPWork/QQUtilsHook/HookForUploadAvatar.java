@@ -25,6 +25,7 @@ public class HookForUploadAvatar{
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
         ui.name = "半透明头像上传";
+        ui.desc = "包括个人头像和群头像,需要自行抠图";
         ui.groupName = "功能辅助";
         ui.type = 1;
         ui.targetID = 1;
