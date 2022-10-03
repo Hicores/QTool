@@ -186,7 +186,14 @@ public class RepeatWithPic {
     static Object chatPie = null;
     public static boolean IsNowReplying() {
         try {
-            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_10){
+            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_13){
+                Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bw"));
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.cb"),new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
+            }
+            else if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_10){
                 Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.bv"));
                 Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(),null,MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.ca"),new Class[]{int.class});
                 Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
