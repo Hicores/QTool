@@ -187,13 +187,15 @@ public class PreventRevoke{
                 FriendUin = sender;
             }
             Object mRawmsg =QQMessageUtils. GetMessageByTimeSeq(FriendUin, istroop, shmsgseq);
-            if(OpUin.equals(QQEnvUtils.getCurrentUin()))
-            {
-                if(istroop==1 || (istroop==0 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))
-                        || (istroop==1000 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))) {
-                    param.setResult(null);
+            if (mRawmsg != null){
+                if(OpUin.equals(QQEnvUtils.getCurrentUin())) {
+                    if(istroop==1 || (istroop==0 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))
+                            || (istroop==1000 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))) {
+                        param.setResult(null);
+                    }
                 }
             }
+
         };
     }
     @VerController

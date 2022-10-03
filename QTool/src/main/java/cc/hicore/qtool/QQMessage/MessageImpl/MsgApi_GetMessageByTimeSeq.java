@@ -20,6 +20,7 @@ public class MsgApi_GetMessageByTimeSeq {
     @ApiExecutor
     @VerController
     public Object api_invoker(String uin, int istroop, long msgseq) throws Exception {
+        if (HookEnv.AppInterface == null) return null;
         Object MessageFacade = MMethod.CallMethodNoParam(HookEnv.AppInterface, "getMessageFacade",
                 MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"));
         return ((Method)info.scanResult.get("invoker")).invoke(MessageFacade,uin,istroop,msgseq);
