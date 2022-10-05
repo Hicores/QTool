@@ -9,6 +9,7 @@ import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.Utils.HttpUtils;
+import cc.hicore.Utils.ThreadUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
@@ -43,13 +44,18 @@ public class CloudBlack {
             if (QQGroupUtils.IsCreator(GroupUin, QQEnvUtils.getCurrentUin())){
                 if (QQGroupUtils.Is_In_Group(GroupUin,Uin)){
                     QQGroupManager.Group_Kick(GroupUin,Uin,true);
+                    reportYunBlack(Uin,GroupUin);
                 }
             }else if (QQGroupUtils.IsAdmin(GroupUin,QQEnvUtils.getCurrentUin())){
                 QQGroupUtils.GroupMemberInfo memberInfo = QQGroupUtils.Group_Get_Member_Info(GroupUin,Uin);
                 if (memberInfo != null && !memberInfo.isAdmin && !memberInfo.isCreator){
                     QQGroupManager.Group_Kick(GroupUin,Uin,true);
+                    reportYunBlack(Uin,GroupUin);
                 }
             }
         }
+    }
+    private static void reportYunBlack(String TargetUin,String TargetGroupUin){
+        ThreadUtils.PostCommonTask(()-> HttpUtils.getContent("https://qtool.haonb.cc/yumBlack/reportKick?uin="+TargetUin+"&groupuin="+TargetGroupUin));
     }
 }
