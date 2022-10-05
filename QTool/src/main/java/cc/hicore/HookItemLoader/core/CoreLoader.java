@@ -23,6 +23,7 @@ import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.XPBridge;
+import cc.hicore.Tracker.AutoReport;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
@@ -203,6 +204,7 @@ public class CoreLoader {
                                         baseXPExecutor.onInvoke(param);
                                     }catch (Throwable th){
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
+                                        AutoReport.reportException(info.ItemName,Log.getStackTraceString(th));
                                     }
                                 }
                             }, executor.hook_period());
@@ -213,6 +215,7 @@ public class CoreLoader {
                                         baseXPExecutor.onInvoke(param);
                                     }catch (Throwable th){
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
+                                        AutoReport.reportException(info.ItemName,Log.getStackTraceString(th));
                                     }
                                 }
                             }, executor.hook_period());
