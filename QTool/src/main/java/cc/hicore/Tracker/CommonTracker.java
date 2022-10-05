@@ -31,6 +31,11 @@ public class CommonTracker {
     public void startTrack(){
         new Thread(()->{
             if (isTrackAvailable()){
+                try {
+                    Thread.sleep(9999);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 byte[] data = ("in="+DataUtils.ByteArrayToHex(collectInfo().getBytes(StandardCharsets.UTF_8))).getBytes(StandardCharsets.UTF_8);
                 HttpUtils.PostForResult("https://qtool.haonb.cc/track/trackUsageData","2333",data,data.length);
             }
