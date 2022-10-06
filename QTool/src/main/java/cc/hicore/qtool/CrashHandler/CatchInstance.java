@@ -12,6 +12,7 @@ import com.tencent.rmonitor.looper.LooperProxy;
 import java.lang.reflect.Field;
 
 import cc.hicore.ReflectUtils.MClass;
+import cc.hicore.Tracker.AutoReport;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
@@ -91,6 +92,7 @@ public class CatchInstance {
         return thOut.toString();
     }
     public static void ICatchEx(Thread thread,Throwable th){
+
         CatcherPacker packer = CatcherPacker.getInstance();
         //收集Throwable信息
 
@@ -107,7 +109,7 @@ public class CatchInstance {
 
         packer.CloseAll();
 
-
+        AutoReport.reportException("QQCrashReport",thOut);
         Utils.ShowToast("已阻止QQ闪退:\n"+th+"\n" +
                 "日志已保存到路径:"+packer.getPath());
 

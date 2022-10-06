@@ -29,7 +29,7 @@ public class AutoReport {
             byte[] reportData = ("d="+DataUtils.ByteArrayToHex(data.toString().getBytes())).getBytes(StandardCharsets.UTF_8);
 
             HttpUtils.Post("https://qtool.haonb.cc/reportError",reportData);
-        }catch (Exception e){
+        }catch (Throwable e){
 
         }
     }

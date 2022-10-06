@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import cc.hicore.Tracker.AutoReport;
+
 public class LogUtils {
     static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.CHINA);
 
@@ -14,6 +16,7 @@ public class LogUtils {
     }
 
     public static void error(String Tag, String text) {
+        AutoReport.reportException(Tag,text);
         LogOutputFile.Print(LogOutputFile.LEVEL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
 
     }
@@ -23,6 +26,7 @@ public class LogUtils {
     }
 
     public static void fetal_error(String Tag, String text) {
+        AutoReport.reportException(Tag,text);
         LogOutputFile.Print(LogOutputFile.LEVEL_FETAL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
     }
 
