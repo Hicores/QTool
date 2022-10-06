@@ -29,6 +29,7 @@ public class QQEnvUtils {
     public static String getCurrentUin() {
         try {
             Object AppRuntime = getAppRuntime();
+            if (AppRuntime == null)return "";
             return MMethod.CallMethodNoParam(AppRuntime, "getCurrentAccountUin", String.class);
         } catch (Exception e) {
             LogUtils.fetal_error(TAG, e);
