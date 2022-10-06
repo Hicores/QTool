@@ -38,6 +38,7 @@ public class CommonTracker {
                 }
                 byte[] data = ("in="+DataUtils.ByteArrayToHex(collectInfo().getBytes(StandardCharsets.UTF_8))).getBytes(StandardCharsets.UTF_8);
                 HttpUtils.PostForResult("https://qtool.haonb.cc/track/trackUsageData","2333",data,data.length);
+
             }
         }).start();;
 
@@ -67,27 +68,21 @@ public class CommonTracker {
             item.put("itemName",info.ItemName);
             item.put("itemID",info.id);
             item.put("isOpen",info.isEnabled);
-
-            JSONArray bugArr = new JSONArray();
-            for (JSONObject bugItem : collectMethodFindErr(info))bugArr.put(bugItem);
-            for (JSONObject bugItem : collectReportErr(info))bugArr.put(bugItem);
-            item.put("bugs",bugArr);
             items.put(item);
+
+            reportMethodFindErr(info);
+            reportMethodLoadErr(info);
         }
         return items;
     }
-    private List<JSONObject> collectMethodFindErr(CoreLoader.XPItemInfo info) throws JSONException {
-        ArrayList<JSONObject> obj = new ArrayList<>();
+    private void reportMethodFindErr(CoreLoader.XPItemInfo info) {
         for (String methodFinderName : info.scanResult.keySet()){
             if (info.scanResult.get(methodFinderName) == null){
                 AutoReport.reportException(info.ItemName,"method("+methodFinderName+") not found");
             }
         }
-        return obj;
     }
-    private List<JSONObject> collectReportErr(CoreLoader.XPItemInfo info) throws JSONException {
-        ArrayList<JSONObject> newData = new ArrayList<>();
-
+    private void reportMethodLoadErr(CoreLoader.XPItemInfo info) {
         for (String reportData : info.cacheException){
             AutoReport.reportException("CoreLoader",reportData);
         }
@@ -95,7 +90,6 @@ public class CommonTracker {
         for (String name : info.ExecutorException.keySet()){
             AutoReport.reportException(name,info.ExecutorException.get(name));
         }
-        return newData;
     }
     public boolean isTrackAvailable(){
         String Uin = QQEnvUtils.getCurrentUin();
