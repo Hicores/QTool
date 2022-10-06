@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import cc.hicore.HookItemLoader.core.ApiHelper;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
@@ -15,6 +16,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQManager.QQGuildManager;
+import cc.hicore.qtool.QQMessage.MessageBuilderImpl.Build_Common_Reply;
 
 public class QQMsgSendUtils {
     private static final int TYPE_TEXT = 1;
@@ -328,36 +330,7 @@ public class QQMsgSendUtils {
     }
 
     public static void sendReply(String GroupUin, Object source, String mixText) {
-        try {
-            String Uins = MField.GetField(source, "senderuin", String.class);
-            Object Appinterface = QQEnvUtils.getAppRuntime();
-            Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
-                    new Class[]{
-                            MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                            MClass.loadClass("com.tencent.mobileqq.data.ChatMessage"),
-                            int.class, long.class, String.class
-                    }
-            );
-            Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(Uins), QQGroupUtils.Group_Get_Name(GroupUin));
-            Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
-                    new Class[]{
-                            MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
-                            String.class, int.class,
-                            MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
-                            String.class
-                    }
-            );
-            if (mixText.contains("[PicUrl=")) {
-                String strTo = mixText.substring(0, mixText.indexOf("["));
-                Object Builded = BuildMsg.invoke(null, Appinterface, GroupUin, 1, SourceInfoObj, strTo.isEmpty() ? " " : strTo);
-                QQMsgSendUtils.decodeAndSendMsg(GroupUin, "", mixText.substring(mixText.indexOf("[")), Builded);
-            } else {
-                Object Builded = BuildMsg.invoke(null, Appinterface, GroupUin, 1, SourceInfoObj, mixText.isEmpty() ? " " : mixText);
-                QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin, ""), Builded);
-            }
-        } catch (Throwable th) {
-            LogUtils.error("sendReply_", th);
-        }
+        ApiHelper.invoke(Build_Common_Reply.class,GroupUin,source,mixText);
     }
 
 }
