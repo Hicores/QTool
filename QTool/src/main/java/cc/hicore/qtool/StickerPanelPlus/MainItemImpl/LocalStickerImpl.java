@@ -23,6 +23,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.NameUtils;
@@ -143,35 +146,49 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         progressDialog.show();
         new Thread(() -> {
             try {
-                for (int i = 0; i < mPicItems.size(); i++){
-                    int finalI = i;
-                    Utils.PostToMain(() -> progressDialog.setMessage("正在更新表情包,请稍等...("+ finalI +"/"+mPicItems.size()+")"));
-                    LocalDataHelper.LocalPicItems item = mPicItems.get(i);
-                    if (item.url.startsWith("http")){
-                        String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
-                        if (!TextUtils.isEmpty(localStorePath)){
-                            HttpUtils.DownloadToFile(item.url, localStorePath);
+                ExecutorService threadPool = Executors.newFixedThreadPool(8);
+                AtomicInteger finishCount = new AtomicInteger();
+                int taskCount = mPicItems.size();
+                for (LocalDataHelper.LocalPicItems item : mPicItems){
+                    if (item.type == 1){
+                        threadPool.execute(() -> {
+                            try {
+                                if (item.url.startsWith("http")){
+                                    String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
+                                    if (!TextUtils.isEmpty(localStorePath)){
+                                        HttpUtils.DownloadToFile(item.url, localStorePath);
 
-                            item.type = 1;
-                            item.fileName = item.MD5;
+                                        item.type = 1;
+                                        item.fileName = item.MD5;
 
 
-                            if (!TextUtils.isEmpty(item.thumbUrl)){
-                                String localThumbPath = LocalDataHelper.getLocalThumbPath(mPathInfo,item);
-                                HttpUtils.DownloadToFile(item.thumbUrl,localThumbPath);
-                                item.thumbName = item.MD5 + "_thumb";
+                                        if (!TextUtils.isEmpty(item.thumbUrl)){
+                                            String localThumbPath = LocalDataHelper.getLocalThumbPath(mPathInfo,item);
+                                            HttpUtils.DownloadToFile(item.thumbUrl,localThumbPath);
+                                            item.thumbName = item.MD5 + "_thumb";
+                                        }
+                                        LocalDataHelper.updatePicItemInfo(mPathInfo, item);
+                                    }
+                                }
+                            }catch (Exception e){
+                                XposedBridge.log(Log.getStackTraceString(e));
+                            }finally {
+                                Utils.PostToMain(() -> progressDialog.setMessage("正在更新表情包,请稍等...("+ finishCount.getAndIncrement() +"/"+mPicItems.size()+")"));
                             }
-                            LocalDataHelper.updatePicItemInfo(mPathInfo, item);
-                        }
+                        });
                     }
                 }
-            }catch (Exception e){
-
-            }finally {
+                while (true){
+                    if (finishCount.get() == taskCount){
+                        break;
+                    }
+                    Thread.sleep(100);
+                }
                 Utils.PostToMain(progressDialog::dismiss);
                 Utils.ShowToast("已更新完成");
                 Utils.PostToMain(ICreator::dismissAll);
-            }
+
+            }catch (Exception e){ }
         }).start();
 
     }
