@@ -12,6 +12,7 @@ import cc.hicore.Utils.ThreadUtils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 public class AutoReport {
     private static final ExecutorService singleReport = Executors.newSingleThreadExecutor();
@@ -20,6 +21,7 @@ public class AutoReport {
     }
     private static void reportExceptionThread(String tag,String contain){
         try {
+
             JSONObject data = new JSONObject();
             data.put("tag",tag);
             data.put("contain",contain);
@@ -27,10 +29,9 @@ public class AutoReport {
             data.put("QQVersion", HostInfo.getVersion());
             data.put("Uin", QQEnvUtils.getCurrentUin());
             byte[] reportData = ("d="+DataUtils.ByteArrayToHex(data.toString().getBytes())).getBytes(StandardCharsets.UTF_8);
-
             HttpUtils.Post("https://qtool.haonb.cc/reportError",reportData);
         }catch (Throwable e){
-
+            XposedBridge.log(e);
         }
     }
 }

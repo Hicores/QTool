@@ -103,7 +103,7 @@ public class HttpUtils {
             return "";
         }
     }
-    public static void Post(String u,byte[] buffer){
+    public static String Post(String u,byte[] buffer){
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(u).openConnection();
             connection.setConnectTimeout(10000);
@@ -115,10 +115,14 @@ public class HttpUtils {
             out.flush();
             out.close();
 
+            InputStream ins = connection.getInputStream();
+            byte[] result = DataUtils.readAllBytes(ins);
+            ins.close();
+            return new String(result);
 
-            XposedBridge.log("Post  Successssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
         } catch (Exception e) {
             XposedBridge.log(Log.getStackTraceString(e));
+            return "";
         }
     }
     public static void ProgressDownload(String url, String filepath, Runnable callback, Context context) {
