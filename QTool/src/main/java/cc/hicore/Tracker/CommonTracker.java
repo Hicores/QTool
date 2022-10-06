@@ -80,10 +80,7 @@ public class CommonTracker {
         ArrayList<JSONObject> obj = new ArrayList<>();
         for (String methodFinderName : info.scanResult.keySet()){
             if (info.scanResult.get(methodFinderName) == null){
-                JSONObject bugNewItem = new JSONObject();
-                bugNewItem.put("name","methodFinder->"+bugNewItem);
-                bugNewItem.put("contain","method is null");
-                obj.add(bugNewItem);
+                AutoReport.reportException(info.ItemName,"method("+methodFinderName+") not found");
             }
         }
         return obj;
@@ -92,18 +89,11 @@ public class CommonTracker {
         ArrayList<JSONObject> newData = new ArrayList<>();
 
         for (String reportData : info.cacheException){
-            JSONObject bugNewItem = new JSONObject();
-            bugNewItem.put("name","报告异常");
-            bugNewItem.put("contain",reportData);
-            newData.add(bugNewItem);
+            AutoReport.reportException("CoreLoader",reportData);
         }
 
         for (String name : info.ExecutorException.keySet()){
-            String data = info.ExecutorException.get(name);
-            JSONObject bugNewItem = new JSONObject();
-            bugNewItem.put("name","执行异常->"+name);
-            bugNewItem.put("contain",data);
-            newData.add(bugNewItem);
+            AutoReport.reportException(name,info.ExecutorException.get(name));
         }
         return newData;
     }
