@@ -77,7 +77,7 @@ public class Build_Common_Reply {
             QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin, ""), Builded);
         }
     }
-    @VerController(max_targetVer = QQVersion.QQ_8_9_0)
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void findMethod(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("invoke","generateSourceInfo sender uin exception:",m->true));
