@@ -3,6 +3,7 @@ package cc.hicore.Tracker;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,12 +17,14 @@ import de.robv.android.xposed.XposedBridge;
 
 public class AutoReport {
     private static final ExecutorService singleReport = Executors.newSingleThreadExecutor();
+    private static final HashSet<String> reportCache = new HashSet<>();
     public static void reportException(String tag,String contain){
+        if (reportCache.contains(tag+"->"+contain))return;
+        reportCache.add(tag+"->"+contain);
         singleReport.execute(()-> reportExceptionThread(tag,contain));
     }
     private static void reportExceptionThread(String tag,String contain){
         try {
-
             JSONObject data = new JSONObject();
             data.put("tag",tag);
             data.put("contain",contain);
