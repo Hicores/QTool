@@ -37,6 +37,7 @@
 -keep class me.iacn.biliroaming.**{*;}
 -keep @cc.hicore.HookItemLoader.Annotations.XPItem class * { *;}
 -keep class cc.hicore.HookItemLoader.**{*;}
+-keepattributes SourceFile,LineNumberTable
 
 -keepclassmembers enum * {
     public static **[] values();
