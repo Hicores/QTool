@@ -65,8 +65,17 @@ public final class LocalPluginItemController {
 
         btn_load.setOnClickListener(v -> ClickLoad());
         btn_stop.setOnClickListener(v -> ClickStop());
-
-
+        btn_loading.setOnClickListener(v -> ClickForceStop());
+    }
+    private void ClickForceStop(){
+        new AlertDialog.Builder(mRoot.getContext())
+                .setTitle("停止加载")
+                .setMessage("是否停止加载脚本")
+                .setPositiveButton("确定", (dialog, which) -> {
+                    ClickStop();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     private void ClickLoad() {
@@ -92,7 +101,6 @@ public final class LocalPluginItemController {
         loadThread.start();
 
     }
-
     private void ClickStop() {
         btn_stop.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
