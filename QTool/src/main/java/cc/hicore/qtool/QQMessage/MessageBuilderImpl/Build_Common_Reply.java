@@ -14,6 +14,7 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
+import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
@@ -25,7 +26,8 @@ public class Build_Common_Reply {
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void sendReply_(String GroupUin, Object source, String mixText) throws Exception {
-        String Uins = MField.GetField(source, "senderuin", String.class);
+        String Uins = MField.GetField(source, "frienduin", String.class);
+        String troopCode = QQGroupUtils.convertGroupUinToCode(Uins);
         Object Appinterface = QQEnvUtils.getAppRuntime();
         Method SourceInfo = MMethod.FindMethod("com.tencent.mobileqq.activity.aio.reply.ReplyMsgUtils", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"),
                 new Class[]{
@@ -34,7 +36,7 @@ public class Build_Common_Reply {
                         int.class, long.class, String.class
                 }
         );
-        Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(Uins), QQGroupUtils.Group_Get_Name(GroupUin));
+        Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(troopCode), QQGroupUtils.Group_Get_Name(GroupUin));
         Method BuildMsg = MMethod.FindMethod("com.tencent.mobileqq.service.message.MessageRecordFactory", null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
                 new Class[]{
                         MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"),
@@ -55,10 +57,11 @@ public class Build_Common_Reply {
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void sendReply_890(String GroupUin, Object source, String mixText) throws Exception {
-        String Uins = MField.GetField(source, "senderuin", String.class);
+        String Uins = MField.GetField(source, "frienduin", String.class);
+        String troopCode = QQGroupUtils.convertGroupUinToCode(Uins);
         Object Appinterface = QQEnvUtils.getAppRuntime();
         Method SourceInfo = (Method) info.scanResult.get("invoke");
-        Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(Uins), QQGroupUtils.Group_Get_Name(GroupUin));
+        Object SourceInfoObj = SourceInfo.invoke(null, Appinterface, source, 0, Long.parseLong(troopCode), QQGroupUtils.Group_Get_Name(GroupUin));
 
         Method BuildMsg = MMethod.FindMethod(info.scanResult.get("builderMethod").getDeclaringClass(), null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText"),
                 new Class[]{

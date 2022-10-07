@@ -145,6 +145,9 @@ public class QQGroupUtils {
         }
         return Code;
     }
+    public static String convertGroupUinToCode(String Uin){
+        return Group_Get_Info(Uin).Code;
+    }
 
     public static GroupInfo Group_Get_Info(String GroupUin) {
         try {
