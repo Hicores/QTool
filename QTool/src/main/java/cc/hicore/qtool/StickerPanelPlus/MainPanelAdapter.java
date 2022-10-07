@@ -6,8 +6,6 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 
-import de.robv.android.xposed.XposedBridge;
-
 public class MainPanelAdapter extends BaseAdapter {
     public interface IMainPanelItem{
         View getView(ViewGroup parent);

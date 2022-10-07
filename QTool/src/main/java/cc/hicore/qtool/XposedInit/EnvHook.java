@@ -26,7 +26,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.CrashHandler.LogcatCatcher;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.Initer.CommonHookLoaderDialog;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;

@@ -33,7 +33,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.VoiceHelper.Panel.VoicePanel;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "语音面板",itemType = XPItem.ITEM_Hook)
 public class QQVoicePanelInject{

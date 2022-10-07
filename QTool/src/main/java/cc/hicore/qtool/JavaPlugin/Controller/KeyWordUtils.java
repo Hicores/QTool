@@ -1,15 +1,12 @@
 package cc.hicore.qtool.JavaPlugin.Controller;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPItem;

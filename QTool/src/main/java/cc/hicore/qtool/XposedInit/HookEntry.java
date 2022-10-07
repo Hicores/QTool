@@ -5,10 +5,7 @@ import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 
 import java.lang.reflect.Field;
 
-import cc.hicore.ConfigUtils.BeforeConfig;
-import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.SubLoader.SubIniter;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XposedBridge;

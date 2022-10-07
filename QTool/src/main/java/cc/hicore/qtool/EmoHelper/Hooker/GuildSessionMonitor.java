@@ -10,7 +10,6 @@ import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "GuildSessionMonitor",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_9_3)
 public class GuildSessionMonitor {

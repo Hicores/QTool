@@ -27,7 +27,6 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.XposedInit.EnvHook;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "apk上传失败替换",itemType = XPItem.ITEM_Hook)
 public class FileFailureRename{

@@ -2,7 +2,6 @@ package cc.hicore.qtool.QQMessage;
 
 import android.text.TextUtils;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;

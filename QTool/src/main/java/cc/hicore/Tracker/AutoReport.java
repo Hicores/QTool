@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.Utils.HttpUtils;
-import cc.hicore.Utils.ThreadUtils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;

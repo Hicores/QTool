@@ -14,7 +14,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
-import cc.hicore.qtool.QQManager.QQGroupManager;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;

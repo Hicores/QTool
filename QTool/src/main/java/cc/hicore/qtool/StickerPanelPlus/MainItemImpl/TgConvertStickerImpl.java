@@ -28,7 +28,6 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
-import de.robv.android.xposed.XposedBridge;
 
 public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
     LinearLayout panelContainer;

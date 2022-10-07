@@ -31,7 +31,6 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "修改设备型号",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
 public class FakeDevInfo{

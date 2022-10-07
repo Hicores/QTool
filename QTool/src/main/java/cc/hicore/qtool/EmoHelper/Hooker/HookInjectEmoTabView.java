@@ -38,7 +38,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.StickerPanelPlus.ICreator;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认

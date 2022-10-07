@@ -9,7 +9,6 @@ import java.util.List;
 
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 public class LocalDataHelper {
     public static class LocalPath{

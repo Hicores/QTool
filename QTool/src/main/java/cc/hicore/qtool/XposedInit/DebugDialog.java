@@ -11,13 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.DexFinder.DexFinder;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.DebugUtils;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 

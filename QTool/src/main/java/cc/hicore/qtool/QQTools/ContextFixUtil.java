@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.view.LayoutInflater;
 
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 public class ContextFixUtil {
     public static class FixResClassLoader extends ClassLoader {

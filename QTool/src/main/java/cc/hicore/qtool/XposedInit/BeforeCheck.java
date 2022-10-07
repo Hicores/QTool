@@ -7,7 +7,6 @@ import android.os.IBinder;
 
 import java.lang.reflect.Method;
 
-import cc.hicore.ConfigUtils.BeforeConfig;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.ServerUtils;

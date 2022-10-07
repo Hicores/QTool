@@ -5,16 +5,13 @@ import java.lang.reflect.Method;
 import cc.hicore.HookItemLoader.Annotations.ApiExecutor;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
-import cc.hicore.HookItemLoader.Annotations.XPChecker;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.core.CoreLoader;
-import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.XposedInit.HostInfo;
 

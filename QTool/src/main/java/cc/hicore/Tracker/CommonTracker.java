@@ -8,8 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 import cc.hicore.HookItemLoader.Annotations.CommonExecutor;
 import cc.hicore.HookItemLoader.Annotations.VerController;
@@ -22,7 +20,6 @@ import cc.hicore.qtool.CrashHandler.CatchInstance;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "UsageDataTracker",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
 public class CommonTracker {

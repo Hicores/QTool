@@ -11,7 +11,6 @@ import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "BaseChatPie_Init",itemType = XPItem.ITEM_Hook)
 public class BaseChatPie{
