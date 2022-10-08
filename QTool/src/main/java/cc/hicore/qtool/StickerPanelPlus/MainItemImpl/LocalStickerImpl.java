@@ -144,7 +144,6 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 AtomicInteger finishCount = new AtomicInteger();
                 int taskCount = mPicItems.size();
                 for (LocalDataHelper.LocalPicItems item : mPicItems){
-                    if (item.type == 1){
                         threadPool.execute(() -> {
                             try {
                                 if (item.url.startsWith("http")){
@@ -170,7 +169,6 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                                 Utils.PostToMain(() -> progressDialog.setMessage("正在更新表情包,请稍等...("+ finishCount.getAndIncrement() +"/"+mPicItems.size()+")"));
                             }
                         });
-                    }
                 }
                 while (true){
                     if (finishCount.get() == taskCount){
