@@ -14,7 +14,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -37,7 +37,8 @@
 -keep class me.iacn.biliroaming.**{*;}
 -keep @cc.hicore.HookItemLoader.Annotations.XPItem class * { *;}
 -keep class cc.hicore.HookItemLoader.**{*;}
--keepattributes SourceFile,LineNumberTable
+
+
 
 -keepclassmembers enum * {
     public static **[] values();
@@ -62,3 +63,4 @@
 }
 
 -flattenpackagehierarchy ''
+-optimizationpasses 5
