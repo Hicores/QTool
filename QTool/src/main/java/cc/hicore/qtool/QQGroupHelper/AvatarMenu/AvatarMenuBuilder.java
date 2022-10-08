@@ -56,6 +56,7 @@ public class AvatarMenuBuilder {
                 menuItems.add("设置名片");
             }else if (UserUin.equals(QQEnvUtils.getCurrentUin())){
                 menuItems.add("撤回此消息");
+                menuItems.add("设置名片");
             }
 
 
