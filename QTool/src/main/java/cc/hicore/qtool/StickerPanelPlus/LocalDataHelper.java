@@ -52,7 +52,7 @@ public class LocalDataHelper {
         public long addTime;
         public int type;
     }
-    public static List<LocalPicItems> getPicItems(String pathName){
+    public synchronized static List<LocalPicItems> getPicItems(String pathName){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathName + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -81,7 +81,7 @@ public class LocalDataHelper {
             return new ArrayList<>();
         }
     }
-    public static boolean addPath(LocalPath addInfo){
+    public synchronized static boolean addPath(LocalPath addInfo){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             if (!new File(pathSetDir).exists()){
@@ -109,7 +109,7 @@ public class LocalDataHelper {
             return false;
         }
     }
-    public static boolean addPicItem(String pathName, LocalPicItems addInfo){
+    public synchronized static boolean addPicItem(String pathName, LocalPicItems addInfo){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathName + "/info.json";
             if (!new File(pathSetDir).exists()) {
@@ -144,7 +144,7 @@ public class LocalDataHelper {
             return false;
         }
     }
-    public static void deletePath(LocalPath pathInfo){
+    public synchronized static void deletePath(LocalPath pathInfo){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -162,7 +162,7 @@ public class LocalDataHelper {
             e.printStackTrace();
         }
     }
-    public static void deletePicItem(LocalPath pathInfo,LocalPicItems item){
+    public synchronized static void deletePicItem(LocalPath pathInfo,LocalPicItems item){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -179,7 +179,7 @@ public class LocalDataHelper {
             e.printStackTrace();
         }
     }
-    public static void setPathCover(LocalPath pathInfo,LocalPicItems coverItem){
+    public synchronized static void setPathCover(LocalPath pathInfo,LocalPicItems coverItem){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -201,7 +201,7 @@ public class LocalDataHelper {
             e.printStackTrace();
         }
     }
-    public static void updatePicItemInfo(LocalPath pathInfo,LocalPicItems newItemInfo){
+    public  synchronized static void updatePicItemInfo(LocalPath pathInfo,LocalPicItems newItemInfo){
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
