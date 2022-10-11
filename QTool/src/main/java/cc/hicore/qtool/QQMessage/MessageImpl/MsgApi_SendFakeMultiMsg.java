@@ -95,7 +95,8 @@ public class MsgApi_SendFakeMultiMsg {
                 int code = MField.GetField(result,"a",int.class);
                 if (code == 0){
                     String resid = MField.GetField(result,"f",String.class);
-                    String willSendResult = replaceXML.replace("REPLACE",resid);
+                    String willSendResult = replaceXML.replace("REPLACE",resid)
+                            .replace("fileNameReplace",(Math.random()+"").substring(2));
                     if (!TextUtils.isEmpty(ShowTag)){
                         willSendResult = willSendResult.replace("新消息",ShowTag);
                     }
@@ -135,7 +136,8 @@ public class MsgApi_SendFakeMultiMsg {
                 int code = MField.GetField(result,"a",int.class);
                 if (code == 0){
                     String resid = MField.GetField(result,"f",String.class);
-                    String willSendResult = replaceXML.replace("REPLACE",resid);
+                    String willSendResult = replaceXML.replace("REPLACE",resid)
+                            .replace("fileNameReplace",(Math.random()+"").substring(2));
                     if (!TextUtils.isEmpty(ShowTag)){
                         willSendResult = willSendResult.replace("新消息",ShowTag);
                     }
