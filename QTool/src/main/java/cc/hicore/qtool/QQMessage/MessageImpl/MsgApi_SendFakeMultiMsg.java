@@ -25,7 +25,7 @@ import cc.hicore.qtool.XposedInit.HostInfo;
 @XPItem(name = "MsgApi_SendFakeMultiMsg",itemType = XPItem.ITEM_Api)
 public class MsgApi_SendFakeMultiMsg {
     private static final String fakeMsgXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
-    private static final String replaceXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" m_resid=\"REPLACE\" m_fileName=\"587781278678697\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
+    private static final String replaceXML = "<?xml version='1.0' encoding='UTF-8' standalone='yes' ?><msg serviceID=\"35\" templateID=\"1\" action=\"viewMultiMsg\" brief=\"[聊天记录]\" m_resid=\"REPLACE\" m_fileName=\"fileNameReplace\" tSum=\"1\" sourceMsgId=\"0\" url=\"\" flag=\"3\" adverSign=\"0\" multiMsgFlag=\"0\"><item layout=\"1\" advertiser_id=\"0\" aid=\"0\"><title size=\"34\" maxLines=\"2\" lineSpace=\"12\">聊天记录</title><title size=\"26\" color=\"#777777\" maxLines=\"2\" lineSpace=\"12\">新消息</title><hr hidden=\"false\" style=\"0\" /><summary size=\"26\" color=\"#777777\">查看1条转发消息</summary></item><source name=\"聊天记录\" icon=\"\" action=\"\" appid=\"-1\" /></msg>";
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void onSend(String fakeGroup, String fakeUin, List messageRecords, Object session, String ShowTag, String fakeName) throws Exception {
@@ -57,7 +57,9 @@ public class MsgApi_SendFakeMultiMsg {
                 int code = MField.GetField(result,"a",int.class);
                 if (code == 0){
                     String resid = MField.GetField(result,"f",String.class);
-                    String willSendResult = replaceXML.replace("REPLACE",resid);
+                    String willSendResult = replaceXML.replace("REPLACE",resid)
+                            .replace("fileNameReplace",(Math.random()+"").substring(2));
+
                     if (!TextUtils.isEmpty(ShowTag)){
                         willSendResult = willSendResult.replace("新消息",ShowTag);
                     }
