@@ -75,17 +75,18 @@ public class CommonTracker {
     private void reportMethodFindErr(CoreLoader.XPItemInfo info) {
         for (String methodFinderName : info.scanResult.keySet()){
             if (info.scanResult.get(methodFinderName) == null){
-                AutoReport.reportException(info.ItemName,"method("+methodFinderName+") not found");
+                AutoReport.reportException(info.ItemName,new NoSuchMethodError("method("+methodFinderName+") not found"),"method("+methodFinderName+") not found");
             }
         }
     }
     private void reportMethodLoadErr(CoreLoader.XPItemInfo info) {
         for (String reportData : info.cacheException){
-            AutoReport.reportException("CoreLoader",reportData);
+
+            AutoReport.reportException("CoreLoader",new RuntimeException(reportData),reportData);
         }
 
         for (String name : info.ExecutorException.keySet()){
-            AutoReport.reportException(name,info.ExecutorException.get(name));
+            AutoReport.reportException(name,new RuntimeException(info.ExecutorException.get(name)),info.ExecutorException.get(name));
         }
     }
     public boolean isTrackAvailable(){

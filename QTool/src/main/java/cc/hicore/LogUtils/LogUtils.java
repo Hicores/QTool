@@ -16,7 +16,7 @@ public class LogUtils {
     }
 
     public static void error(String Tag, String text) {
-        AutoReport.reportException(Tag,text);
+        AutoReport.reportException(Tag,new Throwable(text),"");
         LogOutputFile.Print(LogOutputFile.LEVEL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
 
     }
@@ -26,7 +26,7 @@ public class LogUtils {
     }
 
     public static void fetal_error(String Tag, String text) {
-        AutoReport.reportException(Tag,text);
+        AutoReport.reportException(Tag,new Throwable(text),"");
         LogOutputFile.Print(LogOutputFile.LEVEL_FETAL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
     }
 

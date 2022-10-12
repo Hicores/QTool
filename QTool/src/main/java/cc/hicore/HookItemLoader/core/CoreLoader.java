@@ -204,7 +204,7 @@ public class CoreLoader {
                                         baseXPExecutor.onInvoke(param);
                                     }catch (Throwable th){
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
-                                        AutoReport.reportException(info.ItemName,Log.getStackTraceString(th));
+                                        AutoReport.reportException(info.ItemName,th,"");
                                     }
                                 }
                             }, executor.hook_period());
@@ -215,7 +215,7 @@ public class CoreLoader {
                                         baseXPExecutor.onInvoke(param);
                                     }catch (Throwable th){
                                         info.ExecutorException.put(m.getName(),Log.getStackTraceString(th));
-                                        AutoReport.reportException(info.ItemName,Log.getStackTraceString(th));
+                                        AutoReport.reportException(info.ItemName,th,"");
                                     }
                                 }
                             }, executor.hook_period());

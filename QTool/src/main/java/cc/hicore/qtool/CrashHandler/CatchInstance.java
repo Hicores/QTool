@@ -109,7 +109,7 @@ public class CatchInstance {
 
         packer.CloseAll();
 
-        AutoReport.reportException("QQCrashReport",thOut);
+        AutoReport.reportException("QQCrashReport",th,"");
         Utils.ShowToast("已阻止QQ闪退:\n"+th+"\n" +
                 "日志已保存到路径:"+packer.getPath());
 

@@ -1,9 +1,18 @@
 package cc.hicore.Tracker;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+import com.microsoft.appcenter.crashes.model.ErrorReport;
+import com.microsoft.appcenter.crashes.utils.ErrorLogHelper;
+import com.microsoft.appcenter.utils.AppCenterLog;
+
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,21 +26,19 @@ import de.robv.android.xposed.XposedBridge;
 public class AutoReport {
     private static final ExecutorService singleReport = Executors.newSingleThreadExecutor();
     private static final HashSet<String> reportCache = new HashSet<>();
-    public static void reportException(String tag,String contain){
+    public static void reportException(String tag,Throwable contain,String extra){
         if (reportCache.contains(tag+"->"+contain))return;
         reportCache.add(tag+"->"+contain);
-        singleReport.execute(()-> reportExceptionThread(tag,contain));
+        singleReport.execute(()-> reportExceptionThread(tag,contain,extra));
     }
-    private static void reportExceptionThread(String tag,String contain){
+    private static void reportExceptionThread(String tag,Throwable contain,String extra){
         try {
-            JSONObject data = new JSONObject();
-            data.put("tag",tag);
-            data.put("contain",contain);
-            data.put("version", BuildConfig.VERSION_NAME);
-            data.put("QQVersion", HostInfo.getVersion());
-            data.put("Uin", QQEnvUtils.getCurrentUin());
-            byte[] reportData = ("d="+DataUtils.ByteArrayToHex(data.toString().getBytes())).getBytes(StandardCharsets.UTF_8);
-            HttpUtils.Post("https://qtool.haonb.cc/reportError",reportData);
+            Map<String, String> properties = new HashMap<String, String>() {{
+                put("ver", BuildConfig.VERSION_NAME);
+                put("tag",tag);
+                put("extra",extra);
+            }};
+            Crashes.trackError(contain, properties, null);
         }catch (Throwable e){
             XposedBridge.log(e);
         }
