@@ -14,7 +14,6 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
-@XPItem(name = "启用部分被禁用的功能", itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
 public class RemoveCloudControl {
     @UIItem
     @VerController
