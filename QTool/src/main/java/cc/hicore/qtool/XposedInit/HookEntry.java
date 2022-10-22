@@ -54,7 +54,6 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     public static class FixSubLoadClass {
         public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam,ClassLoader subClassLoader) {
             if (lpparam.packageName.equals("com.tencent.mobileqq")) {
-                InjectClassLoader(lpparam.classLoader);
                 HookEnv.AppPath = lpparam.appInfo.dataDir;
                 HookEnv.SubClassLoader = subClassLoader;
                 HookEnv.IsMainProcess = lpparam.processName.equals("com.tencent.mobileqq");

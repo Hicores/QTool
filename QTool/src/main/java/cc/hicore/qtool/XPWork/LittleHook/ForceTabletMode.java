@@ -16,6 +16,7 @@ import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "强制平板模式",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_9_15)
 public class ForceTabletMode {
@@ -25,9 +26,9 @@ public class ForceTabletMode {
     public UIInfo getUI(){
         UIInfo ui = new UIInfo();
         ui.name = "强制平板模式";
-        ui.desc = "重启QQ生效";
+        ui.desc = "重启QQ生效,不保证一定有用";
         ui.groupName = "功能辅助";
-        ui.targetID = 1;
+        ui.targetID = 4;
         ui.type = 1;
         return ui;
     }
@@ -41,7 +42,9 @@ public class ForceTabletMode {
     @XPExecutor(methodID = "hook",period = XPExecutor.After)
     public BaseXPExecutor XPWork(){
         return param -> {
-            MField.SetField(null,info.scanResult.get("hook").getDeclaringClass(),"b",DeviceType.class, DeviceType.TABLET);
+            Enum<?> type = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.config.DeviceType"),"valueOf",MClass.loadClass("com.tencent.common.config.DeviceType"),
+                    "TABLET");
+            MField.SetField(null,info.scanResult.get("hook").getDeclaringClass(),"b",MClass.loadClass("com.tencent.common.config.DeviceType"), type);
         };
     }
 }
