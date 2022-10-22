@@ -1,5 +1,7 @@
 package cc.hicore.qtool.XPWork.LittleHook;
 
+import android.content.Context;
+
 import com.tencent.common.config.DeviceType;
 
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
@@ -18,7 +20,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import de.robv.android.xposed.XposedBridge;
 
-@XPItem(name = "强制平板模式",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_9_15)
+@XPItem(name = "强制平板模式",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_9_15,proc = XPItem.PROC_ALL)
 public class ForceTabletMode {
     CoreLoader.XPItemInfo info;
     @VerController
@@ -36,6 +38,7 @@ public class ForceTabletMode {
     @MethodScanner
     public void FindMethod(MethodContainer container){
         container.addMethod(MethodFinderBuilder.newFinderByString("hook","initDeviceType type = ",m->true));
+        container.addMethod("hook1",MMethod.FindMethod(MClass.loadClass("com.tencent.hippy.qq.utils.HippyUtils"),"initDeviceType",void.class,new Class[]{Context.class}));
     }
 
     @VerController
@@ -45,6 +48,15 @@ public class ForceTabletMode {
             Enum<?> type = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.config.DeviceType"),"valueOf",MClass.loadClass("com.tencent.common.config.DeviceType"),
                     "TABLET");
             MField.SetField(null,info.scanResult.get("hook").getDeclaringClass(),"b",MClass.loadClass("com.tencent.common.config.DeviceType"), type);
+        };
+    }
+    @VerController
+    @XPExecutor(methodID = "hook1",period = XPExecutor.After)
+    public BaseXPExecutor XPWork2(){
+        return param -> {
+            Enum<?> type = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.config.DeviceType"),"valueOf",MClass.loadClass("com.tencent.common.config.DeviceType"),
+                    "TABLET");
+            MField.SetField(null,info.scanResult.get("hook1").getDeclaringClass(),"b",MClass.loadClass("com.tencent.common.config.DeviceType"), type);
         };
     }
 }
