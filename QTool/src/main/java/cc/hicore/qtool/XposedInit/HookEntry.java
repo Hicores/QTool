@@ -54,6 +54,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     public static class FixSubLoadClass {
         public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam,ClassLoader subClassLoader) {
             if (lpparam.packageName.equals("com.tencent.mobileqq")) {
+                InjectClassLoader(lpparam.classLoader);
                 HookEnv.AppPath = lpparam.appInfo.dataDir;
                 HookEnv.SubClassLoader = subClassLoader;
                 HookEnv.IsMainProcess = lpparam.processName.equals("com.tencent.mobileqq");
@@ -72,13 +73,13 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             EzXHelperInit.INSTANCE.initZygote(startupParam);
         }
     }
-    private static void InjectClassLoader() {
+    private static void InjectClassLoader(ClassLoader qLoader) {
         try {
             ClassLoader currentLoader = HookEntry.class.getClassLoader();
             Field parentF = ClassLoader.class.getDeclaredField("parent");
             parentF.setAccessible(true);
             ClassLoader parent = (ClassLoader) parentF.get(currentLoader);
-            MyFixClassLoader newFixLoader = new MyFixClassLoader(parent);
+            MyFixClassLoader newFixLoader = new MyFixClassLoader(parent,qLoader);
             parentF.set(currentLoader, newFixLoader);
         } catch (Throwable e) {
             XposedBridge.log(e);
@@ -86,13 +87,20 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     }
 
     private static class MyFixClassLoader extends ClassLoader {
-        protected MyFixClassLoader(ClassLoader parent) {
+        ClassLoader QLoader;
+        protected MyFixClassLoader(ClassLoader parent,ClassLoader QLoader) {
             super(parent);
+            this.QLoader = QLoader;
         }
 
         @Override
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-            return super.loadClass(name, resolve);
+            try {
+                return super.loadClass(name, resolve);
+            }catch (Exception e){
+                return QLoader.loadClass(name);
+            }
+
         }
     }
 }
