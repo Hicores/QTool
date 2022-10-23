@@ -10,6 +10,6 @@
 [submodule "libs/BeanShell"]
 	path = libs/BeanShell
 	url = https://github.com/Hicores/BeanShell
-[submodule "QTool/src/main/adfawhf/DexKit"]
-	path = QTool/src/main/adfawhf/DexKit
-	url = https://github.com/LuckyPray/DexKit
+[submodule "libs/DexKit"]
+	path = libs/DexKit
+	url = https://github.com/Hicores/DexKit

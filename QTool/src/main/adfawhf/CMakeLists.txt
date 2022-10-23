@@ -6,7 +6,6 @@ find_library(
         ANDROID_LIBS
         log)
 add_subdirectory(DexBuilder)
-add_subdirectory(DexKitHelper)
 
 
 add_library(
@@ -15,5 +14,4 @@ add_library(
 )
 
 target_link_libraries(dexfinder dex_builder)
-target_link_libraries(dexkithelper)
 
