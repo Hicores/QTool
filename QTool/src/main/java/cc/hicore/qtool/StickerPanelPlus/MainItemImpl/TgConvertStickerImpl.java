@@ -18,7 +18,9 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
@@ -181,13 +183,47 @@ public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 path.coverName = coverPath;
                 path.Name = Name;
                 LocalDataHelper.addPath(path);
+
                 Utils.PostToMain(()->{
-                    new AlertDialog.Builder(mContext,3).setTitle("提示")
-                            .setMessage("添加成功\n\n(新添加的表情包默认为在线模式,如果有需求可以点击设置按钮来本地化就不用每次发送都下载了)").
-                            setPositiveButton("确定", (dialog1, which) -> {
-                                ICreator.dismissAll();
-                            }).show();
+                    ProgressDialog progress = new ProgressDialog(mContext,3);
+                    progress.setMessage("正在下载贴纸包...");
+                    progress.setMessage("正在下载0/0");
+                    progress.setCancelable(false);
+                    progress.show();
+
+                    new Thread(()->{
+                        try {
+                            List<LocalDataHelper.LocalPicItems> items = LocalDataHelper.getPicItems(ID);
+                            int count = items.size();
+                            int index = 0;
+                            for (LocalDataHelper.LocalPicItems item:items){
+                                index++;
+                                int finalIndex = index;
+                                Utils.PostToMain(()->{
+                                    progress.setMessage("正在下载"+ finalIndex +"/"+count);
+                                });
+                                String localPath = LocalDataHelper.getLocalItemPath(path,item);
+                                String thumbPath = LocalDataHelper.getLocalThumbPath(path,item);
+
+                                if (item.thumbUrl.startsWith("http")){
+                                    HttpUtils.DownloadToFile(item.thumbUrl,thumbPath);
+                                }
+                                if (item.url.startsWith("http")){
+                                    HttpUtils.DownloadToFile(item.url,localPath);
+                                }
+
+                                item.type = 1;
+                                LocalDataHelper.updatePicItemInfo(path,item);
+                            }
+                        }catch (Exception e){
+                            Utils.ShowToastL("发生错误:\n"+e);
+                        }finally {
+                            Utils.PostToMain(progress::dismiss);
+                        }
+                    }).start();
                 });
+                Utils.PostToMain(ICreator::dismissAll);
+
             }catch (Exception e){
                 Utils.ShowToast("发生错误:\n"+e);
             }finally {
