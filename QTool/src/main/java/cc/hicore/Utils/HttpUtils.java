@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import cc.hicore.qtool.HookEnv;
 import de.robv.android.xposed.XposedBridge;
 
 public class HttpUtils {
@@ -56,9 +57,13 @@ public class HttpUtils {
                 thread.join();
                 return builder.get();
             }
+            String cachePath = HookEnv.ExtraDataPath + "/Cache/"+Math.random();
             File parent = new File(local).getParentFile();
             if (!parent.exists()) parent.mkdirs();
-            FileOutputStream fOut = new FileOutputStream(local);
+
+
+
+            FileOutputStream fOut = new FileOutputStream(cachePath);
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setConnectTimeout(10000);
             connection.setReadTimeout(10000);
@@ -78,6 +83,9 @@ public class HttpUtils {
             fOut.flush();
             fOut.close();
             ins.close();
+
+            if (new File(cachePath).length() == 0)return false;
+            FileUtils.copy(cachePath,local);
             return true;
         } catch (Exception e) {
             return false;
