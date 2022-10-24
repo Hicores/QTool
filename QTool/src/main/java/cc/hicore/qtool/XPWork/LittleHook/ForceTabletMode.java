@@ -50,13 +50,4 @@ public class ForceTabletMode {
             MField.SetField(null,info.scanResult.get("hook").getDeclaringClass(),"b",MClass.loadClass("com.tencent.common.config.DeviceType"), type);
         };
     }
-    @VerController
-    @XPExecutor(methodID = "hook1",period = XPExecutor.After)
-    public BaseXPExecutor XPWork2(){
-        return param -> {
-            Enum<?> type = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.config.DeviceType"),"valueOf",MClass.loadClass("com.tencent.common.config.DeviceType"),
-                    "TABLET");
-            MField.SetField(null,info.scanResult.get("hook1").getDeclaringClass(),"b",MClass.loadClass("com.tencent.common.config.DeviceType"), type);
-        };
-    }
 }
