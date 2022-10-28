@@ -125,6 +125,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                                             Utils.ShowToastL("标题不能为空");
                                             return;
                                         }
+                                        ICreator.dismissAll();
                                         StickerShareHelper.startShareSync(mPicItems,mPathInfo,name,mContext);
 
                                     }).show();
