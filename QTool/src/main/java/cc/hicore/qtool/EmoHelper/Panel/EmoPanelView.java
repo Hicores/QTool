@@ -63,7 +63,6 @@ public class EmoPanelView extends BottomPopupView {
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
     HorizontalScrollView scView;
-    Button btnSaveToLocal;
 
     ExecutorService savePool = Executors.newFixedThreadPool(16);
 
@@ -501,7 +500,6 @@ public class EmoPanelView extends BottomPopupView {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     try {
                         data.clear();
-                        btnSaveToLocal.setVisibility(VISIBLE);
                         for (int i = 0; i < dataArr.length(); i++) {
                             JSONObject item = dataArr.getJSONObject(i);
                             EmoPanel.EmoInfo infoItem = new EmoPanel.EmoInfo();
@@ -563,7 +561,6 @@ public class EmoPanelView extends BottomPopupView {
                 new Handler(Looper.getMainLooper()).post(() -> {
                     try {
                         data.clear();
-                        btnSaveToLocal.setVisibility(VISIBLE);
                         for (int i = 0; i < dataArr.length(); i++) {
                             JSONObject item = dataArr.getJSONObject(i);
                             EmoPanel.EmoInfo infoItem = new EmoPanel.EmoInfo();
@@ -639,7 +636,6 @@ public class EmoPanelView extends BottomPopupView {
     }
 
     private void updateShowPath(String pathName) {
-        btnSaveToLocal.setVisibility(GONE);
         multiItem.clear();
         data = EmoSearchAndCache.searchForEmo(pathName);
         int Count = 0;
