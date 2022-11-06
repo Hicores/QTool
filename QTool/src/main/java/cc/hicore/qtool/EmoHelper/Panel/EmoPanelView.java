@@ -47,7 +47,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.EmoHelper.CloudSync.SyncCore;
 import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
@@ -87,50 +86,6 @@ public class EmoPanelView extends BottomPopupView {
         super.onCreate();
         scView = findViewById(R.id.emo_title);
         LinearLayout PathBar = findViewById(R.id.PathBar);
-        btnSaveToLocal = findViewById(R.id.SaveToLocal);
-        btnSaveToLocal.setOnClickListener(v -> {
-            EditText ed = new EditText(getContext());
-            new AlertDialog.Builder(getContext(), 3)
-                    .setTitle("输入保存的名字")
-                    .setView(ed)
-                    .setNeutralButton("保存", (dialog, which) -> {
-                        String Name = ed.getText().toString();
-                        if (TextUtils.isEmpty(Name)) {
-                            Utils.ShowToastL("名字不能为空");
-                            return;
-                        }
-                        ProgressDialog mDialog = new ProgressDialog(getContext(), 3);
-                        mDialog.setTitle("正在保存..");
-                        mDialog.setMessage("正在保存图片[0/0]");
-                        mDialog.setCancelable(false);
-                        mDialog.show();
-                        new Thread(() -> {
-                            try {
-                                String RootPath = HookEnv.ExtraDataPath + "Pic/" + Name + "/";
-                                AtomicInteger mLock = new AtomicInteger();
-                                for (EmoPanel.EmoInfo info : data) {
-                                    mLock.getAndIncrement();
-                                    EmoOnlineLoader.submit2(info, () -> {
-                                        mLock.getAndDecrement();
-                                        new Handler(Looper.getMainLooper()).post(() -> mDialog.setMessage("正在保存图片[" + (data.size() - mLock.get()) + "/" + data.size() + "]"));
-                                        FileUtils.copy(info.Path, RootPath + info.MD5);
-                                    });
-                                }
-                                for (int iaa = 0; iaa < 60; iaa++) {
-                                    if (mLock.get() == 0) break;
-                                    Thread.sleep(1000);
-                                }
-                                Utils.ShowToastL("保存完成");
-                            } catch (Exception e) {
-
-                            } finally {
-                                new Handler(Looper.getMainLooper()).post(() -> mDialog.dismiss());
-                            }
-                        }).start();
-
-
-                    }).show();
-        });
 
         ArrayList<String> barList = EmoSearchAndCache.searchForPathList();
         for (String name : barList) {
@@ -163,9 +118,7 @@ public class EmoPanelView extends BottomPopupView {
                         .setNeutralButton("改名", (dialog, which) -> {
                             new File(HookEnv.ExtraDataPath + "Pic/" + name).renameTo(new File(HookEnv.ExtraDataPath + "Pic/" + edName.getText().toString()));
                             dismiss();
-                        }).setNegativeButton("上传", (dialog, which) -> {
-                    SyncCore.requestShare(getContext(), edName.getText().toString(), name);
-                }).show();
+                        }).show();
 
                 return true;
             });
@@ -272,14 +225,7 @@ public class EmoPanelView extends BottomPopupView {
                     container.addView(view, param);
                     view.setOnClickListener(v -> {
                         if (info.type == 2) {
-                            EmoOnlineLoader.submit(info, () -> {
-                                if (RepeatWithPic.IsAvailable()) {
-                                    RepeatWithPic.AddToPreSendList(info.Path);
-                                } else {
-                                    QQMsgSender.sendPic(HookEnv.SessionInfo, QQMsgBuilder.buildPic(HookEnv.SessionInfo, info.Path));
-                                }
-                                dismiss();
-                            });
+
                         } else {
                             if (RepeatWithPic.IsAvailable()) {
                                 RepeatWithPic.AddToPreSendList(info.Path);

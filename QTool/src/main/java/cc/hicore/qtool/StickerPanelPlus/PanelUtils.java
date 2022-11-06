@@ -22,7 +22,6 @@ import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.EmoHelper.Panel.EmoOnlineLoader;
 import cc.hicore.qtool.EmoHelper.Panel.EmoPanel;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
@@ -45,12 +44,7 @@ public class PanelUtils {
         NewInfo.MD5 = MD5.toUpperCase(Locale.ROOT);
 
         if (URL.startsWith("http")) {
-            EmoOnlineLoader.submit(NewInfo, () -> {
-                Glide.with(HookEnv.AppContext)
-                        .load(new File(NewInfo.Path))
-                        .fitCenter()
-                        .into(preView);
-            });
+
         } else {
             NewInfo.Path = URL;
             Glide.with(HookEnv.AppContext)
