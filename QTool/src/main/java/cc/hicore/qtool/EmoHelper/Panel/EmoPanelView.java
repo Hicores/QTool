@@ -40,8 +40,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;

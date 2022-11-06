@@ -51,7 +51,7 @@ public class HookInjectEmoTabView{
         UIInfo ui = new UIInfo();
         ui.name = "表情面板#1";
         ui.groupName = "聊天辅助";
-        ui.desc = "和另一个冲突,请不要都开启,否则可能发生莫名其妙的问题";
+        ui.desc = "以弃用,建议使用表情面板#2";
         ui.type = 1;
         ui.targetID = 1;
         return ui;
