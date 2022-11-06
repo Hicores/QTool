@@ -243,10 +243,8 @@ public class PluginController {
 
         space.setMethod("AddItem", new BshMethod(PluginMethod.class.getMethod("AddItem", String.class, String.class), env));
         space.setMethod("AddItem", new BshMethod(PluginMethod.class.getMethod("AddItem", String.class, String.class, String.class), env));
-        space.setMethod("AddUserItem", new BshMethod(PluginMethod.class.getMethod("AddUserItem", String.class, String.class), env));
         space.setMethod("RemoveItem", new BshMethod(PluginMethod.class.getMethod("RemoveItem", String.class, String.class), env));
         space.setMethod("RemoveItem", new BshMethod(PluginMethod.class.getMethod("RemoveItem", String.class), env));
-        space.setMethod("RemoveUserItem", new BshMethod(PluginMethod.class.getMethod("RemoveUserItem", String.class), env));
         space.setMethod("setItemCallback", new BshMethod(PluginMethod.class.getMethod("setItemCallback", String.class), env));
 
         space.setMethod("putString", new BshMethod(PluginMethod.class.getMethod("putString", String.class, String.class, String.class), env));
@@ -263,9 +261,7 @@ public class PluginController {
         space.setMethod("GetActivity", new BshMethod(PluginMethod.class.getMethod("GetActivity"), env));
         space.setMethod("load", new BshMethod(PluginMethod.class.getMethod("load", String.class), env));
         space.setMethod("loadJar",new BshMethod(PluginMethod.class.getMethod("loadJar", String.class),env));
-        space.setMethod("setFlag", new BshMethod(PluginMethod.class.getMethod("setFlag", String.class), env));
         space.setMethod("IncludeFile", new BshMethod(PluginMethod.class.getMethod("IncludeFile", String.class), env));
-        space.setMethod("HandleRequest", new BshMethod(PluginMethod.class.getMethod("HandlerRequest", Object.class, boolean.class, String.class, boolean.class), env));
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
         space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class),env));

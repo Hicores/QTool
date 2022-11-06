@@ -137,14 +137,6 @@ public class PluginMethod {
         return PluginController.AddItem(info_.PluginVerifyID, ItemName, CallbackName, 1);
     }
 
-    public String AddUserItem(String ItemName, String CallbackName) {
-        return PluginController.AddItem(info_.PluginVerifyID, ItemName, CallbackName, 2);
-    }
-
-    public void RemoveUserItem(String ItemID) {
-        PluginController.RemoveItem(info_.PluginVerifyID, ItemID);
-    }
-
     public void RemoveItem(String PluginID, String ItemID) {
         LogUtils.debug("RemoveItem", PluginID + ":" + ItemID);
         RemoveItem(ItemID);
@@ -265,10 +257,6 @@ public class PluginMethod {
         PluginStoreUtils.putLong(info_.PluginID, ConfigName, key, value);
     }
 
-    public void setFlag(String flag) {
-        LogUtils.debug("setFlag", flag);
-    }
-
     public void IncludeFile(String path) {
         LogUtils.debug("IncludeFile", path);
     }
@@ -301,10 +289,6 @@ public class PluginMethod {
 
     public void sendAntEmo(String GroupUin, String UserUin, int servID) {
         QQMsgSender.sendAntEmo(QQSessionUtils.Build_SessionInfo(GroupUin, UserUin), servID);
-    }
-
-    public void HandlerRequest(Object request, boolean isAccept, String reason, boolean isBlack) {
-        //TODO JoinEventProxy
     }
 
     public String getFileDirectUrl(Object msgData) {
