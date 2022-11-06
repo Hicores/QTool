@@ -279,7 +279,7 @@ public class PluginController {
             Interpreter instance = info.Instance;
             instance.set("context", HookEnv.AppContext);
             instance.set("PluginID", BandVerifyID);
-            instance.set("SDKVer", 13);
+            instance.set("SDKVer", 14);
             instance.set("loader", HookEnv.mLoader);
             instance.set("AppPath", info.LocalPath);
             instance.set("MyUin", QQEnvUtils.getCurrentUin());
