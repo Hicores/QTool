@@ -42,9 +42,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
@@ -63,8 +61,6 @@ public class EmoPanelView extends BottomPopupView {
     private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
     private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
     HorizontalScrollView scView;
-
-    ExecutorService savePool = Executors.newFixedThreadPool(16);
 
     static int CacheScrollTop = 0;
 
@@ -122,25 +118,6 @@ public class EmoPanelView extends BottomPopupView {
                 return true;
             });
         }
-
-
-        TextView view = new TextView(getContext());
-        view.setBackgroundResource(R.drawable.share);
-        view.setTextColor(Color.parseColor("#99FFFF"));
-        view.setTextSize(24);
-        LinearLayout.LayoutParams parans = new LinearLayout.LayoutParams(Utils.sp2px(getContext(), 24), Utils.sp2px(getContext(), 24));
-        parans.setMargins(Utils.dip2px(getContext(), 10), 0, Utils.dip2px(getContext(), 10), 0);
-        view.setOnClickListener(v -> searchOnline());
-        PathBar.addView(view, parans);
-
-        view = new TextView(getContext());
-        view.setBackgroundResource(R.drawable.dl_from_tg);
-        view.setTextColor(Color.parseColor("#99FFFF"));
-        view.setTextSize(24);
-        parans = new LinearLayout.LayoutParams(Utils.sp2px(getContext(), 24), Utils.sp2px(getContext(), 24));
-        parans.setMargins(Utils.dip2px(getContext(), 10), 0, Utils.dip2px(getContext(), 10), 0);
-        view.setOnClickListener(v -> searchFromTg());
-        PathBar.addView(view, parans);
 
         int width = View.MeasureSpec.makeMeasureSpec(0,
                 View.MeasureSpec.UNSPECIFIED);
