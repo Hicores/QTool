@@ -3,6 +3,7 @@ package cc.hicore.qtool.StickerPanelPlus.MainItemImpl;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -232,18 +233,29 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
         });
 
         img.setOnLongClickListener(v->{
+            ImageView preView = new ImageView(context);
+            preView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            preView.setLayoutParams(new ViewGroup.LayoutParams(Utils.getScreenWidth(HookEnv.AppContext)/2, Utils.getScreenWidth(HookEnv.AppContext)/2));
+            if (coverView.startsWith("http://") || coverView.startsWith("https://")){
+                try {
+                    Glide.with(HookEnv.AppContext).load(new URL(coverView)).override(Utils.getScreenWidth(HookEnv.AppContext)/2,Utils.getScreenWidth(HookEnv.AppContext)/2).into(preView);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                Glide.with(HookEnv.AppContext).load(coverView).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(Utils.getScreenWidth(HookEnv.AppContext)/2,Utils.getScreenWidth(HookEnv.AppContext)/2).into(preView);
+            }
             new AlertDialog.Builder(mContext,3)
                     .setTitle("选择你对该表情的操作")
-                    .setItems(new String[]{
-                            "删除该表情", "设置为标题预览"
-                    }, (dialog, which) -> {
-                        if (which == 0){
-                            LocalDataHelper.deletePicItem(mPathInfo,item);
-                            ICreator.dismissAll();
-                        }else if (which == 1){
-                            LocalDataHelper.setPathCover(mPathInfo,item);
-                            ICreator.dismissAll();
-                        }
+                    .setView(preView)
+                    .setOnDismissListener(dialog -> {
+                        Glide.with(HookEnv.AppContext).clear(preView);
+                    }).setNegativeButton("删除该表情", (dialog, which) -> {
+                        LocalDataHelper.deletePicItem(mPathInfo,item);
+                        ICreator.dismissAll();
+                    }).setNeutralButton("设置为标题预览", (dialog, which) -> {
+                        LocalDataHelper.setPathCover(mPathInfo,item);
+                        ICreator.dismissAll();
                     }).show();
             return true;
         });
