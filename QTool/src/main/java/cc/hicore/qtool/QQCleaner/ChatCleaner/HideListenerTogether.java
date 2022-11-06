@@ -15,11 +15,11 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
-@XPItem(name = "屏蔽一起听歌顶栏",itemType = XPItem.ITEM_Hook)
-public class HideListenerTogether{
+@XPItem(name = "屏蔽一起听歌顶栏", itemType = XPItem.ITEM_Hook)
+public class HideListenerTogether {
     @UIItem
     @VerController
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "屏蔽一起听歌顶栏";
         ui.groupName = "聊天界面净化";
@@ -27,22 +27,25 @@ public class HideListenerTogether{
         ui.type = 1;
         return ui;
     }
+
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getHookMethod_New(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","onUIModuleNeedRefresh, checkSession is false",m->((Method)m).getReturnType() == void.class));
+    public void getHookMethod_New(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook", "onUIModuleNeedRefresh, checkSession is false", m -> ((Method) m).getReturnType() == void.class));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ui.BaseListenTogetherPanel"),"a",void.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.listentogether.ui.BaseListenTogetherPanel"), "a", void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.listentogether.ListenTogetherSession")
         }));
 
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> param.setResult(null);
     }
 }

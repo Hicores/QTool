@@ -23,16 +23,7 @@ public class QQMsgSendUtils {
     private static final int TYPE_AT = 3;
     private static final int TYPE_MUTE = 4;
     private static final int TYPE_UNMUTE = 4;
-    private static ExecutorService preSendExecutor = Executors.newSingleThreadExecutor();
-
-    public static class DecodeResult {
-        public int msgType;
-        public String content;
-        public String extra;
-
-        public int atStart;
-        public int atEnd;
-    }
+    private static final ExecutorService preSendExecutor = Executors.newSingleThreadExecutor();
 
     public static void sendText(String GroupUin, String UserUin, String Text, ArrayList atList) {
         QQMsgSender.sendText(QQSessionUtils.Build_SessionInfo(GroupUin, UserUin), Text, atList);
@@ -90,18 +81,18 @@ public class QQMsgSendUtils {
                 if (result.content.equals("0")) {
                     atText = "@全体成员 ";
                 } else {
-                    if (QQSessionUtils.getSessionID() == 10014){
+                    if (QQSessionUtils.getSessionID() == 10014) {
                         atText = "@" + QQGuildManager.Get_User_Name(QQSessionUtils.getGuildID(_Session), result.content) + " ";
-                    }else {
+                    } else {
                         atText = "@" + QQGroupUtils.Group_Get_Member_Name(QQSessionUtils.getGroupUin(_Session), result.content) + " ";
                     }
                 }
                 summary.append(atText);
-                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length,Long.parseLong(QQSessionUtils.getChannelID(_Session))));
+                atInfo.add(QQMsgBuilder.buildAtInfo(result.content, atText, (short) length, Long.parseLong(QQSessionUtils.getChannelID(_Session))));
                 length += atText.length();
-                if (QQSessionUtils.getSessionID() == 10014){
+                if (QQSessionUtils.getSessionID() == 10014) {
                     records.add(QQMsgBuilder.buildText(QQSessionUtils.getGuildID(_Session), atText));
-                }else {
+                } else {
                     records.add(QQMsgBuilder.buildText(QQSessionUtils.getGroupUin(_Session), atText));
                 }
 
@@ -259,7 +250,7 @@ public class QQMsgSendUtils {
                     1, System.currentTimeMillis() / 1000
             );
             MField.SetField(MessageRecord, "msgData", PICDatas);
-            MField.SetField(MessageRecord, "msgUid", (long) ((long) (MField.GetField(MessagePicRecord, "msgUid", long.class)) + 1));
+            MField.SetField(MessageRecord, "msgUid", (long) (MField.GetField(MessagePicRecord, "msgUid", long.class)) + 1);
             MField.SetField(MessageRecord, "shmsgseq", MField.GetField(MessagePicRecord, "shmsgseq", long.class));
             MField.SetField(MessageRecord, "msgUid", MField.GetField(MessagePicRecord, "msgUid", long.class));
             MMethod.CallMethodNoParam(MessageRecord, "doParse", void.class);
@@ -329,7 +320,16 @@ public class QQMsgSendUtils {
     }
 
     public static void sendReply(String GroupUin, Object source, String mixText) {
-        ApiHelper.invoke(Build_Common_Reply.class,GroupUin,source,mixText);
+        ApiHelper.invoke(Build_Common_Reply.class, GroupUin, source, mixText);
+    }
+
+    public static class DecodeResult {
+        public int msgType;
+        public String content;
+        public String extra;
+
+        public int atStart;
+        public int atEnd;
     }
 
 }

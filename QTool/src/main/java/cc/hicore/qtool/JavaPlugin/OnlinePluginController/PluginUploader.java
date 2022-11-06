@@ -155,8 +155,8 @@ public class PluginUploader {
                                         .setNegativeButton("取消", (dialog, which) -> {
 
                                         }).setNeutralButton("上传", (dialog, which) -> {
-                                    Upload0(act, collectInfo.toString(), ZipCachePath);
-                                }).show();
+                                            Upload0(act, collectInfo.toString(), ZipCachePath);
+                                        }).show();
                             });
                 } catch (Exception e) {
                     new Handler(Looper.getMainLooper()).post(() -> {

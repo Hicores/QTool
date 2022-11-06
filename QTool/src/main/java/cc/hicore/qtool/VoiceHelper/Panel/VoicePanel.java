@@ -23,6 +23,8 @@ import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 
 public class VoicePanel {
+    private static String preSavePath;
+
     public static void createVoicePanel() {
         Context context = Utils.getTopActivity();
         ResUtils.StartInject(context);
@@ -38,8 +40,6 @@ public class VoicePanel {
         BasePopupView base = NewPop.asCustom(controller);
         base.show();
     }
-
-    private static String preSavePath;
 
     public static void preSaveVoice(Context context, String voicePath) {
         String tmpName = "语音" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

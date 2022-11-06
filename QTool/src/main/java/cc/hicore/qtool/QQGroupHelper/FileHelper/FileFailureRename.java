@@ -28,11 +28,25 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.XposedInit.EnvHook;
 
-@XPItem(name = "apk上传失败替换",itemType = XPItem.ITEM_Hook)
-public class FileFailureRename{
+@XPItem(name = "apk上传失败替换", itemType = XPItem.ITEM_Hook)
+public class FileFailureRename {
+    public static String GetPackageInfo(String Path) {
+        PackageManager manager = HookEnv.AppContext.getPackageManager();
+        PackageInfo info = manager.getPackageArchiveInfo(Path, PackageManager.GET_ACTIVITIES);
+        if (info != null) {
+            ApplicationInfo appInfo = info.applicationInfo;
+            appInfo.sourceDir = Path;
+            appInfo.publicSourceDir = Path;
+            String appName = manager.getApplicationLabel(appInfo).toString();
+            String version = info.versionName;
+            return appName + "-" + version;
+        }
+        return "base.apk";
+    }
+
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "apk上传失败替换";
         ui.desc = "apk在群聊上传失败自动压缩为ZIP重试";
@@ -41,19 +55,21 @@ public class FileFailureRename{
         ui.type = 1;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper"), null, void.class,
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper"), null, void.class,
                 new Class[]{MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTTransferKey"), int.class,
                         MClass.loadClass("com.tencent.mobileqq.uftransfer.api.IUFTUploadCompleteInfo")}));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod_890(MethodContainer container){
-        for (Method m : MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper").getDeclaredMethods()){
-            if (m.getReturnType().equals(void.class) && m.getParameterCount() == 3 && m.getParameterTypes()[1].equals(int.class)){
-                container.addMethod("hook",m);
+    public void getHookMethod_890(MethodContainer container) {
+        for (Method m : MClass.loadClass("com.tencent.mobileqq.filemanager.uftwrapper.QFileTroopTransferWrapper$TroopUploadWrapper").getDeclaredMethods()) {
+            if (m.getReturnType().equals(void.class) && m.getParameterCount() == 3 && m.getParameterTypes()[1].equals(int.class)) {
+                container.addMethod("hook", m);
                 break;
             }
         }
@@ -61,7 +77,7 @@ public class FileFailureRename{
 
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> {
             int i = (int) param.args[1];
             if (i == 202) {
@@ -79,7 +95,7 @@ public class FileFailureRename{
                     }
 
                     new File(dest).delete();
-                    ZipOutputStream zOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(dest),1024 * 1024));
+                    ZipOutputStream zOut = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(dest), 1024 * 1024));
                     ZipEntry entry = new ZipEntry(f.getName());
                     zOut.putNextEntry(entry);
                     FileInputStream fInp = new FileInputStream(f);
@@ -97,18 +113,5 @@ public class FileFailureRename{
                 }
             }
         };
-    }
-    public static String GetPackageInfo(String Path) {
-        PackageManager manager = HookEnv.AppContext.getPackageManager();
-        PackageInfo info = manager.getPackageArchiveInfo(Path, PackageManager.GET_ACTIVITIES);
-        if (info != null) {
-            ApplicationInfo appInfo = info.applicationInfo;
-            appInfo.sourceDir = Path;
-            appInfo.publicSourceDir = Path;
-            String appName = manager.getApplicationLabel(appInfo).toString();
-            String version = info.versionName;
-            return appName + "-" + version;
-        }
-        return "base.apk";
     }
 }

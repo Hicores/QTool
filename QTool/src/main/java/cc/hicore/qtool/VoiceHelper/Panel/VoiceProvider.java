@@ -7,18 +7,17 @@ import cc.hicore.qtool.HookEnv;
 public class VoiceProvider {
     public static final String PROVIDER_LOCAL_FILE = "LocalFile::";
     public static final String PROVIDER_LOCAL_SEARCH = " LOCAL_SEARCH::";
-
-    public static class FileInfo {
-        public String Name;
-        public int type;
-        public String Path;
-    }
+    private String Path;
 
     private VoiceProvider() {
 
     }
 
-    private String Path;
+    public static VoiceProvider getNewInstance(String Path) {
+        VoiceProvider provider = new VoiceProvider();
+        provider.Path = Path;
+        return provider;
+    }
 
     public VoiceProvider getParent() {
         if (!Path.contains("/")) return this;
@@ -27,12 +26,6 @@ public class VoiceProvider {
 
     public VoiceProvider getChild(String Name) {
         return getNewInstance(Path + "/" + Name);
-    }
-
-    public static VoiceProvider getNewInstance(String Path) {
-        VoiceProvider provider = new VoiceProvider();
-        provider.Path = Path;
-        return provider;
     }
 
     public String getPath() {
@@ -48,5 +41,11 @@ public class VoiceProvider {
             return LocalVoiceSearchHelper.searchForName(HookEnv.ExtraDataPath + "Voice/", searchName);
         }
         return new ArrayList<>();
+    }
+
+    public static class FileInfo {
+        public String Name;
+        public int type;
+        public String Path;
     }
 }

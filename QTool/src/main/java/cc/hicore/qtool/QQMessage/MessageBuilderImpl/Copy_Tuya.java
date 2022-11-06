@@ -12,7 +12,7 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 
-@XPItem(name = "Copy_Tuya",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Copy_Tuya", itemType = XPItem.ITEM_Api)
 public class Copy_Tuya {
     @ApiExecutor
     @VerController
@@ -33,9 +33,9 @@ public class Copy_Tuya {
         MField.SetField(mMessageRecord, "fileUploadStatus", MField.GetField(SourceObj, SourceObj.getClass(), "fileUploadStatus", int.class));
         MField.SetField(mMessageRecord, "fileDownloadStatus", MField.GetField(SourceObj, SourceObj.getClass(), "fileDownloadStatus", int.class));
         String mPath = MField.GetField(SourceObj, "localFildPath");
-        if (!new File(mPath).exists()){
-            mPath = HookEnv.AppContext.getExternalCacheDir()+ "/"+String.valueOf(Math.random()).substring(2);
-            HttpUtils.DownloadToFile(MField.GetField(SourceObj,"combineFileUrl"),mPath);
+        if (!new File(mPath).exists()) {
+            mPath = HookEnv.AppContext.getExternalCacheDir() + "/" + String.valueOf(Math.random()).substring(2);
+            HttpUtils.DownloadToFile(MField.GetField(SourceObj, "combineFileUrl"), mPath);
         }
         MField.SetField(mMessageRecord, "localFildPath", mPath);
         MField.SetField(mMessageRecord, "extStr", MField.GetField(SourceObj, SourceObj.getClass(), "extStr", String.class));

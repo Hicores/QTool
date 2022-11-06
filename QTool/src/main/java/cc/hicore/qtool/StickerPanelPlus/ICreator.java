@@ -37,52 +37,60 @@ import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.TgConvertStickerImpl;
 
 @SuppressLint("ResourceType")
 public class ICreator extends BottomPopupView implements AbsListView.OnScrollListener {
+    private static BasePopupView popupView;
+    MainPanelAdapter adapter = new MainPanelAdapter();
+    int IdOfShareGroup;
+    LinearLayout topSelectBar;
+    int myLovePos = 0;
+    int recentUsePos = 0;
+    int IdOfConvertFromTg;
+    private final List<ViewGroup> newTabView = new ArrayList<>();
+    private ListView listView;
+
     public ICreator(@NonNull Context context) {
         super(context);
     }
-    private static BasePopupView popupView;
-    public static void createPanel(Context context){
+
+    public static void createPanel(Context context) {
         ResUtils.StartInject(context);
         Context fixContext = ContextFixUtil.getFixContext(context);
         XPopup.Builder NewPop = new XPopup.Builder(fixContext).isDestroyOnDismiss(true);
         popupView = NewPop.asCustom(new ICreator(fixContext));
         popupView.show();
     }
-    public static void dismissAll(){
-        if (popupView != null){
+
+    public static void dismissAll() {
+        if (popupView != null) {
             popupView.dismiss();
         }
     }
-    MainPanelAdapter adapter = new MainPanelAdapter();
-    int IdOfShareGroup;
-    LinearLayout topSelectBar;
-    private List<ViewGroup> newTabView = new ArrayList<>();
-    private void initTopSelectBar(){
+
+    private void initTopSelectBar() {
         topSelectBar = findViewById(R.id.Sticker_Pack_Select_Bar);
     }
-    private ListView listView;
-    private void initListView(){
+
+    private void initListView() {
         listView = findViewById(R.id.Sticker_Panel_Main_List_View);
         listView.setAdapter(adapter);
         listView.setVerticalScrollBarEnabled(false);
         listView.setOnScrollListener(this);
     }
-    private void initStickerPacks(){
-        List<LocalDataHelper.LocalPath> paths = LocalDataHelper.readPaths();
-        for (LocalDataHelper.LocalPath path : paths){
-            int localPathPos = adapter.addItemData(new LocalStickerImpl(path, LocalDataHelper.getPicItems(path.storePath),getContext()));
-            ViewGroup sticker_pack_item = (ViewGroup) createPicImage(path.coverName,path.Name, v->{
-                listView.setSelection(localPathPos);
-                listView.smoothScrollToPositionFromTop(localPathPos,-5);
 
-            },path);
+    private void initStickerPacks() {
+        List<LocalDataHelper.LocalPath> paths = LocalDataHelper.readPaths();
+        for (LocalDataHelper.LocalPath path : paths) {
+            int localPathPos = adapter.addItemData(new LocalStickerImpl(path, LocalDataHelper.getPicItems(path.storePath), getContext()));
+            ViewGroup sticker_pack_item = (ViewGroup) createPicImage(path.coverName, path.Name, v -> {
+                listView.setSelection(localPathPos);
+                listView.smoothScrollToPositionFromTop(localPathPos, -5);
+
+            }, path);
             sticker_pack_item.setTag(localPathPos);
             topSelectBar.addView(sticker_pack_item);
         }
     }
-    int myLovePos = 0;
-    int recentUsePos = 0;
-    private void initDefItemsBefore(){
+
+    private void initDefItemsBefore() {
         /*
         ViewGroup likeTab = (ViewGroup) createPicImage(R.drawable.sticker_like,"收藏表情", v->{
             listView.setSelection(myLovePos);
@@ -95,27 +103,27 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
          */
 
 
-        ViewGroup recentUse = (ViewGroup) createPicImage(R.drawable.sticker_recent,"最近使用", v->{
+        ViewGroup recentUse = (ViewGroup) createPicImage(R.drawable.sticker_recent, "最近使用", v -> {
             listView.setSelection(recentUsePos);
-            listView.smoothScrollToPositionFromTop(recentUsePos,-5);
+            listView.smoothScrollToPositionFromTop(recentUsePos, -5);
         });
         recentUsePos = adapter.addItemData(new RecentStickerImpl(getContext()));
         recentUse.setTag(recentUsePos);
         topSelectBar.addView(recentUse);
     }
-    int IdOfConvertFromTg;
-    private void initDefItemsLast(){
-        ViewGroup tabView = (ViewGroup) createPicImage(R.drawable.share,"分享表情", v -> {
+
+    private void initDefItemsLast() {
+        ViewGroup tabView = (ViewGroup) createPicImage(R.drawable.share, "分享表情", v -> {
             listView.setSelection(IdOfShareGroup);
-            listView.smoothScrollToPositionFromTop(IdOfShareGroup,-5);
+            listView.smoothScrollToPositionFromTop(IdOfShareGroup, -5);
         });
         IdOfShareGroup = adapter.addItemData(new OnlineStickerImpl(getContext()));
         tabView.setTag(IdOfShareGroup);
         topSelectBar.addView(tabView);
 
-        ViewGroup tgView = (ViewGroup) createPicImage(R.drawable.dl_from_tg,"从TG转换", v -> {
+        ViewGroup tgView = (ViewGroup) createPicImage(R.drawable.dl_from_tg, "从TG转换", v -> {
             listView.setSelection(IdOfConvertFromTg);
-            listView.smoothScrollToPositionFromTop(IdOfConvertFromTg,-5);
+            listView.smoothScrollToPositionFromTop(IdOfConvertFromTg, -5);
         });
         IdOfConvertFromTg = adapter.addItemData(new TgConvertStickerImpl());
         tgView.setTag(IdOfConvertFromTg);
@@ -124,14 +132,16 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
 
         //topSelectBar.addView(createPicImage(R.drawable.sticker_pack_set_icon,"设置分组",v -> Utils.ShowToast("Click")));
     }
-    public void notifyTabViewSelect(ViewGroup vg){
-        for (ViewGroup v : newTabView){
+
+    public void notifyTabViewSelect(ViewGroup vg) {
+        for (ViewGroup v : newTabView) {
             v.findViewById(887533).setVisibility(GONE);
         }
         vg.findViewById(887533).setVisibility(VISIBLE);
     }
+
     //创建贴纸包面板的滑动按钮
-    private View createPicImage(String imgPath, String title, View.OnClickListener clickListener, LocalDataHelper.LocalPath path){
+    private View createPicImage(String imgPath, String title, View.OnClickListener clickListener, LocalDataHelper.LocalPath path) {
         ImageView img = new ImageView(getContext());
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
@@ -140,44 +150,44 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setOnClickListener(clickListener);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),30),Utils.dip2px(getContext(),30));
-        params.topMargin = Utils.dip2px(getContext(),3);
-        params.bottomMargin = Utils.dip2px(getContext(),3);
-        params.leftMargin = Utils.dip2px(getContext(),3);
-        params.rightMargin = Utils.dip2px(getContext(),3);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 30), Utils.dip2px(getContext(), 30));
+        params.topMargin = Utils.dip2px(getContext(), 3);
+        params.bottomMargin = Utils.dip2px(getContext(), 3);
+        params.leftMargin = Utils.dip2px(getContext(), 3);
+        params.rightMargin = Utils.dip2px(getContext(), 3);
         img.setLayoutParams(params);
         panel.addView(img);
 
         TextView titleView = new TextView(getContext());
         titleView.setText(title);
-        titleView.setTextColor(getResources().getColor(R.color.font_plugin,null));
+        titleView.setTextColor(getResources().getColor(R.color.font_plugin, null));
         titleView.setGravity(Gravity.CENTER_HORIZONTAL);
         titleView.setTextSize(10);
         titleView.setSingleLine();
         panel.addView(titleView);
 
 
-        if (imgPath.startsWith("http://") || imgPath.startsWith("https://")){
+        if (imgPath.startsWith("http://") || imgPath.startsWith("https://")) {
             try {
                 Glide.with(HookEnv.AppContext).load(new URL(imgPath)).into(img);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-        }else {
-            Glide.with(HookEnv.AppContext).load(HookEnv.ExtraDataPath + "本地表情包/" + path.storePath + "/" +imgPath).into(img);
+        } else {
+            Glide.with(HookEnv.AppContext).load(HookEnv.ExtraDataPath + "本地表情包/" + path.storePath + "/" + imgPath).into(img);
         }
 
 
-        LinearLayout.LayoutParams panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),50),ViewGroup.LayoutParams.WRAP_CONTENT);
-        panel_param.leftMargin = Utils.dip2px(getContext(),5);
-        panel_param.rightMargin = Utils.dip2px(getContext(),5);
+        LinearLayout.LayoutParams panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 50), ViewGroup.LayoutParams.WRAP_CONTENT);
+        panel_param.leftMargin = Utils.dip2px(getContext(), 5);
+        panel_param.rightMargin = Utils.dip2px(getContext(), 5);
         panel.setLayoutParams(panel_param);
 
         View greenTip = new View(getContext());
         greenTip.setBackgroundColor(Color.GREEN);
-        panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),30),50);
-        panel_param.leftMargin = Utils.dip2px(getContext(),5);
-        panel_param.rightMargin = Utils.dip2px(getContext(),5);
+        panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 30), 50);
+        panel_param.leftMargin = Utils.dip2px(getContext(), 5);
+        panel_param.rightMargin = Utils.dip2px(getContext(), 5);
         greenTip.setLayoutParams(panel_param);
         greenTip.setId(887533);
         greenTip.setVisibility(GONE);
@@ -186,8 +196,9 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         newTabView.add(panel);
         return panel;
     }
+
     @SuppressLint("ResourceType")
-    private View createPicImage(int resID, String title, View.OnClickListener clickListener){
+    private View createPicImage(int resID, String title, View.OnClickListener clickListener) {
         ImageView img = new ImageView(getContext());
         img.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
@@ -196,34 +207,34 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         panel.setOrientation(LinearLayout.VERTICAL);
         panel.setOnClickListener(clickListener);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),30),Utils.dip2px(getContext(),30));
-        params.topMargin = Utils.dip2px(getContext(),3);
-        params.bottomMargin = Utils.dip2px(getContext(),3);
-        params.leftMargin = Utils.dip2px(getContext(),3);
-        params.rightMargin = Utils.dip2px(getContext(),3);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 30), Utils.dip2px(getContext(), 30));
+        params.topMargin = Utils.dip2px(getContext(), 3);
+        params.bottomMargin = Utils.dip2px(getContext(), 3);
+        params.leftMargin = Utils.dip2px(getContext(), 3);
+        params.rightMargin = Utils.dip2px(getContext(), 3);
         img.setLayoutParams(params);
         panel.addView(img);
 
         TextView titleView = new TextView(getContext());
         titleView.setText(title);
         titleView.setGravity(Gravity.CENTER_HORIZONTAL);
-        titleView.setTextColor(getResources().getColor(R.color.font_plugin,null));
+        titleView.setTextColor(getResources().getColor(R.color.font_plugin, null));
         titleView.setTextSize(10);
         titleView.setSingleLine();
         panel.addView(titleView);
 
         Glide.with(HookEnv.AppContext).load(resID).into(img);
 
-        LinearLayout.LayoutParams panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),50),ViewGroup.LayoutParams.WRAP_CONTENT);
-        panel_param.leftMargin = Utils.dip2px(getContext(),5);
-        panel_param.rightMargin = Utils.dip2px(getContext(),5);
+        LinearLayout.LayoutParams panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 50), ViewGroup.LayoutParams.WRAP_CONTENT);
+        panel_param.leftMargin = Utils.dip2px(getContext(), 5);
+        panel_param.rightMargin = Utils.dip2px(getContext(), 5);
         panel.setLayoutParams(panel_param);
 
         View greenTip = new View(getContext());
         greenTip.setBackgroundColor(Color.GREEN);
-        panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),30),50);
-        panel_param.leftMargin = Utils.dip2px(getContext(),5);
-        panel_param.rightMargin = Utils.dip2px(getContext(),5);
+        panel_param = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 30), 50);
+        panel_param.leftMargin = Utils.dip2px(getContext(), 5);
+        panel_param.rightMargin = Utils.dip2px(getContext(), 5);
         greenTip.setLayoutParams(panel_param);
         greenTip.setId(887533);
         greenTip.setVisibility(GONE);
@@ -233,21 +244,19 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
 
         return panel;
     }
+
     @Override
     protected void onCreate() {
         super.onCreate();
-        Utils.PostToMainDelay(()->{
+        Utils.PostToMainDelay(() -> {
 
             initTopSelectBar();
-
 
 
             initListView();
 
 
-
             initDefItemsBefore();
-
 
 
             initStickerPacks();
@@ -256,26 +265,29 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
             initDefItemsLast();
 
 
-
             adapter.notifyDataSetChanged();
-        },200);
+        }, 200);
 
 
     }
+
     @Override
     protected int getMaxHeight() {
         return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
     }
+
     @Override
     protected int getPopupHeight() {
         return (int) (XPopupUtils.getScreenHeight(getContext()) * .7f);
     }
+
     @Override
     protected void onDismiss() {
         super.onDismiss();
         adapter.destroyAllViews();
         Glide.get(HookEnv.AppContext).clearMemory();
     }
+
     @Override
     protected int getImplLayoutId() {
         return R.layout.sticker_panel_plus_main;
@@ -285,16 +297,17 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
     }
+
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         ViewGroup vg = findViewByItemNumber(firstVisibleItem);
-        if (vg != null){
+        if (vg != null) {
             notifyTabViewSelect(vg);
         }
 
         int first = view.getFirstVisiblePosition();
         int last = view.getLastVisiblePosition();
-        adapter.notifyViewUpdate(first,last);
+        adapter.notifyViewUpdate(first, last);
 
     }
 
@@ -304,10 +317,10 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         adapter.destroyAllViews();
     }
 
-    private ViewGroup findViewByItemNumber(int number){
+    private ViewGroup findViewByItemNumber(int number) {
         for (int i = 0; i < newTabView.size(); i++) {
             Object tag = newTabView.get(i).getTag();
-            if(tag instanceof Integer && ((Integer) tag) == number){
+            if (tag instanceof Integer && ((Integer) tag) == number) {
                 return newTabView.get(i);
             }
         }

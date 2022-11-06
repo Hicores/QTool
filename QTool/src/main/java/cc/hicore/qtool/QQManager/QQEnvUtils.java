@@ -18,9 +18,9 @@ import de.robv.android.xposed.XposedHelpers;
 public class QQEnvUtils {
     private static final String TAG = "QQInfoUtils";
 
-    public static int getTargetID(String IDName){
+    public static int getTargetID(String IDName) {
         try {
-            return MField.GetField(null,MClass.loadClass("com.tencent.mobileqq.R$id"), IDName,int.class);
+            return MField.GetField(null, MClass.loadClass("com.tencent.mobileqq.R$id"), IDName, int.class);
         } catch (Exception e) {
             return 0;
         }
@@ -29,7 +29,7 @@ public class QQEnvUtils {
     public static String getCurrentUin() {
         try {
             Object AppRuntime = getAppRuntime();
-            if (AppRuntime == null)return "";
+            if (AppRuntime == null) return "";
             return MMethod.CallMethodNoParam(AppRuntime, "getCurrentAccountUin", String.class);
         } catch (Exception e) {
             LogUtils.fetal_error(TAG, e);
@@ -51,8 +51,7 @@ public class QQEnvUtils {
             Object FriendManager = MMethod.CallMethod(HookEnv.AppInterface, "getManager",
                     XposedHelpers.findClass("mqq.manager.Manager", HookEnv.mLoader),
                     new Class[]{int.class},
-                    new Object[]{MField.GetField(null, MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "FRIENDS_MANAGER", int.class)}
-            );
+                    MField.GetField(null, MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "FRIENDS_MANAGER", int.class));
             Object mService = MField.GetFirstField(FriendManager, FriendManager.getClass(), MClass.loadClass("com.tencent.mobileqq.friend.api.IFriendDataService"));
             Object friend = MMethod.CallMethodSingle(mService, "getFriend", MClass.loadClass("com.tencent.mobileqq.data.Friends"), FriendUin);
             return MField.GetField(friend, "name", String.class);
@@ -69,8 +68,7 @@ public class QQEnvUtils {
             Object FriendManager = MMethod.CallMethod(HookEnv.AppInterface, "getManager",
                     XposedHelpers.findClass("mqq.manager.Manager", HookEnv.mLoader),
                     new Class[]{int.class},
-                    new Object[]{MField.GetField(null, MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "FRIENDS_MANAGER", int.class)}
-            );
+                    MField.GetField(null, MClass.loadClass("com.tencent.mobileqq.app.QQManagerFactory"), "FRIENDS_MANAGER", int.class));
             Object mService = MField.GetFirstField(FriendManager, FriendManager.getClass(), MClass.loadClass("com.tencent.mobileqq.friend.api.IFriendDataService"));
             ArrayList friendList = MMethod.CallMethodNoParam(mService, "getAllFriends", List.class);
             ArrayList<FriendInfo> NewInfos = new ArrayList<>();
@@ -87,13 +85,6 @@ public class QQEnvUtils {
         }
 
         return null;
-    }
-
-    public static class FriendInfo {
-        public String Uin;
-        public String Name;
-        public int GroupID;
-        public Object source;
     }
 
     public static Object getAppRuntime() throws Exception {
@@ -174,34 +165,43 @@ public class QQEnvUtils {
             return null;
         }
     }
+
     public static void ExitQQAnyWays() {
-        try{
+        try {
             Object Appinterface = getAppRuntime();
-            MField.SetField(Appinterface,"bReceiveMsgOnExit",true);
-            MMethod.CallMethod(Appinterface,"exit",void.class,new Class[]{
+            MField.SetField(Appinterface, "bReceiveMsgOnExit", true);
+            MMethod.CallMethod(Appinterface, "exit", void.class, new Class[]{
                     boolean.class
-            },false);
-        }catch (Exception e)
-        {
+            }, false);
+        } catch (Exception e) {
         }
     }
+
     public static void OpenTroopCard(String GroupUin) {
-        try{
-            Uri u = Uri.parse("mqq://card/show_pslcard?src_type=internal&version=1&uin="+GroupUin+"&card_type=group&source=qrcode");
-            Intent in = new Intent(Intent.ACTION_VIEW,u);
+        try {
+            Uri u = Uri.parse("mqq://card/show_pslcard?src_type=internal&version=1&uin=" + GroupUin + "&card_type=group&source=qrcode");
+            Intent in = new Intent(Intent.ACTION_VIEW, u);
             in.setPackage("com.tencent.mobileqq");
             HookEnv.AppContext.startActivity(in);
+        } catch (Exception ex) {
         }
-        catch (Exception ex) { }
     }
+
     public static void OpenUserCard(String UserUin) {
-        try{
-            Uri u = Uri.parse("mqqapi://card/show_pslcard?src_type=internal&source=sharecard&version=1&uin="+UserUin);
-            Intent in = new Intent(Intent.ACTION_VIEW,u);
+        try {
+            Uri u = Uri.parse("mqqapi://card/show_pslcard?src_type=internal&source=sharecard&version=1&uin=" + UserUin);
+            Intent in = new Intent(Intent.ACTION_VIEW, u);
             in.setPackage("com.tencent.mobileqq");
             HookEnv.AppContext.startActivity(in);
+        } catch (Exception ex) {
         }
-        catch (Exception ex) { }
+    }
+
+    public static class FriendInfo {
+        public String Uin;
+        public String Name;
+        public int GroupID;
+        public Object source;
     }
 
 }

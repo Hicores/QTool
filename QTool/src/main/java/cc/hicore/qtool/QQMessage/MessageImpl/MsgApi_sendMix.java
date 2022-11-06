@@ -14,13 +14,16 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(itemType = XPItem.ITEM_Api,name = "MsgApi_sendMix")
+@XPItem(itemType = XPItem.ITEM_Api, name = "MsgApi_sendMix")
 public class MsgApi_sendMix {
+    CoreLoader.XPItemInfo info;
+
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
-    public void MethodScaner(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("method","sendReplyMessage chatMessage is null",m->true));
+    public void MethodScaner(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("method", "sendReplyMessage chatMessage is null", m -> true));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void send(Object _Session, Object mixRecord) throws Exception {
@@ -33,7 +36,7 @@ public class MsgApi_sendMix {
         Object Call = MMethod.CallStaticMethodNoParam(MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"), null, MClass.loadClass("com.tencent.mobileqq.replymsg.ReplyMsgSender"));
         mMethod.invoke(Call, HookEnv.AppInterface, mixRecord, _Session, 0);
     }
-    CoreLoader.XPItemInfo info;
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void send_890(Object _Session, Object mixRecord) throws Exception {

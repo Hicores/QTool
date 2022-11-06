@@ -27,6 +27,8 @@ import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
 
 public class EmoPanel {
+    static String choiceName = "";
+
     public static void createShow(Context context) {
         ResUtils.StartInject(context);
         Context fixContext = ContextFixUtil.getFixContext(context);
@@ -37,7 +39,6 @@ public class EmoPanel {
         base.show();
     }
 
-    static String choiceName = "";
     public static void PreSavePicToList(String URL, String MD5, Context context) {
         choiceName = "";
         ResUtils.StartInject(context);
@@ -147,8 +148,6 @@ public class EmoPanel {
         public String URL;
         public String thumb;
     }
-
-
 
 
 }

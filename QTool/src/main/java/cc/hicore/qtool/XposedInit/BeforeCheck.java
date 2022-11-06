@@ -14,7 +14,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 
 public class BeforeCheck {
-    private static StringBuilder checkResult = new StringBuilder();
+    private static final StringBuilder checkResult = new StringBuilder();
 
     public static void StartCheckAndShow() {
         new Thread(BeforeCheck::checkNewVersion).start();
@@ -47,9 +47,11 @@ public class BeforeCheck {
 
          */
     }
-    private static void checkNewVersion(){
+
+    private static void checkNewVersion() {
         HookEnv.New_Version = ServerUtils.getNewestCIBuildVer();
     }
+
     private static void CheckPermission() {
         if (HookEnv.ExtraDataPath != null) {
             if (!ExtraPathInit.CheckPermission(HookEnv.ExtraDataPath)) {

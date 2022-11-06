@@ -23,36 +23,36 @@ import cc.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 import de.robv.android.xposed.XposedBridge;
 
 public class SettingInject {
-    public static void startInject(){
+    public static void startInject() {
 
         Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.activity.QQSettingSettingActivity"), "doOnCreate", boolean.class, new Class[]{Bundle.class});
-        Method m2 = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.fragment.QQSettingSettingFragment"), "doOnCreateView", void.class, new Class[]{LayoutInflater.class,ViewGroup.class,Bundle.class});
+        Method m2 = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.fragment.QQSettingSettingFragment"), "doOnCreateView", void.class, new Class[]{LayoutInflater.class, ViewGroup.class, Bundle.class});
         XPBridge.AfterHook afterHook = param -> {
-            Utils.PostToMainDelay(()->{
+            Utils.PostToMainDelay(() -> {
                 try {
                     Activity act = null;
-                    if (param.thisObject instanceof Activity){
+                    if (param.thisObject instanceof Activity) {
                         act = (Activity) param.thisObject;
-                    }else {
-                        act = (Activity) MMethod.CallMethodNoParam(param.thisObject,"getActivity",MClass.loadClass("androidx.fragment.app.FragmentActivity"));
+                    } else {
+                        act = MMethod.CallMethodNoParam(param.thisObject, "getActivity", MClass.loadClass("androidx.fragment.app.FragmentActivity"));
                     }
 
                     ResUtils.StartInject(act);
                     ViewGroup mRoot = null;
                     {
                         Class<?> clz = MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem");
-                        for (Field f : param.thisObject.getClass().getDeclaredFields()){
-                            try{
-                                if (clz.equals(f.getType())){
+                        for (Field f : param.thisObject.getClass().getDeclaredFields()) {
+                            try {
+                                if (clz.equals(f.getType())) {
                                     f.setAccessible(true);
                                     View item = (View) f.get(param.thisObject);
                                     mRoot = (ViewGroup) item.getParent();
-                                    if (mRoot instanceof LinearLayout){
+                                    if (mRoot instanceof LinearLayout) {
                                         break;
                                     }
                                 }
 
-                            }catch (Exception ignored){
+                            } catch (Exception ignored) {
                                 XposedBridge.log(ignored);
                             }
                         }
@@ -63,17 +63,18 @@ public class SettingInject {
                         DebugDialog.startShow(v.getContext());
                         return true;
                     });
-                    mRoot.addView(newItem,0);
+                    mRoot.addView(newItem, 0);
                 } catch (Exception e) {
                     XposedBridge.log(e);
-                    if (!GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main",false)){
-                        Utils.ShowToastL("QTool无法创建设置选项,已自动开启主界面加号入口\n"+ Log.getStackTraceString(e));
-                        GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main",true);
+                    if (!GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main", false)) {
+                        Utils.ShowToastL("QTool无法创建设置选项,已自动开启主界面加号入口\n" + Log.getStackTraceString(e));
+                        GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main", true);
                     }
                 }
-            },200);};
+            }, 200);
+        };
         XPBridge.HookAfter(m, afterHook);
-        if (m2 != null){
+        if (m2 != null) {
             XPBridge.HookAfter(m2, afterHook);
         }
     }

@@ -27,15 +27,7 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 
 public class PluginController {
-    private static HashMap<String, PluginInfo> runningInfo = new HashMap<>();
-
-    //脚本菜单信息
-    public static class ItemInfo {
-        public int itemType;
-        public String ItemName;
-        public String ItemID;
-        public String CallbackName;
-    }
+    private static final HashMap<String, PluginInfo> runningInfo = new HashMap<>();
 
     //添加一个菜单项目到脚本信息中
     public static String AddItem(String PluginVerifyID, String ItemName, String Callback, int type) {
@@ -260,19 +252,19 @@ public class PluginController {
         space.setMethod("Toast", new BshMethod(PluginMethod.class.getMethod("Toast", Object.class), env));
         space.setMethod("GetActivity", new BshMethod(PluginMethod.class.getMethod("GetActivity"), env));
         space.setMethod("load", new BshMethod(PluginMethod.class.getMethod("load", String.class), env));
-        space.setMethod("loadJar",new BshMethod(PluginMethod.class.getMethod("loadJar", String.class),env));
+        space.setMethod("loadJar", new BshMethod(PluginMethod.class.getMethod("loadJar", String.class), env));
         space.setMethod("IncludeFile", new BshMethod(PluginMethod.class.getMethod("IncludeFile", String.class), env));
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
-        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class),env));
-        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class, String.class),env));
-        space.setMethod("sendPackMsg",new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, List.class, String.class, String.class),env));
+        space.setMethod("sendPackMsg", new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class), env));
+        space.setMethod("sendPackMsg", new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class, String.class), env));
+        space.setMethod("sendPackMsg", new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, List.class, String.class, String.class), env));
     }
 
     //这里负责真正加载脚本代码,会把在内存中的脚本代码进行加载并注入必要的环境信息
     public static void LoadInner(String FileContent, String LocalPath, String BandVerifyID) throws Exception {
 
-        if (!KeyWordUtils.checkIsContainForbiddenKeyword(FileContent)){
+        if (!KeyWordUtils.checkIsContainForbiddenKeyword(FileContent)) {
 
             String LoadContent = checkAndRemoveNode(FileContent);
             PluginInfo info = runningInfo.get(BandVerifyID);
@@ -456,5 +448,13 @@ public class PluginController {
                 e.printStackTrace();
             }
         }
+    }
+
+    //脚本菜单信息
+    public static class ItemInfo {
+        public int itemType;
+        public String ItemName;
+        public String ItemID;
+        public String CallbackName;
     }
 }

@@ -17,10 +17,7 @@ import de.robv.android.xposed.XposedBridge;
 
 //发送QQServlet请求包并截获返回数据
 public class QQServletHelper {
-    public interface FileGetCallback {
-        void OnGetUrl(String URL);
-    }
-
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     public static HashMap<String, FileGetCallback> mCallbacks = new HashMap<>();
     static boolean IsInit = false;
 
@@ -110,8 +107,6 @@ public class QQServletHelper {
 
     }
 
-    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-
     public static String bytes2HexStr(byte[] bArr) {
         if (bArr == null || bArr.length == 0) {
             return null;
@@ -130,5 +125,9 @@ public class QQServletHelper {
             }
         }
         return new String(cArr).toUpperCase(Locale.ROOT);
+    }
+
+    public interface FileGetCallback {
+        void OnGetUrl(String URL);
     }
 }

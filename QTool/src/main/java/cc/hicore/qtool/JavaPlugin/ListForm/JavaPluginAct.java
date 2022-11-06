@@ -29,17 +29,26 @@ import cc.hicore.qtool.R;
 /*
 显示脚本项目的Activity
  */
-public class JavaPluginAct{
+public class JavaPluginAct {
+    static AtomicReference<onNotify> notifyInstance = new AtomicReference<>();
     private LinearLayout itemLayout;
     private Context context;
 
     public static void startActivity(Activity host) {
         BaseProxyAct.createNewView("JavaPluginManager", host, context -> new JavaPluginAct().createView(context));
     }
-    private View createView(Context context){
+
+    public static void NotifyLoadSuccess(String PluginID) {
+        onNotify notify = notifyInstance.get();
+        if (notify != null) {
+            notify.onNotifyLoadSuccess(PluginID);
+        }
+    }
+
+    private View createView(Context context) {
         this.context = context;
         LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.menu_javaplugin,null);
+        View root = inflater.inflate(R.layout.menu_javaplugin, null);
         itemLayout = root.findViewById(R.id.ContainLayout);
         searchForLocal();
         root.findViewById(R.id.selectLocal).setOnClickListener(v -> searchForLocal());
@@ -54,20 +63,6 @@ public class JavaPluginAct{
 
         return root;
     }
-
-    static AtomicReference<onNotify> notifyInstance = new AtomicReference<>();
-
-    interface onNotify {
-        void onNotifyLoadSuccess(String PluginID);
-    }
-
-    public static void NotifyLoadSuccess(String PluginID) {
-        onNotify notify = notifyInstance.get();
-        if (notify != null) {
-            notify.onNotifyLoadSuccess(PluginID);
-        }
-    }
-
 
     //扫描本地脚本并显示
     private void searchForLocal() {
@@ -142,5 +137,9 @@ public class JavaPluginAct{
                 new Handler(Looper.getMainLooper()).post(() -> itemLayout.removeView(bar));
             }
         }).start();
+    }
+
+    interface onNotify {
+        void onNotifyLoadSuccess(String PluginID);
     }
 }

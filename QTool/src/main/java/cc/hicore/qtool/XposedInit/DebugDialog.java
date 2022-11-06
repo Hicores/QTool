@@ -14,13 +14,11 @@ import android.widget.TextView;
 import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.ReflectUtils.ResUtils;
 import cc.hicore.Utils.DebugUtils;
-import cc.hicore.Utils.Utils;
-import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
 @SuppressLint("ResourceType")
 public class DebugDialog {
-    public static void startShow(Context context){
+    public static void startShow(Context context) {
         Dialog fullScreen = new Dialog(context, 3);
         ScrollView view = new ScrollView(context);
         LinearLayout mRoot = new LinearLayout(context);
@@ -52,17 +50,17 @@ public class DebugDialog {
         ll.addView(btnChangeDir);
 
         CheckBox check = new CheckBox(context);
-        check.setChecked(GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main",false));
+        check.setChecked(GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main", false));
         check.setTextColor(Color.BLACK);
         check.setText("在主界面加号添加入口");
-        check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main",isCheck));
+        check.setOnCheckedChangeListener((v, isCheck) -> GlobalConfig.Put_Boolean("Add_Menu_Button_to_Main", isCheck));
         mRoot.addView(check);
 
         check = new CheckBox(context);
-        check.setChecked(GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false));
+        check.setChecked(GlobalConfig.Get_Boolean("Prevent_Crash_In_Java", false));
         check.setTextColor(Color.BLACK);
         check.setText("阻止Java层的闪退(不一定总是有效)");
-        check.setOnCheckedChangeListener((v,isCheck)->GlobalConfig.Put_Boolean("Prevent_Crash_In_Java",isCheck));
+        check.setOnCheckedChangeListener((v, isCheck) -> GlobalConfig.Put_Boolean("Prevent_Crash_In_Java", isCheck));
         mRoot.addView(check);
 
         /*
@@ -87,13 +85,15 @@ public class DebugDialog {
         LinearLayout crashBar = new LinearLayout(context);
         Button btnCrashMain = new Button(context);
         btnCrashMain.setText("主线程闪退测试");
-        btnCrashMain.setOnClickListener(v->{throw new RuntimeException("Java闪退测试");});
+        btnCrashMain.setOnClickListener(v -> {
+            throw new RuntimeException("Java闪退测试");
+        });
         crashBar.addView(btnCrashMain);
 
         Button btnCrashThread = new Button(context);
         btnCrashThread.setText("子线程闪退测试");
-        btnCrashThread.setOnClickListener(v->{
-            Thread thread = new Thread(()->{
+        btnCrashThread.setOnClickListener(v -> {
+            Thread thread = new Thread(() -> {
                 throw new RuntimeException("Java子线程闪退测试");
             });
             thread.setName("QTool_闪退测试");
@@ -104,21 +104,22 @@ public class DebugDialog {
 
         Button btnCleanMethodCache = new Button(context);
         btnCleanMethodCache.setText("清除适配数据并重启");
-        btnCleanMethodCache.setOnClickListener(v->{
-            GlobalConfig.Put_String("cacheVer","");
+        btnCleanMethodCache.setOnClickListener(v -> {
+            GlobalConfig.Put_String("cacheVer", "");
             QQEnvUtils.ExitQQAnyWays();
         });
         mRoot.addView(btnCleanMethodCache);
 
         Button printStack = new Button(context);
         printStack.setText("输出所有线程调用栈");
-        printStack.setOnClickListener(v-> DebugUtils.PrintAllThreadStack());
+        printStack.setOnClickListener(v -> DebugUtils.PrintAllThreadStack());
         mRoot.addView(printStack);
 
         fullScreen.setContentView(view);
         fullScreen.show();
 
     }
+
     public static ViewGroup.LayoutParams getMarginParam() {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(40, 0, 0, 0);

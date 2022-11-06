@@ -27,6 +27,12 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContextFixUtil;
 
 public class Utils {
+    private static final int GB = 1024 * 1024 * 1024;
+    //定义MB的计算常量
+    private static final int MB = 1024 * 1024;
+    //定义KB的计算常量
+    private static final int KB = 1024;
+
     public static int dip2px(Context context, float dpValue) {
         if (dpValue > 0) {
             final float scale = context.getResources().getDisplayMetrics().density;
@@ -38,14 +44,15 @@ public class Utils {
         }
 
     }
-    public static boolean isSmallWindowNeedPlay(View v){
+
+    public static boolean isSmallWindowNeedPlay(View v) {
         Rect rect = new Rect();
         boolean visibleRect = v.getGlobalVisibleRect(rect);
 
         if (visibleRect) {
             Point point = new Point();
             Context baseContext = v.getContext();
-            if (baseContext instanceof ContextFixUtil.FixContext){
+            if (baseContext instanceof ContextFixUtil.FixContext) {
                 ContextFixUtil.FixContext fix = (ContextFixUtil.FixContext) v.getContext();
                 baseContext = fix.getBaseContext();
             }
@@ -54,50 +61,56 @@ public class Utils {
             if (baseContext instanceof Activity) {
                 ((Activity) baseContext).getWindowManager().getDefaultDisplay().getSize(point);
 
-                if (rect.top >= 0 && rect.top <= point.y && rect.left >= 0 && rect.left <= point.x) {
-                    return true;
-                }
+                return rect.top >= 0 && rect.top <= point.y && rect.left >= 0 && rect.left <= point.x;
             }
         }
         return false;
     }
-    public static int getScreenWidth(Context context){
+
+    public static int getScreenWidth(Context context) {
         return context.getResources().getDisplayMetrics().widthPixels;
     }
-    public static int getScreenHeight(Context context){
+
+    public static int getScreenHeight(Context context) {
         return context.getResources().getDisplayMetrics().heightPixels;
     }
-    public static int sp2px(Context context, float spValue){
+
+    public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
+
     public static String secondToTime(long second) {
-        if(second == 0) return "0秒";
+        if (second == 0) return "0秒";
         long days = second / 86400;
         second = second % 86400;
         long hours = second / 3600;
         second = second % 3600;
         long minutes = second / 60;
         second = second % 60;
-        return(days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (second == 0 ? "" : second + "秒");
+        return (days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (second == 0 ? "" : second + "秒");
     }
+
     public static String GetNowTime33() {
-        Date day=new Date();
+        Date day = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
         return (df.format(day));
     }
+
     public static String GetNowTime() {
-        Date day=new Date();
+        Date day = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return (df.format(day));
     }
+
     public static String secondToTime2(long second) {
-        if(second == 0) return "0秒";
+        if (second == 0) return "0秒";
         long days = second / 86400;
         second = second % 86400;
         long hours = second / 3600;
-        return(days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时");
+        return (days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时");
     }
+
     public static boolean getDarkModeStatus(Context context) {
         int mode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         return mode == Configuration.UI_MODE_NIGHT_YES;
@@ -145,12 +158,6 @@ public class Utils {
         return null;
     }
 
-    private static final int GB = 1024 * 1024 * 1024;
-    //定义MB的计算常量
-    private static final int MB = 1024 * 1024;
-    //定义KB的计算常量
-    private static final int KB = 1024;
-
     public static String bytes2kb(long bytes) {
         DecimalFormat format = new DecimalFormat("###.00");
         if (bytes / GB >= 1) {
@@ -170,18 +177,20 @@ public class Utils {
         manager.setPrimaryClip(data);
         Thread.currentThread();
     }
-    public static void PostToMain(Runnable run){
+
+    public static void PostToMain(Runnable run) {
         new Handler(Looper.getMainLooper()).post(run);
     }
-    public static void PostToMainDelay(Runnable run,long delay){
-        new Handler(Looper.getMainLooper()).postDelayed(run,delay);
+
+    public static void PostToMainDelay(Runnable run, long delay) {
+        new Handler(Looper.getMainLooper()).postDelayed(run, delay);
     }
 
-    public static void restartSelf(Context context){
+    public static void restartSelf(Context context) {
         Intent in = new Intent(context, MClass.loadClass("com.tencent.mobileqq.activity.SplashActivity"));
         in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(in);
-        ActivityManager mActivityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> mList = mActivityManager.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : mList) {
             if (runningAppProcessInfo.pid != android.os.Process.myPid()) {

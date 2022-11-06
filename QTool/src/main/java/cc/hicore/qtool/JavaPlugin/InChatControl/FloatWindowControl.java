@@ -44,19 +44,20 @@ import cc.hicore.qtool.R;
 显示脚本菜单项目
  */
 public class FloatWindowControl {
+    private static final int MIN_X = 0;
     static Activity cacheAct;
     static WindowManager manager;
     static ImageView mPluginButton;
     static AtomicBoolean IsAdd = new AtomicBoolean();
     static WindowManager.LayoutParams sParams;
-
-    private static final int MIN_X = 0;
+    static HashMap<String, PluginInfo> cachePlugin;
     private static int MIN_Y = -1;
     private static int MAX_X = -1;
     private static int MAX_Y = -1;
     private static Timer timeHide = new Timer();
     private static boolean IsSetTimer = false;
-
+    private static final AtomicBoolean actionClick = new AtomicBoolean();
+    private static Object CacheSession;
 
     public static void onShowEvent(boolean IsShow, Object session) {
         CacheSession = session;
@@ -105,8 +106,6 @@ public class FloatWindowControl {
         }
     }
 
-    static HashMap<String, PluginInfo> cachePlugin;
-
     private static boolean IsAvailable(String TroopUin, boolean IsTroop) {
         HashMap<String, PluginInfo> AvailPlugin = PluginController.checkHasAvailMenu(TroopUin, IsTroop);
         cachePlugin = AvailPlugin;
@@ -132,9 +131,6 @@ public class FloatWindowControl {
         }, 3000);
         IsSetTimer = true;
     }
-
-    private static AtomicBoolean actionClick = new AtomicBoolean();
-    private static Object CacheSession;
 
     @SuppressLint("ClickableViewAccessibility")
     private static void InitImageButton(Context context) {

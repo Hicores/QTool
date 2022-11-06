@@ -3,7 +3,6 @@ package cc.hicore.qtool.ChatHook.ChatCracker;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -28,11 +27,11 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 
 @SuppressLint("ResourceType")
-@XPItem(itemType = XPItem.ITEM_Hook,name = "长按复制卡片代码")
-public class CopyCardCode{
+@XPItem(itemType = XPItem.ITEM_Hook, name = "长按复制卡片代码")
+public class CopyCardCode {
     @UIItem
     @VerController
-    public UIInfo getUIInfo(){
+    public UIInfo getUIInfo() {
         UIInfo info = new UIInfo();
         info.name = "长按复制卡片代码";
         info.type = 1;
@@ -42,8 +41,8 @@ public class CopyCardCode{
     }
 
     @VerController
-    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
-    public BaseXPExecutor xpWorker(){
+    @XPExecutor(methodID = "onAIOGetView", period = XPExecutor.After)
+    public BaseXPExecutor xpWorker() {
         return param -> {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
@@ -52,7 +51,7 @@ public class CopyCardCode{
             } else {
                 return;
             }
-            List MessageRecoreList = MField.GetFirstField(param.thisObject,  List.class);
+            List MessageRecoreList = MField.GetFirstField(param.thisObject, List.class);
             if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
             if (ChatMsg.getClass().getSimpleName().equals("MessageForArkApp") ||
@@ -109,12 +108,13 @@ public class CopyCardCode{
 
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
-    public void getHookMethod(MethodContainer container){
+    public void getHookMethod(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView(container);
     }
+
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
-    public void getHookMethod_890(MethodContainer container){
+    public void getHookMethod_890(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView_890(container);
     }
 }

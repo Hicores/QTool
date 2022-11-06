@@ -8,14 +8,9 @@ import java.util.Collections;
 import cc.hicore.qtool.HookEnv;
 
 public class EmoSearchAndCache {
-    public static class TempTimeSortHelper{
-        public File file;
-        public long modifiedTime;
-    }
     public static ArrayList<EmoPanel.EmoInfo> searchForEmo(String PathName) {
         String rawPath = HookEnv.ExtraDataPath + "/Pic/" + PathName;
         File[] fs = new File(rawPath).listFiles();
-
 
 
         ArrayList<EmoPanel.EmoInfo> findEmoInfos = new ArrayList<>();
@@ -34,7 +29,7 @@ public class EmoSearchAndCache {
                 return (result < 0) ? -1 : 1;
             });
 
-            for (int i=0;i<temp.length;i++){
+            for (int i = 0; i < temp.length; i++) {
                 fs[i] = temp[i].file;
             }
 
@@ -59,7 +54,6 @@ public class EmoSearchAndCache {
         if (fs == null) return new ArrayList<>();
 
 
-
         ArrayList<String> arrName = new ArrayList<>();
         for (File f : fs) {
             if (f.isDirectory()) {
@@ -68,6 +62,11 @@ public class EmoSearchAndCache {
         }
         Collections.sort(arrName);
         return arrName;
+    }
+
+    public static class TempTimeSortHelper {
+        public File file;
+        public long modifiedTime;
     }
 
 

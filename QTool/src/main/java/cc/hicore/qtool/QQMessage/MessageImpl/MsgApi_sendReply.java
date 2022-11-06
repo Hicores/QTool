@@ -15,13 +15,16 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(itemType = XPItem.ITEM_Api,name = "MsgApi_sendReply")
+@XPItem(itemType = XPItem.ITEM_Api, name = "MsgApi_sendReply")
 public class MsgApi_sendReply {
+    CoreLoader.XPItemInfo info;
+
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
-    public void MethodScaner(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("method","sendReplyMessage chatMessage is null",m->true));
+    public void MethodScaner(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("method", "sendReplyMessage chatMessage is null", m -> true));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void send(Object _Session, Object replyRecord) throws Exception {
@@ -36,7 +39,7 @@ public class MsgApi_sendReply {
         });
         mMethod.invoke(Call, QQEnvUtils.getAppRuntime(), replyRecord, _Session, 2, 0, false);
     }
-    CoreLoader.XPItemInfo info;
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void send_890(Object _Session, Object replyRecord) throws Exception {

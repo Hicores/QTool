@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,31 +30,26 @@ import cc.hicore.Utils.BitmapUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.R;
 
-public class BaseProxyAct extends Activity{
-    public interface onCreateView{
-        View getView(Context context);
-    }
-    private static class TmpCacheParams{
-        Bitmap cacheShop;
-        onCreateView callback;
-    }
-    private static HashMap<String,TmpCacheParams> cacheParam = new HashMap<>();
+public class BaseProxyAct extends Activity {
+    private static final HashMap<String, TmpCacheParams> cacheParam = new HashMap<>();
     private View createView;
     private Bitmap cacheBitmap;
     private RelativeLayout ani_layout;
-    public static void createNewView(String Tag,Activity baseAct,onCreateView callback){
-        try{
+    private boolean IsBacking = false;
+
+    public static void createNewView(String Tag, Activity baseAct, onCreateView callback) {
+        try {
             TmpCacheParams param = new TmpCacheParams();
             param.cacheShop = BitmapUtils.onCut(baseAct);
             param.callback = callback;
-            cacheParam.put(Tag,param);
+            cacheParam.put(Tag, param);
 
             Intent intent = new Intent(baseAct, BaseProxyAct.class);
-            intent.putExtra("Tag",Tag);
+            intent.putExtra("Tag", Tag);
             baseAct.startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtils.error("BaseActProxy", e);
-            Utils.ShowToast("无法创建界面:"+e);
+            Utils.ShowToast("无法创建界面:" + e);
         }
 
     }
@@ -69,8 +63,8 @@ public class BaseProxyAct extends Activity{
         setTitleFea();
 
         String tag = getIntent().getStringExtra("Tag");
-        TmpCacheParams mParam= cacheParam.get(tag);
-        if (mParam == null){
+        TmpCacheParams mParam = cacheParam.get(tag);
+        if (mParam == null) {
             finish();
             return;
         }
@@ -78,14 +72,14 @@ public class BaseProxyAct extends Activity{
 
 
         createView = mParam.callback.getView(this);
-        if (createView == null){
+        if (createView == null) {
             finish();
             return;
         }
         cacheBitmap = mParam.cacheShop;
         LinearLayout base_root = findViewById(R.id.Base_Container_First);
         ani_layout = findViewById(R.id.Base_Container_Ani);
-        if (cacheBitmap.isRecycled()){
+        if (cacheBitmap.isRecycled()) {
             cacheBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
         }
         base_root.setBackground(new BitmapDrawable(cacheBitmap));
@@ -94,8 +88,9 @@ public class BaseProxyAct extends Activity{
 
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         param.topMargin = Utils.getStatusBarHeight(this);
-        ani_layout.addView(createView,param);
+        ani_layout.addView(createView, param);
     }
+
     private void setTitleFea() {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -107,7 +102,7 @@ public class BaseProxyAct extends Activity{
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         );
     }
-    private boolean IsBacking = false;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (IsBacking) return true;
@@ -125,5 +120,14 @@ public class BaseProxyAct extends Activity{
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public interface onCreateView {
+        View getView(Context context);
+    }
+
+    private static class TmpCacheParams {
+        Bitmap cacheShop;
+        onCreateView callback;
     }
 }

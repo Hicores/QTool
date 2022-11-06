@@ -7,21 +7,17 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 
 public class MainPanelAdapter extends BaseAdapter {
-    public interface IMainPanelItem{
-        View getView(ViewGroup parent);
-        void onViewDestroy(ViewGroup parent);
-        long getID();
-        void notifyViewUpdate0();
-    }
     ArrayList<IMainPanelItem> viewData = new ArrayList<>();
+    volatile long timeStart;
+
     @Override
     public int getCount() {
         return viewData.size();
     }
 
-    public int addItemData(IMainPanelItem item){
+    public int addItemData(IMainPanelItem item) {
         viewData.add(item);
-        return viewData.size() -1;
+        return viewData.size() - 1;
     }
 
     @Override
@@ -36,9 +32,9 @@ public class MainPanelAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView != null){
+        if (convertView != null) {
             Object tag = convertView.getTag();
-            if (tag instanceof IMainPanelItem){
+            if (tag instanceof IMainPanelItem) {
                 IMainPanelItem item = (IMainPanelItem) tag;
                 item.onViewDestroy(parent);
             }
@@ -48,21 +44,31 @@ public class MainPanelAdapter extends BaseAdapter {
         return retView;
     }
 
-    public void destroyAllViews(){
-        for (IMainPanelItem item : viewData){
+    public void destroyAllViews() {
+        for (IMainPanelItem item : viewData) {
             item.onViewDestroy(null);
         }
     }
-    volatile long timeStart;
-    public void notifyViewUpdate(int first,int last){
-        if (System.currentTimeMillis() - timeStart > 150){
+
+    public void notifyViewUpdate(int first, int last) {
+        if (System.currentTimeMillis() - timeStart > 150) {
             timeStart = System.currentTimeMillis();
-            for (int i = first;i<last+1;i++){
+            for (int i = first; i < last + 1; i++) {
                 IMainPanelItem item = viewData.get(i);
                 item.notifyViewUpdate0();
             }
         }
 
+    }
+
+    public interface IMainPanelItem {
+        View getView(ViewGroup parent);
+
+        void onViewDestroy(ViewGroup parent);
+
+        long getID();
+
+        void notifyViewUpdate0();
     }
 
 }

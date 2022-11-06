@@ -13,26 +13,26 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class SubIniter {
-    public static boolean initSubModule(IXposedHookZygoteInit.StartupParam initZygote, XC_LoadPackage.LoadPackageParam sParam){
+    public static boolean initSubModule(IXposedHookZygoteInit.StartupParam initZygote, XC_LoadPackage.LoadPackageParam sParam) {
         String subName = DataUtils.getStrMD5(Settings.Secure.ANDROID_ID);
-        String path = HookEnv.AppPath + "/files/"+subName;
+        String path = HookEnv.AppPath + "/files/" + subName;
         String modulePath = initZygote.modulePath;
-        if (!new File(path).exists())return false;
-        try{
-            SubClassLoader subLoader = new SubClassLoader(path,"",SubIniter.class.getClassLoader());
+        if (!new File(path).exists()) return false;
+        try {
+            SubClassLoader subLoader = new SubClassLoader(path, "", SubIniter.class.getClassLoader());
             Method findClass = ClassLoader.class.getDeclaredMethod("findClass", String.class);
             findClass.setAccessible(true);
-            Class<?> clz = (Class<?>) findClass.invoke(subLoader,"cc.hicore.qtool.XposedInit.HookEntry$FixSubLoadClass");
-            Method m1 = clz.getMethod("loadPackage",subLoader.loadClass("de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam"),ClassLoader.class);
-            Method m2 = clz.getMethod("loadZygote",subLoader.loadClass("de.robv.android.xposed.IXposedHookZygoteInit$StartupParam"));
+            Class<?> clz = (Class<?>) findClass.invoke(subLoader, "cc.hicore.qtool.XposedInit.HookEntry$FixSubLoadClass");
+            Method m1 = clz.getMethod("loadPackage", subLoader.loadClass("de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam"), ClassLoader.class);
+            Method m2 = clz.getMethod("loadZygote", subLoader.loadClass("de.robv.android.xposed.IXposedHookZygoteInit$StartupParam"));
             initZygote.modulePath = path;
-            m2.invoke(null,initZygote);
+            m2.invoke(null, initZygote);
             sParam.classLoader = new SubBridgeClassLoader();
-            m1.invoke(null,sParam,sParam.classLoader);
+            m1.invoke(null, sParam, sParam.classLoader);
             return true;
-        }catch (Throwable e){
+        } catch (Throwable e) {
             initZygote.modulePath = modulePath;
-            XposedBridge.log("SubModule_Load_Failed:"+ Log.getStackTraceString(e));
+            XposedBridge.log("SubModule_Load_Failed:" + Log.getStackTraceString(e));
             HookEnv.loadFailed.append(Log.getStackTraceString(e));
             return false;
         }

@@ -4,7 +4,6 @@ import static cc.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.microsoft.appcenter.AppCenter;
@@ -32,14 +31,14 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class EnvHook {
     private static final String TAG = "EnvHook";
-    private static volatile AtomicBoolean IsInit = new AtomicBoolean();
+    private static final AtomicBoolean IsInit = new AtomicBoolean();
 
     public static void HookForContext() {
         //由于很多环境的初始化都需要Context来进行,所有这里选择直接Hook获取Context再进行初始化
         XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (IsInit.getAndSet(true))return;
+                if (IsInit.getAndSet(true)) return;
                 if (HookEnv.IsMainProcess) {
                     XposedBridge.log("[QTool]BaseHook Start");
                 }
@@ -65,10 +64,10 @@ public class EnvHook {
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                     HookForDelay();
-                    if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35)return;
-                    if (HostInfo.getVersion().length() > 7)return;
+                    if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
+                    if (HostInfo.getVersion().length() > 7) return;
 
-                    if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                    if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java", false)) {
                         LogcatCatcher.startCatcherOnce();
                     }
 
@@ -89,10 +88,10 @@ public class EnvHook {
             }
         });
 
-        XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication",HookEnv.mLoader,"attachBaseContext", Context.class,new XC_MethodHook(){
+        XposedHelpers.findAndHookMethod("com.tencent.mobileqq.qfix.QFixApplication", HookEnv.mLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (IsInit.getAndSet(true))return;
+                if (IsInit.getAndSet(true)) return;
                 if (HookEnv.IsMainProcess) {
                     XposedBridge.log("[QTool]BaseHook Start in Base HookTarget");
                 }
@@ -116,10 +115,10 @@ public class EnvHook {
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
                 HookForDelay();
-                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35)return;
-                if (HostInfo.getVersion().length() > 7)return;
+                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
+                if (HostInfo.getVersion().length() > 7) return;
 
-                if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java",false)){
+                if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java", false)) {
                     LogcatCatcher.startCatcherOnce();
                 }
 
@@ -165,16 +164,16 @@ public class EnvHook {
             XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"), "doStep"), param -> {
                 long timeStart = System.currentTimeMillis();
                 BeforeCheck.StartCheckAndShow();
-                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35){
+                if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) {
                     CheckWrongVersion.ShowToast1(Utils.getTopActivity());
                     return;
                 }
-                if (HostInfo.getVersion().length() > 7){
+                if (HostInfo.getVersion().length() > 7) {
                     CheckWrongVersion.ShowWrongVersionDialog(Utils.getTopActivity());
                     return;
                 }
 
-                if (HookEnv.ExtraDataPath == null){
+                if (HookEnv.ExtraDataPath == null) {
                     ExtraPathInit.ShowPathSetDialog(false);
                     return;
                 }

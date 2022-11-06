@@ -11,7 +11,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 
-@XPItem(name = "Group_Get_Mute_List",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Group_Get_Mute_List", itemType = XPItem.ITEM_Api)
 public class Group_Get_Mute_List {
     @ApiExecutor
     @VerController

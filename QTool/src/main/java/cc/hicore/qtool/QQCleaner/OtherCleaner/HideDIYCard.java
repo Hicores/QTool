@@ -11,11 +11,12 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "屏蔽DIY名片",itemType = XPItem.ITEM_Hook)
-public class HideDIYCard{
+
+@XPItem(name = "屏蔽DIY名片", itemType = XPItem.ITEM_Hook)
+public class HideDIYCard {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "屏蔽DIY名片";
         ui.targetID = 2;
@@ -23,20 +24,22 @@ public class HideDIYCard{
         ui.groupName = "其他净化";
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.profilecard.processor.TempProfileBusinessProcessor","updateCardTemplate", void.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod("com.tencent.mobileqq.profilecard.processor.TempProfileBusinessProcessor", "updateCardTemplate", void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.Card"),
                 String.class,
                 MClass.loadClass("SummaryCardTaf.SSummaryCardRsp")
         }));
     }
+
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor worker(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor worker() {
         return param -> {
-            MField.SetField(param.args[0],"lCurrentStyleId",(long)0);
+            MField.SetField(param.args[0], "lCurrentStyleId", (long) 0);
         };
     }
 

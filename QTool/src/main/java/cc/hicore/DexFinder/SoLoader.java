@@ -2,7 +2,6 @@ package cc.hicore.DexFinder;
 
 import android.provider.Settings;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;

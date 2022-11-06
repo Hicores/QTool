@@ -14,7 +14,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(name = "Manager_Group_Kick",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Manager_Group_Kick", itemType = XPItem.ITEM_Api)
 public class Group_Kick {
     @ApiExecutor
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
@@ -32,6 +32,7 @@ public class Group_Kick {
                 Long.parseLong(GroupUin), KickList, isBlack, false
         );
     }
+
     @ApiExecutor
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     public void kick_new(String GroupUin, String UserUin, boolean isBlack) throws Exception {
@@ -48,14 +49,15 @@ public class Group_Kick {
                 Long.parseLong(GroupUin), KickList, isBlack, false
         );
     }
+
     @VerController
     @XPChecker
     public void check() throws Exception {
         Object appRuntime = QQEnvUtils.getAppRuntime();
-        Assert.notNull(appRuntime,"appRuntime is NULL");
+        Assert.notNull(appRuntime, "appRuntime is NULL");
 
         Object ManagerObject = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler"), QQEnvUtils.getAppRuntime());
-        Assert.notNull(ManagerObject,"ManagerObject is NULL");
+        Assert.notNull(ManagerObject, "ManagerObject is NULL");
 
         Method callMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberMngHandler", null, void.class, new Class[]{
                 long.class,
@@ -63,7 +65,7 @@ public class Group_Kick {
                 boolean.class,
                 boolean.class
         });
-        Assert.notNull(callMethod,"callMethod is NULL");
+        Assert.notNull(callMethod, "callMethod is NULL");
 
     }
 }

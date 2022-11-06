@@ -30,13 +30,13 @@ public class Repeater {
                 if (AtList1 == null) AtList1 = AtList3;
                 String nowMsg = MField.GetField(chatMsg, "msg", String.class);
                 ArrayList newAtList = new ArrayList();
-                try{
+                try {
                     JSONArray newArray = new JSONArray(mStr);
-                    for (int i=0;i<newArray.length();i++){
+                    for (int i = 0; i < newArray.length(); i++) {
                         JSONObject item = newArray.getJSONObject(i);
-                        newAtList.add(QQMsgBuilder.buildAtInfo(""+item.getLong("uin"),new String(new char[item.getInt("textLen")]), (short) item.getInt("startPos"),item.optLong("channelId")));
+                        newAtList.add(QQMsgBuilder.buildAtInfo("" + item.getLong("uin"), new String(new char[item.getInt("textLen")]), (short) item.getInt("startPos"), item.optLong("channelId")));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 

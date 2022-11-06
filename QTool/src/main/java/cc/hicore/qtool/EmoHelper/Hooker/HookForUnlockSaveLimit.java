@@ -22,12 +22,13 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "表情收藏上限后存在本地",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData,max_targetVer = QQVersion.QQ_8_9_8)
-public class HookForUnlockSaveLimit{
+@XPItem(name = "表情收藏上限后存在本地", itemType = XPItem.ITEM_Hook, period = XPItem.Period_InitData, max_targetVer = QQVersion.QQ_8_9_8)
+public class HookForUnlockSaveLimit {
     CoreLoader.XPItemInfo info;
+
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "表情收藏上限后存在本地";
         ui.type = 1;
@@ -35,25 +36,28 @@ public class HookForUnlockSaveLimit{
         ui.groupName = "功能辅助";
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.emosm.api.impl.FavroamingDBManagerServiceImpl", "getEmoticonDataList", List.class, new Class[0]));
-        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.emosm.favroaming.EmoAddedAuthCallback", "handleMessage", boolean.class, new Class[]{Message.class}));
-        container.addMethod(MethodFinderBuilder.newFinderByString("get_constant","FavEmoConstant",m ->true));
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethod("com.tencent.mobileqq.emosm.api.impl.FavroamingDBManagerServiceImpl", "getEmoticonDataList", List.class, new Class[0]));
+        container.addMethod("hook_2", MMethod.FindMethod("com.tencent.mobileqq.emosm.favroaming.EmoAddedAuthCallback", "handleMessage", boolean.class, new Class[]{Message.class}));
+        container.addMethod(MethodFinderBuilder.newFinderByString("get_constant", "FavEmoConstant", m -> true));
     }
+
     @VerController
     @XPExecutor(methodID = "hook_1")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> {
             Class<?> clz = info.scanResult.get("get_constant").getDeclaringClass();
             MField.SetField(null, clz, "a", int.class, 2000);
             MField.SetField(null, clz, "b", int.class, 2000);
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_2")
-    public BaseXPExecutor worker_2(){
+    public BaseXPExecutor worker_2() {
         return param -> {
             Message message = (Message) param.args[0];
             int code = message.what;
@@ -65,6 +69,7 @@ public class HookForUnlockSaveLimit{
             }
         };
     }
+
     private void AddToLocal(String md5) {
         try {
             Object manager = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.emosm.favroaming.EmoticonFromGroupManager"), HookEnv.AppInterface);

@@ -11,22 +11,24 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "GuildSessionMonitor",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_9_3)
+@XPItem(name = "GuildSessionMonitor", itemType = XPItem.ITEM_Hook, targetVer = QQVersion.QQ_8_9_3)
 public class GuildSessionMonitor {
     public static String guildID;
     public static String channelID;
+
     @VerController
     @MethodScanner
-    public void findMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","aioFactory.javaClass.name",m->true));
+    public void findMethod(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook", "aioFactory.javaClass.name", m -> true));
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor xpWorker(){
+    public BaseXPExecutor xpWorker() {
         return param -> {
             Object currentContext = param.args[0];
-            guildID = MField.GetField(currentContext,"a",String.class);
-            channelID = MField.GetField(currentContext,"b",String.class);
+            guildID = MField.GetField(currentContext, "a", String.class);
+            channelID = MField.GetField(currentContext, "b", String.class);
             HookEnv.isCurrentGuild = true;
         };
     }

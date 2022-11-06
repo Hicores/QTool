@@ -1,16 +1,13 @@
 package cc.hicore.qtool.EmoHelper.Panel;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -24,16 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.lxj.easyadapter.EasyAdapter;
 import com.lxj.easyadapter.ViewHolder;
-import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
-import com.lxj.xpopup.core.PositionPopupView;
-import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.util.XPopupUtils;
 import com.lxj.xpopup.widget.VerticalRecyclerView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -41,28 +31,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.EmoHelper.Hooker.RepeatWithPic;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMsgBuilder;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.R;
 
 
 public class EmoPanelView extends BottomPopupView {
-    private static String SelectedName = "";
-    private ArrayList<View> titleBarList = new ArrayList<>();
-    VerticalRecyclerView recyclerView;
-    private ArrayList<EmoPanel.EmoInfo> data = new ArrayList<>();
-    private ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
-    private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
-    HorizontalScrollView scView;
-
     static int CacheScrollTop = 0;
-
-    private HashSet<View> cacheImageView = new HashSet<>();
+    private static String SelectedName = "";
+    VerticalRecyclerView recyclerView;
+    HorizontalScrollView scView;
+    private final ArrayList<View> titleBarList = new ArrayList<>();
+    private ArrayList<EmoPanel.EmoInfo> data = new ArrayList<>();
+    private final ArrayList<ArrayList<EmoPanel.EmoInfo>> multiItem = new ArrayList<>();
+    private EasyAdapter<ArrayList<EmoPanel.EmoInfo>> commonAdapter;
+    private final HashSet<View> cacheImageView = new HashSet<>();
 
 
     public EmoPanelView(@NonNull Context context) {
@@ -175,13 +161,13 @@ public class EmoPanelView extends BottomPopupView {
                         });
                     } else if (info.type == 2) {
                         try {
-                            if (TextUtils.isEmpty(info.thumb)){
+                            if (TextUtils.isEmpty(info.thumb)) {
                                 Glide.with(HookEnv.AppContext)
                                         .load(new URL(info.URL))
                                         .placeholder(R.drawable.loading)
                                         .fitCenter()
                                         .into(view);
-                            }else {
+                            } else {
                                 Glide.with(HookEnv.AppContext)
                                         .load(new URL(info.thumb))
                                         .placeholder(R.drawable.loading)
@@ -234,6 +220,7 @@ public class EmoPanelView extends BottomPopupView {
 
         });
     }
+
     private void FindNameToSelectID(String Name) {
         ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
 

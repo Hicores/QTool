@@ -30,6 +30,8 @@ import java.io.FileOutputStream;
 import java.util.Locale;
 
 public class DecodeForEncPic {
+    private static final byte[] GIFMask = {0, 1, 0, 1};
+
     private static int conVertToInt(byte[] b) {
         int i = 0;
         int pos = 0;
@@ -39,8 +41,6 @@ public class DecodeForEncPic {
         }
         return i;
     }
-
-    private static final byte[] GIFMask = {0, 1, 0, 1};
 
     public static String decodeGifForLocalPath(int dwTabID, byte[] sbufID) {
         try {

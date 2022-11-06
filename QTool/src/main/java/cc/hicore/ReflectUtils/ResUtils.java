@@ -1,7 +1,6 @@
 package cc.hicore.ReflectUtils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 

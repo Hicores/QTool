@@ -13,7 +13,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.DataUtils;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "Builder_Pic",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Builder_Pic", itemType = XPItem.ITEM_Api)
 public class Builder_Pic {
     @VerController
     @ApiExecutor

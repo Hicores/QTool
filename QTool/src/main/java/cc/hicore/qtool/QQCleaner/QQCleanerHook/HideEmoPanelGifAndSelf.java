@@ -22,21 +22,12 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-@XPItem(name = "隐藏表情面板图标",itemType = XPItem.ITEM_Hook)
-public class HideEmoPanelGifAndSelf{
-    @VerController
-    @UIItem
-    public UIInfo getUI(){
-        UIInfo ui = new UIInfo();
-        ui.name = "隐藏表情面板图标";
-        ui.desc = "点击设置隐藏的图标";
-        ui.type = 1;
-        ui.targetID = 2;
-        ui.groupName = "聊天界面净化";
-        return ui;
-    }
 
-    static HashMap<String, String> HideMap = new HashMap<>();{
+@XPItem(name = "隐藏表情面板图标", itemType = XPItem.ITEM_Hook)
+public class HideEmoPanelGifAndSelf {
+    static HashMap<String, String> HideMap = new HashMap<>();
+
+    {
         HideMap.put("加号", "13");
         HideMap.put("自带表情", "7");
         HideMap.put("收藏表情", "4");
@@ -46,14 +37,28 @@ public class HideEmoPanelGifAndSelf{
         HideMap.put("DIY表情", "11");
         HideMap.put("魔法表情", "9");
     }
+
+    @VerController
+    @UIItem
+    public UIInfo getUI() {
+        UIInfo ui = new UIInfo();
+        ui.name = "隐藏表情面板图标";
+        ui.desc = "点击设置隐藏的图标";
+        ui.type = 1;
+        ui.targetID = 2;
+        ui.groupName = "聊天界面净化";
+        return ui;
+    }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.emoticonview.EmoticonPanelController", "getPanelDataList", List.class, new Class[0]));
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod("com.tencent.mobileqq.emoticonview.EmoticonPanelController", "getPanelDataList", List.class, new Class[0]));
     }
+
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor hookWorker(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor hookWorker() {
         return param -> {
             List<String> mSetConf = HookEnv.Config.getList("QQCleaner", "HideEmoPanel", true);
             List l = (List) param.getResult();
@@ -66,9 +71,10 @@ public class HideEmoPanelGifAndSelf{
             }
         };
     }
+
     @VerController
     @UIClick
-    public void uiClick(Context context){
+    public void uiClick(Context context) {
         Activity act = Utils.getTopActivity();
         List<String> mSetConf = HookEnv.Config.getList("QQCleaner", "HideEmoPanel", true);
         ArrayList<String> showStrs = new ArrayList<>();

@@ -13,11 +13,12 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用Toggle",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL,targetVer = QQVersion.QQ_8_8_88,max_targetVer = QQVersion.QQ_8_9_0)
-public class ToggleKiller{
+
+@XPItem(name = "禁用Toggle", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL, targetVer = QQVersion.QQ_8_8_88, max_targetVer = QQVersion.QQ_8_9_0)
+public class ToggleKiller {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "禁用Toggle";
         ui.groupName = "服务调节";
@@ -25,16 +26,18 @@ public class ToggleKiller{
         ui.type = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.ft.op.ToggleDispatcher$11"),"handleMessage",void.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.ft.op.ToggleDispatcher$11"), "handleMessage", void.class, new Class[]{
                 Message.class
         }));
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> param.setResult(null);
     }
 }

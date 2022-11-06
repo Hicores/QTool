@@ -15,14 +15,16 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(name = "Builder_Text",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Builder_Text", itemType = XPItem.ITEM_Api)
 public class Build_Text {
     CoreLoader.XPItemInfo info;
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("method","createMsgRecordFromDB", m->true));
+    public void getMethod(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("method", "createMsgRecordFromDB", m -> true));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public Object build(String GroupUin, String text) throws Exception {
@@ -40,6 +42,7 @@ public class Build_Text {
 
         return InvokeMethod.invoke(null, HookEnv.AppInterface, "", GroupUin, QQEnvUtils.getCurrentUin(), 1, (byte) 0, (byte) 0, (short) 0, text);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public Object build_890(String GroupUin, String text) throws Exception {

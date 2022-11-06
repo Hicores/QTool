@@ -24,12 +24,44 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.Utils.Utils;
-@XPItem(name = "在消息右下角显示时间",itemType = XPItem.ITEM_Hook)
+
+@XPItem(name = "在消息右下角显示时间", itemType = XPItem.ITEM_Hook)
 @SuppressLint("ResourceType")
-public class ShowMessageTime{
+public class ShowMessageTime {
+    private static final HashMap<String, String> supportShow = new HashMap<>();
+
+    {
+        supportShow.put("MessageForPic", "RelativeLayout");
+        supportShow.put("MessageForText", "ETTextView");
+        supportShow.put("MessageForLongTextMsg", "ETTextView");
+        supportShow.put("MessageForFoldMsg", "ETTextView");
+        supportShow.put("MessageForPtt", "BreathAnimationLayout");
+        supportShow.put("MessageForMixedMsg", "MixedMsgLinearLayout");
+        supportShow.put("MessageForReplyText", "SelectableLinearLayout");
+        supportShow.put("MessageForScribble", "RelativeLayout");
+        supportShow.put("MessageForMarketFace", "RelativeLayout");
+        supportShow.put("MessageForArkApp", "ArkAppRootLayout");
+        supportShow.put("MessageForStructing", "RelativeLayout");
+        supportShow.put("MessageForTroopPobing", "LinearLayout");
+        supportShow.put("MessageForTroopEffectPic", "RelativeLayout");
+        supportShow.put("MessageForAniSticker", "FrameLayout");
+        supportShow.put("MessageForArkFlashChat", "ArkAppRootLayout");
+        supportShow.put("MessageForShortVideo", "RelativeLayout");
+        supportShow.put("MessageForPokeEmo", "RelativeLayout");
+    }
+
+    private static View searchForView(String Name, ViewGroup vg) {
+        for (int i = 0; i < vg.getChildCount(); i++) {
+            if (vg.getChildAt(i).getClass().getSimpleName().contains(Name)) {
+                return vg.getChildAt(i);
+            }
+        }
+        return null;
+    }
+
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.groupName = "聊天界面增强";
         ui.name = "在消息右下角显示时间";
@@ -37,23 +69,26 @@ public class ShowMessageTime{
         ui.targetID = 1;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
+    public void getHookMethod(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView(container);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod_890(MethodContainer container){
+    public void getHookMethod_890(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView_890(container);
     }
+
     @VerController
-    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
-    public BaseXPExecutor worker(){
+    @XPExecutor(methodID = "onAIOGetView", period = XPExecutor.After)
+    public BaseXPExecutor worker() {
         return param -> {
             Object mGetView = param.getResult();
             if (!(mGetView instanceof RelativeLayout)) return;
-            List msgList = MField.GetFirstField(param.thisObject,  List.class);
+            List msgList = MField.GetFirstField(param.thisObject, List.class);
             if (msgList == null) return;
             Object ChatMsg = msgList.get((int) param.args[0]);
             //解析消息
@@ -94,33 +129,5 @@ public class ShowMessageTime{
                 }
             }
         };
-    }
-    private static final HashMap<String, String> supportShow = new HashMap<>();
-    {
-        supportShow.put("MessageForPic", "RelativeLayout");
-        supportShow.put("MessageForText", "ETTextView");
-        supportShow.put("MessageForLongTextMsg", "ETTextView");
-        supportShow.put("MessageForFoldMsg", "ETTextView");
-        supportShow.put("MessageForPtt", "BreathAnimationLayout");
-        supportShow.put("MessageForMixedMsg", "MixedMsgLinearLayout");
-        supportShow.put("MessageForReplyText", "SelectableLinearLayout");
-        supportShow.put("MessageForScribble", "RelativeLayout");
-        supportShow.put("MessageForMarketFace", "RelativeLayout");
-        supportShow.put("MessageForArkApp", "ArkAppRootLayout");
-        supportShow.put("MessageForStructing", "RelativeLayout");
-        supportShow.put("MessageForTroopPobing", "LinearLayout");
-        supportShow.put("MessageForTroopEffectPic", "RelativeLayout");
-        supportShow.put("MessageForAniSticker", "FrameLayout");
-        supportShow.put("MessageForArkFlashChat", "ArkAppRootLayout");
-        supportShow.put("MessageForShortVideo", "RelativeLayout");
-        supportShow.put("MessageForPokeEmo", "RelativeLayout");
-    }
-    private static View searchForView(String Name, ViewGroup vg) {
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            if (vg.getChildAt(i).getClass().getSimpleName().contains(Name)) {
-                return vg.getChildAt(i);
-            }
-        }
-        return null;
     }
 }

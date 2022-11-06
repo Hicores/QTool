@@ -11,11 +11,12 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MField;
-@XPItem(name = "屏蔽窗口抖动",itemType = XPItem.ITEM_Hook)
-public class PreventShakeWindow{
+
+@XPItem(name = "屏蔽窗口抖动", itemType = XPItem.ITEM_Hook)
+public class PreventShakeWindow {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "屏蔽窗口抖动";
         ui.groupName = "聊天净化";
@@ -23,23 +24,26 @@ public class PreventShakeWindow{
         ui.targetID = 2;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
+    public void getHookMethod(MethodContainer container) {
         Finders.onTroopMessage(container);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod_890(MethodContainer container){
+    public void getHookMethod_890(MethodContainer container) {
         Finders.onTroopMessageNew(container);
     }
+
     @VerController
     @XPExecutor(methodID = "troopMsgProxy")
     public BaseXPExecutor worker() {
         return param -> {
             Object ChatMsg = param.args[2];
-            if (ChatMsg.getClass().getSimpleName().equals("MessageForShakeWindow")){
-                MField.SetField(ChatMsg,"isread",true);
+            if (ChatMsg.getClass().getSimpleName().equals("MessageForShakeWindow")) {
+                MField.SetField(ChatMsg, "isread", true);
             }
         };
     }

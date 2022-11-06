@@ -24,11 +24,14 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
-@XPItem(name = "隐藏QQ钱包广告",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
-public class HideQWalletAd{
+@XPItem(name = "隐藏QQ钱包广告", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
+public class HideQWalletAd {
+    static AtomicBoolean IsLoad = new AtomicBoolean();
+    ViewTreeObserver.OnGlobalLayoutListener listener = null;
+
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "隐藏QQ钱包广告";
         ui.groupName = "其他净化";
@@ -36,20 +39,21 @@ public class HideQWalletAd{
         ui.type = 1;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_80)
     @MethodScanner
-    public void getPluginLoad(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pluginsdk.PluginStatic"),"getOrCreateClassLoaderByPath",ClassLoader.class,new Class[]{
+    public void getPluginLoad(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pluginsdk.PluginStatic"), "getOrCreateClassLoaderByPath", ClassLoader.class, new Class[]{
                 Context.class, String.class, String.class, boolean.class
         }));
     }
-    static AtomicBoolean IsLoad = new AtomicBoolean();
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_80)
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor hookForPlugin(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor hookForPlugin() {
         return param -> {
             String sName = (String) param.args[1];
-            if(sName.equals("qwallet_plugin.apk") && !IsLoad.getAndSet(true)){
+            if (sName.equals("qwallet_plugin.apk") && !IsLoad.getAndSet(true)) {
                 ClassLoader pluginLoader = (ClassLoader) param.getResult();
                 XposedHelpers.findAndHookMethod("com.qwallet.activity.QWalletHomeActivity", pluginLoader,
                         "onCreate", Bundle.class,
@@ -57,11 +61,11 @@ public class HideQWalletAd{
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 super.afterHookedMethod(param);
-                                ViewGroup group = MField.GetFirstField(param.thisObject,pluginLoader.loadClass("com.qwallet.view.QWalletHeaderView"));
+                                ViewGroup group = MField.GetFirstField(param.thisObject, pluginLoader.loadClass("com.qwallet.view.QWalletHeaderView"));
                                 listener = () -> {
                                     try {
-                                        View v = MField.GetFirstField(group,MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
-                                        if (v == null)return;
+                                        View v = MField.GetFirstField(group, MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
+                                        if (v == null) return;
                                         group.removeView(v);
                                         group.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
                                     } catch (Exception e) {
@@ -75,15 +79,16 @@ public class HideQWalletAd{
             }
         };
     }
+
     @VerController(targetVer = QQVersion.QQ_8_8_80)
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor worker(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor worker() {
         return param -> {
-            ViewGroup group = MField.GetFirstField(param.thisObject,MClass.loadClass("com.qwallet.view.QWalletHeaderView"));
+            ViewGroup group = MField.GetFirstField(param.thisObject, MClass.loadClass("com.qwallet.view.QWalletHeaderView"));
             listener = () -> {
                 try {
-                    View v = MField.GetFirstField(group,MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
-                    if (v == null)return;
+                    View v = MField.GetFirstField(group, MClass.loadClass("com.tencent.biz.ui.TouchWebView"));
+                    if (v == null) return;
                     group.removeView(v);
                     group.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
                 } catch (Exception e) {
@@ -96,10 +101,9 @@ public class HideQWalletAd{
 
     @VerController(targetVer = QQVersion.QQ_8_8_80)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.qwallet.activity.QWalletHomeActivity"),"onViewCreated",void.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.qwallet.activity.QWalletHomeActivity"), "onViewCreated", void.class, new Class[]{
                 View.class, Bundle.class
         }));
     }
-    ViewTreeObserver.OnGlobalLayoutListener listener = null;
 }

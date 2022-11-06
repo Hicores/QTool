@@ -23,11 +23,11 @@ import cc.hicore.qtool.GroupChecker.CheckJoinIn.JoinSame;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XPWork.QQUIUtils.FormItemUtils;
 
-@XPItem(name = "群聊检测助手",itemType = XPItem.ITEM_Hook)
-public class CheckerHooker{
+@XPItem(name = "群聊检测助手", itemType = XPItem.ITEM_Hook)
+public class CheckerHooker {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "群聊检测助手";
         ui.groupName = "群聊助手";
@@ -35,34 +35,36 @@ public class CheckerHooker{
         ui.targetID = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.troop.troopsetting.activity.TroopSettingActivity","doOnCreate",boolean.class,new Class[]{Bundle.class}));
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod("com.tencent.mobileqq.troop.troopsetting.activity.TroopSettingActivity", "doOnCreate", boolean.class, new Class[]{Bundle.class}));
     }
+
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor hook_worker(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor hook_worker() {
         return param -> {
             View mGetItem = MField.GetFirstField(param.thisObject, MClass.loadClass("com.tencent.mobileqq.widget.QFormSimpleItem"));
-            if (mGetItem != null){
+            if (mGetItem != null) {
                 LinearLayout mRootView = (LinearLayout) mGetItem.getParent();
-                if (mRootView != null){
+                if (mRootView != null) {
                     Context context = mRootView.getContext();
-                    mRootView.addView(FormItemUtils.createSingleItem(context,"群聊检测助手", v->{
-                        String[] items = new String[]{"检测重复加群","检测不活跃用户(最后发言时间)","检测不活跃用户(规则2)"};
-                        new AlertDialog.Builder(mRootView.getContext(),3)
+                    mRootView.addView(FormItemUtils.createSingleItem(context, "群聊检测助手", v -> {
+                        String[] items = new String[]{"检测重复加群", "检测不活跃用户(最后发言时间)", "检测不活跃用户(规则2)"};
+                        new AlertDialog.Builder(mRootView.getContext(), 3)
                                 .setItems(items, (dialog, which) -> {
-                                    if (which == 0){
+                                    if (which == 0) {
                                         JoinSame.start(mRootView.getContext());
-                                    }else if (which == 1){
+                                    } else if (which == 1) {
                                         CheckCommon.CollectAndCheck(QQSessionUtils.getGroupUin());
-                                    }else if (which == 2){
+                                    } else if (which == 2) {
                                         CheckExtra.CollectAndCheck(QQSessionUtils.getGroupUin());
                                     }
 
                                 }).show();
-                    }),14);
+                    }), 14);
 
                 }
             }

@@ -12,12 +12,13 @@ import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.ReflectUtils.MClass;
 
-@XPItem(name = " 替换群侧滑",itemType = XPItem.ITEM_Hook,max_targetVer = QQVersion.QQ_8_9_0)
-public class ReplaceSlide{
+@XPItem(name = " 替换群侧滑", itemType = XPItem.ITEM_Hook, max_targetVer = QQVersion.QQ_8_9_0)
+public class ReplaceSlide {
     CoreLoader.XPItemInfo info;
+
     @VerController
     @UIItem
-    public UIInfo getUIInfo(){
+    public UIInfo getUIInfo() {
         UIInfo ui = new UIInfo();
         ui.groupName = "聊天界面增强";
         ui.targetID = 1;
@@ -26,18 +27,20 @@ public class ReplaceSlide{
         ui.name = "替换群侧滑";
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MClass.findCons(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopAppShortcutDrawer"),new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MClass.findCons(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopAppShortcutDrawer"), new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")
         }));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> {
-            Object obj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopMultiCardDrawer"),param.args);
+            Object obj = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.activity.aio.drawer.TroopMultiCardDrawer"), param.args);
             param.setResult(obj);
         };
     }

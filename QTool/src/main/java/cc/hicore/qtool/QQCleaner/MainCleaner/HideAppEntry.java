@@ -13,11 +13,12 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "屏蔽下拉小程序",itemType = XPItem.ITEM_Hook)
-public class HideAppEntry{
+
+@XPItem(name = "屏蔽下拉小程序", itemType = XPItem.ITEM_Hook)
+public class HideAppEntry {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "屏蔽下拉小程序";
         ui.targetID = 2;
@@ -25,15 +26,17 @@ public class HideAppEntry{
         ui.groupName = "主界面净化";
         return ui;
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> param.setResult(null);
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.mini.api.impl.MiniAppServiceImpl"),"createMiniAppEntryManager",MClass.loadClass("com.tencent.mobileqq.mini.entry.MiniAppPullInterface"),new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.mini.api.impl.MiniAppServiceImpl"), "createMiniAppEntryManager", MClass.loadClass("com.tencent.mobileqq.mini.entry.MiniAppPullInterface"), new Class[]{
                 boolean.class, Activity.class, Object.class, Object.class, Object.class, Object.class, ViewGroup.class
         }));
     }

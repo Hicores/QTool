@@ -21,23 +21,23 @@ import cc.hicore.qtool.QQMessage.MessageImpl.MsgApi_revokeMsg;
 
 public class QQMessageUtils {
     public static Object GetMessageByTimeSeq(String uin, int istroop, long msgseq) {
-        return ApiHelper.invoke(MsgApi_GetMessageByTimeSeq.class,uin,istroop,msgseq);
+        return ApiHelper.invoke(MsgApi_GetMessageByTimeSeq.class, uin, istroop, msgseq);
     }
 
     public static void revokeMsg(Object msg) {
         if (msg.getClass().toString().contains("MessageForTroopFile")) {
             RevokeTroopFile(msg);
         }
-        ApiHelper.invoke(MsgApi_revokeMsg.class,msg);
+        ApiHelper.invoke(MsgApi_revokeMsg.class, msg);
 
     }
 
     public static void AddMsg(Object MessageRecord) {
-       ApiHelper.invoke(MsgApi_AddMsg.class,MessageRecord);
+        ApiHelper.invoke(MsgApi_AddMsg.class, MessageRecord);
     }
 
     public static void AddAndSendMsg(Object MessageRecord) {
-        ApiHelper.invoke(MsgApi_AddAndSendMsg.class,MessageRecord);
+        ApiHelper.invoke(MsgApi_AddAndSendMsg.class, MessageRecord);
     }
 
     private static void RevokeTroopFile(Object MessageRecord) {
@@ -50,6 +50,7 @@ public class QQMessageUtils {
             LogUtils.error("RevokeTroopFile", ex);
         }
     }
+
     public static String getCardMsg(Object msg) {
         try {
             String clzName = msg.getClass().getSimpleName();
@@ -86,8 +87,9 @@ public class QQMessageUtils {
             return 0;
         }
     }
-    public static void sendFakeMultiMsg(String fakeGroup,String fakeUin,List messageRecords,Object session,String ShowTag,String fakeName){
-        ApiHelper.invoke(MsgApi_SendFakeMultiMsg.class,fakeGroup,fakeUin,messageRecords,session,ShowTag,fakeName);
+
+    public static void sendFakeMultiMsg(String fakeGroup, String fakeUin, List messageRecords, Object session, String ShowTag, String fakeName) {
+        ApiHelper.invoke(MsgApi_SendFakeMultiMsg.class, fakeGroup, fakeUin, messageRecords, session, ShowTag, fakeName);
     }
 
 }

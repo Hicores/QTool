@@ -1,11 +1,10 @@
 package cc.hicore.qtool.XposedInit.ItemLoader;
 
 public abstract class BaseHookItem {
-    public BaseHookItem() {
-    }
-
     private boolean isLoad = false;
     private boolean isTryLoad = false;
+    public BaseHookItem() {
+    }
 
     public String getTag() {
         return getClass().getSimpleName();

@@ -6,17 +6,18 @@ import java.io.InputStreamReader;
 
 
 public class LogcatCatcher {
-    public static void startCatcherOnce(){
+    public static void startCatcherOnce() {
         CatchInstance.StartCatch();
     }
+
     public static void StartCatch() {
-        new Thread(()->{
+        new Thread(() -> {
             try {
                 Process proc = Runtime.getRuntime().exec("logcat");
                 InputStreamReader reader = new InputStreamReader(proc.getInputStream());
                 BufferedReader mReader = new BufferedReader(reader);
                 String Line;
-                while ((Line = mReader.readLine())!=null){
+                while ((Line = mReader.readLine()) != null) {
                     StringPool_Logcat.Add(Line);
                 }
 

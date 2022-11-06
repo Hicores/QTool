@@ -12,12 +12,12 @@ import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import de.robv.android.xposed.XC_MethodHook;
 
-@XPItem(name = "Proxy_Troop_Mute",itemType = XPItem.ITEM_Hook)
-public class TroopMuteProxy{
+@XPItem(name = "Proxy_Troop_Mute", itemType = XPItem.ITEM_Hook)
+public class TroopMuteProxy {
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
                 String.class,
                 long.class,
                 long.class,
@@ -26,7 +26,7 @@ public class TroopMuteProxy{
                 String.class,
                 boolean.class
         }));
-        container.addMethod("hook_2",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
+        container.addMethod("hook_2", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.utils.TroopGagMgr"), null, void.class, new Class[]{
                 String.class,
                 String.class,
                 long.class,
@@ -36,9 +36,10 @@ public class TroopMuteProxy{
                 boolean.class
         }));
     }
+
     @VerController
-    @XPExecutor(methodID = "hook_1",hook_period = XC_MethodHook.PRIORITY_HIGHEST)
-    public BaseXPExecutor worker_1(){
+    @XPExecutor(methodID = "hook_1", hook_period = XC_MethodHook.PRIORITY_HIGHEST)
+    public BaseXPExecutor worker_1() {
         return param -> {
             String GroupUin = (String) param.args[0];
             long TimeRest = (long) param.args[2];
@@ -48,9 +49,10 @@ public class TroopMuteProxy{
             PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMuteEvent(GroupUin, Target, AdminUin, TimeRest));
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "hook_2",hook_period = XC_MethodHook.PRIORITY_HIGHEST)
-    public BaseXPExecutor worker_2(){
+    @XPExecutor(methodID = "hook_2", hook_period = XC_MethodHook.PRIORITY_HIGHEST)
+    public BaseXPExecutor worker_2() {
         return param -> {
             String GroupUin = (String) param.args[0];
             String AdminUin = (String) param.args[1];

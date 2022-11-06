@@ -12,11 +12,20 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "解除风险网址拦截",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
-public class UnlockWebLock{
+
+@XPItem(name = "解除风险网址拦截", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
+public class UnlockWebLock {
+    private static String GetStringMiddle(String str, String before, String after) {
+        int index1 = str.indexOf(before);
+        if (index1 == -1) return null;
+        int index2 = str.indexOf(after, index1 + before.length());
+        if (index2 == -1) return null;
+        return str.substring(index1 + before.length(), index2);
+    }
+
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "解除风险网址拦截";
         ui.groupName = "功能辅助";
@@ -24,32 +33,27 @@ public class UnlockWebLock{
         ui.type = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.smtt.sdk.WebView"), "loadUrl",void.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.smtt.sdk.WebView"), "loadUrl", void.class, new Class[]{
                 String.class
         }));
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> {
             String loadUrl = (String) param.args[0];
-            if(loadUrl.startsWith("https://c.pc.qq.com/middlem.html?") || loadUrl.startsWith("https://c.pc.qq.com/index.html?")) {
-                String RedictUrl = GetStringMiddle(loadUrl,"url=","&");
-                if(RedictUrl!=null) {
+            if (loadUrl.startsWith("https://c.pc.qq.com/middlem.html?") || loadUrl.startsWith("https://c.pc.qq.com/index.html?")) {
+                String RedictUrl = GetStringMiddle(loadUrl, "url=", "&");
+                if (RedictUrl != null) {
                     String SourceUrl = URLDecoder.decode(RedictUrl);
                     param.args[0] = SourceUrl;
                 }
             }
         };
-    }
-    private static String GetStringMiddle(String str,String before,String after) {
-        int index1 = str.indexOf(before);
-        if(index1==-1)return null;
-        int index2 = str.indexOf(after,index1+before.length());
-        if(index2==-1)return null;
-        return str.substring(index1+before.length(),index2);
     }
 }

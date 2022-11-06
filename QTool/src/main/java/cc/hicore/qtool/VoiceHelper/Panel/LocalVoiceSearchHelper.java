@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,7 +20,7 @@ public class LocalVoiceSearchHelper {
         File[] fs = new File(LocalPath).listFiles();
         if (fs == null) return resultArr;
 
-        Arrays.sort(fs,(o1, o2) -> sortByPinYin(o1.getName(), o2.getName()));
+        Arrays.sort(fs, (o1, o2) -> sortByPinYin(o1.getName(), o2.getName()));
         Arrays.sort(fs, (o1, o2) -> {
             if (o1.isFile() && o2.isDirectory()) return 1;
             if (o1.isDirectory() && o2.isFile()) return -1;
@@ -46,6 +45,7 @@ public class LocalVoiceSearchHelper {
         }
         return resultArr;
     }
+
     private static int sortByPinYin(String o1, String o2) {
         List<String> list = Arrays.asList(o1, o2);
         list.sort(Collator.getInstance(Locale.CHINA));

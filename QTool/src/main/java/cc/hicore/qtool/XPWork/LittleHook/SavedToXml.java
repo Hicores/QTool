@@ -9,11 +9,11 @@ import cc.hicore.ReflectUtils.MMethod;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 
-@XPItem(name = "XP_Save",itemType = XPItem.ITEM_Hook)
-public class SavedToXml{
+@XPItem(name = "XP_Save", itemType = XPItem.ITEM_Hook)
+public class SavedToXml {
     @VerController
     @CommonExecutor
-    public void execute(){
+    public void execute() {
         XposedHelpers.findAndHookMethod(MClass.loadClass("com.tencent.mobileqq.data.MessageForStarLeague"), "decodeMsgFromXmlBuff", Classes.QQAppinterFace(), int.class, long.class, byte[].class, int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {

@@ -13,33 +13,36 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 
-@XPItem(name = "Proxy_Base_msg",itemType = XPItem.ITEM_Hook)
-public class BaseMsgProxy{
+@XPItem(name = "Proxy_Base_msg", itemType = XPItem.ITEM_Hook)
+public class BaseMsgProxy {
     private static final String TAG = "BaseMsgProxy";
     private static final long StartTime = System.currentTimeMillis();
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), "a", void.class, new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), "a", void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"),
                 MClass.loadClass("com.tencent.mobileqq.persistence.EntityManager"),
                 boolean.class, boolean.class, boolean.class, boolean.class,
                 MClass.loadClass("com.tencent.imcore.message.BaseMessageManager$AddMessageContext")
         }));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook","addMessage set sendmsg extra ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message.")));
+    public void getHookMethod_890(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook", "addMessage set sendmsg extra ", m -> m.getDeclaringClass().getName().startsWith("com.tencent.imcore.message.")));
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor worker(){
+    public BaseXPExecutor worker() {
         return param -> {
             Object MessageRecord = param.args[0];
-            if (MessageRecord == null)return;
+            if (MessageRecord == null) return;
             if (System.currentTimeMillis() - StartTime < 10 * 1000) return;
-            if (Classes.MessageRecord().isAssignableFrom(MessageRecord.getClass())){
+            if (Classes.MessageRecord().isAssignableFrom(MessageRecord.getClass())) {
                 PluginMessageProcessor.submit(() -> PluginMessageProcessor.onMessage(MessageRecord));
             }
 

@@ -21,24 +21,25 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
 public class StickerShareHelper {
-    public static boolean checkIsOnlineSticker(LocalDataHelper.LocalPath pathData){
+    public static boolean checkIsOnlineSticker(LocalDataHelper.LocalPath pathData) {
         List<LocalDataHelper.LocalPicItems> items = LocalDataHelper.getPicItems(pathData.storePath);
-        for (LocalDataHelper.LocalPicItems item : items){
-            if (item.type == 2){
+        for (LocalDataHelper.LocalPicItems item : items) {
+            if (item.type == 2) {
                 return true;
             }
         }
         return false;
     }
-    public static void startShareSync(List<LocalDataHelper.LocalPicItems> items, LocalDataHelper.LocalPath path, String showName, Context context){
-        ProgressDialog progDialog = new ProgressDialog(context,3);
+
+    public static void startShareSync(List<LocalDataHelper.LocalPicItems> items, LocalDataHelper.LocalPath path, String showName, Context context) {
+        ProgressDialog progDialog = new ProgressDialog(context, 3);
         progDialog.setCancelable(false);
         progDialog.setTitle("正在处理...");
         progDialog.setMessage("正在准备...");
         progDialog.show();
-        new Thread(()->{
+        new Thread(() -> {
             try {
-                if (items.size() < 10 ){
+                if (items.size() < 10) {
                     Utils.ShowToastL("仅能上传大于十张的表情包");
                     return;
                 }
@@ -47,11 +48,11 @@ public class StickerShareHelper {
                 requestData.put("uin", QQEnvUtils.getCurrentUin());
                 requestData.put("name", showName);
                 String URL =
-                        "https://qtool.haonb.cc/StickerHelper/createPack?in="+ DataUtils.ByteArrayToHex(requestData.toString().getBytes());
+                        "https://qtool.haonb.cc/StickerHelper/createPack?in=" + DataUtils.ByteArrayToHex(requestData.toString().getBytes());
                 String result = HttpUtils.getContent(URL);
                 JSONObject json = new JSONObject(result);
                 if (json.getInt("code") == 1) {
-                    Utils.ShowToastL("验证失败,无法创建图集:\n"+json.getString("msg"));
+                    Utils.ShowToastL("验证失败,无法创建图集:\n" + json.getString("msg"));
                     return;
                 }
 
@@ -67,7 +68,7 @@ public class StickerShareHelper {
                     connection.setDoOutput(true);
                     connection.setRequestProperty("key", key);
                     OutputStream out = connection.getOutputStream();
-                    out.write(FileUtils.ReadFile(new File(LocalDataHelper.getLocalItemPath(path,picItem))));
+                    out.write(FileUtils.ReadFile(new File(LocalDataHelper.getLocalItemPath(path, picItem))));
                     out.flush();
                     out.close();
                     InputStream ins = connection.getInputStream();
@@ -83,9 +84,9 @@ public class StickerShareHelper {
                     Utils.ShowToastL("分享成功,请等待审核通过");
                 }
 
-            }catch (Exception e){
-                Utils.ShowToastL("发生错误:\n"+e);
-            }finally {
+            } catch (Exception e) {
+                Utils.ShowToastL("发生错误:\n" + e);
+            } finally {
                 Utils.PostToMain(progDialog::dismiss);
             }
         }).start();

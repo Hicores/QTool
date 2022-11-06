@@ -19,14 +19,14 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.HttpUtils;
 import cc.hicore.Utils.Utils;
 
-@XPItem(name = "耗流量卡片屏蔽",itemType = XPItem.ITEM_Hook)
-public class FuckDLCard{
-    private static long mStartTime=0;
-    private static HashMap<String,Long> mCache = new HashMap<>();
+@XPItem(name = "耗流量卡片屏蔽", itemType = XPItem.ITEM_Hook)
+public class FuckDLCard {
+    private static long mStartTime = 0;
+    private static final HashMap<String, Long> mCache = new HashMap<>();
 
     @UIItem
     @VerController
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "屏蔽部分耗流量卡片";
         ui.groupName = "聊天净化";
@@ -34,10 +34,11 @@ public class FuckDLCard{
         ui.type = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",MMethod.FindMethod("com.tencent.mobileqq.transfile.HttpDownloader","downloadImage", File.class,new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", MMethod.FindMethod("com.tencent.mobileqq.transfile.HttpDownloader", "downloadImage", File.class, new Class[]{
                 OutputStream.class,
                 MClass.loadClass("com.tencent.image.DownloadParams"),
                 MClass.loadClass("com.tencent.image.URLDrawableHandler"),
@@ -45,14 +46,15 @@ public class FuckDLCard{
                 URL.class
         }));
     }
+
     @VerController
     @XPExecutor(methodID = "hook")
-    public BaseXPExecutor xpWorker(){
+    public BaseXPExecutor xpWorker() {
         return param -> {
             Object paramObj = param.args[1];
-            String mUrl = MField.GetField(paramObj,"urlStr",String.class);
-            long Size =0;
-            if(!mCache.containsKey(mUrl)) {
+            String mUrl = MField.GetField(paramObj, "urlStr", String.class);
+            long Size = 0;
+            if (!mCache.containsKey(mUrl)) {
                 Size = HttpUtils.GetFileLength(mUrl);
             } else {
                 Long mLong = mCache.get(mUrl);
@@ -60,11 +62,11 @@ public class FuckDLCard{
             }
 
             //如果文件大于100M就直接停止加载并,并且缓存地址,防止重复获取大小信息消耗流量
-            if(Size>100*1024*1024 || mCache.containsKey(mUrl)) {
-                if(System.currentTimeMillis()>mStartTime+60*1000) {
-                    Utils.ShowToast("当前下载的图片可能过大,已停止加载,图片大小:"+ Utils.bytes2kb(Size));
+            if (Size > 100 * 1024 * 1024 || mCache.containsKey(mUrl)) {
+                if (System.currentTimeMillis() > mStartTime + 60 * 1000) {
+                    Utils.ShowToast("当前下载的图片可能过大,已停止加载,图片大小:" + Utils.bytes2kb(Size));
                     mStartTime = System.currentTimeMillis();
-                    mCache.put(mUrl,Size);
+                    mCache.put(mUrl, Size);
                 }
                 param.setResult(null);
             }

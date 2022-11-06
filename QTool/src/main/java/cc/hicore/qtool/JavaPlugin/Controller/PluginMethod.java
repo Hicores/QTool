@@ -22,7 +22,7 @@ import cc.hicore.qtool.QQTools.QQServletHelper;
 //插件Api直接导出方法
 public class PluginMethod {
 
-    private PluginInfo info_;
+    private final PluginInfo info_;
 
     public PluginMethod(PluginInfo cacheInfo) {
         info_ = cacheInfo;
@@ -63,9 +63,9 @@ public class PluginMethod {
     }
 
     public void sendTip(Object source, String text) {
-        if (source instanceof PluginInfo.MessageData){
+        if (source instanceof PluginInfo.MessageData) {
             QQMsgSendUtils.addTip(((PluginInfo.MessageData) source).msg, text);
-        }else {
+        } else {
             QQMsgSendUtils.addTip(source, text);
         }
 
@@ -151,9 +151,9 @@ public class PluginMethod {
     }
 
     public void revokeMsg(Object msg) {
-        if (msg instanceof PluginInfo.MessageData){
+        if (msg instanceof PluginInfo.MessageData) {
             QQMessageUtils.revokeMsg(((PluginInfo.MessageData) msg).msg);
-        }else {
+        } else {
             QQMessageUtils.revokeMsg(msg);
         }
 
@@ -184,35 +184,35 @@ public class PluginMethod {
     }
 
     public String getSkey() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Skey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Skey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName + "(" + info_.PluginID + ")")) {
             return QQTicketManager.getSkey();
         }
         return "";
     }
 
     public String getPskey(String Domain) {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Pskey(" + Domain + "),使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的Pskey(" + Domain + "),使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName + "(" + info_.PluginID + ")")) {
             return QQTicketManager.getPsKey(Domain);
         }
         return "";
     }
 
     public String getSuperkey() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的SuperKey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的SuperKey,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName + "(" + info_.PluginID + ")")) {
             return QQTicketManager.getSuperKey();
         }
         return "";
     }
 
     public String getPT4Token(String Domain) {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的PT4Token,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" +info_.PluginName+"("+info_.PluginID+")")) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的PT4Token,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName + "(" + info_.PluginID + ")")) {
             return QQTicketManager.getPt4Token(Domain);
         }
         return "";
     }
 
     public String getBKN() {
-        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的BKN,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName+"("+info_.PluginID+")")) {
+        if (SecurityAccess.checkAccess(info_.PluginID, "当前加载的脚本:" + info_.PluginName + " 正在获取你当前登录QQ的BKN,使用该Key可以进行信息获取,状态修改等操作,请确认你的脚本来源正确且没有恶意代码再允许此操作\n\n脚本ID:" + info_.PluginName + "(" + info_.PluginID + ")")) {
             return QQTicketManager.getBKN();
         }
         return "";
@@ -302,32 +302,35 @@ public class PluginMethod {
         return QQServletHelper.waitForGetDownUrl(chatMsg);
     }
 
-    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg,String ShowTag){
-        try{
-            Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
-            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
+    public void sendPackMsg(String GroupUin, String UserUin, String fakeGroup, String fakeUser, String msg, String ShowTag) {
+        try {
+            Object session = QQSessionUtils.Build_SessionInfo(GroupUin, UserUin);
+            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup, fakeUser, msg);
             List l = new ArrayList();
             l.add(packMsg);
-            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,l,session,ShowTag,"");
-        }catch (Exception e){
-            LogUtils.warning("sendPackMsg",""+e);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup, fakeUser, l, session, ShowTag, "");
+        } catch (Exception e) {
+            LogUtils.warning("sendPackMsg", "" + e);
         }
     }
-    public void sendPackMsg(String GroupUin,String UserUin,String fakeGroup,String fakeUser,String msg,String ShowTag,String fakeName){
-        try{
-            Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
-            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup,fakeUser,msg);
+
+    public void sendPackMsg(String GroupUin, String UserUin, String fakeGroup, String fakeUser, String msg, String ShowTag, String fakeName) {
+        try {
+            Object session = QQSessionUtils.Build_SessionInfo(GroupUin, UserUin);
+            Object packMsg = QQMsgBuilder.Build_Fake_Mix(fakeGroup, fakeUser, msg);
             List l = new ArrayList();
             l.add(packMsg);
-            QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,l,session,ShowTag,fakeName);
-        }catch (Exception e){
-            LogUtils.warning("sendPackMsg",""+e);
+            QQMessageUtils.sendFakeMultiMsg(fakeGroup, fakeUser, l, session, ShowTag, fakeName);
+        } catch (Exception e) {
+            LogUtils.warning("sendPackMsg", "" + e);
         }
     }
-    public void sendPackMsg(String GroupUin, String UserUin, String fakeGroup, String fakeUser, List messageList,String ShowTag,String fakeName){
-        Object session = QQSessionUtils.Build_SessionInfo(GroupUin,UserUin);
-        QQMessageUtils.sendFakeMultiMsg(fakeGroup,fakeUser,messageList,session,ShowTag,fakeName);
+
+    public void sendPackMsg(String GroupUin, String UserUin, String fakeGroup, String fakeUser, List messageList, String ShowTag, String fakeName) {
+        Object session = QQSessionUtils.Build_SessionInfo(GroupUin, UserUin);
+        QQMessageUtils.sendFakeMultiMsg(fakeGroup, fakeUser, messageList, session, ShowTag, fakeName);
     }
+
     public ClassLoader loadJar(String JarPath) throws Exception {
         if (!JarPath.startsWith("/")) {
             JarPath = info_.LocalPath + "/" + JarPath;

@@ -33,14 +33,9 @@ import cc.hicore.qtool.XposedInit.EnvHook;
 
 public class OnlinePluginItemController {
     private static final String TAG = "OnlinePluginItemController";
-    private PluginInfo cacheInfo;
-    private View cacheView;
+    private final PluginInfo cacheInfo;
+    private final View cacheView;
     private int MeasureHeight;
-
-    public static View getViewInstance(Context context, PluginInfo NewInfo) {
-        OnlinePluginItemController NewController = new OnlinePluginItemController(context, NewInfo);
-        return NewController.cacheView;
-    }
 
     private OnlinePluginItemController(Context context, PluginInfo NewInfo) {
         cacheInfo = NewInfo;
@@ -100,7 +95,7 @@ public class OnlinePluginItemController {
             @Override
             public void onGlobalLayout() {
                 ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                MeasureHeight = (int) (ll.getMeasuredHeight());
+                MeasureHeight = ll.getMeasuredHeight();
                 ll.setVisibility(View.GONE);
             }
         });
@@ -108,6 +103,11 @@ public class OnlinePluginItemController {
         initAnim();
 
 
+    }
+
+    public static View getViewInstance(Context context, PluginInfo NewInfo) {
+        OnlinePluginItemController NewController = new OnlinePluginItemController(context, NewInfo);
+        return NewController.cacheView;
     }
 
     private void initAnim() {

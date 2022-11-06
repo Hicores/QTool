@@ -38,7 +38,12 @@ public final class VoicePanelController extends BottomPopupView {
     private EasyAdapter<VoiceProvider.FileInfo> commonAdapter;
     private TextView showPath;
 
-    private ArrayList<VoiceProvider.FileInfo> resultFile = new ArrayList<>();
+    private final ArrayList<VoiceProvider.FileInfo> resultFile = new ArrayList<>();
+    private VoiceProvider cacheProvider;
+
+    public VoicePanelController(@NonNull Context context) {
+        super(context);
+    }
 
     @Override
     protected void onCreate() {
@@ -65,7 +70,7 @@ public final class VoicePanelController extends BottomPopupView {
                         QQMsgSender.sendVoice(HookEnv.SessionInfo, fileInfo.Path);
                         dismiss();
                     });
-                }else {
+                } else {
                     clickButton.setOnLongClickListener(null);
                 }
 
@@ -93,21 +98,20 @@ public final class VoicePanelController extends BottomPopupView {
 
         UpdateControlData();
     }
-    private ArrayList<String> searchVoices(String path){
+
+    private ArrayList<String> searchVoices(String path) {
         File[] fs = new File(path).listFiles();
-        if (fs == null)return new ArrayList<>();
+        if (fs == null) return new ArrayList<>();
         ArrayList<String> ret = new ArrayList<>();
-        for (File f : fs){
-            if (f.isFile()){
+        for (File f : fs) {
+            if (f.isFile()) {
                 ret.add(f.getAbsolutePath());
-            }else if (f.isDirectory()){
+            } else if (f.isDirectory()) {
                 ret.addAll(searchVoices(f.getAbsolutePath()));
             }
         }
         return ret;
     }
-
-    private VoiceProvider cacheProvider;
 
     private void initSearchBox() {
         new Handler(Looper.getMainLooper())
@@ -204,9 +208,6 @@ public final class VoicePanelController extends BottomPopupView {
             provider = VoiceProvider.getNewInstance(VoiceProvider.PROVIDER_LOCAL_FILE);
             UpdateProviderDate();
         }
-    }
-    public VoicePanelController(@NonNull Context context) {
-        super(context);
     }
 
     @Override

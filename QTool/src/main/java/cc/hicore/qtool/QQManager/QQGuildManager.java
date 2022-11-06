@@ -99,10 +99,11 @@ public class QQGuildManager {
             return null;
         }
     }
-    public static String Get_User_Name(String GuildID,String UserTinyID){
+
+    public static String Get_User_Name(String GuildID, String UserTinyID) {
         try {
             Object IGpsManager = QQEnvUtils.GetIGpsManager();
-            return MMethod.CallMethodParams(IGpsManager, "getGuildMemberName", String.class, GuildID,UserTinyID);
+            return MMethod.CallMethodParams(IGpsManager, "getGuildMemberName", String.class, GuildID, UserTinyID);
         } catch (Exception e) {
             return UserTinyID;
         }

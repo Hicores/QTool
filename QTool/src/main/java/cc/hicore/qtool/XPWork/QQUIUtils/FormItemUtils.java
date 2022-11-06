@@ -1,7 +1,6 @@
 package cc.hicore.qtool.XPWork.QQUIUtils;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import cc.hicore.LogUtils.LogUtils;

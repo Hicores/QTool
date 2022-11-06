@@ -27,12 +27,13 @@ public class CommonHookLoaderDialog {
     private final Context mContext;
     private TextView progressTitle;
     private ProgressBar progressBar;
-    private CenterPopupView popupView;
+    private final CenterPopupView popupView;
     private BasePopupView popupDialog;
-    public CommonHookLoaderDialog(Context context){
+
+    public CommonHookLoaderDialog(Context context) {
         mContext = context;
         releaseJsonFile();
-        popupView = new CenterPopupView(ContextFixUtil.getFixContext(context)){
+        popupView = new CenterPopupView(ContextFixUtil.getFixContext(context)) {
             @Override
             protected int getImplLayoutId() {
                 return R.layout.loading_progress;
@@ -44,11 +45,11 @@ public class CommonHookLoaderDialog {
 
                 LinearLayout root = findViewById(R.id.All_Root);
                 LottieAnimationView animationView = new LottieAnimationView(getContext());
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(),150),Utils.dip2px(getContext(),150));
-                params.topMargin = Utils.dip2px(getContext(),16);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Utils.dip2px(getContext(), 150), Utils.dip2px(getContext(), 150));
+                params.topMargin = Utils.dip2px(getContext(), 16);
                 params.gravity = Gravity.CENTER_HORIZONTAL;
-                root.addView(animationView,1,params);
-                animationView.setAnimationFromJson(FileUtils.ReadFileString(mContext.getCacheDir()+"/loading.json"),null);
+                root.addView(animationView, 1, params);
+                animationView.setAnimationFromJson(FileUtils.ReadFileString(mContext.getCacheDir() + "/loading.json"), null);
                 animationView.setRepeatCount(-1);
                 animationView.playAnimation();
 
@@ -72,33 +73,37 @@ public class CommonHookLoaderDialog {
             }
         };
     }
-    public void showDialog(){
+
+    public void showDialog() {
         popupDialog = new XPopup.Builder(ContextFixUtil.getFixContext(mContext))
                 .dismissOnBackPressed(false)
                 .dismissOnTouchOutside(false)
                 .asCustom(popupView);
         popupDialog.show();
     }
-    public void destroyDialog(){
-        if (popupDialog != null){
+
+    public void destroyDialog() {
+        if (popupDialog != null) {
             popupDialog.dismiss();
         }
     }
-    public void updateProgress(int current,int max){
-        Utils.PostToMain(()->{
-            progressTitle.setText(current+"/"+max);
+
+    public void updateProgress(int current, int max) {
+        Utils.PostToMain(() -> {
+            progressTitle.setText(current + "/" + max);
             progressBar.setMax(max);
             progressBar.setProgress(current);
         });
     }
-    private void releaseJsonFile(){
+
+    private void releaseJsonFile() {
         try {
             ZipInputStream zIns = new ZipInputStream(new FileInputStream(HookEnv.ToolApkPath));
             ZipEntry entry;
-            while ((entry = zIns.getNextEntry()) != null){
-                if (entry.getName().equals("assets/loading.json")){
-                    FileOutputStream out = new FileOutputStream(mContext.getCacheDir()+"/loading.json");
-                    DataUtils.CopyStream(zIns,out);
+            while ((entry = zIns.getNextEntry()) != null) {
+                if (entry.getName().equals("assets/loading.json")) {
+                    FileOutputStream out = new FileOutputStream(mContext.getCacheDir() + "/loading.json");
+                    DataUtils.CopyStream(zIns, out);
                     out.close();
                     break;
                 }

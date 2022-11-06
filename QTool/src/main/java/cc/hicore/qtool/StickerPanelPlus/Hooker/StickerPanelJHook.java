@@ -39,17 +39,16 @@ import cc.hicore.qtool.QQTools.QQDecodeUtils.DecodeForEncPic;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.PanelUtils;
-import de.robv.android.xposed.XposedBridge;
 
 /*
 注入主界面选项菜单,同时在菜单勾选时请求三个钩子的挂钩确认
  */
 @SuppressLint("ResourceType")
-@XPItem(name = "表情面板#2",itemType = XPItem.ITEM_Hook)
+@XPItem(name = "表情面板#2", itemType = XPItem.ITEM_Hook)
 public class StickerPanelJHook {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "表情面板#2";
         ui.groupName = "聊天辅助";
@@ -58,53 +57,59 @@ public class StickerPanelJHook {
         ui.targetID = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getMethod(MethodContainer container){
+    public void getMethod(MethodContainer container) {
         Method[] m = new Method[9];
-        container.addMethod("common_icon_create",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
+        container.addMethod("common_icon_create", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.panel.PanelIconLinearLayout",
                 null, void.class, new Class[]{MClass.loadClass("com.tencent.mobileqq.activity.aio.core.BaseChatPie")}));
-        container.addMethod("pic_item_menu_inject",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder")));
-        container.addMethod("pic_item_menu_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", null, void.class, new Class[]{
+        container.addMethod("pic_item_menu_inject", QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder")));
+        container.addMethod("pic_item_menu_click", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.BasePicItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
-        container.addMethod("mix_item_menu_inject",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder")));
-        container.addMethod("mix_item_meun_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", null, void.class, new Class[]{
+        container.addMethod("mix_item_menu_inject", QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder")));
+        container.addMethod("mix_item_meun_click", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MixedMsgItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
         container.addMethod("marker_item_menu_inject", QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder")));
-        container.addMethod("marker_item_menu_click",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", null, void.class, new Class[]{
+        container.addMethod("marker_item_menu_click", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.MarketFaceItemBuilder", null, void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getPanelIconCreateMethod_8893(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create","initui() simple mode  bottomMargin 1 = ",m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.helper")));
+    public void getPanelIconCreateMethod_8893(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("simple_emo_icon_create", "initui() simple mode  bottomMargin 1 = ", m -> m.getDeclaringClass().getName().startsWith("com.tencent.mobileqq.activity.aio.helper")));
 
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_3)
     @MethodScanner
-    public void getGuildPanelHookMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","em_aio_input_box",m->m.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent")));
+    public void getGuildPanelHookMethod(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create", "em_aio_input_box", m -> m.getDeclaringClass().getName().equals("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent")));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_3)
     @MethodScanner
-    public void getGuildPanelHookMethod_893(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create","mEmojiLayout.findViewByI…id.guild_aio_emoji_image)",m->((Method)m).getReturnType().equals(View.class)));
+    public void getGuildPanelHookMethod_893(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("guild_emo_icon_create", "mEmojiLayout.findViewByI…id.guild_aio_emoji_image)", m -> ((Method) m).getReturnType().equals(View.class)));
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getPanelIconCreateMethod(MethodContainer container){
-        container.addMethod("simple_emo_icon_create",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
-        container.addMethod("guild_emo_icon_create",MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]));
+    public void getPanelIconCreateMethod(MethodContainer container) {
+        container.addMethod("simple_emo_icon_create", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
+        container.addMethod("guild_emo_icon_create", MMethod.FindMethod("com.tencent.mobileqq.guild.chatpie.helper.GuildInputBarCommonComponent", "b", void.class, new Class[0]));
 
     }
+
     @VerController
-    @XPExecutor(methodID = "common_icon_create",period = XPExecutor.After)
-    public BaseXPExecutor inject_emo_bar(){
+    @XPExecutor(methodID = "common_icon_create", period = XPExecutor.After)
+    public BaseXPExecutor inject_emo_bar() {
         return param -> {
             LinearLayout l = (LinearLayout) param.thisObject;
-            if (l.findViewById(11223366)!=null)return;
+            if (l.findViewById(11223366) != null) return;
             View v = l.getChildAt(2);
-            if (v == null)return;
+            if (v == null) return;
             ResUtils.StartInject(v.getContext());
             ImageView image = new ImageView(v.getContext());
             image.setImageResource(R.drawable.huaji);
@@ -116,9 +121,10 @@ public class StickerPanelJHook {
             //image.setOnClickListener(vxx -> ICreator.createPanel(image.getContext()));
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "pic_item_menu_inject",period = XPExecutor.After)
-    public BaseXPExecutor inject_pic_menu_builder(){
+    @XPExecutor(methodID = "pic_item_menu_inject", period = XPExecutor.After)
+    public BaseXPExecutor inject_pic_menu_builder() {
         return param -> {
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
@@ -130,9 +136,10 @@ public class StickerPanelJHook {
             param.setResult(ret);
         };
     }
+
     @VerController
     @XPExecutor(methodID = "pic_item_menu_click")
-    public BaseXPExecutor inject_pic_menu_click(){
+    public BaseXPExecutor inject_pic_menu_click() {
         return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
@@ -144,9 +151,10 @@ public class StickerPanelJHook {
             }
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "mix_item_menu_inject",period = XPExecutor.After)
-    public BaseXPExecutor inject_mix_menu_builder(){
+    @XPExecutor(methodID = "mix_item_menu_inject", period = XPExecutor.After)
+    public BaseXPExecutor inject_mix_menu_builder() {
         return param -> {
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
@@ -158,9 +166,10 @@ public class StickerPanelJHook {
             param.setResult(ret);
         };
     }
+
     @VerController
     @XPExecutor(methodID = "mix_item_meun_click")
-    public BaseXPExecutor inject_mix_menu_click(){
+    public BaseXPExecutor inject_mix_menu_click() {
         return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
@@ -188,9 +197,10 @@ public class StickerPanelJHook {
             }
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "marker_item_menu_inject",period = XPExecutor.After)
-    public BaseXPExecutor inject_market_menu_builder(){
+    @XPExecutor(methodID = "marker_item_menu_inject", period = XPExecutor.After)
+    public BaseXPExecutor inject_market_menu_builder() {
         return param -> {
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
@@ -202,9 +212,10 @@ public class StickerPanelJHook {
             param.setResult(ret);
         };
     }
+
     @VerController
     @XPExecutor(methodID = "marker_item_menu_click")
-    public BaseXPExecutor inject_marker_menu_click(){
+    public BaseXPExecutor inject_marker_menu_click() {
         return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
@@ -216,9 +227,10 @@ public class StickerPanelJHook {
             }
         };
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_3)
     @XPExecutor(methodID = "guild_emo_icon_create")
-    public BaseXPExecutor guild_emo_button(){
+    public BaseXPExecutor guild_emo_button() {
         return param -> {
             new Handler(Looper.getMainLooper())
                     .postDelayed(() -> {
@@ -243,14 +255,15 @@ public class StickerPanelJHook {
                     }, 200);
         };
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_3)
-    @XPExecutor(methodID = "guild_emo_icon_create",period = XPExecutor.After)
-    public BaseXPExecutor guild_emo_button_893(){
+    @XPExecutor(methodID = "guild_emo_icon_create", period = XPExecutor.After)
+    public BaseXPExecutor guild_emo_button_893() {
         return param -> {
             ViewGroup vg = (ViewGroup) param.getResult();
-            for (int i=0;i<vg.getChildCount();i++){
+            for (int i = 0; i < vg.getChildCount(); i++) {
                 View v = vg.getChildAt(i);
-                if (v instanceof ImageView){
+                if (v instanceof ImageView) {
                     v.setOnLongClickListener(v1 -> {
                         ICreator.createPanel(v1.getContext());
                         return true;
@@ -259,9 +272,10 @@ public class StickerPanelJHook {
             }
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "simple_emo_icon_create",period = XPExecutor.After)
-    public BaseXPExecutor simple_mode_emo_button(){
+    @XPExecutor(methodID = "simple_emo_icon_create", period = XPExecutor.After)
+    public BaseXPExecutor simple_mode_emo_button() {
         return param -> {
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 1);
             if (button != null) {

@@ -3,7 +3,6 @@ package cc.hicore.qtool.QQMessage;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -108,11 +107,11 @@ public class QQMsgSender {
     }
 
     public static void sendMix(Object _Session, Object mixRecord) {
-        ApiHelper.invoke(MsgApi_sendMix.class,_Session,mixRecord);
+        ApiHelper.invoke(MsgApi_sendMix.class, _Session, mixRecord);
     }
 
     public static void sendReply(Object _Session, Object replyRecord) {
-        ApiHelper.invoke(MsgApi_sendReply.class,_Session,replyRecord);
+        ApiHelper.invoke(MsgApi_sendReply.class, _Session, replyRecord);
     }
 
     public static void sendTuya(Object _Session, Object strikeMsg) {
@@ -178,8 +177,9 @@ public class QQMsgSender {
     }
 
     public static void sendAntEmo(Object _Session, int ID) {
-        ApiHelper.invoke(MsgApi_sentAntEmo.class,_Session,ID);
+        ApiHelper.invoke(MsgApi_sentAntEmo.class, _Session, ID);
     }
+
     public static void QQ_Forward_ShortVideo(Object _SessionInfo, Object ChatMessage) {
         try {
             MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade"), null, void.class, new Class[]{

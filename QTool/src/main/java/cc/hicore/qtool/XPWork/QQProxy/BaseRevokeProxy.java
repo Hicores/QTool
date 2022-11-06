@@ -17,22 +17,24 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 
-@XPItem(name = "BaseRevokeProxy",itemType = XPItem.ITEM_Hook)
-public class BaseRevokeProxy{
+@XPItem(name = "BaseRevokeProxy", itemType = XPItem.ITEM_Hook)
+public class BaseRevokeProxy {
     private static final String TAG = "BaseRevokeProxy";
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook1",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"), null, void.class, new Class[]{
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook1", MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.QQMessageFacade"), null, void.class, new Class[]{
                 ArrayList.class, boolean.class
         }));
-        container.addMethod("hook2",MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), null, void.class, new Class[]{
+        container.addMethod("hook2", MMethod.FindMethod(MClass.loadClass("com.tencent.imcore.message.BaseMessageManager"), null, void.class, new Class[]{
                 ArrayList.class
         }));
     }
+
     @VerController
     @XPExecutor(methodID = "hook1")
-    public BaseXPExecutor hook_1(){
+    public BaseXPExecutor hook_1() {
         return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
             if (msgList == null || msgList.isEmpty()) return;
@@ -65,9 +67,10 @@ public class BaseRevokeProxy{
             }
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook2")
-    public BaseXPExecutor hook_2(){
+    public BaseXPExecutor hook_2() {
         return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
             if (msgList == null || msgList.isEmpty()) return;
@@ -92,7 +95,8 @@ public class BaseRevokeProxy{
             }
         };
     }
-    public static class Table_RevokeInfo_Field{
+
+    public static class Table_RevokeInfo_Field {
         public static Class RevokeMsgInfo() {
             return MClass.loadClass("com.tencent.mobileqq.revokemsg.RevokeMsgInfo");
         }
@@ -107,31 +111,31 @@ public class BaseRevokeProxy{
 
         public static Field OpUin() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(RevokeMsgInfo(), "b", String.class) :
-                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "d", String.class):
-                            MField.FindField(RevokeMsgInfo(),"h",String.class);
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "d", String.class) :
+                            MField.FindField(RevokeMsgInfo(), "h", String.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         public static Field Sender() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(RevokeMsgInfo(), "d", String.class) :
-                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "h", String.class):
-                            MField.FindField(RevokeMsgInfo(),"n",String.class);
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "h", String.class) :
+                            MField.FindField(RevokeMsgInfo(), "n", String.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         public static Field IsTroop() {
-            Field f = HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "a", int.class):
-                    MField.FindField(RevokeMsgInfo(),"e",int.class);;
+            Field f = HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "a", int.class) :
+                    MField.FindField(RevokeMsgInfo(), "e", int.class);
             if (f != null) f.setAccessible(true);
             return f;
         }
 
         public static Field shmsgseq() {
             Field f = HostInfo.getVerCode() < 5670 ? MField.FindField(RevokeMsgInfo(), "a", long.class) :
-                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "b", long.class):
-                            MField.FindField(RevokeMsgInfo(),"f",long.class);;
+                    HostInfo.getVerCode() < 8000 ? MField.FindField(RevokeMsgInfo(), "b", long.class) :
+                            MField.FindField(RevokeMsgInfo(), "f", long.class);
             if (f != null) f.setAccessible(true);
             return f;
         }

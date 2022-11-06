@@ -11,19 +11,7 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 
 public class RecentStickerHelper {
-    public static class RecentItemInfo{
-        public String MD5;
-        public String fileName;
-        public String url;
-        public String thumbName;
-        public String thumbUrl;
-
-
-        public long addTime;
-        public int type;
-        public String pathName;
-    }
-    public static List<RecentItemInfo> getAllRecentRecord(){
+    public static List<RecentItemInfo> getAllRecentRecord() {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/recent.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -44,23 +32,25 @@ public class RecentStickerHelper {
                 items.add(localPath);
             }
             return items;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
-    public static void cleanAllRecentRecord(){
+
+    public static void cleanAllRecentRecord() {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/recent.json";
             JSONObject pathJson = new JSONObject();
             JSONArray pathList = new JSONArray();
             pathJson.put("items", pathList);
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private static void createIfFileNotContain(){
+
+    private static void createIfFileNotContain() {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/recent.json";
             if (!new File(pathSetDir).exists()) {
@@ -69,11 +59,12 @@ public class RecentStickerHelper {
                 pathJson.put("items", pathList);
                 FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void addPicItemToRecentRecord(LocalDataHelper.LocalPath bandPath,LocalDataHelper.LocalPicItems item){
+
+    public static void addPicItemToRecentRecord(LocalDataHelper.LocalPath bandPath, LocalDataHelper.LocalPicItems item) {
         try {
             createIfFileNotContain();
             removeContainOrLast(item);
@@ -95,11 +86,12 @@ public class RecentStickerHelper {
             pathJson.put("items", pathList);
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static void addPicItemToRecentRecord(RecentItemInfo itemInfo){
+
+    public static void addPicItemToRecentRecord(RecentItemInfo itemInfo) {
         try {
             createIfFileNotContain();
             removeContainOrLast(itemInfo);
@@ -123,18 +115,19 @@ public class RecentStickerHelper {
             pathJson.put("items", pathList);
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private static void removeContainOrLast(LocalDataHelper.LocalPicItems item){
+
+    private static void removeContainOrLast(LocalDataHelper.LocalPicItems item) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/recent.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if (path.getString("MD5").equals(item.MD5)){
+                if (path.getString("MD5").equals(item.MD5)) {
                     pathList.remove(i);
                     pathJson.put("items", pathList);
                     FileUtils.WriteToFile(pathSetDir, pathJson.toString());
@@ -142,37 +135,51 @@ public class RecentStickerHelper {
                 }
             }
 
-            if (pathList.length() >= 30){
+            if (pathList.length() >= 30) {
                 pathList.remove(0);
                 pathJson.put("items", pathList);
                 FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private static void removeContainOrLast(RecentItemInfo item){
+
+    private static void removeContainOrLast(RecentItemInfo item) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/recent.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if (path.getString("MD5").equals(item.MD5)){
+                if (path.getString("MD5").equals(item.MD5)) {
                     pathList.remove(i);
                     pathJson.put("items", pathList);
                     FileUtils.WriteToFile(pathSetDir, pathJson.toString());
                     return;
                 }
             }
-            if (pathList.length() >= 30){
+            if (pathList.length() >= 30) {
                 pathList.remove(0);
                 pathJson.put("items", pathList);
                 FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static class RecentItemInfo {
+        public String MD5;
+        public String fileName;
+        public String url;
+        public String thumbName;
+        public String thumbUrl;
+
+
+        public long addTime;
+        public int type;
+        public String pathName;
     }
 }

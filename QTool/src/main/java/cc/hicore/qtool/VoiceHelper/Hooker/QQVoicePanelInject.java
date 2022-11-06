@@ -34,11 +34,11 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
 import cc.hicore.qtool.VoiceHelper.Panel.VoicePanel;
 
-@XPItem(name = "语音面板",itemType = XPItem.ITEM_Hook)
-public class QQVoicePanelInject{
+@XPItem(name = "语音面板", itemType = XPItem.ITEM_Hook)
+public class QQVoicePanelInject {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "语音面板";
         ui.desc = "在QQ的发送语音界面点击打开";
@@ -47,47 +47,53 @@ public class QQVoicePanelInject{
         ui.groupName = "聊天辅助";
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
+    public void getHookMethod(MethodContainer container) {
         Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.aio.audiopanel.PressToSpeakPanel");
         for (Constructor<?> cons : clz.getDeclaredConstructors()) {
             if (cons.getParameterCount() == 2) {
                 if (cons.getParameterTypes()[0] == Context.class && cons.getParameterTypes()[1] == AttributeSet.class) {
                     cons.setAccessible(true);
-                    container.addMethod("hook_1",cons);
+                    container.addMethod("hook_1", cons);
                 }
             }
         }
-        container.addMethod("hook_2",QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder")));
-        container.addMethod("hook_3",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.PttItemBuilder", "a", void.class, new Class[]{
+        container.addMethod("hook_2", QQReflect.GetItemBuilderMenuBuilder(MClass.loadClass("com.tencent.mobileqq.activity.aio.item.PttItemBuilder")));
+        container.addMethod("hook_3", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.item.PttItemBuilder", "a", void.class, new Class[]{
                 int.class, Context.class, MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")}));
 
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getSimpleInit(MethodContainer container){
-        container.addMethod("hook_4",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
+    public void getSimpleInit(MethodContainer container) {
+        container.addMethod("hook_4", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.SimpleUIAIOHelper", "a", void.class, new Class[0]));
     }
-    @VerController(targetVer = QQVersion.QQ_8_9_0,max_targetVer = QQVersion.QQ_8_9_3)
+
+    @VerController(targetVer = QQVersion.QQ_8_9_0, max_targetVer = QQVersion.QQ_8_9_3)
     @MethodScanner
-    public void getSimpleInit_890(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
+    public void getSimpleInit_890(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4", "initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
     }
-    @VerController(targetVer = QQVersion.QQ_8_9_3,max_targetVer = QQVersion.QQ_8_9_8)
+
+    @VerController(targetVer = QQVersion.QQ_8_9_3, max_targetVer = QQVersion.QQ_8_9_8)
     @MethodScanner
-    public void getSimpleInit_893(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
+    public void getSimpleInit_893(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4", "initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "A", void.class, new Class[0])));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_8)
     @MethodScanner
-    public void getSimpleInit_898(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4","initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "C", void.class, new Class[0])));
+    public void getSimpleInit_898(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4", "initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "C", void.class, new Class[0])));
     }
+
     @SuppressLint("ResourceType")
     @VerController
-    @XPExecutor(methodID = "hook_1",period = XPExecutor.After)
-    public BaseXPExecutor worker_1(){
+    @XPExecutor(methodID = "hook_1", period = XPExecutor.After)
+    public BaseXPExecutor worker_1() {
         return param -> {
             int mSpeakID = HookEnv.AppContext.getResources().getIdentifier("press_to_speak_iv", "id", HookEnv.AppContext.getPackageName());
             RelativeLayout RLayout = (RelativeLayout) param.thisObject;
@@ -110,14 +116,15 @@ public class QQVoicePanelInject{
             params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ABOVE, 889565);
             params.addRule(RelativeLayout.CENTER_HORIZONTAL, 1);
-            RLayout.addView(tipView,-1,params);
+            RLayout.addView(tipView, -1, params);
 
             image.setOnClickListener(v -> VoicePanel.createVoicePanel());
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "hook_2",period = XPExecutor.After)
-    public BaseXPExecutor worker_2(){
+    @XPExecutor(methodID = "hook_2", period = XPExecutor.After)
+    public BaseXPExecutor worker_2() {
         return param -> {
             Object arr = param.getResult();
             Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
@@ -129,9 +136,10 @@ public class QQVoicePanelInject{
             param.setResult(ret);
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_3")
-    public BaseXPExecutor worker_3(){
+    public BaseXPExecutor worker_3() {
         return param -> {
             int InvokeID = (int) param.args[0];
             Context mContext = (Context) param.args[1];
@@ -142,9 +150,10 @@ public class QQVoicePanelInject{
             }
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "hook_4",period = XPExecutor.After)
-    public BaseXPExecutor worker_4(){
+    @XPExecutor(methodID = "hook_4", period = XPExecutor.After)
+    public BaseXPExecutor worker_4() {
         return param -> {
             View button = MField.GetRoundField(param.thisObject, param.thisObject.getClass(), ImageButton.class, 0);
             if (button != null) {

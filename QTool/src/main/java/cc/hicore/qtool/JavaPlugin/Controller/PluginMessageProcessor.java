@@ -21,9 +21,11 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 
 public class PluginMessageProcessor {
-    static HashMap<String, String> fileDLCache = new HashMap<>();
     private static final ExecutorService messageProcessor = Executors.newSingleThreadExecutor();
-    private static final ExecutorService pluginDispatcher = Executors.newSingleThreadExecutor();{
+    private static final ExecutorService pluginDispatcher = Executors.newSingleThreadExecutor();
+    static HashMap<String, String> fileDLCache = new HashMap<>();
+
+    {
         messageProcessor.submit(() -> Thread.currentThread().setName("QTool_MessageProcessor"));
     }
 
@@ -85,7 +87,7 @@ public class PluginMessageProcessor {
                 } catch (Exception e) {
                 }
                 data.mAtList = mAtList;
-                data.AtList = (String[]) mAtList.toArray(new String[0]);
+                data.AtList = mAtList.toArray(new String[0]);
             } else if (clzName.equals("MessageForPic")) {
                 data.MessageType = 1;
                 String PicMd5 = MField.GetField(msg, "md5", String.class);
@@ -147,7 +149,7 @@ public class PluginMessageProcessor {
             submit2(() -> PluginController.onMessage(early, data));
 
         } catch (Exception e) {
-            LogUtils.error("MessageDecoder0", new RuntimeException("Can't decode msg:(" + msg.getClass().getName() + ")",e));
+            LogUtils.error("MessageDecoder0", new RuntimeException("Can't decode msg:(" + msg.getClass().getName() + ")", e));
         }
 
     }
@@ -246,7 +248,7 @@ public class PluginMessageProcessor {
                 } catch (Exception e) {
                 }
                 data.mAtList = mAtList;
-                data.AtList = (String[]) mAtList.toArray(new String[0]);
+                data.AtList = mAtList.toArray(new String[0]);
             } else if (clzName.equals("MessageForPic")) {
                 data.MessageType = 1;
                 String PicMd5 = MField.GetField(msg, "md5", String.class);
@@ -312,7 +314,7 @@ public class PluginMessageProcessor {
                 PluginController.checkAndInvoke(data.GroupUin, "onRevokeMsg", data);
             }
         } catch (Exception e) {
-            LogUtils.error("MessageDecoder1", new RuntimeException("Can't decode msg:(" + msg.getClass().getName() + ")",e));
+            LogUtils.error("MessageDecoder1", new RuntimeException("Can't decode msg:(" + msg.getClass().getName() + ")", e));
         }
     }
 

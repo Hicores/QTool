@@ -46,11 +46,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = getPackageManager();
         ComponentName componentName = new ComponentName(this, "cc.hicore.qtool.MainActivity");
         ComponentName HideName = new ComponentName(this, "cc.hicore.qtool.MainActivity.Hide");
-        if (pm.getComponentEnabledSetting(HideName) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            hide_main_icon.setChecked(true);
-        } else {
-            hide_main_icon.setChecked(false);
-        }
+        hide_main_icon.setChecked(pm.getComponentEnabledSetting(HideName) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
         hide_main_icon.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 pm.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);

@@ -20,7 +20,7 @@ import cc.hicore.Utils.Utils;
 public class FixWhileLine {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "修补屏幕下方小白条";
         ui.groupName = "其他选项";
@@ -28,23 +28,25 @@ public class FixWhileLine {
         ui.type = 1;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void findMethod(MethodContainer container){
+    public void findMethod(MethodContainer container) {
         Finders.BaseChatPieInit(container);
     }
 
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void findMethod_8893(MethodContainer container){
+    public void findMethod_8893(MethodContainer container) {
         Finders.BaseChatPieInit_8893(container);
     }
+
     @VerController
-    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
-    public BaseXPExecutor doXPHook(){
+    @XPExecutor(methodID = "basechatpie_init", period = XPExecutor.After)
+    public BaseXPExecutor doXPHook() {
         return param -> {
             Activity act = Utils.getTopActivity();
-            if (act != null){
+            if (act != null) {
                 Window window = act.getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(Color.TRANSPARENT);

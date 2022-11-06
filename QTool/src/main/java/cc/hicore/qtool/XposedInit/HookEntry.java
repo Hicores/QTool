@@ -15,6 +15,19 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     private static StartupParam cacheParam;
 
+    private static void InjectClassLoader(ClassLoader qLoader) {
+        try {
+            ClassLoader currentLoader = HookEntry.class.getClassLoader();
+            Field parentF = ClassLoader.class.getDeclaredField("parent");
+            parentF.setAccessible(true);
+            ClassLoader parent = (ClassLoader) parentF.get(currentLoader);
+            MyFixClassLoader newFixLoader = new MyFixClassLoader(parent, qLoader);
+            parentF.set(currentLoader, newFixLoader);
+        } catch (Throwable e) {
+            XposedBridge.log(e);
+        }
+    }
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if (lpparam.isFirstApplication) {
@@ -40,7 +53,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
             XposedBridge.log("[QTool]Load from normal mode.");
 
             FixSubLoadClass.loadZygote(cacheParam);
-            FixSubLoadClass.loadPackage(lpparam,null);
+            FixSubLoadClass.loadPackage(lpparam, null);
         }
 
 
@@ -52,7 +65,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
     }
 
     public static class FixSubLoadClass {
-        public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam,ClassLoader subClassLoader) {
+        public static void loadPackage(XC_LoadPackage.LoadPackageParam lpparam, ClassLoader subClassLoader) {
             if (lpparam.packageName.equals("com.tencent.mobileqq")) {
                 HookEnv.AppPath = lpparam.appInfo.dataDir;
                 HookEnv.SubClassLoader = subClassLoader;
@@ -60,34 +73,24 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
                 HookEnv.ProcessName = lpparam.processName;
                 HookEnv.mLoader = lpparam.classLoader;
                 HookEnv.AppApkPath = lpparam.appInfo.sourceDir;
-                XposedBridge.log("startup module from:"+HookEnv.ToolApkPath);
+                XposedBridge.log("startup module from:" + HookEnv.ToolApkPath);
 
                 EzXHelperInit.INSTANCE.initHandleLoadPackage(lpparam);
 
                 EnvHook.HookForContext();
             }
         }
+
         public static void loadZygote(StartupParam startupParam) {
             HookEnv.ToolApkPath = startupParam.modulePath;
             EzXHelperInit.INSTANCE.initZygote(startupParam);
         }
     }
-    private static void InjectClassLoader(ClassLoader qLoader) {
-        try {
-            ClassLoader currentLoader = HookEntry.class.getClassLoader();
-            Field parentF = ClassLoader.class.getDeclaredField("parent");
-            parentF.setAccessible(true);
-            ClassLoader parent = (ClassLoader) parentF.get(currentLoader);
-            MyFixClassLoader newFixLoader = new MyFixClassLoader(parent,qLoader);
-            parentF.set(currentLoader, newFixLoader);
-        } catch (Throwable e) {
-            XposedBridge.log(e);
-        }
-    }
 
     private static class MyFixClassLoader extends ClassLoader {
         ClassLoader QLoader;
-        protected MyFixClassLoader(ClassLoader parent,ClassLoader QLoader) {
+
+        protected MyFixClassLoader(ClassLoader parent, ClassLoader QLoader) {
             super(parent);
             this.QLoader = QLoader;
         }
@@ -96,7 +99,7 @@ public class HookEntry implements IXposedHookLoadPackage, IXposedHookZygoteInit 
         protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             try {
                 return super.loadClass(name, resolve);
-            }catch (Exception e){
+            } catch (Exception e) {
                 return QLoader.loadClass(name);
             }
 

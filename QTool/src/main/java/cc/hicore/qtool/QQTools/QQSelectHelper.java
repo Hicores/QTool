@@ -14,7 +14,6 @@ import android.graphics.drawable.DrawableWrapper;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -51,28 +50,17 @@ import cc.hicore.qtool.R;
  */
 public class QQSelectHelper {
 
-    public interface onSelected {
-        void onGroupSelect(ArrayList<String> uin);
-
-        void onFriendSelect(ArrayList<String> uin);
-
-        void onGuildSelect(HashMap<String, HashSet<String>> guilds);
-
-        void onAllSelected();
-    }
-
-    private boolean isShowTroop;
-    private boolean isShowFriend;
-    private boolean isShowGuild;
-    private Context mContext;
     LayoutInflater inflater = null;
     LinearLayout mContainer;
-
+    private final boolean isShowTroop;
+    private final boolean isShowFriend;
+    private final boolean isShowGuild;
+    private final Context mContext;
     private int CurrentType = 0;
-
     private ArrayList<String> selectGroup = new ArrayList<>();
     private ArrayList<String> selectFriend = new ArrayList<>();
     private HashMap<String, HashSet<String>> selectGuild = new HashMap<>();
+    private List<CheckBox> checkBoxs;
 
     public QQSelectHelper(Context context, boolean isTroop, boolean isFriend, boolean isGuild) {
         mContext = context;
@@ -92,8 +80,6 @@ public class QQSelectHelper {
     public void setSelectedGuildChannel(HashMap<String, HashSet<String>> selectGuild) {
         this.selectGuild = selectGuild;
     }
-
-    private List<CheckBox> checkBoxs;
 
     private void SwitchToGroup() {
         mContainer.removeAllViews();
@@ -217,11 +203,11 @@ public class QQSelectHelper {
                         ((RadioButton) findViewById(R.id.select_guild)).setChecked(true);
 
                     if (!isShowTroop)
-                        ((RadioButton) findViewById(R.id.select_group)).setVisibility(GONE);
+                        findViewById(R.id.select_group).setVisibility(GONE);
                     if (!isShowFriend)
-                        ((RadioButton) findViewById(R.id.select_friend)).setVisibility(GONE);
+                        findViewById(R.id.select_friend).setVisibility(GONE);
                     if (!isShowGuild)
-                        ((RadioButton) findViewById(R.id.select_guild)).setVisibility(GONE);
+                        findViewById(R.id.select_guild).setVisibility(GONE);
 
                     if (defTab == 1) {
                         SwitchToGroup();
@@ -284,9 +270,19 @@ public class QQSelectHelper {
 
     }
 
+    public interface onSelected {
+        void onGroupSelect(ArrayList<String> uin);
+
+        void onFriendSelect(ArrayList<String> uin);
+
+        void onGuildSelect(HashMap<String, HashSet<String>> guilds);
+
+        void onAllSelected();
+    }
+
     @SuppressLint("AppCompatCustomView")
     public static class RoundImageView extends ImageView {
-        private static ExecutorService dlPool = Executors.newFixedThreadPool(16);
+        private static final ExecutorService dlPool = Executors.newFixedThreadPool(16);
         private Paint mPaint;
         private Matrix mMatrix;
 

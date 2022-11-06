@@ -19,9 +19,10 @@ import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQMsgSender;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 
-@XPItem(name = "Build_Common_Reply",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Build_Common_Reply", itemType = XPItem.ITEM_Api)
 public class Build_Common_Reply {
     CoreLoader.XPItemInfo info;
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void sendReply_(String GroupUin, Object source, String mixText) throws Exception {
@@ -53,6 +54,7 @@ public class Build_Common_Reply {
             QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin, ""), Builded);
         }
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void sendReply_890(String GroupUin, Object source, String mixText) throws Exception {
@@ -79,10 +81,11 @@ public class Build_Common_Reply {
             QQMsgSender.sendReply(QQSessionUtils.Build_SessionInfo(GroupUin, ""), Builded);
         }
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void findMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("invoke","generateSourceInfo sender uin exception:",m->true));
-        container.addMethod(MethodFinderBuilder.newFinderByString("builderMethod","createMsgRecordFromDB", m->true));
+    public void findMethod(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("invoke", "generateSourceInfo sender uin exception:", m -> true));
+        container.addMethod(MethodFinderBuilder.newFinderByString("builderMethod", "createMsgRecordFromDB", m -> true));
     }
 }

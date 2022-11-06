@@ -35,11 +35,11 @@ import cc.hicore.qtool.R;
 import cc.hicore.qtool.XPWork.QQProxy.BaseRevokeProxy;
 
 @SuppressLint("ResourceType")
-@XPItem(name = "消息防撤回",itemType = XPItem.ITEM_Hook)
-public class PreventRevoke{
+@XPItem(name = "消息防撤回", itemType = XPItem.ITEM_Hook)
+public class PreventRevoke {
     @UIItem
     @VerController
-    public UIInfo getUIInfo(){
+    public UIInfo getUIInfo() {
         UIInfo ui = new UIInfo();
         ui.groupName = "聊天界面增强";
         ui.name = "消息防撤回";
@@ -47,47 +47,53 @@ public class PreventRevoke{
         ui.targetID = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getMethod_1(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade",null,void.class,new Class[]{
-                ArrayList.class,boolean.class
+    public void getMethod_1(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethod("com.tencent.imcore.message.QQMessageFacade", null, void.class, new Class[]{
+                ArrayList.class, boolean.class
         }));
 
-        container.addMethod("hook_3",MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager",null,void.class,new Class[]{
+        container.addMethod("hook_3", MMethod.FindMethod("com.tencent.imcore.message.BaseMessageManager", null, void.class, new Class[]{
                 ArrayList.class
         }));
 
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getViewAdapter(MethodContainer container){
+    public void getViewAdapter(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView(container);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getViewAdapter_890(MethodContainer container){
+    public void getViewAdapter_890(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView_890(container);
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getAIORevokeHelper(MethodContainer container){
-        container.addMethod("hook_4",MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper","c",void.class,new Class[]{
+    public void getAIORevokeHelper(MethodContainer container) {
+        container.addMethod("hook_4", MMethod.FindMethod("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper", "c", void.class, new Class[]{
                 MClass.loadClass("com.tencent.mobileqq.data.ChatMessage")
         }));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_8_93)
     @MethodScanner
-    public void getAIORevokeHelper_New(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4_before","tips_exp",m->m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
-        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("hook_4","hook_4_before",m->((Method)m).getParameterCount() == 1 && m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
+    public void getAIORevokeHelper_New(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4_before", "tips_exp", m -> m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
+        container.addMethod(MethodFinderBuilder.newFinderByMethodInvokingLinked("hook_4", "hook_4_before", m -> ((Method) m).getParameterCount() == 1 && m.getDeclaringClass().equals(MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIORevokeMsgHelper"))));
     }
+
     @VerController
     @XPExecutor(methodID = "hook_1")
-    public BaseXPExecutor hook_1(){
+    public BaseXPExecutor hook_1() {
         return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
-            if(msgList==null || msgList.isEmpty())return;
+            if (msgList == null || msgList.isEmpty()) return;
 
 
             String GroupUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.GroupUin().get(msgList.get(0));
@@ -96,70 +102,72 @@ public class PreventRevoke{
             int istroop = (int) BaseRevokeProxy.Table_RevokeInfo_Field.IsTroop().get(msgList.get(0));
             long shmsgseq = (long) BaseRevokeProxy.Table_RevokeInfo_Field.shmsgseq().get(msgList.get(0));
             String FriendUin;
-            if(istroop == 1){
+            if (istroop == 1) {
                 FriendUin = GroupUin;
-            }else if(istroop == 0){
-                if(OpUin.equals(QQEnvUtils.getCurrentUin())){
+            } else if (istroop == 0) {
+                if (OpUin.equals(QQEnvUtils.getCurrentUin())) {
                     FriendUin = GroupUin;
-                }else{
+                } else {
                     FriendUin = OpUin;
                 }
-            } else{
-                if(OpUin.equals(QQEnvUtils.getCurrentUin())){
+            } else {
+                if (OpUin.equals(QQEnvUtils.getCurrentUin())) {
                     FriendUin = GroupUin;
-                }else{
+                } else {
                     FriendUin = OpUin;
                 }
 
             }
             Object mRawmsg = QQMessageUtils.GetMessageByTimeSeq(FriendUin, istroop, shmsgseq);
-            if (mRawmsg !=null){
-                long shmsg = MField.GetField(mRawmsg,"shmsgseq",long.class);
-                long msgTime = MField.GetField(mRawmsg,"time",long.class);
-                List<String> l = HookEnv.Config.getList("RevokeStore","RevokeMsgList",true);
+            if (mRawmsg != null) {
+                long shmsg = MField.GetField(mRawmsg, "shmsgseq", long.class);
+                long msgTime = MField.GetField(mRawmsg, "time", long.class);
+                List<String> l = HookEnv.Config.getList("RevokeStore", "RevokeMsgList", true);
                 if (!l.contains(msgTime + ":" + shmsg)) l.add(msgTime + ":" + shmsg);
-                if (l.size() > 1000)l.remove(0);
-                HookEnv.Config.setList("RevokeStore","RevokeMsgList",l);
+                if (l.size() > 1000) l.remove(0);
+                HookEnv.Config.setList("RevokeStore", "RevokeMsgList", l);
             }
             param.setResult(null);
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
-    public BaseXPExecutor hook_2(){
+    @XPExecutor(methodID = "onAIOGetView", period = XPExecutor.After)
+    public BaseXPExecutor hook_2() {
         return param -> {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
-            if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-            List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
-            if(MessageRecoreList==null)return;
+            if (mGetView instanceof RelativeLayout) mLayout = (RelativeLayout) mGetView;
+            else return;
+            List MessageRecoreList = MField.GetFirstField(param.thisObject, List.class);
+            if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
-            String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
-            if (!TextUtils.isEmpty(Extstr)){
+            String Extstr = MField.GetField(ChatMsg, "extStr", String.class);
+            if (!TextUtils.isEmpty(Extstr)) {
                 ImageView tv = mLayout.findViewById(753951);
-                List<String> l = HookEnv.Config.getList("RevokeStore","RevokeMsgList",true);
-                long shmsg = MField.GetField(ChatMsg,"shmsgseq",long.class);
-                long msgTime = MField.GetField(ChatMsg,"time",long.class);
-                if (l.contains(msgTime + ":" + shmsg)){
+                List<String> l = HookEnv.Config.getList("RevokeStore", "RevokeMsgList", true);
+                long shmsg = MField.GetField(ChatMsg, "shmsgseq", long.class);
+                long msgTime = MField.GetField(ChatMsg, "time", long.class);
+                if (l.contains(msgTime + ":" + shmsg)) {
                     if (tv == null) {
                         ResUtils.StartInject(mLayout.getContext());
                         //长按标签,位于Parent顶部中央,最大化
-                        RelativeLayout.LayoutParams RLP = new RelativeLayout.LayoutParams(Utils.dip2px(mLayout.getContext(),80), Utils.dip2px(mLayout.getContext(),24));
+                        RelativeLayout.LayoutParams RLP = new RelativeLayout.LayoutParams(Utils.dip2px(mLayout.getContext(), 80), Utils.dip2px(mLayout.getContext(), 24));
                         RLP.width = ViewGroup.LayoutParams.MATCH_PARENT;
                         RLP.topMargin = Utils.dip2px(mLayout.getContext(), 18);
                         tv = new ImageView(mLayout.getContext());
                         mLayout.addView(tv, RLP);
                         tv.setImageResource(R.drawable.revoke);
                         tv.setId(753951);
-                        tv.setMaxHeight(Utils.dip2px(mLayout.getContext(),24));
-                        tv.setMaxWidth(Utils.dip2px(mLayout.getContext(),80));
+                        tv.setMaxHeight(Utils.dip2px(mLayout.getContext(), 24));
+                        tv.setMaxWidth(Utils.dip2px(mLayout.getContext(), 80));
                         tv.setBackgroundColor(Color.TRANSPARENT);
                     }
                     if (tv.getVisibility() != View.VISIBLE)
                         tv.setVisibility(View.VISIBLE);
                     tv.setClickable(false);
-                }else {
-                    if (tv != null){
+                } else {
+                    if (tv != null) {
                         if (tv.getVisibility() != View.GONE)
                             tv.setVisibility(View.GONE);
                     }
@@ -167,12 +175,13 @@ public class PreventRevoke{
             }
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_3")
-    public BaseXPExecutor hook_3(){
+    public BaseXPExecutor hook_3() {
         return param -> {
             ArrayList msgList = (ArrayList) param.args[0];
-            if(msgList==null || msgList.isEmpty())return;
+            if (msgList == null || msgList.isEmpty()) return;
             String GroupUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.GroupUin().get(msgList.get(0));
             String OpUin = (String) BaseRevokeProxy.Table_RevokeInfo_Field.OpUin().get(msgList.get(0));
             String sender = (String) BaseRevokeProxy.Table_RevokeInfo_Field.Sender().get(msgList.get(0));
@@ -181,16 +190,16 @@ public class PreventRevoke{
 
 
             String FriendUin;
-            if(istroop == 1 || istroop == 0){
+            if (istroop == 1 || istroop == 0) {
                 FriendUin = GroupUin;
-            }else{
+            } else {
                 FriendUin = sender;
             }
-            Object mRawmsg =QQMessageUtils. GetMessageByTimeSeq(FriendUin, istroop, shmsgseq);
-            if (mRawmsg != null){
-                if(OpUin.equals(QQEnvUtils.getCurrentUin())) {
-                    if(istroop==1 || (istroop==0 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))
-                            || (istroop==1000 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))) {
+            Object mRawmsg = QQMessageUtils.GetMessageByTimeSeq(FriendUin, istroop, shmsgseq);
+            if (mRawmsg != null) {
+                if (OpUin.equals(QQEnvUtils.getCurrentUin())) {
+                    if (istroop == 1 || (istroop == 0 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))
+                            || (istroop == 1000 && !mRawmsg.getClass().getName().contains("MessageForTroopFile"))) {
                         param.setResult(null);
                     }
                 }
@@ -198,9 +207,10 @@ public class PreventRevoke{
 
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_4")
-    public BaseXPExecutor hook_4(){
+    public BaseXPExecutor hook_4() {
         return param -> {
             param.setResult(null);
             QQMessageUtils.revokeMsg(param.args[0]);

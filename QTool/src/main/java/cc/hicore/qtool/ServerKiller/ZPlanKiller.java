@@ -13,11 +13,12 @@ import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
-@XPItem(name = "禁用ZPlan",itemType = XPItem.ITEM_Hook,targetVer = QQVersion.QQ_8_8_80)
-public class ZPlanKiller{
+
+@XPItem(name = "禁用ZPlan", itemType = XPItem.ITEM_Hook, targetVer = QQVersion.QQ_8_8_80)
+public class ZPlanKiller {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "禁用ZPlan";
         ui.groupName = "服务调节";
@@ -25,35 +26,39 @@ public class ZPlanKiller{
         ui.type = 1;
         return ui;
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_8_90)
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","getZPlanWhiteListFromNet",void.class,new Class[]{
-                List.class,List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl", "getZPlanWhiteListFromNet", void.class, new Class[]{
+                List.class, List.class, MClass.loadClass("com.tencent.mobileqq.zplan.servlet.api.IZplanAccessableCallback")
         }));
-        container.addMethod("hook_2",MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl","isInZplanWhiteList",boolean.class,new Class[]{
-                long.class,long.class
+        container.addMethod("hook_2", MMethod.FindMethod("com.tencent.mobileqq.zplan.servlet.api.impl.ZPlanRequestImpl", "isInZplanWhiteList", boolean.class, new Class[]{
+                long.class, long.class
         }));
     }
+
     @VerController(targetVer = QQVersion.QQ_8_8_90)
     @MethodScanner
-    public void getHookMethod_8_8_95(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl"),"getZPlanWhiteListFromNet"));
-        container.addMethod("hook_2",MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl"),"isZPlanAccessible"));
+    public void getHookMethod_8_8_95(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl"), "getZPlanWhiteListFromNet"));
+        container.addMethod("hook_2", MMethod.FindMethodByName(MClass.loadClass("com.tencent.mobileqq.zplan.utils.api.impl.ZPlanAccessibleHelperImpl"), "isZPlanAccessible"));
     }
+
     @VerController
     @XPExecutor(methodID = "hook_1")
-    public BaseXPExecutor worker_1(){
+    public BaseXPExecutor worker_1() {
         return param -> {
             Object o = param.args[2];
-            if (o != null){
-                MMethod.CallMethodSingle(o,"a",void.class,false);
+            if (o != null) {
+                MMethod.CallMethodSingle(o, "a", void.class, false);
             }
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_2")
-    public BaseXPExecutor worker_2(){
+    public BaseXPExecutor worker_2() {
         return param -> param.setResult(false);
     }
 }

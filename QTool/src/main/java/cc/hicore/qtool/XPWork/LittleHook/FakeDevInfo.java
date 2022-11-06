@@ -32,11 +32,11 @@ import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
-@XPItem(name = "修改设备型号",itemType = XPItem.ITEM_Hook,proc = XPItem.PROC_ALL)
-public class FakeDevInfo{
+@XPItem(name = "修改设备型号", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
+public class FakeDevInfo {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "修改设备型号";
         ui.groupName = "修改";
@@ -44,70 +44,75 @@ public class FakeDevInfo{
         ui.type = 1;
         return ui;
     }
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook",getMethod());
-        container.addMethod("qzone_hook",MMethod.FindMethod(MClass.loadClass("NS_MOBILE_EXTRA.GetDeviceInfoRsp"),"readFrom",void.class,new Class[]{MClass.loadClass("com.qq.taf.jce.JceInputStream")}));
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook", getMethod());
+        container.addMethod("qzone_hook", MMethod.FindMethod(MClass.loadClass("NS_MOBILE_EXTRA.GetDeviceInfoRsp"), "readFrom", void.class, new Class[]{MClass.loadClass("com.qq.taf.jce.JceInputStream")}));
     }
+
     @VerController
-    @XPExecutor(methodID = "qzone_hook",period = XPExecutor.After)
-    public BaseXPExecutor fix_qzone(){
+    @XPExecutor(methodID = "qzone_hook", period = XPExecutor.After)
+    public BaseXPExecutor fix_qzone() {
         return param -> {
-            List devinfo_List = MField.GetField(param.thisObject,"vecDeviceInfo");
-            for (Object devInfo : devinfo_List){
-                String name = MField.GetField(devInfo,"strDeviceTail");
-                if (name.toLowerCase(Locale.ROOT).startsWith("android"))break;
+            List devinfo_List = MField.GetField(param.thisObject, "vecDeviceInfo");
+            for (Object devInfo : devinfo_List) {
+                String name = MField.GetField(devInfo, "strDeviceTail");
+                if (name.toLowerCase(Locale.ROOT).startsWith("android")) break;
                 String sub = name.indexOf("(") != -1 ? name.substring(name.indexOf("(")) : "";
-                name = HookEnv.Config.getString("Set","FakeDevInfoSet","")+sub;
-                MField.SetField(devInfo,"strDeviceTail",name);
+                name = HookEnv.Config.getString("Set", "FakeDevInfoSet", "") + sub;
+                MField.SetField(devInfo, "strDeviceTail", name);
             }
         };
     }
+
     @VerController
-    @XPExecutor(methodID = "hook",period = XPExecutor.After)
-    public BaseXPExecutor fix_base(){
+    @XPExecutor(methodID = "hook", period = XPExecutor.After)
+    public BaseXPExecutor fix_base() {
         return param -> {
-            String BuildSet = HookEnv.Config.getString("Set","FakeDevInfoSet","");
+            String BuildSet = HookEnv.Config.getString("Set", "FakeDevInfoSet", "");
             param.setResult(BuildSet);
         };
     }
+
     @VerController
     @CommonExecutor
     public void fix_build() throws Exception {
-        String BuildSet = HookEnv.Config.getString("Set","FakeDevInfoSet","");
-        if (!TextUtils.isEmpty(BuildSet)){
-            MField.SetField(null, Build.class,"MODEL",String.class,BuildSet);
+        String BuildSet = HookEnv.Config.getString("Set", "FakeDevInfoSet", "");
+        if (!TextUtils.isEmpty(BuildSet)) {
+            MField.SetField(null, Build.class, "MODEL", String.class, BuildSet);
         }
     }
+
     @VerController
     @UIClick
-    public void uiClick(Context context){
+    public void uiClick(Context context) {
         LinearLayout mRoot = new LinearLayout(context);
         mRoot.setOrientation(LinearLayout.VERTICAL);
 
         CheckBox box = new CheckBox(context);
         box.setText("开启修改设备型号");
-        box.setChecked(HookEnv.Config.getBoolean("Set","FakeDevInfoOpen",false));
+        box.setChecked(HookEnv.Config.getBoolean("Set", "FakeDevInfoOpen", false));
         //mRoot.addView(box);
 
         EditText ed = new EditText(context);
-        ed.setText(HookEnv.Config.getString("Set","FakeDevInfoSet",""));
+        ed.setText(HookEnv.Config.getString("Set", "FakeDevInfoSet", ""));
         mRoot.addView(ed);
 
         new AlertDialog.Builder(context)
                 .setTitle("请设置选项")
                 .setView(mRoot)
                 .setNegativeButton("保存", (dialog, which) -> {
-                    if (ed.getText().toString().isEmpty()){
+                    if (ed.getText().toString().isEmpty()) {
                         Utils.ShowToast("输入不能为空");
                         return;
                     }
-                    HookEnv.Config.setBoolean("Set","FakeDevInfoOpen",box.isChecked());
-                    HookEnv.Config.setString("Set","FakeDevInfoSet",ed.getText().toString());
+                    HookEnv.Config.setBoolean("Set", "FakeDevInfoOpen", box.isChecked());
+                    HookEnv.Config.setString("Set", "FakeDevInfoSet", ed.getText().toString());
                     HookLoader.CallHookStart(FakeDevInfo.class.getName());
                     new File("/data/data/com.tencent.mobileqq/app_x5webview/Default/Local Storage/leveldb/MANIFEST-000001").delete();
-                    new File(HookEnv.Application.getCacheDir().getParent()+"/app_x5webview/Default/Local Storage/leveldb/MANIFEST-000001").delete();
+                    new File(HookEnv.Application.getCacheDir().getParent() + "/app_x5webview/Default/Local Storage/leveldb/MANIFEST-000001").delete();
                     new AlertDialog.Builder(context)
                             .setTitle("提示")
                             .setMessage("是否立即停止QQ?")
@@ -116,23 +121,24 @@ public class FakeDevInfo{
                             }).show();
                 }).show();
     }
-    public Method getMethod(){
-        Method m =  MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.Pandora.deviceInfo.DeviceInfoManager"), "getModel",String.class,new Class[]{
+
+    public Method getMethod() {
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.Pandora.deviceInfo.DeviceInfoManager"), "getModel", String.class, new Class[]{
                 Context.class
         });
-        if (m == null){
-            if (HostInfo.getVerCode() < 7830){
-                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "h",String.class,new Class[]{
+        if (m == null) {
+            if (HostInfo.getVerCode() < 7830) {
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "h", String.class, new Class[]{
                         Context.class
                 });
-            }else {
-                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g",String.class,new Class[]{
+            } else {
+                m = MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.pandora.deviceinfo.DeviceInfoManager"), "g", String.class, new Class[]{
                         Context.class
                 });
             }
         }
-        if (m == null){
-            m = MMethod.FindMethod(MClass.loadClass("com.tencent.qmethod.pandoraex.monitor.DeviceInfoMonitor"), "getModel",String.class,new Class[0]);
+        if (m == null) {
+            m = MMethod.FindMethod(MClass.loadClass("com.tencent.qmethod.pandoraex.monitor.DeviceInfoMonitor"), "getModel", String.class, new Class[0]);
         }
         return m;
     }

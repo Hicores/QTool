@@ -7,13 +7,14 @@ import de.robv.android.xposed.XposedHelpers;
 public class ByPassInnerHook {
     static XC_MethodHook.Unhook unhook;
     static ClassLoader mLoader = XposedBridge.class.getClassLoader();
-    public static void StartByPass(){
+
+    public static void StartByPass() {
         unhook = XposedHelpers.findAndHookMethod(Class.class, "getClassLoader", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 ClassLoader loader = (ClassLoader) param.getResult();
-                if (loader == mLoader){
+                if (loader == mLoader) {
                     unhook.unhook();
                     unhook = null;
                     param.setResult(null);
@@ -21,8 +22,9 @@ public class ByPassInnerHook {
             }
         });
     }
-    public static void EndBypass(){
-        if (unhook != null){
+
+    public static void EndBypass() {
+        if (unhook != null) {
             unhook.unhook();
             unhook = null;
         }

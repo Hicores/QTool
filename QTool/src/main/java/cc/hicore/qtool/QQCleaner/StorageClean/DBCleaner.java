@@ -32,11 +32,11 @@ import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.QQTools.QQSelectHelper;
 import cc.hicore.qtool.R;
 
-@XPItem(name = "聊天数据库清理",itemType = XPItem.ITEM_Hook)
-public class DBCleaner{
+@XPItem(name = "聊天数据库清理", itemType = XPItem.ITEM_Hook)
+public class DBCleaner {
     @VerController
     @UIItem
-    public UIInfo getUI(){
+    public UIInfo getUI() {
         UIInfo ui = new UIInfo();
         ui.name = "聊天数据库清理";
         ui.groupName = "空间清理";
@@ -44,16 +44,18 @@ public class DBCleaner{
         ui.type = 2;
         return ui;
     }
+
     @VerController
     @UIClick
-    public void uiClick(Context context){
-        String[] selectItems = new String[]{"群组消息","好友消息"};
+    public void uiClick(Context context) {
+        String[] selectItems = new String[]{"群组消息", "好友消息"};
         new AlertDialog.Builder(context)
-                .setItems(selectItems, (dialog, which) -> calc_db(context,which))
+                .setItems(selectItems, (dialog, which) -> calc_db(context, which))
                 .setTitle("点击一项进行检索(不会立即清理)")
                 .show();
     }
-    private void calc_db(Context base,int select){
+
+    private void calc_db(Context base, int select) {
         BaseProxyAct.createNewView("DBResultShow", (Activity) base, context1 -> {
             ScrollView sc = new ScrollView(context1);
             LinearLayout mRoot = new LinearLayout(context1);
@@ -67,130 +69,129 @@ public class DBCleaner{
 
             basePopupView.show();
 
-            new Thread(()->{
-                try{
+            new Thread(() -> {
+                try {
                     LocalTableInit.initTable();
                     LayoutInflater inflater = ContextFixUtil.getContextInflater(context1);
-                    DBHelper helper = new DBHelper(HookEnv.AppContext.getDatabasePath(QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
-                    DBHelper slowTable = new DBHelper(HookEnv.AppContext.getDatabasePath("slowtable_"+QQEnvUtils.getCurrentUin()+".db").getAbsolutePath());
+                    DBHelper helper = new DBHelper(HookEnv.AppContext.getDatabasePath(QQEnvUtils.getCurrentUin() + ".db").getAbsolutePath());
+                    DBHelper slowTable = new DBHelper(HookEnv.AppContext.getDatabasePath("slowtable_" + QQEnvUtils.getCurrentUin() + ".db").getAbsolutePath());
                     HashSet<String> tableName = new HashSet<>();
                     List<String> tables = helper.getTables();
                     Iterator<String> its = tables.iterator();
-                    while (its.hasNext()){
+                    while (its.hasNext()) {
                         String name = its.next();
-                        if (select == 0 && name.startsWith("mr_troop")){
+                        if (select == 0 && name.startsWith("mr_troop")) {
                             tableName.add(name);
-                        } else if (select == 1 && name.startsWith("mr_friend")){
+                        } else if (select == 1 && name.startsWith("mr_friend")) {
                             tableName.add(name);
-                        }else if (select == 2 && name.startsWith("mr_guild")){
+                        } else if (select == 2 && name.startsWith("mr_guild")) {
                             tableName.add(name);
                         }
                     }
 
                     tables = slowTable.getTables();
                     its = tables.iterator();
-                    while (its.hasNext()){
+                    while (its.hasNext()) {
                         String name = its.next();
-                        if (select == 0 && name.startsWith("mr_troop")){
+                        if (select == 0 && name.startsWith("mr_troop")) {
                             tableName.add(name);
-                        } else if (select == 1 && name.startsWith("mr_friend")){
+                        } else if (select == 1 && name.startsWith("mr_friend")) {
                             tableName.add(name);
-                        }else if (select == 2 && name.startsWith("mr_guild")){
+                        } else if (select == 2 && name.startsWith("mr_guild")) {
                             tableName.add(name);
                         }
                     }
 
 
-                    for (String tablesName : tableName){
+                    for (String tablesName : tableName) {
 
                         String uin;
-                        if (select == 1){
-                            uin = LocalTableInit.query(tablesName.substring(10,10+32));
-                        }else{
-                            uin = LocalTableInit.query(tablesName.substring(9,9+32));
+                        if (select == 1) {
+                            uin = LocalTableInit.query(tablesName.substring(10, 10 + 32));
+                        } else {
+                            uin = LocalTableInit.query(tablesName.substring(9, 9 + 32));
                         }
-                        try{
+                        try {
                             Long.parseLong(uin);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             uin = "";
                         }
 
-                        if (uin.isEmpty())uin = DBHelper.decodeData(helper.getOneData(tablesName,"frienduin"));
-                        try{
+                        if (uin.isEmpty())
+                            uin = DBHelper.decodeData(helper.getOneData(tablesName, "frienduin"));
+                        try {
                             Long.parseLong(uin);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             uin = "";
                         }
 
-                        if (TextUtils.isEmpty(uin)){
-                            uin = DBHelper.decodeData(slowTable.getOneData(tablesName,"frienduin"));
+                        if (TextUtils.isEmpty(uin)) {
+                            uin = DBHelper.decodeData(slowTable.getOneData(tablesName, "frienduin"));
                         }
                         int count = helper.getCount(tablesName);
                         int slowTableCount = slowTable.getCount(tablesName);
 
                         String finalUin = uin;
-                        Utils.PostToMain(()->{
-                            RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.dbcleaner_item,null);
+                        Utils.PostToMain(() -> {
+                            RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.dbcleaner_item, null);
                             TextView name = layout.findViewById(R.id.Show_Name);
-                            if (TextUtils.isEmpty(finalUin)){
-                                if (select == 0){
+                            if (TextUtils.isEmpty(finalUin)) {
+                                if (select == 0) {
                                     name.setText(tablesName.substring(9));
-                                }else if (select == 1){
+                                } else if (select == 1) {
                                     name.setText(tablesName.substring(10));
                                 }
 
-                            }else {
-                                if (select == 0){
-                                    name.setText(QQGroupUtils.Group_Get_Name(finalUin)+"("+ finalUin +")");
-                                }else if (select == 1){
-                                    name.setText(QQEnvUtils.getFriendName(finalUin)+"("+ finalUin +")");
+                            } else {
+                                if (select == 0) {
+                                    name.setText(QQGroupUtils.Group_Get_Name(finalUin) + "(" + finalUin + ")");
+                                } else if (select == 1) {
+                                    name.setText(QQEnvUtils.getFriendName(finalUin) + "(" + finalUin + ")");
                                 }
 
                             }
-                            name.setOnClickListener(v->{
-                                if (select == 0){
+                            name.setOnClickListener(v -> {
+                                if (select == 0) {
                                     QQEnvUtils.OpenTroopCard(finalUin);
-                                }else if (select == 1){
+                                } else if (select == 1) {
                                     QQEnvUtils.OpenUserCard(finalUin);
                                 }
                             });
                             QQSelectHelper.RoundImageView headerView = layout.findViewById(R.id.Header);
-                            if (select == 0){
+                            if (select == 0) {
                                 headerView.setImagePath(String.format("https://p.qlogo.cn/gh/%s/%s/140", finalUin, finalUin));
-                            }else if (select == 1){
+                            } else if (select == 1) {
                                 headerView.setImagePath(String.format("https://q4.qlogo.cn/g?b=qq&nk=%s&s=140", finalUin));
                             }
 
                             TextView countCommon = layout.findViewById(R.id.DBSize_Common);
-                            countCommon.setText("消息条数:"+count);
+                            countCommon.setText("消息条数:" + count);
                             TextView slowCount = layout.findViewById(R.id.DBSize_SlowTable);
-                            slowCount.setText("Slowtable消息条数:"+slowTableCount);
+                            slowCount.setText("Slowtable消息条数:" + slowTableCount);
                             mRoot.addView(layout);
 
                             Button btnReset = layout.findViewById(R.id.Clean_Now);
-                            btnReset.setOnClickListener(v->{
+                            btnReset.setOnClickListener(v -> {
                                 new AlertDialog.Builder(context1)
                                         .setTitle("确认操作?")
-                                        .setMessage("确认清除所有 "+name.getText() + " 的消息记录(仅本地)?")
+                                        .setMessage("确认清除所有 " + name.getText() + " 的消息记录(仅本地)?")
                                         .setNegativeButton("清除所有", (dialog, which) -> {
                                             BasePopupView popup = new XPopup.Builder(ContextFixUtil.getFixContext(context1))
                                                     .dismissOnTouchOutside(false)
                                                     .dismissOnBackPressed(false)
                                                     .asLoading("正在处理,请稍后...");
                                             popup.show();
-                                            new Thread(()->{
+                                            new Thread(() -> {
                                                 try {
                                                     slowTable.Drop(tablesName);
                                                     helper.Drop(tablesName);
-                                                }catch (Exception e){
+                                                } catch (Exception e) {
 
-                                                }finally {
+                                                } finally {
                                                     Utils.ShowToast("已执行");
                                                     Utils.PostToMain(popup::dismiss);
                                                 }
                                             }).start();
-
-
 
 
                                         }).setNeutralButton("仅清除slowtable数据", (dialog, which) -> {
@@ -199,12 +200,12 @@ public class DBCleaner{
                                                     .dismissOnBackPressed(false)
                                                     .asLoading("正在处理,请稍后...");
                                             popup.show();
-                                            new Thread(()->{
+                                            new Thread(() -> {
                                                 try {
                                                     slowTable.Drop(tablesName);
-                                                }catch (Exception e){
+                                                } catch (Exception e) {
 
-                                                }finally {
+                                                } finally {
                                                     Utils.ShowToast("已执行");
                                                     Utils.PostToMain(popup::dismiss);
                                                 }
@@ -213,7 +214,7 @@ public class DBCleaner{
                             });
                         });
                     }
-                }finally {
+                } finally {
                     Utils.PostToMain(basePopupView::dismiss);
                 }
             }).start();

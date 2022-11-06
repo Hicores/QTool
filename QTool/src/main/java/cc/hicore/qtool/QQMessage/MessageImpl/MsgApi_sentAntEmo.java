@@ -12,7 +12,7 @@ import cc.hicore.ReflectUtils.Classes;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 
-@XPItem(name = "MsgApi_sentAntEmo",itemType = XPItem.ITEM_Api)
+@XPItem(name = "MsgApi_sentAntEmo", itemType = XPItem.ITEM_Api)
 public class MsgApi_sentAntEmo {
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
@@ -22,6 +22,7 @@ public class MsgApi_sentAntEmo {
         );
         m.invoke(null, ID, _Session, 0);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void send_890(Object _Session, int ID) throws InvocationTargetException, IllegalAccessException {

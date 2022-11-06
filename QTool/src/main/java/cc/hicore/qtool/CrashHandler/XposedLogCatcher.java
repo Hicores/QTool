@@ -10,7 +10,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 
 public class XposedLogCatcher {
-    public static void StartCatcher(){
+    public static void StartCatcher() {
         Method med;
         Method medErr;
         try {
@@ -28,9 +28,9 @@ public class XposedLogCatcher {
                 super.beforeHookedMethod(param);
                 String sLine = (String) param.args[0];
                 if (sLine == null) sLine = "null";
-                String StartLine = "("+ Utils.GetNowTime()+")"
-                        +"["+ HookEnv.ProcessName+"->"+Thread.currentThread().getName()+"] "
-                        +sLine;
+                String StartLine = "(" + Utils.GetNowTime() + ")"
+                        + "[" + HookEnv.ProcessName + "->" + Thread.currentThread().getName() + "] "
+                        + sLine;
                 StringPool_XpLog.Add(StartLine);
             }
         };
@@ -40,28 +40,28 @@ public class XposedLogCatcher {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 Throwable sLine = (Throwable) param.args[0];
-                if (sLine == null)return;
-                String StartLine = "("+ Utils.GetNowTime()+")"
-                        +"["+HookEnv.ProcessName+"->"+Thread.currentThread().getName()+"]\n"
+                if (sLine == null) return;
+                String StartLine = "(" + Utils.GetNowTime() + ")"
+                        + "[" + HookEnv.ProcessName + "->" + Thread.currentThread().getName() + "]\n"
                         + Log.getStackTraceString(sLine);
                 StringPool_XpErr.Add(StartLine);
             }
         };
 
-        try{
+        try {
 
-            XposedBridge.hookMethod(med,hook);
-            XposedBridge.hookMethod(medErr,hookErr);
-        }catch (Throwable e){
-            try{
+            XposedBridge.hookMethod(med, hook);
+            XposedBridge.hookMethod(medErr, hookErr);
+        } catch (Throwable e) {
+            try {
                 ByPassInnerHook.StartByPass();
-                XposedBridge.hookMethod(med,hook);
+                XposedBridge.hookMethod(med, hook);
                 ByPassInnerHook.EndBypass();
 
                 ByPassInnerHook.StartByPass();
-                XposedBridge.hookMethod(medErr,hookErr);
+                XposedBridge.hookMethod(medErr, hookErr);
                 ByPassInnerHook.EndBypass();
-            }catch (Throwable e2){
+            } catch (Throwable e2) {
                 StringPool_XpLog.Add("Can't get XposedLog.");
                 StringPool_XpErr.Add("Can't get XposedLog.");
             }

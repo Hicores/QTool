@@ -18,13 +18,14 @@ import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 
-@XPItem(name = "Build_Mix",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Build_Mix", itemType = XPItem.ITEM_Api)
 public class Build_Mix {
     CoreLoader.XPItemInfo info;
+
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_9_0)
-    public void MethodScaner(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("method"," MessageForWantGiftMsg.GIFT_SENDER_UIN  ", m->true));
+    public void MethodScaner(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("method", " MessageForWantGiftMsg.GIFT_SENDER_UIN  ", m -> true));
     }
 
     @ApiExecutor
@@ -32,8 +33,8 @@ public class Build_Mix {
     public Object build_890(Object session, ArrayList msgElems) throws Exception {
         Method m = null;
         Class<?> clz = info.scanResult.get("method").getDeclaringClass();
-        for (Method ma : clz.getDeclaredMethods()){
-            if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))){
+        for (Method ma : clz.getDeclaredMethods()) {
+            if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))) {
                 m = ma;
                 break;
             }
@@ -49,13 +50,14 @@ public class Build_Mix {
         MixMessageRecord = MMethod.CallMethodNoParam(MixMessageRecord, "rebuildMixedMsg", MClass.loadClass("com.tencent.mobileqq.data.MessageRecord"));
         return MixMessageRecord;
     }
+
     @ApiExecutor
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     public Object build(Object session, ArrayList msgElems) throws Exception {
         Method m = null;
         Class<?> clz = MClass.loadClass("com.tencent.mobileqq.service.message.MessageRecordFactory");
-        for (Method ma : clz.getDeclaredMethods()){
-            if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))){
+        for (Method ma : clz.getDeclaredMethods()) {
+            if (ma.getReturnType().equals(MClass.loadClass("com.tencent.mobileqq.data.MessageForMixedMsg"))) {
                 m = ma;
                 break;
             }

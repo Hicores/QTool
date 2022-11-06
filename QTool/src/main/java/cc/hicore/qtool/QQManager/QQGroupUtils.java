@@ -25,7 +25,7 @@ public class QQGroupUtils {
     public static String Group_Get_Member_Name(String GroupUin, String UserUin) {
         try {
             Object runTimeService = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberNameService"));
-            return MMethod.CallMethodParams(runTimeService,"getTroopMemberName",String.class,GroupUin,UserUin);
+            return MMethod.CallMethodParams(runTimeService, "getTroopMemberName", String.class, GroupUin, UserUin);
         } catch (Exception e) {
             return UserUin;
         }
@@ -41,7 +41,7 @@ public class QQGroupUtils {
         try {
             Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
             Object GroupMemberInfoR = MMethod.CallMethodParams(TroopManager, "getTroopMember", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopMemberInfo"), GroupUin, UserUin);
-            if (GroupMemberInfoR == null)return null;
+            if (GroupMemberInfoR == null) return null;
             GroupInfo gInfo = Group_Get_Info(GroupUin);
 
             GroupMemberInfo NewItem = new GroupMemberInfo();
@@ -52,7 +52,7 @@ public class QQGroupUtils {
             NewItem.last_active = MField.GetField(GroupMemberInfoR, "last_active_time");
             NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
             NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
-            NewItem.level = MField.GetField(GroupMemberInfoR,"newRealLevel",int.class);
+            NewItem.level = MField.GetField(GroupMemberInfoR, "newRealLevel", int.class);
             NewItem.Title = MField.GetField(GroupMemberInfoR, "mUniqueTitle");
             return NewItem;
         } catch (Exception e) {
@@ -60,15 +60,16 @@ public class QQGroupUtils {
             return null;
         }
     }
-    public static boolean Is_In_Group(String GroupUin,String UserUin){
-        GroupMemberInfo memberInfo = Group_Get_Member_Info(GroupUin,UserUin);
+
+    public static boolean Is_In_Group(String GroupUin, String UserUin) {
+        GroupMemberInfo memberInfo = Group_Get_Member_Info(GroupUin, UserUin);
         return memberInfo != null;
     }
 
     public static ArrayList<GroupInfo> Group_Get_List() {
         try {
             Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
-            ArrayList<?> rawList = MMethod.CallMethodNoParam(TroopInfoServer,"getUiTroopListWithoutBlockedTroop",ArrayList.class);
+            ArrayList<?> rawList = MMethod.CallMethodNoParam(TroopInfoServer, "getUiTroopListWithoutBlockedTroop", ArrayList.class);
 
             ArrayList<GroupInfo> NewList = new ArrayList<>();
             for (Object item : rawList) {
@@ -77,9 +78,9 @@ public class QQGroupUtils {
                 NewItem.Name = MField.GetField(item, "troopname");
                 NewItem.Creator = MField.GetField(item, "troopowneruin");
                 String admins = MField.GetField(item, "Administrator");
-                if (admins == null){
+                if (admins == null) {
                     NewItem.adminList = new ArrayList<>();
-                }else {
+                } else {
                     NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
                 }
                 NewList.add(NewItem);
@@ -90,28 +91,29 @@ public class QQGroupUtils {
             return null;
         }
     }
-    public static ArrayList<GroupMemberInfo> waitForGetGroupInfo(String GroupUin){
-        try{
+
+    public static ArrayList<GroupMemberInfo> waitForGetGroupInfo(String GroupUin) {
+        try {
             GroupInfo mInfo = Group_Get_Info(GroupUin);
             Object TroopObserve = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.troop.api.observer.TroopObserver"));
-            MMethod.CallMethodParams(HookEnv.AppInterface,"addObserver",void.class,TroopObserve,true);
+            MMethod.CallMethodParams(HookEnv.AppInterface, "addObserver", void.class, TroopObserve, true);
             AtomicBoolean locker = new AtomicBoolean();
             AtomicReference<List> mGetList = new AtomicReference<>();
-            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.observer.TroopObserver"),"onUpdateTroopGetMemberList",void.class,new Class[]{
-                    String.class,boolean.class,List.class,int.class,long.class,int.class
-            }),param -> {
+            XPBridge.HookBeforeOnce(MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.observer.TroopObserver"), "onUpdateTroopGetMemberList", void.class, new Class[]{
+                    String.class, boolean.class, List.class, int.class, long.class, int.class
+            }), param -> {
                 mGetList.set((List) param.args[2]);
                 locker.getAndSet(true);
-                MMethod.CallMethodSingle(HookEnv.AppInterface,"removeObserver",void.class,TroopObserve);
+                MMethod.CallMethodSingle(HookEnv.AppInterface, "removeObserver", void.class, TroopObserve);
             });
-            MMethod.CallMethodParams(QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.troop.handler.TroopMemberListHandler"),null,void.class,
-                    true,GroupUin,mInfo.Code,true,1,System.currentTimeMillis(),0);
-            for (int i=0;i<100;i++){
-                if (locker.get())break;
+            MMethod.CallMethodParams(QQEnvUtils.getBusinessHandler("com.tencent.mobileqq.troop.handler.TroopMemberListHandler"), null, void.class,
+                    true, GroupUin, mInfo.Code, true, 1, System.currentTimeMillis(), 0);
+            for (int i = 0; i < 100; i++) {
+                if (locker.get()) break;
                 Thread.sleep(100);
             }
             List troopMemberList = mGetList.get();
-            if (troopMemberList ==null)return Group_Get_Member_List(GroupUin);
+            if (troopMemberList == null) return Group_Get_Member_List(GroupUin);
 
             ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
             GroupInfo gInfo = Group_Get_Info(GroupUin);
@@ -125,27 +127,29 @@ public class QQGroupUtils {
                 NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
                 NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
                 NewItem.Title = MField.GetField(item, "mUniqueTitle");
-                NewItem.level = MField.GetField(item,"newRealLevel",int.class);
+                NewItem.level = MField.GetField(item, "newRealLevel", int.class);
                 Infos.add(NewItem);
             }
             return Infos;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return Group_Get_Member_List(GroupUin);
         }
 
     }
-    public static String convertGroupCodeToUin(String Code){
-        try{
+
+    public static String convertGroupCodeToUin(String Code) {
+        try {
             Object infoImpl = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
-            String result = MMethod.CallMethodSingle(infoImpl,"getTroopUinByTroopCode",String.class,Code);
-            if (result != null)return  result;
-        }catch (Exception e){
+            String result = MMethod.CallMethodSingle(infoImpl, "getTroopUinByTroopCode", String.class, Code);
+            if (result != null) return result;
+        } catch (Exception e) {
 
         }
         return Code;
     }
-    public static String convertGroupUinToCode(String Uin){
+
+    public static String convertGroupUinToCode(String Uin) {
         return Group_Get_Info(Uin).Code;
     }
 
@@ -153,7 +157,7 @@ public class QQGroupUtils {
         try {
 
             Object TroopInfoServer = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopInfoService"));
-            Object GroupInfoR = MMethod.CallMethodSingle(TroopInfoServer,"getTroopInfo",MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"),GroupUin);
+            Object GroupInfoR = MMethod.CallMethodSingle(TroopInfoServer, "getTroopInfo", MClass.loadClass("com.tencent.mobileqq.data.troop.TroopInfo"), GroupUin);
 
             GroupInfo NewItem = new GroupInfo();
             NewItem.Uin = MField.GetField(GroupInfoR, "troopuin");
@@ -161,9 +165,9 @@ public class QQGroupUtils {
             NewItem.Name = MField.GetField(GroupInfoR, "troopname");
             NewItem.Creator = MField.GetField(GroupInfoR, "troopowneruin");
             String admins = MField.GetField(GroupInfoR, "Administrator");
-            if (admins != null){
+            if (admins != null) {
                 NewItem.adminList = new ArrayList<>(Arrays.asList(admins.split("\\|")));
-            }else {
+            } else {
                 NewItem.adminList = new ArrayList<>();
             }
 
@@ -174,14 +178,15 @@ public class QQGroupUtils {
         }
 
     }
+
     public static String GetTroopNameByContact(String GroupUin) {
-        return ApiHelper.invoke(Get_Group_Name_By_Contact.class,GroupUin);
+        return ApiHelper.invoke(Get_Group_Name_By_Contact.class, GroupUin);
     }
 
     public static ArrayList<GroupMemberInfo> Group_Get_Member_List(String GroupUin) {
         try {
             Object TroopManager = QQEnvUtils.getRuntimeService(MClass.loadClass("com.tencent.mobileqq.troop.api.ITroopMemberInfoService"));
-            ArrayList MyList = MMethod.CallMethodParams(TroopManager, "getAllTroopMembers",List.class, GroupUin);
+            ArrayList MyList = MMethod.CallMethodParams(TroopManager, "getAllTroopMembers", List.class, GroupUin);
 
             ArrayList<GroupMemberInfo> Infos = new ArrayList<>();
             GroupInfo gInfo = Group_Get_Info(GroupUin);
@@ -195,7 +200,7 @@ public class QQGroupUtils {
                 NewItem.isCreator = gInfo.Creator.equals(NewItem.Uin);
                 NewItem.isAdmin = gInfo.adminList.contains(NewItem.Uin);
                 NewItem.Title = MField.GetField(item, "mUniqueTitle");
-                NewItem.level = MField.GetField(item,"newRealLevel",int.class);
+                NewItem.level = MField.GetField(item, "newRealLevel", int.class);
                 Infos.add(NewItem);
             }
             return Infos;
@@ -204,23 +209,25 @@ public class QQGroupUtils {
             return null;
         }
     }
-    public static boolean IsCreator(String GroupUin,String UserUin){
-        GroupMemberInfo info = Group_Get_Member_Info(GroupUin,UserUin);
-        if (info != null){
+
+    public static boolean IsCreator(String GroupUin, String UserUin) {
+        GroupMemberInfo info = Group_Get_Member_Info(GroupUin, UserUin);
+        if (info != null) {
             return info.isCreator;
         }
         return false;
     }
-    public static boolean IsAdmin(String GroupUin,String UserUin){
-        GroupMemberInfo info = Group_Get_Member_Info(GroupUin,UserUin);
-        if (info != null){
+
+    public static boolean IsAdmin(String GroupUin, String UserUin) {
+        GroupMemberInfo info = Group_Get_Member_Info(GroupUin, UserUin);
+        if (info != null) {
             return info.isAdmin;
         }
         return false;
     }
 
     public static ArrayList<MuteList> Group_Get_Mute_List(String GroupUin) {
-        ArrayList<MuteList> list = ApiHelper.invoke(Group_Get_Mute_List.class,GroupUin);
+        ArrayList<MuteList> list = ApiHelper.invoke(Group_Get_Mute_List.class, GroupUin);
         return list == null ? new ArrayList<>() : list;
     }
 

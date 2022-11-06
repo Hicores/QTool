@@ -11,22 +11,25 @@ import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
-@XPItem(name = "Proxy_Troop_Join_Exit",itemType = XPItem.ITEM_Hook)
-public class TroopJoinExitProxy{
+
+@XPItem(name = "Proxy_Troop_Join_Exit", itemType = XPItem.ITEM_Hook)
+public class TroopJoinExitProxy {
     private static final String TAG = "TroopEventProxy";
     private static final HashSet<String> cacheExitMap = new HashSet<>();
     private static final HashSet<String> cacheJoinMap = new HashSet<>();
+
     @VerController
     @MethodScanner
-    public void getHookMethod(MethodContainer container){
-        container.addMethod("hook_1",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.impl.TroopCreateInfoServiceImpl"),
+    public void getHookMethod(MethodContainer container) {
+        container.addMethod("hook_1", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.impl.TroopCreateInfoServiceImpl"),
                 "deleteInInviteList", new Class[]{String.class, String.class}));
-        container.addMethod("hook_2",MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.impl.TroopCreateInfoServiceImpl"),
+        container.addMethod("hook_2", MMethod.FindMethod(MClass.loadClass("com.tencent.mobileqq.troop.api.impl.TroopCreateInfoServiceImpl"),
                 "isInInviteList", new Class[]{String.class, String.class}));
     }
+
     @VerController
     @XPExecutor(methodID = "hook_1")
-    public BaseXPExecutor worker_1(){
+    public BaseXPExecutor worker_1() {
         return param -> {
             String GroupUin = (String) param.args[0];
             String UserUin = (String) param.args[1];
@@ -37,9 +40,10 @@ public class TroopJoinExitProxy{
             PluginMessageProcessor.onExitEvent(GroupUin, UserUin, "-1");
         };
     }
+
     @VerController
     @XPExecutor(methodID = "hook_2")
-    public BaseXPExecutor worker_2(){
+    public BaseXPExecutor worker_2() {
         return param -> {
             String GroupUin = String.valueOf(param.args[0]);
             String UserUin = (String) param.args[1];

@@ -14,7 +14,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 
-@XPItem(name = "Group_Change_Name",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Group_Change_Name", itemType = XPItem.ITEM_Api)
 public class Group_Change_Name {
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
@@ -39,6 +39,7 @@ public class Group_Change_Name {
         });
         CallMethod.invoke(mCallObj, GroupUin, mList, mList2);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @ApiExecutor
     public void change_new(String GroupUin, String UserUin, String name) throws Exception {
@@ -62,14 +63,15 @@ public class Group_Change_Name {
         });
         CallMethod.invoke(mCallObj, GroupUin, mList, mList2);
     }
+
     @VerController
     @XPChecker
-    public void check(){
+    public void check() {
         Object callMethod = MMethod.FindMethod("com.tencent.mobileqq.troop.handler.TroopMemberCardHandler", null, void.class, new Class[]{
                 String.class,
                 ArrayList.class,
                 ArrayList.class
         });
-        Assert.notNull(callMethod,"callMethod is NULL");
+        Assert.notNull(callMethod, "callMethod is NULL");
     }
 }

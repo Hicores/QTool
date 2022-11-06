@@ -36,25 +36,18 @@ import cc.hicore.qtool.R;
 
 public final class LocalPluginItemController {
     private static final String TAG = "LocalPluginController";
-    private RelativeLayout mRoot;
+    private final RelativeLayout mRoot;
     private String PluginPath;
     private int MeasureHeight;
 
-    private View btn_load;
-    private View btn_loading;
-    private View btn_stop;
+    private final View btn_load;
+    private final View btn_loading;
+    private final View btn_stop;
 
 
     private PluginInfo mInfo;
-
-    public static LocalPluginItemController create(Context context) {
-        LocalPluginItemController controller = new LocalPluginItemController(context);
-        return controller;
-    }
-
     private boolean IsChangeSize = false;
     private boolean IsExpand = false;
-
     private LocalPluginItemController(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mRoot = (RelativeLayout) inflater.inflate(R.layout.plugin_item_local, null);
@@ -67,7 +60,13 @@ public final class LocalPluginItemController {
         btn_stop.setOnClickListener(v -> ClickStop());
         btn_loading.setOnClickListener(v -> ClickForceStop());
     }
-    private void ClickForceStop(){
+
+    public static LocalPluginItemController create(Context context) {
+        LocalPluginItemController controller = new LocalPluginItemController(context);
+        return controller;
+    }
+
+    private void ClickForceStop() {
         new AlertDialog.Builder(mRoot.getContext())
                 .setTitle("停止加载")
                 .setMessage("是否停止加载脚本")
@@ -101,6 +100,7 @@ public final class LocalPluginItemController {
         loadThread.start();
 
     }
+
     private void ClickStop() {
         btn_stop.setVisibility(View.GONE);
         btn_loading.setVisibility(View.VISIBLE);
@@ -254,7 +254,7 @@ public final class LocalPluginItemController {
                             Utils.ShowToastL("已删除");
                         }).setNegativeButton("关闭", (dialog, which) -> {
 
-                }).show();
+                        }).show();
             });
             return true;
 
@@ -328,7 +328,7 @@ public final class LocalPluginItemController {
             helper.setSelectedGuildChannel(selectGuildList);
 
             helper.startShow(new QQSelectHelper.onSelected() {
-                ArrayList<String> selected = new ArrayList<>();
+                final ArrayList<String> selected = new ArrayList<>();
 
                 @Override
                 public void onGroupSelect(ArrayList<String> uin) {
@@ -390,7 +390,7 @@ public final class LocalPluginItemController {
             @Override
             public void onGlobalLayout() {
                 ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                MeasureHeight = (int) (ll.getMeasuredHeight());
+                MeasureHeight = ll.getMeasuredHeight();
                 ll.setVisibility(View.GONE);
             }
         });

@@ -11,11 +11,11 @@ import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "脚本自动加载",itemType = XPItem.ITEM_Hook,period = XPItem.Period_InitData)
-public class AutoLoad{
+@XPItem(name = "脚本自动加载", itemType = XPItem.ITEM_Hook, period = XPItem.Period_InitData)
+public class AutoLoad {
     @VerController
     @CommonExecutor
-    public void work(){
+    public void work() {
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -35,6 +35,7 @@ public class AutoLoad{
             }
         }).start();
     }
+
     //通过插件ID在文件中扫描插件文件目录
     private PluginInfo searchPathByID(String ID) {
         File[] searchResult = new File(HookEnv.ExtraDataPath + "/Plugin").listFiles();

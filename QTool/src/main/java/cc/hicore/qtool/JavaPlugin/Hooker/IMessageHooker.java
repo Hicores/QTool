@@ -8,16 +8,17 @@ import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 
-@XPItem(name = "IPluginMessageHooker",itemType = XPItem.ITEM_Hook)
+@XPItem(name = "IPluginMessageHooker", itemType = XPItem.ITEM_Hook)
 public class IMessageHooker {
     @VerController
     @MethodScanner
-    public void findMethod(MethodContainer container){
-        container.addMethod(MethodFinderBuilder.newFinderByString("pbSendMsg","--->sendRichTextMessageWith_MR : msgseq=",m->true));
+    public void findMethod(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("pbSendMsg", "--->sendRichTextMessageWith_MR : msgseq=", m -> true));
     }
+
     @XPExecutor(methodID = "pbSendMsg")
     @VerController
-    public BaseXPExecutor hook_worker(){
+    public BaseXPExecutor hook_worker() {
         return param -> {
             Object records = param.args[0];
 

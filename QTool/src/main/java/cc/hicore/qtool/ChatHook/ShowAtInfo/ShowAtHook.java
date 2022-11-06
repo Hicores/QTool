@@ -27,11 +27,11 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
 
-@XPItem(name =  "消息下方显示艾特对象",itemType = XPItem.ITEM_Hook)
-public class ShowAtHook{
+@XPItem(name = "消息下方显示艾特对象", itemType = XPItem.ITEM_Hook)
+public class ShowAtHook {
     @VerController
     @UIItem
-    public UIInfo getUIInfo(){
+    public UIInfo getUIInfo() {
         UIInfo ui = new UIInfo();
         ui.groupName = "聊天界面增强";
         ui.targetID = 1;
@@ -39,109 +39,113 @@ public class ShowAtHook{
         ui.name = "在消息下方显示艾特对象";
         return ui;
     }
+
     @VerController
-    @XPExecutor(methodID = "onAIOGetView",period = XPExecutor.After)
-    public BaseXPExecutor worker(){
+    @XPExecutor(methodID = "onAIOGetView", period = XPExecutor.After)
+    public BaseXPExecutor worker() {
         return param -> {
             Object mGetView = param.getResult();
             RelativeLayout mLayout;
-            if(mGetView instanceof RelativeLayout)mLayout = (RelativeLayout) mGetView;else return;
-            List MessageRecoreList = MField.GetFirstField(param.thisObject,List.class);
-            if(MessageRecoreList==null)return;
+            if (mGetView instanceof RelativeLayout) mLayout = (RelativeLayout) mGetView;
+            else return;
+            List MessageRecoreList = MField.GetFirstField(param.thisObject, List.class);
+            if (MessageRecoreList == null) return;
             Object ChatMsg = MessageRecoreList.get((int) param.args[0]);
 
             StringBuilder builder = new StringBuilder();
             String ClzName = ChatMsg.getClass().getSimpleName();
-            if (ClzName.equals("MessageForText") || ClzName.equals("MessageForLongTextMsg")){
-                String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
+            if (ClzName.equals("MessageForText") || ClzName.equals("MessageForLongTextMsg")) {
+                String Extstr = MField.GetField(ChatMsg, "extStr", String.class);
                 JSONObject atJson = new JSONObject(Extstr);
                 String mStr = atJson.optString("troop_at_info_list");
-                ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"),"getTroopMemberInfoFromExtrJson",ArrayList.class,new Class[]{String.class},mStr);
-                String GroupUin = MField.GetField(ChatMsg,ChatMsg.getClass(),"frienduin",String.class);
-                if (AtList3 != null){
-                    for (Object obj : AtList3){
-                        long mLongData = MField.GetField(obj,"uin",long.class);
-                        if (mLongData == 0){
+                ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), "getTroopMemberInfoFromExtrJson", ArrayList.class, new Class[]{String.class}, mStr);
+                String GroupUin = MField.GetField(ChatMsg, ChatMsg.getClass(), "frienduin", String.class);
+                if (AtList3 != null) {
+                    for (Object obj : AtList3) {
+                        long mLongData = MField.GetField(obj, "uin", long.class);
+                        if (mLongData == 0) {
                             builder.append("AtQQ:全体成员\n");
                             continue;
                         }
-                        builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")).append("(").append(mLongData).append(")\n");
+                        builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin, String.valueOf(mLongData)).replace("\n", "")).append("(").append(mLongData).append(")\n");
                     }
                 }
             }
-            if (ClzName.equals("MessageForReplyText")){
+            if (ClzName.equals("MessageForReplyText")) {
                 HashSet<String> showText = new LinkedHashSet<>();
-                Object replyTo = MField.GetField(ChatMsg,"mSourceMsgInfo");
-                long replyToUin = MField.GetField(replyTo,"mSourceMsgSenderUin");
-                long replyToU = MField.GetField(replyTo,"mSourceMsgToUin");
-                showText.add("ReplyQQ:"+QQGroupUtils.Group_Get_Member_Name(""+replyToU,""+replyToUin).replace("\n","")+"("+replyToUin+")");
+                Object replyTo = MField.GetField(ChatMsg, "mSourceMsgInfo");
+                long replyToUin = MField.GetField(replyTo, "mSourceMsgSenderUin");
+                long replyToU = MField.GetField(replyTo, "mSourceMsgToUin");
+                showText.add("ReplyQQ:" + QQGroupUtils.Group_Get_Member_Name("" + replyToU, "" + replyToUin).replace("\n", "") + "(" + replyToUin + ")");
 
-                String Extstr = MField.GetField(ChatMsg,"extStr",String.class);
+                String Extstr = MField.GetField(ChatMsg, "extStr", String.class);
                 JSONObject atJson = new JSONObject(Extstr);
                 String mStr = atJson.optString("troop_at_info_list");
-                ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"),"getTroopMemberInfoFromExtrJson",ArrayList.class,new Class[]{String.class},mStr);
-                String GroupUin = MField.GetField(ChatMsg,ChatMsg.getClass(),"frienduin",String.class);
-                if (AtList3 != null){
-                    for (Object obj : AtList3){
-                        long mLongData = MField.GetField(obj,"uin",long.class);
-                        if (mLongData == 0){
+                ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), "getTroopMemberInfoFromExtrJson", ArrayList.class, new Class[]{String.class}, mStr);
+                String GroupUin = MField.GetField(ChatMsg, ChatMsg.getClass(), "frienduin", String.class);
+                if (AtList3 != null) {
+                    for (Object obj : AtList3) {
+                        long mLongData = MField.GetField(obj, "uin", long.class);
+                        if (mLongData == 0) {
                             builder.append("AtQQ:全体成员\n");
                             continue;
                         }
-                        showText.add("AtQQ:"+QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")+"("+mLongData+")");
+                        showText.add("AtQQ:" + QQGroupUtils.Group_Get_Member_Name(GroupUin, String.valueOf(mLongData)).replace("\n", "") + "(" + mLongData + ")");
                     }
                 }
-                for (String text : showText){
+                for (String text : showText) {
                     builder.append(text).append("\n");
                 }
             }
 
-            if (ClzName.equals("MessageForMixedMsg")){
-                ArrayList items = MField.GetField(ChatMsg,"msgElemList");
+            if (ClzName.equals("MessageForMixedMsg")) {
+                ArrayList items = MField.GetField(ChatMsg, "msgElemList");
 
-                for (Object objs : items){
-                    String Extstr = MField.GetField(objs,"extStr",String.class);
-                    if (TextUtils.isEmpty(Extstr))continue;
+                for (Object objs : items) {
+                    String Extstr = MField.GetField(objs, "extStr", String.class);
+                    if (TextUtils.isEmpty(Extstr)) continue;
                     JSONObject atJson = new JSONObject(Extstr);
                     String mStr = atJson.optString("troop_at_info_list");
-                    if (TextUtils.isEmpty(mStr))continue;
-                    ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"),"getTroopMemberInfoFromExtrJson",ArrayList.class,new Class[]{String.class},mStr);
-                    String GroupUin = MField.GetField(ChatMsg,ChatMsg.getClass(),"frienduin",String.class);
-                    if (AtList3 != null){
-                        for (Object obj : AtList3){
-                            long mLongData = MField.GetField(obj,"uin",long.class);
-                            if (mLongData == 0){
+                    if (TextUtils.isEmpty(mStr)) continue;
+                    ArrayList AtList3 = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), "getTroopMemberInfoFromExtrJson", ArrayList.class, new Class[]{String.class}, mStr);
+                    String GroupUin = MField.GetField(ChatMsg, ChatMsg.getClass(), "frienduin", String.class);
+                    if (AtList3 != null) {
+                        for (Object obj : AtList3) {
+                            long mLongData = MField.GetField(obj, "uin", long.class);
+                            if (mLongData == 0) {
                                 builder.append("AtQQ:全体成员\n");
                                 continue;
                             }
-                            builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin,String.valueOf(mLongData)).replace("\n","")).append("(").append(mLongData).append(")\n");
+                            builder.append("AtQQ:").append(QQGroupUtils.Group_Get_Member_Name(GroupUin, String.valueOf(mLongData)).replace("\n", "")).append("(").append(mLongData).append(")\n");
                         }
                     }
                 }
             }
 
-            if (builder.length() != 0){
-                builder.setLength(builder.length()-1);
-                MMethod.CallMethod(mLayout,"setTailMessage",void.class,new Class[]{boolean.class,CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")},true,builder.toString(),null);
-            }else {
+            if (builder.length() != 0) {
+                builder.setLength(builder.length() - 1);
+                MMethod.CallMethod(mLayout, "setTailMessage", void.class, new Class[]{boolean.class, CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")}, true, builder.toString(), null);
+            } else {
                 TextView tailView = mLayout.findViewById(QQEnvUtils.getTargetID("chat_item_tail_message"));
-                if (tailView != null){
+                if (tailView != null) {
                     String text = tailView.getText().toString();
-                    if (text.startsWith("AtQQ") || text.startsWith("ReplyQQ:")){
-                        MMethod.CallMethod(mLayout,"setTailMessage",void.class,new Class[]{boolean.class,CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")},false,"",null);
+                    if (text.startsWith("AtQQ") || text.startsWith("ReplyQQ:")) {
+                        MMethod.CallMethod(mLayout, "setTailMessage", void.class, new Class[]{boolean.class, CharSequence.class, MClass.loadClass("android.view.View$OnClickListener")}, false, "", null);
                     }
                 }
             }
         };
     }
+
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void methodFinder(MethodContainer container){
+    public void methodFinder(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView(container);
     }
+
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
-    public void getHookMethod_890(MethodContainer container){
+    public void getHookMethod_890(MethodContainer container) {
         Finders.AIOMessageListAdapter_getView_890(container);
     }
 }

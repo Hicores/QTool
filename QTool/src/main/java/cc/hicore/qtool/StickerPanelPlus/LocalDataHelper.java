@@ -11,12 +11,7 @@ import cc.hicore.Utils.FileUtils;
 import cc.hicore.qtool.HookEnv;
 
 public class LocalDataHelper {
-    public static class LocalPath{
-        public String coverName;
-        public String Name;
-        public String storePath;
-    }
-    public static List<LocalPath> readPaths(){
+    public static List<LocalPath> readPaths() {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -30,29 +25,18 @@ public class LocalDataHelper {
                     localPath.Name = path.getString("Name");
                     localPath.storePath = path.getString("storePath");
                     paths.add(localPath);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
             }
             return paths;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
-    public static class LocalPicItems{
-        public String MD5;
-        public String fileName;
-        public String thumbName;
 
-        public String url;
-        public String thumbUrl;
-
-
-        public long addTime;
-        public int type;
-    }
-    public synchronized static List<LocalPicItems> getPicItems(String pathName){
+    public synchronized static List<LocalPicItems> getPicItems(String pathName) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathName + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
@@ -70,28 +54,29 @@ public class LocalDataHelper {
                     localPath.thumbName = path.optString("thumbName");
                     localPath.thumbUrl = path.optString("thumbUrl");
                     items.add(localPath);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
             }
             return items;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
-    public synchronized static boolean addPath(LocalPath addInfo){
+
+    public synchronized static boolean addPath(LocalPath addInfo) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
-            if (!new File(pathSetDir).exists()){
+            if (!new File(pathSetDir).exists()) {
                 FileUtils.WriteToFile(pathSetDir, "{\"paths\":[]}");
             }
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("paths");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("Name").equals(addInfo.Name)){
+                if (path.getString("Name").equals(addInfo.Name)) {
                     return false;
                 }
             }
@@ -104,12 +89,13 @@ public class LocalDataHelper {
             new File(HookEnv.ExtraDataPath + "本地表情包/" + addInfo.storePath).mkdirs();
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    public synchronized static boolean addPicItem(String pathName, LocalPicItems addInfo){
+
+    public synchronized static boolean addPicItem(String pathName, LocalPicItems addInfo) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathName + "/info.json";
             if (!new File(pathSetDir).exists()) {
@@ -121,7 +107,7 @@ public class LocalDataHelper {
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("MD5").equals(addInfo.MD5)){
+                if (path.getString("MD5").equals(addInfo.MD5)) {
                     return false;
                 }
             }
@@ -139,57 +125,60 @@ public class LocalDataHelper {
 
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    public synchronized static void deletePath(LocalPath pathInfo){
+
+    public synchronized static void deletePath(LocalPath pathInfo) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("paths");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("Name").equals(pathInfo.Name)){
+                if (path.getString("Name").equals(pathInfo.Name)) {
                     pathList.remove(i);
                     break;
                 }
             }
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
             FileUtils.deleteFile(new File(HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public synchronized static void deletePicItem(LocalPath pathInfo,LocalPicItems item){
+
+    public synchronized static void deletePicItem(LocalPath pathInfo, LocalPicItems item) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("MD5").equals(item.MD5)){
+                if (path.getString("MD5").equals(item.MD5)) {
                     pathList.remove(i);
                     break;
                 }
             }
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public synchronized static void setPathCover(LocalPath pathInfo,LocalPicItems coverItem){
+
+    public synchronized static void setPathCover(LocalPath pathInfo, LocalPicItems coverItem) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/set.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("paths");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("Name").equals(pathInfo.Name)){
-                    if (coverItem.type == 1){
+                if (path.getString("Name").equals(pathInfo.Name)) {
+                    if (coverItem.type == 1) {
                         path.put("coverName", coverItem.fileName);
-                    }else if (coverItem.type == 2){
+                    } else if (coverItem.type == 2) {
                         path.put("coverName", coverItem.url);
                     }
 
@@ -197,18 +186,19 @@ public class LocalDataHelper {
                 }
             }
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public  synchronized static void updatePicItemInfo(LocalPath pathInfo,LocalPicItems newItemInfo){
+
+    public synchronized static void updatePicItemInfo(LocalPath pathInfo, LocalPicItems newItemInfo) {
         try {
             String pathSetDir = HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/info.json";
             JSONObject pathJson = new JSONObject(FileUtils.ReadFileString(pathSetDir));
             JSONArray pathList = pathJson.getJSONArray("items");
             for (int i = 0; i < pathList.length(); i++) {
                 JSONObject path = pathList.getJSONObject(i);
-                if(path.getString("MD5").equals(newItemInfo.MD5)){
+                if (path.getString("MD5").equals(newItemInfo.MD5)) {
                     path.put("fileName", newItemInfo.fileName);
                     path.put("addTime", newItemInfo.addTime);
                     path.put("type", newItemInfo.type);
@@ -219,27 +209,49 @@ public class LocalDataHelper {
                 }
             }
             FileUtils.WriteToFile(pathSetDir, pathJson.toString());
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public static String getLocalItemPath(RecentStickerHelper.RecentItemInfo recentItemInfo){
+
+    public static String getLocalItemPath(RecentStickerHelper.RecentItemInfo recentItemInfo) {
         return HookEnv.ExtraDataPath + "本地表情包/" + recentItemInfo.pathName + "/" + recentItemInfo.fileName;
     }
-    public static String getLocalItemPath(LocalPath pathInfo,LocalPicItems newItemInfo){
+
+    public static String getLocalItemPath(LocalPath pathInfo, LocalPicItems newItemInfo) {
         try {
             return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.fileName;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    public static String getLocalThumbPath(LocalPath pathInfo,LocalPicItems newItemInfo){
+
+    public static String getLocalThumbPath(LocalPath pathInfo, LocalPicItems newItemInfo) {
         try {
             return HookEnv.ExtraDataPath + "本地表情包/" + pathInfo.storePath + "/" + newItemInfo.fileName + "_thumb";
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static class LocalPath {
+        public String coverName;
+        public String Name;
+        public String storePath;
+    }
+
+    public static class LocalPicItems {
+        public String MD5;
+        public String fileName;
+        public String thumbName;
+
+        public String url;
+        public String thumbUrl;
+
+
+        public long addTime;
+        public int type;
     }
 }

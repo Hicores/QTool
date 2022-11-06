@@ -12,20 +12,11 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "BaseChatPie_Init",itemType = XPItem.ITEM_Hook)
-public class BaseChatPie{
+@XPItem(name = "BaseChatPie_Init", itemType = XPItem.ITEM_Hook)
+public class BaseChatPie {
     public static Object cacheChatPie;
-    @VerController
-    @XPExecutor(methodID = "basechatpie_init",period = XPExecutor.After)
-    public BaseXPExecutor worker(){
-        return param -> {
-            cacheChatPie = param.thisObject;
-            HookEnv.AppInterface = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"));
-            HookEnv.SessionInfo = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
-            HookEnv.isCurrentGuild = false;
-        };
-    }
-    public static Object getNewSessionInfo(){
+
+    public static Object getNewSessionInfo() {
         try {
             return MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
         } catch (Exception e) {
@@ -33,14 +24,27 @@ public class BaseChatPie{
             return null;
         }
     }
+
+    @VerController
+    @XPExecutor(methodID = "basechatpie_init", period = XPExecutor.After)
+    public BaseXPExecutor worker() {
+        return param -> {
+            cacheChatPie = param.thisObject;
+            HookEnv.AppInterface = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.app.QQAppInterface"));
+            HookEnv.SessionInfo = MField.GetFirstField(cacheChatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo"));
+            HookEnv.isCurrentGuild = false;
+        };
+    }
+
     @MethodScanner
     @VerController(targetVer = QQVersion.QQ_8_8_93)
-    public void getBaseChatPieInit(MethodContainer container){
+    public void getBaseChatPieInit(MethodContainer container) {
         Finders.BaseChatPieInit_8893(container);
     }
+
     @MethodScanner
     @VerController(max_targetVer = QQVersion.QQ_8_8_93)
-    public void getBaseChatPieOld(MethodContainer container){
+    public void getBaseChatPieOld(MethodContainer container) {
         Finders.BaseChatPieInit(container);
     }
 }

@@ -12,7 +12,7 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Assert;
 import cc.hicore.qtool.HookEnv;
 
-@XPItem(name = "Group_Change_Title",itemType = XPItem.ITEM_Api)
+@XPItem(name = "Group_Change_Title", itemType = XPItem.ITEM_Api)
 public class Group_Change_Title {
     @VerController
     @ApiExecutor
@@ -23,12 +23,13 @@ public class Group_Change_Title {
                 },
                 HookEnv.AppInterface, GroupUin, UserUin, title, mProxy);
     }
+
     @VerController
     @XPChecker
-    public void check(){
-        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"),null,void.class,new Class[]{
+    public void check() {
+        Method m = MMethod.FindMethod(MClass.loadClass("com.tencent.biz.troop.EditUniqueTitleActivity"), null, void.class, new Class[]{
                 HookEnv.AppInterface.getClass(), String.class, String.class, String.class, MClass.loadClass("mqq.observer.BusinessObserver")
         });
-        Assert.notNull(m,"change title method is null");
+        Assert.notNull(m, "change title method is null");
     }
 }

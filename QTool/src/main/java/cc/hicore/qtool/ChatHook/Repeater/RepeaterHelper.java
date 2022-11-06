@@ -20,6 +20,7 @@ import de.robv.android.xposed.XposedBridge;
 @SuppressLint("ResourceType")
 public class RepeaterHelper {
     private static final HashMap<String, String> supportMessageTypes = new HashMap<>();
+    private static long double_click_time = 0;
 
     static {
         supportMessageTypes.put("MessageForPic", "RelativeLayout");
@@ -40,15 +41,13 @@ public class RepeaterHelper {
         supportMessageTypes.put("MessageForPokeEmo", "RelativeLayout");
     }
 
-    private static long double_click_time = 0;
-
     public static void createRepeatIcon(RelativeLayout baseChatItem, Object ChatMsg) throws Exception {
         boolean isSendFromLocal;
-        int istroop = MField.GetField(ChatMsg,"istroop",int.class);
-        if (istroop == 1 || istroop == 0){
-            String UserUin = MField.GetField(ChatMsg,"senderuin",String.class);
+        int istroop = MField.GetField(ChatMsg, "istroop", int.class);
+        if (istroop == 1 || istroop == 0) {
+            String UserUin = MField.GetField(ChatMsg, "senderuin", String.class);
             isSendFromLocal = UserUin.equals(QQEnvUtils.getCurrentUin());
-        }else {
+        } else {
             isSendFromLocal = MMethod.CallMethodNoParam(ChatMsg, "isSendFromLocal", boolean.class);
         }
 
@@ -60,16 +59,16 @@ public class RepeaterHelper {
             if (imageButton == null) {
                 imageButton = new ImageButton(context);
                 imageButton.setImageDrawable(Hooker.cacheDrawable);
-                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)), Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
+                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(Utils.dip2px(context, HookEnv.Config.getInt("Repeater", "Size", 32)), Utils.dip2px(context, HookEnv.Config.getInt("Repeater", "Size", 32)));
                 imageButton.setAdjustViewBounds(true);
                 imageButton.getBackground().setAlpha(0);
-                imageButton.setMaxHeight(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
-                imageButton.setMaxWidth(Utils.dip2px(context, HookEnv.Config.getInt("Repeater","Size",32)));
+                imageButton.setMaxHeight(Utils.dip2px(context, HookEnv.Config.getInt("Repeater", "Size", 32)));
+                imageButton.setMaxWidth(Utils.dip2px(context, HookEnv.Config.getInt("Repeater", "Size", 32)));
                 imageButton.setId(256666);
                 imageButton.setTag(ChatMsg);
                 imageButton.setOnClickListener(v -> {
-                    if (HookEnv.Config.getBoolean("Repeater","DoubleClickMode",false)){
-                        if (System.currentTimeMillis() - double_click_time > 300){
+                    if (HookEnv.Config.getBoolean("Repeater", "DoubleClickMode", false)) {
+                        if (System.currentTimeMillis() - double_click_time > 300) {
                             double_click_time = System.currentTimeMillis();
                             return;
                         }
@@ -84,7 +83,7 @@ public class RepeaterHelper {
                 baseChatItem.addView(imageButton, param);
             } else {
                 if (imageButton.getVisibility() != View.VISIBLE)
-                imageButton.setVisibility(View.VISIBLE);
+                    imageButton.setVisibility(View.VISIBLE);
                 imageButton.setTag(ChatMsg);
             }
 
