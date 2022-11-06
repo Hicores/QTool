@@ -1,6 +1,7 @@
 package cc.hicore.Utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import cc.hicore.ReflectUtils.MClass;
@@ -177,9 +179,15 @@ public class Utils {
 
     public static void restartSelf(Context context){
         Intent in = new Intent(context, MClass.loadClass("com.tencent.mobileqq.activity.SplashActivity"));
-//FLAG_ACTIVITY_CLEAR_TASK不可省略，这个如果没有，开机自启之后，崩溃将无法重启
         in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(in);
+        ActivityManager mActivityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> mList = mActivityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : mList) {
+            if (runningAppProcessInfo.pid != android.os.Process.myPid()) {
+                android.os.Process.killProcess(runningAppProcessInfo.pid);
+            }
+        }
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
