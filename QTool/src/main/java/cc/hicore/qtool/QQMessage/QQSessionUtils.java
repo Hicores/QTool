@@ -58,7 +58,7 @@ public class QQSessionUtils {
             }
             return mObj;
         } catch (Exception e) {
-            LogUtils.error(TAG, "Can't not build session:\n" + e);
+            LogUtils.error(TAG, e);
             return null;
         }
     }
@@ -153,7 +153,7 @@ public class QQSessionUtils {
                 return mObj;
             }
         } catch (Exception e) {
-            LogUtils.error(TAG, "Can't not build guild session:\n" + e);
+            LogUtils.error(TAG,  e);
             return null;
         }
 

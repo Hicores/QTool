@@ -44,7 +44,7 @@ public class QQMsgSender {
             });
             CallMethod.invoke(null, HookEnv.AppInterface, HookEnv.AppContext, _Session, text, atList);
         } catch (Exception e) {
-            LogUtils.error("sendText", Log.getStackTraceString(e));
+            LogUtils.error("sendText", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class QQMsgSender {
                     });
             CallMethod.invoke(null, HookEnv.AppInterface, _Session, structMsg);
         } catch (Throwable th) {
-            LogUtils.error("sendStruct", Log.getStackTraceString(th));
+            LogUtils.error("sendStruct", th);
         }
     }
 
@@ -88,7 +88,7 @@ public class QQMsgSender {
                     });
             CallMethod.invoke(null, HookEnv.AppInterface, _Session, arkAppMsg);
         } catch (Throwable th) {
-            LogUtils.error("sendArkApp", Log.getStackTraceString(th));
+            LogUtils.error("sendArkApp", th);
         }
     }
 

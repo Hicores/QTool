@@ -15,22 +15,20 @@ public class LogUtils {
         LogOutputFile.Print(LogOutputFile.LEVEL_DEBUG, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
     }
 
-    public static void error(String Tag, String text) {
-        AutoReport.reportException(Tag,new Throwable(text),"");
+    private static void error(String Tag, String text) {
         LogOutputFile.Print(LogOutputFile.LEVEL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
-
     }
-
     public static void error(String Tag, Throwable t) {
+        AutoReport.reportException(Tag,t,"");
         error(Tag, Log.getStackTraceString(t));
     }
 
-    public static void fetal_error(String Tag, String text) {
-        AutoReport.reportException(Tag,new Throwable(text),"");
+    private static void fetal_error(String Tag, String  text) {
         LogOutputFile.Print(LogOutputFile.LEVEL_FETAL_ERROR, "[" + format.format(new Date()) + "]" + Tag + ":" + text);
     }
 
     public static void fetal_error(String Tag, Throwable t) {
+        AutoReport.reportException(Tag,t,"");
         fetal_error(Tag, Log.getStackTraceString(t));
     }
 

@@ -99,7 +99,7 @@ public class CopyCardCode{
                         }
 
                     } catch (Throwable e) {
-                        LogUtils.error("CopyXml", Log.getStackTraceString(e));
+                        LogUtils.error("CopyXml", e);
                     }
                     return false;
                 });

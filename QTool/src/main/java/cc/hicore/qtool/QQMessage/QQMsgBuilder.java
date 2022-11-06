@@ -62,7 +62,7 @@ public class QQMsgBuilder {
             med.invoke(_ArkAppMsg, json);
             return _ArkAppMsg;
         } catch (Throwable th) {
-            LogUtils.error("TAG", "build_json:\n" + th);
+            LogUtils.error("build_json", th);
             return null;
         }
     }
@@ -150,7 +150,7 @@ public class QQMsgBuilder {
             }
             return AtInfoObj;
         } catch (Exception e) {
-            LogUtils.error("buildAtInfo", Log.getStackTraceString(e));
+            LogUtils.error("buildAtInfo", e);
             return null;
         }
     }

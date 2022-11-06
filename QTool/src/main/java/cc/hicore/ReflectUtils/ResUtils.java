@@ -18,7 +18,7 @@ public class ResUtils {
                 EzXHelperInit.INSTANCE.addModuleAssetPath(ctx);
             }
         } catch (Exception e) {
-            LogUtils.fetal_error("Inject_Res", Log.getStackTraceString(e));
+            LogUtils.fetal_error("Inject_Res", e);
         }
     }
 

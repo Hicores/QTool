@@ -145,7 +145,7 @@ public class EnvHook {
             AppCenter.start(HookEnv.Application, "6f119935-286d-4a6b-b9e4-c9f18513dbf8",
                     Analytics.class, Crashes.class);
         } catch (Exception e) {
-            LogUtils.error("AppCenter", "Init Failed:\n" + Log.getStackTraceString(e));
+            LogUtils.error("AppCenter", e);
         }
 
 

@@ -54,7 +54,7 @@ public class BaseProxyAct extends Activity{
             intent.putExtra("Tag",Tag);
             baseAct.startActivity(intent);
         }catch (Exception e){
-            LogUtils.error("BaseActProxy", Log.getStackTraceString(e));
+            LogUtils.error("BaseActProxy", e);
             Utils.ShowToast("无法创建界面:"+e);
         }
 

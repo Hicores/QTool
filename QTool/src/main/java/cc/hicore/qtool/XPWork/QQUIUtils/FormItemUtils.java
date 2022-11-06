@@ -18,7 +18,7 @@ public class FormItemUtils {
             NewItem.setOnClickListener(listener);
             return NewItem;
         } catch (Exception e) {
-            LogUtils.error(TAG, "Can't create ListItem because:" + Log.getStackTraceString(e));
+            LogUtils.error(TAG, e);
             return null;
         }
     }
@@ -31,7 +31,7 @@ public class FormItemUtils {
             NewItem.setOnClickListener(listener);
             return NewItem;
         } catch (Exception e) {
-            LogUtils.error(TAG, "Can't create MultiItem because:" + Log.getStackTraceString(e));
+            LogUtils.error(TAG, e);
             return null;
         }
     }
