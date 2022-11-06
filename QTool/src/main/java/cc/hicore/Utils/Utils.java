@@ -79,9 +79,9 @@ public class Utils {
         second = second % 60;
         return(days == 0 ? "" : days + "天") + (hours == 0 ? "" : hours + "小时") + (minutes == 0 ? "" : minutes + "分钟") + (second == 0 ? "" : second + "秒");
     }
-    public static String GetNowTime22() {
+    public static String GetNowTime33() {
         Date day=new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
         return (df.format(day));
     }
     public static String GetNowTime() {

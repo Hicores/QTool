@@ -22,9 +22,12 @@ public class CatcherPacker {
     ZipOutputStream zOut;
     ByteArrayOutputStream bArr = new ByteArrayOutputStream();
     String Path;
+    private String getRandomName(){
+        String curNano = System.nanoTime()+"";
+        return "Crash_"+ Utils.GetNowTime33()+"." + curNano.substring(6) +".zip";
+    }
     private CatcherPacker(){
-        String FileName = "CrashReport_"+ Utils.GetNowTime22()+new Random().nextInt() +".zip";
-        Path = HookEnv.ExtraDataPath + "CrashReport/"+FileName;
+        Path = HookEnv.ExtraDataPath + "CrashReport/" + getRandomName();
         new File(HookEnv.ExtraDataPath + "CrashReport").mkdirs();
         try {
             zOut = new ZipOutputStream(new FileOutputStream(Path));
