@@ -2,6 +2,7 @@ package cc.hicore.HookItemLoader.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -296,9 +297,10 @@ public class MethodScannerWorker {
         return null;
     }
     private static Method getMethodFromCache(String ID){
-        String s = HookEnv.Config.getString("method_info",ID,null);
-        if (s == null)return null;
-        return DescToMethod(s);
+        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("method_info",Context.MODE_PRIVATE);
+        String methodInfo = share.getString(ID,null);
+        if (methodInfo == null)return null;
+        return DescToMethod(methodInfo);
     }
     private static Method DescToMethod(String desc){
         try{
@@ -318,10 +320,14 @@ public class MethodScannerWorker {
         }
     }
     private static void cleanAllCache(){
-        HookEnv.Config.removeAll("method_info");
+        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("method_info",Context.MODE_PRIVATE);
+        share.edit().clear().apply();
     }
     private static void writeMethodToCache(String ID,Method method){
-        HookEnv.Config.setString("method_info",ID,getMethodDesc(method));
+        SharedPreferences share = HookEnv.AppContext.getSharedPreferences("method_info",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putString(ID,getMethodDesc(method));
+        editor.apply();
     }
     private static String getMethodDesc(Method m){
         try{
