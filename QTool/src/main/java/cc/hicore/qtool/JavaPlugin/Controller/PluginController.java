@@ -254,6 +254,8 @@ public class PluginController {
         space.setMethod("load", new BshMethod(PluginMethod.class.getMethod("load", String.class), env));
         space.setMethod("loadJar", new BshMethod(PluginMethod.class.getMethod("loadJar", String.class), env));
         space.setMethod("IncludeFile", new BshMethod(PluginMethod.class.getMethod("IncludeFile", String.class), env));
+        space.setMethod("setFlag", new BshMethod(PluginMethod.class.getMethod("setFlag", String.class), env));
+
         space.setMethod("getFileUrl", new BshMethod(PluginMethod.class.getMethod("getFileDirectUrl", Object.class), env));
 
         space.setMethod("sendPackMsg", new BshMethod(PluginMethod.class.getMethod("sendPackMsg", String.class, String.class, String.class, String.class, String.class, String.class), env));

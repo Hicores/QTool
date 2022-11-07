@@ -261,6 +261,11 @@ public class PluginMethod {
         LogUtils.debug("IncludeFile", path);
     }
 
+    public void setFlag(String flag){
+        //Do Nothing
+        LogUtils.info("PluginSetFlag",info_.PluginName+"->"+flag);
+    }
+
     public int getChatType() {
         return QQSessionUtils.getSessionID();
     }
