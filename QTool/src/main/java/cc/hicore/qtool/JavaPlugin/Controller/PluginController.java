@@ -55,17 +55,28 @@ public class PluginController {
     }
 
     //通过ID移除一个脚本菜单项目
-    public static void RemoveItem(String PluginVerifyID, String ItemID) {
+    public static void RemoveItem(String PluginVerifyID, String ItemID,int type) {
         PluginInfo info = runningInfo.get(PluginVerifyID);
         if (info != null) {
-            info.ItemFunctions.remove(ItemID);
+            if (type == 0) {
+                info.ItemFunctions.remove(ItemID);
+            } else {
+                Iterator<String> iterator = info.ItemFunctions.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String key = iterator.next();
+                    ItemInfo itemInfo = info.ItemFunctions.get(key);
+                    if (itemInfo.itemType == type) {
+                        iterator.remove();
+                    }
+                }
+            }
         }
     }
     //通过名字移除一个脚本菜单项目
-    public static void RemoveItemByName(String PluginVerifyID, String ItemName){
+    public static void RemoveItemByName(String PluginVerifyID, String ItemName,int type){
         PluginInfo info = runningInfo.get(PluginVerifyID);
         if (info != null) {
-            info.ItemFunctions.values().removeIf(itemInfo -> itemInfo.ItemName.equals(ItemName));
+            info.ItemFunctions.values().removeIf(itemInfo -> itemInfo.ItemName.equals(ItemName) && (itemInfo.itemType == type));
         }
     }
 
@@ -247,6 +258,9 @@ public class PluginController {
         space.setMethod("RemoveItem", new BshMethod(PluginMethod.class.getMethod("RemoveItem", String.class), env));
         space.setMethod("RemoveItemByName", new BshMethod(PluginMethod.class.getMethod("RemoveItemByName", String.class), env));
         space.setMethod("setItemCallback", new BshMethod(PluginMethod.class.getMethod("setItemCallback", String.class), env));
+        space.setMethod("addMenuItem", new BshMethod(PluginMethod.class.getMethod("addMenuItem", String.class, String.class), env));
+        space.setMethod("removeMenuItem", new BshMethod(PluginMethod.class.getMethod("removeMenu", String.class), env));
+        space.setMethod("removeMenuItemByName", new BshMethod(PluginMethod.class.getMethod("removeMenuItemByName", String.class), env));
 
         space.setMethod("putString", new BshMethod(PluginMethod.class.getMethod("putString", String.class, String.class, String.class), env));
         space.setMethod("putInt", new BshMethod(PluginMethod.class.getMethod("putInt", String.class, String.class, int.class), env));

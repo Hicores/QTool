@@ -143,10 +143,20 @@ public class PluginMethod {
     }
 
     public void RemoveItem(String ItemID) {
-        PluginController.RemoveItem(info_.PluginVerifyID, ItemID);
+        PluginController.RemoveItem(info_.PluginVerifyID, ItemID,1);
     }
     public void RemoveItemByName(String Name){
-        PluginController.RemoveItemByName(info_.PluginVerifyID,Name);
+        PluginController.RemoveItemByName(info_.PluginVerifyID,Name,1);
+    }
+
+    public String addMenuItem(String Name, String CallbackName){
+        return PluginController.AddItem(info_.PluginVerifyID,Name,CallbackName,2);
+    }
+    public void removeMenuItemByName(String Name){
+        PluginController.RemoveItemByName(info_.PluginVerifyID,Name,2);
+    }
+    public void removeMenu(String key){
+        PluginController.RemoveItem(info_.PluginVerifyID,key,2);
     }
 
     public void Toast(Object obj) {
