@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import cc.hicore.ConfigUtils.GlobalConfig;
+import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 
@@ -35,6 +36,9 @@ public class ExtraPathInit {
                 new File(HookEnv.ExtraDataPath + ".nomedia").createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            if (HookEnv.IsMainProcess){
+                FileUtils.deleteFile(new File(HookEnv.ExtraDataPath + "Cache"));
             }
         }
     }
