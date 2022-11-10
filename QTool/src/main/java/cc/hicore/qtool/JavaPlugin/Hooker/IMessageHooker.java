@@ -7,6 +7,7 @@ import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
 import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
+import cc.hicore.qtool.JavaPlugin.Controller.PluginMessageProcessor;
 
 @XPItem(name = "IPluginMessageHooker", itemType = XPItem.ITEM_Hook)
 public class IMessageHooker {
@@ -21,7 +22,7 @@ public class IMessageHooker {
     public BaseXPExecutor hook_worker() {
         return param -> {
             Object records = param.args[0];
-
+            PluginMessageProcessor.onPbSendMessage(records);
         };
     }
 }

@@ -330,4 +330,11 @@ public class PluginMessageProcessor {
         PluginController.checkAndInvoke(GroupUin, "onRequestJoin", requestInfo);
     }
 
+    public static void onPbSendMessage(Object msgRecord){
+        PluginInfo.EarlyInfo earlyInfo = decodeEarly(msgRecord);
+        if (earlyInfo != null){
+            PluginController.checkAndInvoke(earlyInfo.GroupUin, "onPbSendMessage", msgRecord);
+        }
+    }
+
 }
