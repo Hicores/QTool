@@ -44,7 +44,12 @@ public class PanelUtils {
         NewInfo.MD5 = MD5.toUpperCase(Locale.ROOT);
 
         if (URL.startsWith("http")) {
-
+            EmoOnlineLoader.submit(NewInfo, () -> {
+                Glide.with(HookEnv.AppContext)
+                        .load(new File(NewInfo.Path))
+                        .fitCenter()
+                        .into(preView);
+            });
         } else {
             NewInfo.Path = URL;
             Glide.with(HookEnv.AppContext)

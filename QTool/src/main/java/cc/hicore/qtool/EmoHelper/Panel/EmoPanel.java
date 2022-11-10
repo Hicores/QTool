@@ -25,6 +25,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.EmoOnlineLoader;
 
 public class EmoPanel {
     static String choiceName = "";
@@ -57,6 +58,13 @@ public class EmoPanel {
                     .load(new File(NewInfo.Path))
                     .fitCenter()
                     .into(preView);
+        }else {
+            EmoOnlineLoader.submit(NewInfo, () -> {
+                Glide.with(HookEnv.AppContext)
+                        .load(new File(NewInfo.Path))
+                        .fitCenter()
+                        .into(preView);
+            });
         }
 
         ArrayList<String> NameList = EmoSearchAndCache.searchForPathList();
