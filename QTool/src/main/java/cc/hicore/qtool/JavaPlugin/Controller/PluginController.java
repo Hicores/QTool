@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,11 +54,18 @@ public class PluginController {
         }
     }
 
-    //移除一个脚本菜单项目
+    //通过ID移除一个脚本菜单项目
     public static void RemoveItem(String PluginVerifyID, String ItemID) {
         PluginInfo info = runningInfo.get(PluginVerifyID);
         if (info != null) {
             info.ItemFunctions.remove(ItemID);
+        }
+    }
+    //通过名字移除一个脚本菜单项目
+    public static void RemoveItemByName(String PluginVerifyID, String ItemName){
+        PluginInfo info = runningInfo.get(PluginVerifyID);
+        if (info != null) {
+            info.ItemFunctions.values().removeIf(itemInfo -> itemInfo.ItemName.equals(ItemName));
         }
     }
 
@@ -237,6 +245,7 @@ public class PluginController {
         space.setMethod("AddItem", new BshMethod(PluginMethod.class.getMethod("AddItem", String.class, String.class, String.class), env));
         space.setMethod("RemoveItem", new BshMethod(PluginMethod.class.getMethod("RemoveItem", String.class, String.class), env));
         space.setMethod("RemoveItem", new BshMethod(PluginMethod.class.getMethod("RemoveItem", String.class), env));
+        space.setMethod("RemoveItemByName", new BshMethod(PluginMethod.class.getMethod("RemoveItemByName", String.class), env));
         space.setMethod("setItemCallback", new BshMethod(PluginMethod.class.getMethod("setItemCallback", String.class), env));
 
         space.setMethod("putString", new BshMethod(PluginMethod.class.getMethod("putString", String.class, String.class, String.class), env));

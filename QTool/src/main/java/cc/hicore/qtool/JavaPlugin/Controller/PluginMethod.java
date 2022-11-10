@@ -145,6 +145,9 @@ public class PluginMethod {
     public void RemoveItem(String ItemID) {
         PluginController.RemoveItem(info_.PluginVerifyID, ItemID);
     }
+    public void RemoveItemByName(String Name){
+        PluginController.RemoveItemByName(info_.PluginVerifyID,Name);
+    }
 
     public void Toast(Object obj) {
         Utils.ShowToast(obj);
