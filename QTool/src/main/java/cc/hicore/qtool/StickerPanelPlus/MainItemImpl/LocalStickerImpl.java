@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -74,7 +75,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 if (item.type == 2) {
                     itemLine.addView(getItemContainer(mContext, item.url, i % 5, item));
                 } else if (item.type == 1) {
-                    if (!TextUtils.isEmpty(item.thumbName)) {
+                    if (new File(LocalDataHelper.getLocalThumbPath(mPathInfo, item)).exists()) {
                         itemLine.addView(getItemContainer(mContext, LocalDataHelper.getLocalThumbPath(mPathInfo, item), i % 5, item));
                     } else {
                         itemLine.addView(getItemContainer(mContext, LocalDataHelper.getLocalItemPath(mPathInfo, item), i % 5, item));
