@@ -75,12 +75,7 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 if (item.type == 2) {
                     itemLine.addView(getItemContainer(mContext, item.url, i % 5, item));
                 } else if (item.type == 1) {
-                    if (new File(LocalDataHelper.getLocalThumbPath(mPathInfo, item)).exists()) {
-                        itemLine.addView(getItemContainer(mContext, LocalDataHelper.getLocalThumbPath(mPathInfo, item), i % 5, item));
-                    } else {
-                        itemLine.addView(getItemContainer(mContext, LocalDataHelper.getLocalItemPath(mPathInfo, item), i % 5, item));
-                    }
-
+                    itemLine.addView(getItemContainer(mContext, LocalDataHelper.getLocalItemPath(mPathInfo, item), i % 5, item));
                 }
 
             }
@@ -293,7 +288,12 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                         if (coverView.startsWith("http://") || coverView.startsWith("https://")) {
                             Glide.with(HookEnv.AppContext).load(new URL(coverView)).override(width_item, width_item).into(v.view);
                         } else {
-                            Glide.with(HookEnv.AppContext).load(coverView).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(width_item, width_item).into(v.view);
+                            if(new File(coverView + "_thumb").exists()){
+                                Glide.with(HookEnv.AppContext).load(coverView + "_thumb").fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(width_item, width_item).into(v.view);
+                            }else {
+                                Glide.with(HookEnv.AppContext).load(coverView).fitCenter().diskCacheStrategy(DiskCacheStrategy.RESOURCE).override(width_item, width_item).into(v.view);
+                            }
+
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
