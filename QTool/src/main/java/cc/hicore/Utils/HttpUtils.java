@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.XposedInit.EnvHook;
 import de.robv.android.xposed.XposedBridge;
 
 public class HttpUtils {
@@ -57,6 +58,7 @@ public class HttpUtils {
                 thread.join();
                 return builder.get();
             }
+            EnvHook.requireCachePath();
             String cachePath = HookEnv.ExtraDataPath + "/Cache/"+Math.random();
             File parent = new File(local).getParentFile();
             if (!parent.exists()) parent.mkdirs();
@@ -84,7 +86,7 @@ public class HttpUtils {
             fOut.close();
             ins.close();
 
-            if (new File(cachePath).length() == 0)return false;
+            if (new File(cachePath).length() < 1)return false;
             FileUtils.copy(cachePath,local);
             return true;
         } catch (Exception e) {

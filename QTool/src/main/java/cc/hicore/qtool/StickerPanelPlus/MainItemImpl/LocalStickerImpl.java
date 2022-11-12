@@ -147,18 +147,20 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                             if (item.url.startsWith("http")) {
                                 String localStorePath = LocalDataHelper.getLocalItemPath(mPathInfo, item);
                                 if (!TextUtils.isEmpty(localStorePath)) {
-                                    HttpUtils.DownloadToFile(item.url, localStorePath);
+                                    if (HttpUtils.DownloadToFile(item.url, localStorePath)){
+                                        item.type = 1;
+                                        item.fileName = item.MD5;
 
-                                    item.type = 1;
-                                    item.fileName = item.MD5;
 
-
-                                    if (!TextUtils.isEmpty(item.thumbUrl)) {
-                                        String localThumbPath = LocalDataHelper.getLocalThumbPath(mPathInfo, item);
-                                        HttpUtils.DownloadToFile(item.thumbUrl, localThumbPath);
-                                        item.thumbName = item.MD5 + "_thumb";
+                                        if (!TextUtils.isEmpty(item.thumbUrl)) {
+                                            String localThumbPath = LocalDataHelper.getLocalThumbPath(mPathInfo, item);
+                                            HttpUtils.DownloadToFile(item.thumbUrl, localThumbPath);
+                                            item.thumbName = item.MD5 + "_thumb";
+                                        }
+                                        LocalDataHelper.updatePicItemInfo(mPathInfo, item);
                                     }
-                                    LocalDataHelper.updatePicItemInfo(mPathInfo, item);
+
+
                                 }
                             }
                         } catch (Exception e) {
