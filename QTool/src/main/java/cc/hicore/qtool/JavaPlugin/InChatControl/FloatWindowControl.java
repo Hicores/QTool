@@ -106,7 +106,7 @@ public class FloatWindowControl {
         }
     }
 
-    private static boolean IsAvailable(String TroopUin, boolean IsTroop) {
+    public static boolean IsAvailable(String TroopUin, boolean IsTroop) {
         HashMap<String, PluginInfo> AvailPlugin = PluginController.checkHasAvailMenu(TroopUin, IsTroop);
         cachePlugin = AvailPlugin;
         return !AvailPlugin.isEmpty();
@@ -142,7 +142,7 @@ public class FloatWindowControl {
 
         mPluginButton.setOnClickListener(v -> {
             if (actionClick.get()) {
-                ShowButtonDialog(CacheSession,1);
+                ShowButtonDialog(CacheSession,1,null);
             }
 
         });
@@ -263,9 +263,9 @@ public class FloatWindowControl {
         return layoutParams;
     }
 
-    private static void ShowButtonDialog(Object Session,int type) {
-        Context fixContext = new ContextFixUtil.FixContext(cacheAct);
-        LayoutInflater inflater = ContextFixUtil.getContextInflater(cacheAct);
+    public static void ShowButtonDialog(Object Session,int typeAA,Object chatMsg) {
+        Context fixContext = new ContextFixUtil.FixContext(Utils.getTopActivity());
+        LayoutInflater inflater = ContextFixUtil.getContextInflater(Utils.getTopActivity());
         BottomPopupView view = new BottomPopupView(fixContext) {
             @Override
             protected int getImplLayoutId() {
@@ -318,14 +318,14 @@ public class FloatWindowControl {
                     LinearLayout menu_items = item.findViewById(R.id.menu_items);
                     for (String itemKey : info.ItemFunctions.keySet()) {
                         PluginController.ItemInfo itemInfo = info.ItemFunctions.get(itemKey);
-                        if (itemInfo.itemType == type) {
+                        if (itemInfo.itemType == typeAA) {
                             TextView newView = (TextView) inflater.inflate(R.layout.plugin_item_menu_item, null);
                             newView.setText(" - " + itemInfo.ItemName);
 
                             LinearLayout.LayoutParams parambb = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             parambb.setMargins(Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5));
 
-                            newView.setOnClickListener(v -> PluginController.InvokeToPluginItem(Session, itemInfo.CallbackName, info));
+                            newView.setOnClickListener(v -> PluginController.InvokeToPluginItem(Session, itemInfo.CallbackName, info,typeAA,chatMsg));
                             menu_items.addView(newView, parambb);
                         }
                     }

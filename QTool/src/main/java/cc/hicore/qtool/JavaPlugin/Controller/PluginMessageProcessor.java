@@ -54,104 +54,109 @@ public class PluginMessageProcessor {
     private static void onMessage0(Object msg) {
         PluginInfo.EarlyInfo early = decodeEarly(msg);
         try {
-            PluginInfo.MessageData data = new PluginInfo.MessageData();
-            data.MessageTime = MField.GetField(msg, "time", long.class);
-            data.IsGroup = early.istroop == 1 || early.istroop == 10014;
-            data.IsChannel = early.istroop == 10014;
-            if (data.IsChannel) {
-                data.ChannelID = early.ChannelID;
-                data.GuildID = early.GuildID;
-            }
-            data.GroupUin = early.GroupUin;
-            data.UserUin = early.UserUin;
-            data.AppInterface = HookEnv.AppInterface;
-            data.msg = msg;
-            data.IsSend = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
-            data.SessionInfo = HookEnv.SessionInfo;
-            String clzName = msg.getClass().getSimpleName();
-            data.SenderNickName = QQGroupUtils.Group_Get_Member_Name(data.GroupUin, data.UserUin);
-            if (clzName.equals("MessageForText") || clzName.equals("MessageForLongTextMsg") || clzName.equals("MessageForFoldMsg")) {
-                data.MessageType = 1;
-                data.MessageContent = MField.GetField(msg, "msg", String.class);
-                ArrayList<String> mAtList = new ArrayList<>();
-                String extra = MField.GetField(msg, msg.getClass(), "extStr", String.class);
-                try {
-                    JSONObject mJson = new JSONObject(extra);
-                    extra = mJson.optString("troop_at_info_list");
-                    ArrayList atList = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), "getTroopMemberInfoFromExtrJson", ArrayList.class, new Class[]{String.class}, extra);
-                    if (atList != null) {
-                        for (Object mAtInfo : atList) {
-                            mAtList.add("" + (long) MField.GetField(mAtInfo, "uin", long.class));
-                        }
-                    }
-                } catch (Exception e) {
-                }
-                data.mAtList = mAtList;
-                data.AtList = mAtList.toArray(new String[0]);
-            } else if (clzName.equals("MessageForPic")) {
-                data.MessageType = 1;
-                String PicMd5 = MField.GetField(msg, "md5", String.class);
-                String PicPath = MField.GetField(msg, "bigMsgUrl", String.class);
-                if (TextUtils.isEmpty(PicPath)) {
-                    PicPath = "https://gchat.qpic.cn/gchatpic_new/0/0-0-" + PicMd5 + "/0?term=2";
-                }
-                data.MessageContent = "[PicUrl=" + PicPath + "]";
-                data.mAtList = new ArrayList();
-                data.AtList = new String[0];
-            } else if (clzName.equals("MessageForMixedMsg")) {
-                data.MessageType = 3;
-                List mEleList = MField.GetField(msg, "msgElemList", List.class);
-                String MsgSummary = "";
-                for (Object MessageRecord : mEleList) {
-                    if (MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForText") ||
-                            MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForLongTextMsg")) {
-                        String str = MField.GetField(MessageRecord, "msg", String.class);
-                        if (!TextUtils.isEmpty(str)) MsgSummary = MsgSummary + str;
-
-
-                    } else if (MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForPic")) {
-
-                        String PicMd5 = MField.GetField(MessageRecord, "md5", String.class);
-
-                        String PicPath = MField.GetField(MessageRecord, "bigMsgUrl", String.class);
-
-                        if (TextUtils.isEmpty(PicPath)) {
-                            PicPath = "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + PicMd5 + "/0?term=2";
-                        }
-                        MsgSummary = MsgSummary + "[PicUrl=" + PicPath + "]";
-                    }
-                }
-                data.MessageContent = MsgSummary;
-            } else if (clzName.equals("MessageForStructing") || clzName.equals("MessageForArkApp")) {
-                data.MessageType = 2;
-                data.MessageContent = QQMessageUtils.getCardMsg(msg);
-            } else if (clzName.equals("MessageForPtt")) {
-                data.MessageType = 4;
-                data.MessageContent = "[语音]MD5=" + MField.GetField(msg, "md5", String.class);
-                data.FileUrl = "https://grouptalk.c2c.qq.com" +
-                        MField.GetField(msg, "directUrl", String.class);
-                data.LocalPath = MField.GetField(msg, "fullLocalPath", String.class);
-            } else if (clzName.equals("MessageForTroopFile")) {
-                data.MessageType = 5;
-                data.MessageContent = "[文件]" + MField.GetField(msg, "fileName", String.class);
-                data.FileUrl = MField.GetField(msg, "url", String.class);
-                data.FileName = MField.GetField(msg, "fileName", String.class);
-                data.FileSize = MField.GetField(msg, "fileSize", long.class);
-            } else if (clzName.equals("MessageForReplyText")) {
-                Object SourceInfo = MField.GetField(msg, "mSourceMsgInfo");
-                if (SourceInfo != null) {
-                    data.MessageType = 6;
-                    data.MessageContent = MField.GetField(msg, "msg", String.class);
-                    long uin = MField.GetField(SourceInfo, "mSourceMsgSenderUin");
-                    data.ReplyTo = String.valueOf(uin);
-                }
-            }
+            PluginInfo.MessageData data = decodeMessageData(msg);
             submit2(() -> PluginController.onMessage(early, data));
 
         } catch (Exception e) {
             LogUtils.error("MessageDecoder0", new RuntimeException("Can't decode msg:(" + msg.getClass().getName() + ")", e));
         }
 
+    }
+    public static PluginInfo.MessageData decodeMessageData(Object msg) throws Exception {
+        PluginInfo.EarlyInfo early = decodeEarly(msg);
+        PluginInfo.MessageData data = new PluginInfo.MessageData();
+        data.MessageTime = MField.GetField(msg, "time", long.class);
+        data.IsGroup = early.istroop == 1 || early.istroop == 10014;
+        data.IsChannel = early.istroop == 10014;
+        if (data.IsChannel) {
+            data.ChannelID = early.ChannelID;
+            data.GuildID = early.GuildID;
+        }
+        data.GroupUin = early.GroupUin;
+        data.UserUin = early.UserUin;
+        data.AppInterface = HookEnv.AppInterface;
+        data.msg = msg;
+        data.IsSend = MMethod.CallMethodNoParam(msg, "isSendFromLocal", boolean.class);
+        data.SessionInfo = HookEnv.SessionInfo;
+        String clzName = msg.getClass().getSimpleName();
+        data.SenderNickName = QQGroupUtils.Group_Get_Member_Name(data.GroupUin, data.UserUin);
+        if (clzName.equals("MessageForText") || clzName.equals("MessageForLongTextMsg") || clzName.equals("MessageForFoldMsg")) {
+            data.MessageType = 1;
+            data.MessageContent = MField.GetField(msg, "msg", String.class);
+            ArrayList<String> mAtList = new ArrayList<>();
+            String extra = MField.GetField(msg, msg.getClass(), "extStr", String.class);
+            try {
+                JSONObject mJson = new JSONObject(extra);
+                extra = mJson.optString("troop_at_info_list");
+                ArrayList atList = MMethod.CallMethod(null, MClass.loadClass("com.tencent.mobileqq.data.MessageForText"), "getTroopMemberInfoFromExtrJson", ArrayList.class, new Class[]{String.class}, extra);
+                if (atList != null) {
+                    for (Object mAtInfo : atList) {
+                        mAtList.add("" + (long) MField.GetField(mAtInfo, "uin", long.class));
+                    }
+                }
+            } catch (Exception e) {
+            }
+            data.mAtList = mAtList;
+            data.AtList = mAtList.toArray(new String[0]);
+        } else if (clzName.equals("MessageForPic")) {
+            data.MessageType = 1;
+            String PicMd5 = MField.GetField(msg, "md5", String.class);
+            String PicPath = MField.GetField(msg, "bigMsgUrl", String.class);
+            if (TextUtils.isEmpty(PicPath)) {
+                PicPath = "https://gchat.qpic.cn/gchatpic_new/0/0-0-" + PicMd5 + "/0?term=2";
+            }
+            data.MessageContent = "[PicUrl=" + PicPath + "]";
+            data.mAtList = new ArrayList();
+            data.AtList = new String[0];
+        } else if (clzName.equals("MessageForMixedMsg")) {
+            data.MessageType = 3;
+            List mEleList = MField.GetField(msg, "msgElemList", List.class);
+            String MsgSummary = "";
+            for (Object MessageRecord : mEleList) {
+                if (MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForText") ||
+                        MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForLongTextMsg")) {
+                    String str = MField.GetField(MessageRecord, "msg", String.class);
+                    if (!TextUtils.isEmpty(str)) MsgSummary = MsgSummary + str;
+
+
+                } else if (MessageRecord.getClass().getSimpleName().equalsIgnoreCase("MessageForPic")) {
+
+                    String PicMd5 = MField.GetField(MessageRecord, "md5", String.class);
+
+                    String PicPath = MField.GetField(MessageRecord, "bigMsgUrl", String.class);
+
+                    if (TextUtils.isEmpty(PicPath)) {
+                        PicPath = "http://gchat.qpic.cn/gchatpic_new/0/0-0-" + PicMd5 + "/0?term=2";
+                    }
+                    MsgSummary = MsgSummary + "[PicUrl=" + PicPath + "]";
+                }
+            }
+            data.MessageContent = MsgSummary;
+        } else if (clzName.equals("MessageForStructing") || clzName.equals("MessageForArkApp")) {
+            data.MessageType = 2;
+            data.MessageContent = QQMessageUtils.getCardMsg(msg);
+        } else if (clzName.equals("MessageForPtt")) {
+            data.MessageType = 4;
+            data.MessageContent = "[语音]MD5=" + MField.GetField(msg, "md5", String.class);
+            data.FileUrl = "https://grouptalk.c2c.qq.com" +
+                    MField.GetField(msg, "directUrl", String.class);
+            data.LocalPath = MField.GetField(msg, "fullLocalPath", String.class);
+        } else if (clzName.equals("MessageForTroopFile")) {
+            data.MessageType = 5;
+            data.MessageContent = "[文件]" + MField.GetField(msg, "fileName", String.class);
+            data.FileUrl = MField.GetField(msg, "url", String.class);
+            data.FileName = MField.GetField(msg, "fileName", String.class);
+            data.FileSize = MField.GetField(msg, "fileSize", long.class);
+        } else if (clzName.equals("MessageForReplyText")) {
+            Object SourceInfo = MField.GetField(msg, "mSourceMsgInfo");
+            if (SourceInfo != null) {
+                data.MessageType = 6;
+                data.MessageContent = MField.GetField(msg, "msg", String.class);
+                long uin = MField.GetField(SourceInfo, "mSourceMsgSenderUin");
+                data.ReplyTo = String.valueOf(uin);
+            }
+        }
+        return data;
     }
 
     //解析出消息中的发送者和群聊等信息

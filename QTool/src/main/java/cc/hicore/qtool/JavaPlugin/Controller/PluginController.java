@@ -296,7 +296,7 @@ public class PluginController {
             Interpreter instance = info.Instance;
             instance.set("context", HookEnv.AppContext);
             instance.set("PluginID", BandVerifyID);
-            instance.set("SDKVer", 14);
+            instance.set("SDKVer", 15);
             instance.set("loader", HookEnv.mLoader);
             instance.set("AppPath", info.LocalPath);
             instance.set("MyUin", QQEnvUtils.getCurrentUin());
@@ -423,26 +423,35 @@ public class PluginController {
     }
 
     //传递菜单点击事件
-    public static void InvokeToPluginItem(Object Session, String Name, PluginInfo info) {
+    public static void InvokeToPluginItem(Object Session, String Name, PluginInfo info,int InvokeType,Object chatMsg) {
         if (Session != null) {
-            String GroupUin = QQSessionUtils.getGroupUin(Session);
-            String UserUin = QQSessionUtils.getFriendUin(Session);
-            int type = QQSessionUtils.getSessionID(Session);
-            try {
-                if (type == 1) {
-                    InvokeToPlugin(info.Instance, Name, GroupUin, "", 1);
-                    InvokeToPlugin(info.Instance, Name, GroupUin);
-                } else if (type == 0) {
-                    InvokeToPlugin(info.Instance, Name, "", UserUin, 2);
-                } else if (type == 1000) {
-                    InvokeToPlugin(info.Instance, Name, GroupUin, UserUin, 2);
-                } else if (type == 10014) {
-                    InvokeToPlugin(info.Instance, Name, QQSessionUtils.getGuildID(Session) + "&" + QQSessionUtils.getChannelID(Session), "", 1);
+            if (InvokeType == 1){
+                String GroupUin = QQSessionUtils.getGroupUin(Session);
+                String UserUin = QQSessionUtils.getFriendUin(Session);
+                int type = QQSessionUtils.getSessionID(Session);
+                try {
+                    if (type == 1) {
+                        InvokeToPlugin(info.Instance, Name, GroupUin, "", 1);
+                        InvokeToPlugin(info.Instance, Name, GroupUin);
+                    } else if (type == 0) {
+                        InvokeToPlugin(info.Instance, Name, "", UserUin, 2);
+                    } else if (type == 1000) {
+                        InvokeToPlugin(info.Instance, Name, GroupUin, UserUin, 2);
+                    } else if (type == 10014) {
+                        InvokeToPlugin(info.Instance, Name, QQSessionUtils.getGuildID(Session) + "&" + QQSessionUtils.getChannelID(Session), "", 1);
+                    }
+                } catch (Exception e) {
+                    Utils.ShowToast("调用到 " + Name + " 时发生错误");
+                    PluginErrorOutput.Print(info.LocalPath, "脚本 " + info.PluginName + " 回调 " + Name + " 执行过程中发生错误:\n" + Log.getStackTraceString(e));
                 }
-            } catch (Exception e) {
-                Utils.ShowToast("调用到 " + Name + " 时发生错误");
-                PluginErrorOutput.Print(info.LocalPath, "脚本 " + info.PluginName + " 回调 " + Name + " 执行过程中发生错误:\n" + Log.getStackTraceString(e));
+            }else if (InvokeType == 2){
+                try {
+                    InvokeToPlugin(info.Instance, Name, PluginMessageProcessor.decodeMessageData(chatMsg));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 
