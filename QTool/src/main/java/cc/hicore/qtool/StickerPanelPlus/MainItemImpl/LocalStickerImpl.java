@@ -96,7 +96,8 @@ public class LocalStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 }, (dialog, which) -> {
                     if (which == 0) {
                         new AlertDialog.Builder(mContext, 3)
-                                .setTitle("是否删除该表情包(" + tv_title.getText() + "),该表情包内的本地表情将被删除并不可恢复")
+                                .setTitle("提示")
+                                .setMessage("是否删除该表情包(" + tv_title.getText() + "),该表情包内的本地表情将被删除并不可恢复")
                                 .setNeutralButton("确定删除", (dialog1, which1) -> {
                                     LocalDataHelper.deletePath(mPathInfo);
                                     ICreator.dismissAll();
