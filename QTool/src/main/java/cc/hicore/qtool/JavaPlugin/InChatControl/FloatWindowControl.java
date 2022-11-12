@@ -325,7 +325,10 @@ public class FloatWindowControl {
                             LinearLayout.LayoutParams parambb = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             parambb.setMargins(Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5));
 
-                            newView.setOnClickListener(v -> PluginController.InvokeToPluginItem(Session, itemInfo.CallbackName, info,typeAA,chatMsg));
+                            newView.setOnClickListener(v -> {
+                                PluginController.InvokeToPluginItem(Session, itemInfo.CallbackName, info,typeAA,chatMsg);
+                                dismiss();
+                            });
                             menu_items.addView(newView, parambb);
                         }
                     }
