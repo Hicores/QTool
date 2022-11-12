@@ -384,14 +384,19 @@ public class PluginController {
     }
 
     //获取某一个群聊中可以被显示的菜单信息
-    public static HashMap<String, PluginInfo> checkHasAvailMenu(String Uin, boolean isTroop) {
+    public static HashMap<String, PluginInfo> checkHasAvailMenu(String Uin, boolean isTroop,int type) {
         HashMap<String, PluginInfo> avail = new HashMap<>();
         for (String key : runningInfo.keySet()) {
             PluginInfo info = runningInfo.get(key);
             if (info != null && (info.ItemFunctions.size() != 0 || !TextUtils.isEmpty(info.ItemClickFunctionName)) && !info.IsLoading && info.IsRunning) {
-                if (info.IsAvailable(Uin)) {
-                    avail.put(key, info);
+                for (ItemInfo menu : info.ItemFunctions.values()) {
+                    if (menu.itemType == type){
+                        if (info.IsAvailable(Uin)) {
+                            avail.put(key, info);
+                        }
+                    }
                 }
+
             }
         }
         return avail;
