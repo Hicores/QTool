@@ -20,6 +20,7 @@ import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.ThreadUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.ICreator;
 import cc.hicore.qtool.StickerPanelPlus.LocalDataHelper;
 import cc.hicore.qtool.StickerPanelPlus.MainPanelAdapter;
 
@@ -126,7 +127,11 @@ public class InputFromLocalImpl implements MainPanelAdapter.IMainPanelItem{
                         .setMessage("导入完成")
                         .setPositiveButton("确定", null)
                         .show();
+
+                ICreator.dismissAll();
             });
+
+
 
         });
     }
