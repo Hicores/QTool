@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -86,7 +87,12 @@ public class RecentStickerImpl implements MainPanelAdapter.IMainPanelItem {
                 if (coverView.startsWith("http://") || coverView.startsWith("https://")) {
                     Glide.with(HookEnv.AppContext).load(new URL(coverView)).into(img);
                 } else {
-                    Glide.with(HookEnv.AppContext).load(coverView).into(img);
+                    if (new File(coverView+"_thumb").exists()){
+                        Glide.with(HookEnv.AppContext).load(coverView+"_thumb").into(img);
+                    }else {
+                        Glide.with(HookEnv.AppContext).load(coverView).into(img);
+                    }
+
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
