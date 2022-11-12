@@ -34,4 +34,16 @@ public class FormItemUtils {
             return null;
         }
     }
+    public static View createMultiItem_Appent(Context context, CharSequence title, String rightLine, View.OnClickListener listener) {
+        try {
+            View NewItem = MClass.NewInstance(MClass.loadClass("com.tencent.mobileqq.widget.FormSimpleItem"), context);
+            MMethod.CallMethodSingle(NewItem, "setLeftText", void.class, title);
+            MMethod.CallMethodSingle(NewItem, "setRightText", void.class, rightLine);
+            NewItem.setOnClickListener(listener);
+            return NewItem;
+        } catch (Exception e) {
+            LogUtils.error(TAG, e);
+            return null;
+        }
+    }
 }
