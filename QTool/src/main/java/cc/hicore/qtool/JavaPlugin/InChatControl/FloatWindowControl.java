@@ -142,7 +142,7 @@ public class FloatWindowControl {
 
         mPluginButton.setOnClickListener(v -> {
             if (actionClick.get()) {
-                ShowButtonDialog(CacheSession);
+                ShowButtonDialog(CacheSession,1);
             }
 
         });
@@ -263,7 +263,7 @@ public class FloatWindowControl {
         return layoutParams;
     }
 
-    private static void ShowButtonDialog(Object Session) {
+    private static void ShowButtonDialog(Object Session,int type) {
         Context fixContext = new ContextFixUtil.FixContext(cacheAct);
         LayoutInflater inflater = ContextFixUtil.getContextInflater(cacheAct);
         BottomPopupView view = new BottomPopupView(fixContext) {
@@ -318,7 +318,7 @@ public class FloatWindowControl {
                     LinearLayout menu_items = item.findViewById(R.id.menu_items);
                     for (String itemKey : info.ItemFunctions.keySet()) {
                         PluginController.ItemInfo itemInfo = info.ItemFunctions.get(itemKey);
-                        if (itemInfo.itemType == 1) {
+                        if (itemInfo.itemType == type) {
                             TextView newView = (TextView) inflater.inflate(R.layout.plugin_item_menu_item, null);
                             newView.setText(" - " + itemInfo.ItemName);
 

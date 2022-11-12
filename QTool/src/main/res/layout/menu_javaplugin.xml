@@ -19,15 +19,22 @@
             android:id="@+id/selectOnline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="3dp"
             android:text="在线脚本" />
 
         <Button
             android:id="@+id/openApiDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="3dp"
             android:text="编写说明" />
+
+        <Button
+            android:id="@+id/createNewPlugin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="创建脚本" />
     </LinearLayout>
     <ScrollView
         android:layout_below="@+id/TopToolBar"

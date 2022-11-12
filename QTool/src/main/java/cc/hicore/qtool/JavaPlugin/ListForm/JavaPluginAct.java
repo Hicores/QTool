@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -17,10 +18,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
+import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.HttpUtils;
+import cc.hicore.Utils.NameUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.ActProxy.BaseProxyAct;
 import cc.hicore.qtool.HookEnv;
@@ -53,6 +62,7 @@ public class JavaPluginAct {
         searchForLocal();
         root.findViewById(R.id.selectLocal).setOnClickListener(v -> searchForLocal());
         root.findViewById(R.id.selectOnline).setOnClickListener(v -> searchForOnline());
+        root.findViewById(R.id.createNewPlugin).setOnClickListener(v -> createNewPlugin());
 
         root.findViewById(R.id.openApiDesc)
                 .setOnClickListener(v -> {
@@ -62,6 +72,44 @@ public class JavaPluginAct {
                 });
 
         return root;
+    }
+
+    private void createNewPlugin(){
+        ViewGroup root = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.plugin_create_new, null);
+        EditText ed_name = root.findViewById(R.id.ed_plugin_name_input);
+        EditText ed_version = root.findViewById(R.id.ed_plugin_version_input);
+        EditText ed_author = root.findViewById(R.id.ed_plugin_author_input);
+        new AlertDialog.Builder(context,3)
+                .setView(root)
+                .setTitle("创建新插件")
+                .setNeutralButton("创建",(v,x)->{
+                    String name = ed_name.getText().toString();
+                    String version = ed_version.getText().toString();
+                    String author = ed_author.getText().toString();
+
+                    String path = FileUtils.tryToCreatePath(new File(HookEnv.ExtraDataPath + "Plugin"),name);
+                    try {
+                        new File(path + "/desc.txt").createNewFile();
+                        new File(path + "/main.java").createNewFile();
+                        new File(path + "/ignore.txt").createNewFile();
+
+                        Properties prop = new Properties();
+                        prop.setProperty("id",name.replace("=","")+"_"+author+"_"+ NameUtils.getRandomString(8));
+                        prop.setProperty("type","1");
+                        prop.setProperty("author",author.replace("=",""));
+                        prop.setProperty("version",version.replace("=",""));
+                        prop.setProperty("name",name.replace("=",""));
+                        OutputStream stream = new FileOutputStream(path + "/info.prop");
+                        prop.store(stream,"AUTO_CREATE");
+                        stream.close();
+
+                        searchForLocal();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Utils.ShowToast("已创建");
+                }).show();
     }
 
     //扫描本地脚本并显示

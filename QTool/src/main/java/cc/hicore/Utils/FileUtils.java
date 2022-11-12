@@ -132,6 +132,24 @@ public class FileUtils {
         return NewName;
     }
 
+    public static String tryToCreatePath(File root,String name){
+        File f = new File(root,name);
+        if (!f.mkdirs()){
+            if (name.length() > 2){
+                name = name.substring(0,2)+name.hashCode();
+            }else {
+                name = name + name.hashCode();
+            }
+            f = new File(root,name);
+            if (!f.mkdirs()){
+                name = name.hashCode()+"_"+NameUtils.getRandomString(8);
+                f = new File(root,name);
+                f.mkdirs();
+            }
+        }
+        return f.getAbsolutePath();
+    }
+
     public static void copy(String source, String dest) {
 
         try {
