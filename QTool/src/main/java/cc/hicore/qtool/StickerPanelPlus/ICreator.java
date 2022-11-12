@@ -30,6 +30,7 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.R;
+import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.InputFromLocalImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.LocalStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.OnlineStickerImpl;
 import cc.hicore.qtool.StickerPanelPlus.MainItemImpl.RecentStickerImpl;
@@ -44,6 +45,8 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
     int myLovePos = 0;
     int recentUsePos = 0;
     int IdOfConvertFromTg;
+
+    int IdOfInputPic;
     private final List<ViewGroup> newTabView = new ArrayList<>();
     private ListView listView;
 
@@ -128,6 +131,14 @@ public class ICreator extends BottomPopupView implements AbsListView.OnScrollLis
         IdOfConvertFromTg = adapter.addItemData(new TgConvertStickerImpl());
         tgView.setTag(IdOfConvertFromTg);
         topSelectBar.addView(tgView);
+
+        ViewGroup inputView = (ViewGroup) createPicImage(R.drawable.input, "导入图片", v -> {
+            listView.setSelection(IdOfInputPic);
+            listView.smoothScrollToPositionFromTop(IdOfInputPic, -5);
+        });
+        IdOfInputPic = adapter.addItemData(new InputFromLocalImpl());
+        tgView.setTag(IdOfInputPic);
+        topSelectBar.addView(inputView);
 
 
         //topSelectBar.addView(createPicImage(R.drawable.sticker_pack_set_icon,"设置分组",v -> Utils.ShowToast("Click")));
