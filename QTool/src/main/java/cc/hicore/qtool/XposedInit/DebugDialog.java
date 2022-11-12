@@ -21,6 +21,7 @@ public class DebugDialog {
     public static void startShow(Context context) {
         Dialog fullScreen = new Dialog(context, 3);
         ScrollView view = new ScrollView(context);
+        view.setFillViewport(true);
         LinearLayout mRoot = new LinearLayout(context);
         view.addView(mRoot);
         mRoot.setOrientation(LinearLayout.VERTICAL);
