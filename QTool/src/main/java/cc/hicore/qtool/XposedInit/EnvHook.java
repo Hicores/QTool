@@ -4,6 +4,7 @@ import static cc.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
 import com.microsoft.appcenter.AppCenter;
@@ -173,7 +174,7 @@ public class EnvHook {
                     return;
                 }
 
-                if (HookEnv.ExtraDataPath == null) {
+                if (TextUtils.isEmpty(HookEnv.ExtraDataPath)) {
                     ExtraPathInit.ShowPathSetDialog(false);
                     return;
                 }
