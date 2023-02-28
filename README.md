@@ -3,19 +3,13 @@
 
 [![license](https://img.shields.io/github/license/Hicores/QTool.svg?)](https://www.gnu.org/licenses/agpl-3.0.html)
 [![Telegram](https://img.shields.io/static/v1?label=Telegram&message=Chat&color=0088cc)](https://t.me/QToolC)
-[![Telegram](https://img.shields.io/static/v1?label=Telegram&message=CIBuild&color=0088cc)](https://t.me/QToolCI)
-[![CIBuild](https://img.shields.io/static/v1?label=CIBuild&message=Action&color=cc66cc)](https://github.com/Hicores/QTool/actions)
 </div>
 
 -----
+### QTool 由于作者现实学业的原因已停更,将不会再提供任何官方的apk文件下载
+-----
 
 QTool 是一个开源,免费的 Xposed 模块,在使用之前,你应该进行百度了解Xposed是啥,如何使用,最新的构建版本可以到Action中进行下载
-
-## 说明
-
-- 支持Android >= 8.1
-- 支持QQ 版本为8.8.35以上,由于作者精力有限无法保证更新适配的时效性和可用性,请确定自己的需求再使用
-- 本模块功能不是很全面,建议同时配合其他模块使用
 
 ## 功能列表
 - 自行安装模块查看
