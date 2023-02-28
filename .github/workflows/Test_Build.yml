@@ -1,0 +1,41 @@
+name: Test Build CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: get-cmake
+        uses: lukka/get-cmake@v.3.23.2
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: |
+          mkdir tempDir
+          cd tempDir
+          git clone https://github.com/Hicores/QTool
+          cd QTool
+          export CommitNumber=`git rev-list --count main`
+          echo $CommitNumber
+          cd ../..
+          echo ${{ secrets.SIGN_KEY }} | base64 -d > key.jks
+          git submodule update --init --recursive
+          echo $CommitNumber
+          ./gradlew :QTool:assembleRelease
+        env:
+          KEYSTORE_PATH: "../key.jks"
+          KEYSTORE_PASSWORD: ${{ secrets.SIGN_PASS }}
+          KEY_ALIAS: ${{ secrets.SIGN_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ALIA_PASS }}
