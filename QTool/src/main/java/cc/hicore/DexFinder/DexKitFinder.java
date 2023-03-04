@@ -21,7 +21,6 @@ public class DexKitFinder implements IDexFinder{
     public void init(String apkPath, ClassLoader loader) {
         if (SecurityChecker.checkLoaderType() == 1)return;
         SoLoader.loadByName("libdexkit.so");
-        XposedBridge.log(apkPath);
         bridge = DexKitBridge.create(apkPath);
         this.loader = loader;
     }
