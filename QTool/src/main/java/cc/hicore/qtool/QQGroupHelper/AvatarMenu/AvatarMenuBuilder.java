@@ -21,6 +21,7 @@ import cc.hicore.qtool.QQManager.QQGroupUtils;
 import cc.hicore.qtool.QQMessage.QQMessageUtils;
 import cc.hicore.qtool.QQTools.ContextFixUtil;
 import cc.hicore.qtool.XPWork.QQProxy.BaseChatPie;
+import de.robv.android.xposed.XposedBridge;
 
 public class AvatarMenuBuilder {
 
@@ -147,8 +148,10 @@ public class AvatarMenuBuilder {
     }
 
     public static void Add_At_Text(String GroupUin, String UserUin) {
+        XposedBridge.log(BaseChatPie.cacheChatPie.getClass().getName());
         //只有在群聊的时候才会添加艾特信息,私聊时不进行添加
-        if (BaseChatPie.cacheChatPie.getClass().getName().equals("com.tencent.mobileqq.activity.aio.core.TroopChatPie")) {
+        if (BaseChatPie.cacheChatPie.getClass().getName().equals("com.tencent.mobileqq.activity.aio.core.TroopChatPie") ||
+                BaseChatPie.cacheChatPie.getClass().getName().equals("com.tencent.mobileqq.troop.guild.TroopGuildChatPie")) {
             try {
                 MMethod.CallMethod(BaseChatPie.cacheChatPie, null, void.class, new Class[]{String.class, String.class, boolean.class, int.class},
                         UserUin, QQGroupUtils.Group_Get_Member_Name(GroupUin, UserUin), false, 1);
