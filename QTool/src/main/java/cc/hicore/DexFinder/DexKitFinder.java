@@ -14,14 +14,14 @@ public class DexKitFinder implements IDexFinder{
     @Override
     public void init(String apkPath, ClassLoader loader) {
         SoLoader.loadByName("libdexkit.so");
-        bridge = DexKitBridge.create(loader);
+        bridge = DexKitBridge.create(apkPath);
         this.loader = loader;
     }
 
     @Override
     public Method[] findMethodByString(String str) {
         if (str ==null)return new Method[0];
-        List<DexMethodDescriptor> desc = bridge.findMethodUsingString(str,false,"","","",null,null);
+        List<DexMethodDescriptor> desc = bridge.findMethodUsingString(str,false,"","","",null,false,null);
 
         ArrayList<Method> methods = new ArrayList<>();
         for (DexMethodDescriptor dexMethodDescriptor : desc) {
@@ -40,7 +40,7 @@ public class DexKitFinder implements IDexFinder{
     public Method[] findMethodBeInvoked(Method beInvoked) {
         if (beInvoked == null)return new Method[0];
         List<DexMethodDescriptor> desc = bridge.findMethodCaller(new DexMethodDescriptor(beInvoked).getDescriptor(),
-                "","","",null,"","","",null,null);
+                "","","",null,"","","",null,false,null);
         ArrayList<Method> methods = new ArrayList<>();
         for (DexMethodDescriptor dexMethodDescriptor : desc) {
             try {
@@ -59,7 +59,7 @@ public class DexKitFinder implements IDexFinder{
     public Method[] findMethodInvoking(Method beInvoked) {
         if (beInvoked == null)return new Method[0];
         Map<DexMethodDescriptor,List<DexMethodDescriptor>> desc = bridge.findMethodInvoking(new DexMethodDescriptor(beInvoked).getDescriptor(),
-                "","","",null,"","","",null,null);
+                "","","",null,"","","",null,false,null);
         ArrayList<Method> methods = new ArrayList<>();
         for (DexMethodDescriptor dexMethodDescriptor : desc.keySet()) {
             try {
