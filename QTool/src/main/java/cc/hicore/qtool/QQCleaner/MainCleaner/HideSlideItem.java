@@ -67,7 +67,10 @@ public class HideSlideItem {
             }
             return null;
         }));
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook2", "VipInfoHandler payRuleUin changed", m2 -> m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe")));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook2", "VipInfoHandler payRuleUin changed", m2 -> {
+            return m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMe") ||
+                    m2.getDeclaringClass().getName().equals("com.tencent.mobileqq.activity.QQSettingMeView");
+        }));
 
     }
 
