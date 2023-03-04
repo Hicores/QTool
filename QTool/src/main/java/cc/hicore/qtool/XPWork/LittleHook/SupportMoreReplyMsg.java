@@ -41,7 +41,13 @@ public class SupportMoreReplyMsg {
                 MMethod.FindMethod(m.getDeclaringClass(), "H", boolean.class, new Class[0])
         ));
     }
-
+    @VerController(targetVer = QQVersion.QQ_8_9_33)
+    @MethodScanner
+    public void getHookMethod_8933(MethodContainer container) {
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook", "isInterestedMotionEvent() is called. ev", m ->
+                MMethod.FindMethod(m.getDeclaringClass(), "I", boolean.class, new Class[0])
+        ));
+    }
     @VerController
     @XPExecutor(methodID = "hook")
     public BaseXPExecutor worker() {
