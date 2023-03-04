@@ -87,7 +87,7 @@ public class QQVoicePanelInject {
     @VerController(targetVer = QQVersion.QQ_8_9_8)
     @MethodScanner
     public void getSimpleInit_898(MethodContainer container) {
-        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4", "initui() simple mode  bottomMargin  2 = ", m -> MMethod.FindMethod(m.getDeclaringClass(), "C", void.class, new Class[0])));
+        container.addMethod(MethodFinderBuilder.newFinderByString("hook_4", "initui() simple mode  bottomMargin  2 = ", m -> true));
     }
 
     @SuppressLint("ResourceType")
