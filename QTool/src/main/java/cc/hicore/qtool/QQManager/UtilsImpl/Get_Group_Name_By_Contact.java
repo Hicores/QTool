@@ -22,7 +22,7 @@ public class Get_Group_Name_By_Contact {
     @VerController(targetVer = QQVersion.QQ_8_9_0)
     @MethodScanner
     public void methodFinder(MethodContainer container) {
-        container.addMethod(MethodFinderBuilder.newFinderByString("invokeMethod", "getNewTroopNameOrTroopName()", m -> true));
+        container.addMethod(MethodFinderBuilder.newFinderByString("invokeMethod", "getTroopDisplayName()", m -> true));
     }
 
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)

@@ -1,7 +1,9 @@
 package cc.hicore.qtool.ChatHook.ChatCracker;
 
 import android.app.Activity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.Utils.LayoutUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "转发消息来源定位", itemType = XPItem.ITEM_Hook)
 public class TransShowUin {
@@ -71,8 +74,10 @@ public class TransShowUin {
                     if (mtitleView instanceof TextView) {
                         TextView mView = (TextView) mtitleView;
                         mView.setText("" + QQGroupUtils.GetTroopNameByContact(Troop).replace("\n", "") + "(" + Troop + ")");
-                        //mView.setWidth(8000);
+                        mView.setWidth(((ViewGroup)mView.getParent()).getWidth());
                         mView.setOnClickListener(v1 -> QQEnvUtils.OpenTroopCard(Troop));
+                        mView.setGravity(Gravity.CENTER);
+
                     }
                 }
                 View avatar = LayoutUtils.findView("VasAvatar", mLayout);
