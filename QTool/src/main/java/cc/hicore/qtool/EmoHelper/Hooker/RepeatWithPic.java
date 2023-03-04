@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -18,17 +19,21 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
+import cc.hicore.HookItemLoader.core.CoreLoader;
 import cc.hicore.LogUtils.LogUtils;
 import cc.hicore.ReflectUtils.Finders;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.StringUtils;
+import cc.hicore.qtool.JavaPlugin.Controller.PluginController;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
+import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "带图回复", itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {
@@ -36,6 +41,7 @@ public class RepeatWithPic {
     public static volatile boolean IsEnable;
     static EditText ed = null;
     static Object chatPie = null;
+    static CoreLoader.XPItemInfo item;
 
     public static void AddToPreSendList(String LocalPath) {
         String cookie = Integer.toString(LocalPath.hashCode());
@@ -57,10 +63,38 @@ public class RepeatWithPic {
             ed.setSelection(pos + Text.length());
         }
     }
+    private static Class<?> getHelperProviderClz(){
+        Class<?> clz = MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.AIOJubaoDialogHelper");
+        Constructor<?>[] cons = clz.getConstructors();
+        for (Constructor<?> con : cons){
+            if (con.getParameterCount() == 2){
+                return con.getParameterTypes()[0];
+            }
+        }
+        return null;
+    }
+    private static Class<?> getReplyProviderItemClz(){
+        Class<?> sFather = item.scanResult.get("fatherClass").getDeclaringClass();
+        Class<?>[] sInterface = sFather.getInterfaces();
+        for (Class<?> inter : sInterface){
+            if (inter.getSimpleName().length() < 5){
+                if (inter.getMethods().length > 0){
+                    return inter;
+                }
+            }
+        }
+        return null;
+    }
 
     public static boolean IsNowReplying() {
         try {
-            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_28){
+            if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_33){
+                Object HelperProvider = MField.GetFirstField(chatPie, getHelperProviderClz());
+                Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(), null, getReplyProviderItemClz(), new Class[]{int.class});
+                Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
+                Object SourceInfo = MMethod.CallMethod(ReplyHelper, null, MClass.loadClass("com.tencent.mobileqq.data.MessageForReplyText$SourceMsgInfo"), new Class[0]);
+                return SourceInfo != null;
+            } else if (HostInfo.getVerCode() >= QQVersion.QQ_8_9_28){
                 Object HelperProvider = MField.GetFirstField(chatPie, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.ce"));
                 Method IsNowReplyingMethod = MMethod.FindMethod(HelperProvider.getClass(), null, MClass.loadClass("com.tencent.mobileqq.activity.aio.helper.cj"), new Class[]{int.class});
                 Object ReplyHelper = IsNowReplyingMethod.invoke(HelperProvider, 119);
@@ -134,6 +168,11 @@ public class RepeatWithPic {
         ui.type = 1;
         ui.targetID = 1;
         return ui;
+    }
+    @VerController(targetVer = QQVersion.QQ_8_9_33)
+    @MethodScanner
+    public void getReplyMScannerMethod(MethodContainer container){
+        container.addMethod(MethodFinderBuilder.newFinderByString("fatherClass"," showSearchEmotionPanel set afRoot FitsSystemWindows: false",m->true));
     }
 
     @VerController(max_targetVer = QQVersion.QQ_8_9_0)
