@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/QTool" />
             <option value="$PROJECT_DIR$/libs/BeanShell/beanshell20b6" />
             <option value="$PROJECT_DIR$/libs/DexKit/dexkit" />
+            <option value="$PROJECT_DIR$/libs/DexKit/dexkit-android" />
             <option value="$PROJECT_DIR$/libs/EasyAdapter/easy-adapter" />
             <option value="$PROJECT_DIR$/libs/XPopup/library" />
           </set>

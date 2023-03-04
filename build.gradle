@@ -15,6 +15,9 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+plugins {
+    id "org.jetbrains.dokka" version "1.7.20" apply false
+}
 apply from: 'common.gradle'
 task clean(type: Delete) {
     delete rootProject.buildDir

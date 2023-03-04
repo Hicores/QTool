@@ -1,7 +1,9 @@
 package cc.hicore.HookItemLoader.core;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
@@ -146,9 +148,45 @@ public class MethodScannerWorker {
         }
         return null;
     }
+    public static boolean checkLoadStatus(){
+        if (SecurityChecker.isLoading()){
+            Utils.PostToMain(()->{
+                Context context = Utils.getTopActivity();
+                new AlertDialog.Builder(context,3)
+                        .setTitle("QTool上次未能完成方法查找")
+                        .setItems(new String[]{
+                                "重新查找","只用DexKit进行查找","只用DexHelper进行查找","跳过查找,直接进入"
+                        }, (dialogInterface, i) -> {
+                            if (i == 0) {
+                                SecurityChecker.saveLoaderType(0);
+                                SecurityChecker.finishPreload();
+                                Utils.PostToMainDelay(() -> Utils.restartSelf(context), 500);
+                            }else if (i == 1) {
+                                SecurityChecker.saveLoaderType(2);
+                                SecurityChecker.finishPreload();
+                                Utils.PostToMainDelay(() -> Utils.restartSelf(context), 500);
+                            }else if (i == 2){
+                                SecurityChecker.saveLoaderType(1);
+                                SecurityChecker.finishPreload();
+                                Utils.PostToMainDelay(() -> Utils.restartSelf(context), 500);
+                            }else if (i == 3){
+                                SecurityChecker.finishPreload();
+                                String cacheVer = HostInfo.getVersion() + "." + HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
+                                GlobalConfig.Put_String("cacheVer", cacheVer);
+                                Utils.PostToMainDelay(() -> Utils.restartSelf(context), 500);
+                            }
+                        }).setCancelable(false).show();
+
+            });
+            return true;
+        }
+        return false;
+    }
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
     public static void doFindMethod() {
+        if (checkLoadStatus())return;
+        SecurityChecker.savePreload();
         cleanAllCache();
         CollectLinkInfo();
 
@@ -194,6 +232,7 @@ public class MethodScannerWorker {
                 }
                 String cacheVer = HostInfo.getVersion() + "." + HostInfo.getVerCode() + "->" + BuildConfig.VERSION_CODE;
                 GlobalConfig.Put_String("cacheVer", cacheVer);
+                SecurityChecker.finishPreload();
                 Utils.PostToMainDelay(() -> Utils.restartSelf(context), 500);
             }, "QTool_Method_Finder").start();
         });

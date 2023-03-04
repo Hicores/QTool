@@ -100,5 +100,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.1'
     implementation "com.airbnb.android:lottie:5.2.0"
 
-    implementation project(':dexkit')
+    implementation project(':dexkit-android')
 }

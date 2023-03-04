@@ -2,6 +2,7 @@ package cc.hicore.DexFinder;
 
 import android.provider.Settings;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -14,6 +15,7 @@ public class SoLoader {
     public static void loadByName(String name){
         String cachePath = HookEnv.AppContext.getCacheDir() + "/" + DataUtils.getStrMD5(Settings.Secure.ANDROID_ID+"_").substring(0,8) + "/";
         String tempName = ""+name.hashCode();
+        FileUtils.deleteFile(new File(cachePath+tempName));
         outputLibToCache(cachePath+tempName,name);
         System.load(cachePath+tempName);
     }
