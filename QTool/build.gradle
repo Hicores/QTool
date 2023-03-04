@@ -66,7 +66,7 @@ android {
     externalNativeBuild {
         cmake {
             path "./src/main/adfawhf/CMakeLists.txt"
-            version "3.23.2"
+            version "3.18.1"
 
         }
     }
