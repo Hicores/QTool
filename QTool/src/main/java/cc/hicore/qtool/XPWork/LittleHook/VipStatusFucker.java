@@ -13,7 +13,7 @@ import cc.hicore.HookItemLoader.bridge.MethodFinderBuilder;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import de.robv.android.xposed.XposedBridge;
 
-@XPItem(itemType = XPItem.ITEM_Hook, name = "VipStatusFucker")
+//@XPItem(itemType = XPItem.ITEM_Hook, name = "VipStatusFucker")
 public class VipStatusFucker {
     @UIItem
     @VerController
