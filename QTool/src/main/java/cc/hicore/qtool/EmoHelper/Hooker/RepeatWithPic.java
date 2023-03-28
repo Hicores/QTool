@@ -38,7 +38,6 @@ import de.robv.android.xposed.XposedBridge;
 @XPItem(name = "带图回复", itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {
     private static final HashMap<String, String> picCookies = new HashMap<>();
-    public static volatile boolean IsEnable;
     static EditText ed = null;
     static Object chatPie = null;
     static CoreLoader.XPItemInfo item;
