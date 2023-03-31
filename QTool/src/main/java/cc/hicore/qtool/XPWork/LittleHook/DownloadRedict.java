@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -17,14 +18,19 @@ import cc.hicore.HookItemLoader.Annotations.XPExecutor;
 import cc.hicore.HookItemLoader.Annotations.XPItem;
 import cc.hicore.HookItemLoader.bridge.BaseXPExecutor;
 import cc.hicore.HookItemLoader.bridge.MethodContainer;
+import cc.hicore.HookItemLoader.bridge.QQVersion;
 import cc.hicore.HookItemLoader.bridge.UIInfo;
 import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 @XPItem(name = "下载重定向", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
 public class DownloadRedict {
+    private static String oldPath;
     private static boolean checkMkDir(String Path) {
         File f = new File(Path);
         f.mkdirs();
@@ -51,6 +57,22 @@ public class DownloadRedict {
         }));
     }
 
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @MethodScanner
+    public void replaceGuildTmpDataPath(MethodContainer container){
+        container.addMethod("hookGuild",MMethod.FindMethod(MClass.loadClass("com.tencent.guild.api.msg.impl.GuildMsgApiImpl"),"getNTKernelExtDataPath",String.class,new Class[0]));
+    }
+
+    @VerController(targetVer = QQVersion.QQ_8_9_0)
+    @XPExecutor(methodID = "hookGuild", period = XPExecutor.After)
+    public BaseXPExecutor work_guild(){
+        return param -> {
+            String result = (String) param.getResult();
+            param.setResult(oldPath);
+
+        };
+    }
+
     @VerController
     @XPExecutor(methodID = "hook", period = XPExecutor.After)
     public BaseXPExecutor worker() {
@@ -61,6 +83,9 @@ public class DownloadRedict {
                 if (new File(Result).exists() && new File(Result).isFile())
                     return;//如果下载的文件已经存在则不替换,防止与QQ文件数据库出错而导致无法下载的问题
                 String End = Path.substring(Path.lastIndexOf("/Tencent/QQfile_recv/") + "/Tencent/QQfile_recv/".length());
+
+                oldPath = Result.substring(0,Result.lastIndexOf("/Tencent/QQfile_recv/") + "/Tencent/QQfile_recv/".length());
+
                 String Start = HookEnv.Config.getString("Set", "DownloadRedictPath", "");
 
                 if (TextUtils.isEmpty(Start))
