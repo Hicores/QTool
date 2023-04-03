@@ -44,7 +44,7 @@ public class IMessageMenuHooker {
     @XPExecutor(methodID = "menu_add",period = XPExecutor.After)
     public BaseXPExecutor xpWorker(){
         return param -> {
-            if (FloatWindowControl.IsAvailable(QQSessionUtils.getGroupUin(),QQSessionUtils.getSessionID() == 1,2)){
+            if (FloatWindowControl.updatePluginCache(QQSessionUtils.getGroupUin(),QQSessionUtils.getSessionID() == 1,2)){
                 Object arr = param.getResult();
                 Object ret = Array.newInstance(arr.getClass().getComponentType(), Array.getLength(arr) + 1);
                 System.arraycopy(arr, 0, ret, 1, Array.getLength(arr));

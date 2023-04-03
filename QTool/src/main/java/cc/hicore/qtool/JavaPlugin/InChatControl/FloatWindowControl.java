@@ -76,7 +76,7 @@ public class FloatWindowControl {
             MAX_Y = MIN_Y + metrics.heightPixels - Utils.dip2px(act, 32);
         }
 
-        if (IsShow && IsAvailable(QQSessionUtils.getGroupUin(session), !(QQSessionUtils.getSessionID(session) == 0 || QQSessionUtils.getSessionID(session) == 1000),1)) {
+        if (IsShow && updatePluginCache(QQSessionUtils.getGroupUin(session), !(QQSessionUtils.getSessionID(session) == 0 || QQSessionUtils.getSessionID(session) == 1000),1)) {
 
             if (act == cacheAct) {
                 if (!IsAdd.getAndSet(true)) {
@@ -106,7 +106,7 @@ public class FloatWindowControl {
         }
     }
 
-    public static boolean IsAvailable(String TroopUin, boolean IsTroop,int type) {
+    public static boolean updatePluginCache(String TroopUin, boolean IsTroop,int type) {
         HashMap<String, PluginInfo> AvailPlugin = PluginController.checkHasAvailMenu(TroopUin, IsTroop,type);
         cachePlugin = AvailPlugin;
         return !AvailPlugin.isEmpty();
@@ -142,6 +142,7 @@ public class FloatWindowControl {
 
         mPluginButton.setOnClickListener(v -> {
             if (actionClick.get()) {
+                updatePluginCache(QQSessionUtils.getGroupUin(CacheSession), !(QQSessionUtils.getSessionID(CacheSession) == 0 || QQSessionUtils.getSessionID(CacheSession) == 1000),1);
                 ShowButtonDialog(CacheSession,1,null);
             }
 
