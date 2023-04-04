@@ -9,7 +9,9 @@
 -----
 
 QTool 是一个开源,免费的 Xposed 模块,在使用之前,你应该进行百度了解Xposed是啥,如何使用
+
 对于新版的安卓系统,推荐使用LSPosed来使用本模块 https://github.com/LSPosed/LSPosed
+
 对于没有root的系统,推荐使用LSPatch来使用本模块 https://github.com/LSPosed/LSPatch
 
 ## 许可证
