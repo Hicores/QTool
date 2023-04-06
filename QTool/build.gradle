@@ -5,13 +5,12 @@ plugins {
 var commitCount = getGitHeadRefsSuffix()
 
 android {
-    compileSdk 32
+    compileSdk 33
     ndkVersion '23.1.7779620'
     defaultConfig {
         applicationId "cc.hicore.qtool"
         minSdk 26
-        //noinspection ExpiredTargetSdkVersion
-        targetSdk 26
+        targetSdk 33
         if (System.getenv("CommitNumber") != null){
             println("${System.getenv("CommitNumber")}")
             versionName "v${System.getenv("CommitNumber")}"
