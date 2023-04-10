@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.R;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 public class RepeaterSet {
     public static void startShow(Context context) {
@@ -36,7 +35,6 @@ public class RepeaterSet {
                     HookEnv.Config.setBoolean("Repeater", "Open", allSwitch.isChecked());
                     HookEnv.Config.setInt("Repeater", "Size", Integer.parseInt(edSize.getText().toString()));
                     HookEnv.Config.setBoolean("Repeater", "DoubleClickMode", doubleClick.isChecked());
-                    HookLoader.CallHookStart(Hooker.class.getName());
                 }).show();
 
 

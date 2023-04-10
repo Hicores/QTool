@@ -23,8 +23,6 @@
 -keep class androidx.lifecycle.**{ *; }
 -keep class com.lxj.xpopup.widget.**{*;}
 -keep class cc.hicore.qtool.XposedInit.**{*;}
--keep class * implements cc.hicore.qtool.XposedInit.ItemLoader.BaseUiItem { }
--keep class * extends cc.hicore.qtool.XposedInit.ItemLoader.BaseHookItem { }
 -keep class * extends android.app.Activity { }
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$GroupInfo{ *;}
 -keep class cc.hicore.qtool.JavaPlugin.Controller.PluginInfo$RequestInfo{ *;}

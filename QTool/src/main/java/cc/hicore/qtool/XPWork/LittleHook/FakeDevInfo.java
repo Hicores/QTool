@@ -30,7 +30,6 @@ import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @XPItem(name = "修改设备型号", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
 public class FakeDevInfo {
@@ -110,7 +109,6 @@ public class FakeDevInfo {
                     }
                     HookEnv.Config.setBoolean("Set", "FakeDevInfoOpen", box.isChecked());
                     HookEnv.Config.setString("Set", "FakeDevInfoSet", ed.getText().toString());
-                    HookLoader.CallHookStart(FakeDevInfo.class.getName());
                     new File("/data/data/com.tencent.mobileqq/app_x5webview/Default/Local Storage/leveldb/MANIFEST-000001").delete();
                     new File(HookEnv.Application.getCacheDir().getParent() + "/app_x5webview/Default/Local Storage/leveldb/MANIFEST-000001").delete();
                     new AlertDialog.Builder(context)

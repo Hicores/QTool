@@ -1,4 +1,4 @@
-package cc.hicore.qtool.XposedInit.Initer;
+package cc.hicore.qtool.XposedInit;
 
 import android.content.Context;
 import android.view.Gravity;

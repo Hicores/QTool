@@ -22,7 +22,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.ItemLoader.HookLoader;
 
 @XPItem(name = "消息长按菜单净化", itemType = XPItem.ITEM_Hook)
 public class ChatLongClickCleaner {
@@ -115,8 +114,6 @@ public class ChatLongClickCleaner {
                             saveList.add(defCheckItem.get(i));
                         }
                     }
-                    if (!saveList.isEmpty())
-                        HookLoader.CallHookStart(ChatLongClickCleaner.class.getName());
                     HookEnv.Config.setList("Set", "ChatLongClickItemCleaner", saveList);
                 }).show();
     }
