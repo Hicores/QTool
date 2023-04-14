@@ -37,7 +37,7 @@ public class ForceTabletMode {
     @MethodScanner
     public void FindMethod(MethodContainer container) {
         container.addMethod(MethodFinderBuilder.newFinderByString("hook", "initDeviceType type = ", m -> true));
-        container.addMethod("hook1", MMethod.FindMethod(MClass.loadClass("com.tencent.hippy.qq.utils.HippyUtils"), "initDeviceType", void.class, new Class[]{Context.class}));
+        //container.addMethod("hook1", MMethod.FindMethod(MClass.loadClass("com.tencent.hippy.qq.utils.HippyUtils"), "initDeviceType", void.class, new Class[]{Context.class}));
     }
 
     @VerController
@@ -46,7 +46,12 @@ public class ForceTabletMode {
         return param -> {
             Enum<?> type = MMethod.CallStaticMethod(MClass.loadClass("com.tencent.common.config.DeviceType"), "valueOf", MClass.loadClass("com.tencent.common.config.DeviceType"),
                     "TABLET");
-            MField.SetField(null, info.scanResult.get("hook").getDeclaringClass(), "b", MClass.loadClass("com.tencent.common.config.DeviceType"), type);
+            try {
+                MField.SetField(null, info.scanResult.get("hook").getDeclaringClass(), "b", MClass.loadClass("com.tencent.common.config.DeviceType"), type);
+            }catch (Exception e){
+                MField.SetField(null, info.scanResult.get("hook").getDeclaringClass(), "b", MClass.loadClass("com.tencent.common.config.pad.DeviceType"), type);
+            }
+
         };
     }
 }
