@@ -1,8 +1,6 @@
 package cc.hicore.qtool.JavaPlugin.Hooker;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -18,11 +16,9 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.ReflectUtils.QQReflect;
-import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
 import cc.hicore.qtool.JavaPlugin.InChatControl.FloatWindowControl;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
-import cc.hicore.qtool.StickerPanelPlus.PanelUtils;
 
 @XPItem(name = "IMessageMenuHooker",itemType = XPItem.ITEM_Hook)
 public class IMessageMenuHooker {

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import cc.hicore.HookItemLoader.core.SecurityChecker;
-import cc.hicore.Utils.Utils;
-import de.robv.android.xposed.XposedBridge;
 import io.luckypray.dexkit.DexKitBridge;
 import io.luckypray.dexkit.builder.MethodCallerArgs;
 import io.luckypray.dexkit.builder.MethodInvokingArgs;

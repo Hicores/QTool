@@ -29,11 +29,9 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.StringUtils;
-import cc.hicore.qtool.JavaPlugin.Controller.PluginController;
 import cc.hicore.qtool.QQMessage.QQMsgSendUtils;
 import cc.hicore.qtool.QQMessage.QQSessionUtils;
 import cc.hicore.qtool.XposedInit.HostInfo;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "带图回复", itemType = XPItem.ITEM_Hook)
 public class RepeatWithPic {

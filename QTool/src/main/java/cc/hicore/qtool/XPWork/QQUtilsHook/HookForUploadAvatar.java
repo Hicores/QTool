@@ -20,10 +20,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MField;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.DebugUtils;
-import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 
 @XPItem(name = "半透明头像上传", itemType = XPItem.ITEM_Hook)
 public class HookForUploadAvatar {

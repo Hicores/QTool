@@ -31,8 +31,8 @@ import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.BuildConfig;
 import cc.hicore.qtool.HookEnv;
-import cc.hicore.qtool.XposedInit.HostInfo;
 import cc.hicore.qtool.XposedInit.CommonHookLoaderDialog;
+import cc.hicore.qtool.XposedInit.HostInfo;
 import de.robv.android.xposed.XposedBridge;
 
 public class MethodScannerWorker {

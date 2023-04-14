@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.system.Os;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;

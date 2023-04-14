@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -24,9 +23,6 @@ import cc.hicore.ReflectUtils.MClass;
 import cc.hicore.ReflectUtils.MMethod;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 
 @XPItem(name = "下载重定向", itemType = XPItem.ITEM_Hook, proc = XPItem.PROC_ALL)
 public class DownloadRedict {

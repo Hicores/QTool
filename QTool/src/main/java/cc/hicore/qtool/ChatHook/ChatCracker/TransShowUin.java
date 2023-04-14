@@ -23,7 +23,6 @@ import cc.hicore.ReflectUtils.MField;
 import cc.hicore.Utils.LayoutUtils;
 import cc.hicore.qtool.QQManager.QQEnvUtils;
 import cc.hicore.qtool.QQManager.QQGroupUtils;
-import de.robv.android.xposed.XposedBridge;
 
 @XPItem(name = "转发消息来源定位", itemType = XPItem.ITEM_Hook)
 public class TransShowUin {
