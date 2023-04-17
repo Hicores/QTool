@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
+import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.HookItemLoader.Annotations.MethodScanner;
 import cc.hicore.HookItemLoader.Annotations.VerController;
 import cc.hicore.HookItemLoader.Annotations.XPExecutor;
@@ -38,13 +39,16 @@ public class Hook_For_Main_Entry {
     @XPExecutor(methodID = "hook_1")
     public BaseXPExecutor worker_1() {
         return param -> {
-            List mMenu = (List) param.args[1];
-            Object newItem = MClass.NewInstance(mMenu.get(0).getClass(), new Class[]{
-                    int.class, String.class, String.class, int.class
-            }, 1699, "QTool", "点击打开QTool主菜单", 3);
-            Drawable drawable = HookEnv.AppContext.getDrawable(R.drawable.micon);
-            MField.SetField(newItem, "drawable", drawable);
-            mMenu.add(0, newItem);
+            if (GlobalConfig.Get_Boolean("Add_Menu_Button_to_Main", false)){
+                List mMenu = (List) param.args[1];
+                Object newItem = MClass.NewInstance(mMenu.get(0).getClass(), new Class[]{
+                        int.class, String.class, String.class, int.class
+                }, 1699, "QTool", "点击打开QTool主菜单", 3);
+                Drawable drawable = HookEnv.AppContext.getDrawable(R.drawable.micon);
+                MField.SetField(newItem, "drawable", drawable);
+                mMenu.add(0, newItem);
+            }
+
         };
     }
 
