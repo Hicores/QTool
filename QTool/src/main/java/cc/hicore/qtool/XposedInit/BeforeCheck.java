@@ -32,20 +32,6 @@ public class BeforeCheck {
                         }).show();
             }
         }
-        /*
-        if (BeforeConfig.getBoolean("Enable_SubMode")){
-            if (HookEnv.loadFailed.length() > 0){
-                Activity act = Utils.getTopActivity();
-                new AlertDialog.Builder(act, 3)
-                        .setTitle("QTool提示")
-                        .setMessage("当前开启了内更新模式,但是无法加载更新后的数据,请尝试重新更新,如果仍然无法更新请关闭内更新,然后更新apk来更新模块版本:\n" + HookEnv.loadFailed.toString())
-                        .setNegativeButton("确定", (dialog, which) -> {
-
-                        }).show();
-            }
-        }
-
-         */
     }
 
     private static void checkNewVersion() {

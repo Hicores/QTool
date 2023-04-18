@@ -4,6 +4,8 @@ import static cc.hicore.qtool.HookEnv.moduleLoader;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit;
@@ -64,11 +66,7 @@ public class EnvHook {
                     EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                    try {
-                        HookForDelay();
-                    }catch (Exception e){
-                        Utils.ShowToastL("[QTool]Delay Hook Error:\n"+e);
-                    }
+                    HookForDelay();
 
                     if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                     if (HostInfo.getVersion().length() > 7) return;
@@ -120,11 +118,7 @@ public class EnvHook {
                 EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                try {
-                    HookForDelay();
-                }catch (Exception e){
-                    Utils.ShowToastL("[QTool]Delay Hook Error:\n"+e);
-                }
+                HookForDelay();
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                 if (HostInfo.getVersion().length() > 7) return;
 
@@ -171,14 +165,14 @@ public class EnvHook {
     //在QQ完成一些初步的环境初始化后才开始执行一些代码
     private static void HookForDelay() {
         if (HookEnv.IsMainProcess) {
-            XPBridge.HookBeforeOnce(XposedHelpers.findMethodBestMatch(MClass.loadClass("com.tencent.mobileqq.startup.step.LoadData"), "doStep"), param -> {
+            new Handler(Looper.getMainLooper()).postDelayed(()->{
                 long timeStart = System.currentTimeMillis();
                 BeforeCheck.StartCheckAndShow();
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) {
                     CheckWrongVersion.ShowToast1(Utils.getTopActivity());
                     return;
                 }
-                if (HostInfo.getVersion().length() > 7) {
+                if (HostInfo.getVersion().length() > 8) {
                     CheckWrongVersion.ShowWrongVersionDialog(Utils.getTopActivity());
                     return;
                 }
@@ -191,16 +185,10 @@ public class EnvHook {
 
                 InitActivityProxy();
                 InitAppCenter();
-                /*
-                Utils.PostToMain(()->{
-                    new CommonHookLoaderDialog(Utils.getTopActivity()).showDialog();
-                });
-
-                 */
 
 
                 XposedBridge.log("[QTool]Delay Hook End,time cost:" + (System.currentTimeMillis() - timeStart) + "ms");
-            });
+            },5000);
         }
 
     }

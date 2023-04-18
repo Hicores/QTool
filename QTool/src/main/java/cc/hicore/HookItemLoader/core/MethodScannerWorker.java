@@ -236,14 +236,6 @@ public class MethodScannerWorker {
             }, "QTool_Method_Finder").start();
         });
 
-        while (true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     private static Member findMethod(BaseMethodInfo info) {
