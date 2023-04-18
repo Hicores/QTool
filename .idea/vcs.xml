@@ -14,7 +14,6 @@
     <mapping directory="$PROJECT_DIR$/QTool/src/main/adfawhf/DexBuilder/external/abseil" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/QTool/src/main/adfawhf/DexKit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libs/BeanShell" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/libs/DexKit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libs/EasyAdapter" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libs/XPopup" vcs="Git" />
   </component>

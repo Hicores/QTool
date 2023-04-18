@@ -64,7 +64,12 @@ public class EnvHook {
                     EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
                     ResUtils.StartInject(HookEnv.AppContext);
                     //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                    HookForDelay();
+                    try {
+                        HookForDelay();
+                    }catch (Exception e){
+                        Utils.ShowToastL("[QTool]Delay Hook Error:\n"+e);
+                    }
+
                     if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                     if (HostInfo.getVersion().length() > 7) return;
 
@@ -115,7 +120,11 @@ public class EnvHook {
                 EzXHelperInit.INSTANCE.initAppContext(HookEnv.AppContext, false, true);
                 ResUtils.StartInject(HookEnv.AppContext);
                 //然后进行延迟Hook,同时如果目录未设置的时候能弹出设置界面
-                HookForDelay();
+                try {
+                    HookForDelay();
+                }catch (Exception e){
+                    Utils.ShowToastL("[QTool]Delay Hook Error:\n"+e);
+                }
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                 if (HostInfo.getVersion().length() > 7) return;
 
