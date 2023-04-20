@@ -165,6 +165,16 @@ public class TgConvertStickerImpl implements MainPanelAdapter.IMainPanelItem {
         new Thread(() -> {
             try {
                 String stickerPack = HttpUtils.getContent("https://qtool.haonb.cc/getContent?id=" + ID);
+                if (stickerPack == null){
+                    Utils.ShowToastL("网络异常");
+                    return;
+                }
+                JSONObject mJson = new JSONObject(stickerPack);
+                if (mJson.optInt("code") == 1){
+                    String msg = mJson.optString("msg");
+                    Utils.ShowToastL("加载错误:"+msg);
+                    return;
+                }
                 JSONArray listArr = new JSONObject(stickerPack).getJSONArray("data");
                 for (int i = 0; i < listArr.length(); i++) {
                     JSONObject item = listArr.getJSONObject(i);
