@@ -121,6 +121,7 @@ public class EnvHook {
                 HookForDelay();
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                 if (HostInfo.getVersion().length() > 7) return;
+                if (HostInfo.checkIsGrayQQ())return;
 
                 if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java", false)) {
                     LogcatCatcher.startCatcherOnce();
@@ -168,6 +169,10 @@ public class EnvHook {
             new Handler(Looper.getMainLooper()).postDelayed(()->{
                 long timeStart = System.currentTimeMillis();
                 BeforeCheck.StartCheckAndShow();
+                if (HostInfo.checkIsGrayQQ()){
+                    BeforeCheck.showGrayQQTip();
+                    return;
+                }
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) {
                     CheckWrongVersion.ShowToast1(Utils.getTopActivity());
                     return;

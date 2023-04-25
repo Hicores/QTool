@@ -76,4 +76,17 @@ public class BeforeCheck {
         }
 
     }
+    public static void showGrayQQTip(){
+        Activity act = Utils.getTopActivity();
+        if (act != null) {
+            new AlertDialog.Builder(act, 3)
+                    .setTitle("提示")
+                    .setMessage("你当前使用的可能不是官方正式版QQ,要正常使用QTool,你需要下载官方正式版QQ后再进行使用" )
+                    .setNegativeButton("确定", (dialog, which) -> {
+
+                    }).show();
+        }
+    }
+
+
 }

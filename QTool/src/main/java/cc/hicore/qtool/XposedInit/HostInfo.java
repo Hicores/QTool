@@ -38,4 +38,14 @@ public class HostInfo {
     public static String getVersion() {
         return Version;
     }
+
+    public static boolean checkIsGrayQQ(){
+        try {
+            PackageManager pm = HookEnv.AppContext.getPackageManager();
+            ApplicationInfo sAppInfo = pm.getApplicationInfo("com.tencent.mobileqq", PackageManager.GET_META_DATA);
+            String Settings = sAppInfo.metaData.getString("AppSetting_params");
+            if (Settings.contains("#Gray"))return true;
+        }catch (Exception ignored) {}
+        return false;
+    }
 }
