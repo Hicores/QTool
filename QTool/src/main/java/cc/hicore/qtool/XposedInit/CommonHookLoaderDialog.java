@@ -32,6 +32,10 @@ public class CommonHookLoaderDialog {
 
     public CommonHookLoaderDialog(Context context) {
         mContext = context;
+        if (mContext == null){
+            popupView = null;
+            return;
+        }
         releaseJsonFile();
         popupView = new CenterPopupView(ContextFixUtil.getFixContext(context)) {
             @Override
@@ -75,6 +79,7 @@ public class CommonHookLoaderDialog {
     }
 
     public void showDialog() {
+        if (mContext == null)return;
         popupDialog = new XPopup.Builder(ContextFixUtil.getFixContext(mContext))
                 .dismissOnBackPressed(false)
                 .dismissOnTouchOutside(false)
@@ -83,12 +88,14 @@ public class CommonHookLoaderDialog {
     }
 
     public void destroyDialog() {
+        if (mContext == null)return;
         if (popupDialog != null) {
             popupDialog.dismiss();
         }
     }
 
     public void updateProgress(int current, int max) {
+        if (mContext == null)return;
         Utils.PostToMain(() -> {
             progressTitle.setText(current + "/" + max);
             progressBar.setMax(max);
