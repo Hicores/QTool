@@ -3,6 +3,7 @@ package cc.hicore.qtool.XposedInit;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.IBinder;
 
 import java.lang.reflect.Method;
@@ -75,5 +76,16 @@ public class BeforeCheck {
             }
         }
 
+    }
+    public static void showForGrayQQ(){
+        Activity act = Utils.getTopActivity();
+        if (act != null){
+            new AlertDialog.Builder(act,3)
+                    .setTitle("提示")
+                    .setMessage("你似乎使用的并不是官方正式版QQ,如果需要使用本模块,清重新安装官方正式版QQ再试")
+                    .setNegativeButton("确定", (dialog, which) -> {
+
+                    }).show();
+        }
     }
 }

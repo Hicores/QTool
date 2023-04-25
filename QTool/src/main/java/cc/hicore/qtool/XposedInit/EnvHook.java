@@ -70,6 +70,7 @@ public class EnvHook {
 
                     if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) return;
                     if (HostInfo.getVersion().length() > 7) return;
+                    if (checkForGrayQQ.isGrayQQ())return;
 
                     if (GlobalConfig.Get_Boolean("Prevent_Crash_In_Java", false)) {
                         LogcatCatcher.startCatcherOnce();
@@ -167,6 +168,10 @@ public class EnvHook {
         if (HookEnv.IsMainProcess) {
             new Handler(Looper.getMainLooper()).postDelayed(()->{
                 long timeStart = System.currentTimeMillis();
+                if (checkForGrayQQ.isGrayQQ()){
+                    BeforeCheck.showForGrayQQ();
+                    return;
+                }
                 BeforeCheck.StartCheckAndShow();
                 if (HostInfo.getVerCode() < QQVersion.QQ_8_8_35) {
                     CheckWrongVersion.ShowToast1(Utils.getTopActivity());
