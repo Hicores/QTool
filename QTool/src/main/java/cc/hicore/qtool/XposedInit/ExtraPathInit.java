@@ -23,6 +23,7 @@ import cc.hicore.ConfigUtils.GlobalConfig;
 import cc.hicore.Utils.FileUtils;
 import cc.hicore.Utils.Utils;
 import cc.hicore.qtool.HookEnv;
+import cc.hicore.qtool.QQManager.QQEnvUtils;
 
 public class ExtraPathInit {
     public static void InitPath() {
@@ -135,6 +136,7 @@ public class ExtraPathInit {
         }
         GlobalConfig.Put_String("StorePath", Path);
         dismissDialog.dismiss();
+        Utils.restartSelf(mAct);
     }
 
     //通过创建文件判断目录是否有存储权限
